@@ -3,5 +3,4 @@ import java.util.*;
 import java.*;
 
 public enum NotificationName {
-    case
 }
