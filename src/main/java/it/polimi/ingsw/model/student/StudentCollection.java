@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.student;
 
 import java.util.*;
 
-public class StudentCollection {
+public class StudentCollection{
 
 
 
@@ -37,5 +37,6 @@ public class StudentCollection {
         return Student.values()[random.nextInt(Student.values().length)];
 
     }
+
 
 }
