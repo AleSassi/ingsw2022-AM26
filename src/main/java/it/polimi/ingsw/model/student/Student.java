@@ -23,6 +23,10 @@ public enum Student {
         return this.associatedProfessor;
     }
 
+    public static int getRawValueOf(Student student) {
+        return values.indexOf(student);
+    }
+
     public static Student getRandomStudent() {
         int randIndex = randomizer.nextInt(0, values.size());
         return values.get(randIndex);
