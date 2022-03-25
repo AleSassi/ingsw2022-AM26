@@ -13,7 +13,7 @@ public enum Student {
     private final Professor associatedProfessor;
 
     private static final Random randomizer = new Random();
-    private static final List<Student> values = Collections.unmodifiableList(Arrays.asList(values()));
+    private static final List<Student> values = List.of(values());
 
     Student(Professor professor){
         associatedProfessor = professor;
