@@ -5,10 +5,13 @@ public class AssistantCard {
     int priorityNumber;
     int motherNatureSteps;
 
-    public AssistantCard(int value){ //constructor
-        cardCharacterID=value;
+    public AssistantCard(int id){
+        cardCharacterID=id;
     }
 
+    /**
+     *constructor with id parameter
+     */
     public int Getid(){ //constructor
        return cardCharacterID;
     }
