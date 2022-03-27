@@ -1,26 +1,25 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.assistants;
 
-public class AssistantCard {
-    int cardCharacterID;
-    int priorityNumber;
-    int motherNatureSteps;
+public final class AssistantCard {
+
+    private final int cardID;
+    private int priorityNumber;
+    private int motherNatureSteps;
 
     public AssistantCard(int id){
-        cardCharacterID=id;
+        cardID = id;
     }
 
     /**
      *constructor with id parameter
      */
-    public int Getid(){ //constructor
-       return cardCharacterID;
+    public int getCardID(){
+       return cardID;
     }
 
     public int getPriorityNumber(){
         return priorityNumber;
-
     }
-
 
     public int getMotherNatureSteps(){
         return motherNatureSteps;
