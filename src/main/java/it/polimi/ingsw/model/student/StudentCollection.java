@@ -25,13 +25,19 @@ public class StudentCollection {
         students.set(studentIndex, students.get(studentIndex) - count);
     }
 
-    void addStudents(Student s, int count) {
+    public void addStudents(Student s, int count) {
         int studentIndex = Student.getRawValueOf(s);
         students.set(studentIndex, students.get(studentIndex) + count);
     }
 
+    public void mergeWithCollection(StudentCollection otherCollection) {
+        for (Student s: Student.values()) {
+            addStudents(s, otherCollection.getCount(s));
+        }
+    }
+
     public Student pickRandom() throws EmptyCollectionException {
-        int ranInt = randomizer.nextInt(0, getTotalCount()-1);
+        int ranInt = randomizer.nextInt(0, getTotalCount());
         List<Integer> progressiveCounts = getProgressiveCounts();
         for (int index = 0; index < progressiveCounts.size(); index++) {
             int lowerRangeBounds = index == 0 ? 0 : progressiveCounts.get(index - 1);
@@ -52,6 +58,24 @@ public class StudentCollection {
             result.add(lastProgressiveCount + studentCount);
             lastProgressiveCount += studentCount;
         }
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        StudentCollection that = (StudentCollection) o;
+
+        if (!students.equals(that.students)) return false;
+        return randomizer.equals(that.randomizer);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = students.hashCode();
+        result = 31 * result + randomizer.hashCode();
         return result;
     }
 }
