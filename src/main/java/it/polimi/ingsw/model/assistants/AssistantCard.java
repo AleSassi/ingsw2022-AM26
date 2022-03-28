@@ -13,6 +13,7 @@ public enum AssistantCard {
     LION(10,5);
 
     private int  priorityNumber;
+
     private int  motherNatureSteps;
 
 
