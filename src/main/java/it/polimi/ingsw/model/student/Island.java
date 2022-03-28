@@ -36,10 +36,15 @@ public class Island extends StudentHost{
     public boolean isUnifiableWith(Island island){
         return (this.activeTowerType == island.activeTowerType && (this.towerCount > 0 && island.towerCount > 0));
     }
-    public void acquireIsland(Island island){
+    public void acquireIsland(Island island) throws EmptyCollectionException {
         if(isUnifiableWith(island)) {
             this.towerCount += island.getTowerCount();
-
+             for(Student s : Student.values()){
+                 int studentToMove = island.getCount(s);
+                 island.removeStudent(s, studentToMove);
+                 placeStudents(s, studentToMove);
+             }
+             isMotherNaturePresent = isMotherNaturePresent || island.isMotherNaturePresent;
         }
     }
 
