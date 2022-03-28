@@ -1,21 +1,22 @@
 package it.polimi.ingsw.model.student;
 
 import it.polimi.ingsw.model.Professor;
+
 import java.util.*;
 
 public enum Student {
-    YellowElf (Professor.YellowElf),
-    BlueUnicorn (Professor.BlueUnicorn),
-    GreenFrog (Professor.GreenFrog),
-    RedDragon (Professor.RedDragon),
-    PinkFair (Professor.PinkFair);
+    YellowElf(Professor.YellowElf),
+    BlueUnicorn(Professor.BlueUnicorn),
+    GreenFrog(Professor.GreenFrog),
+    RedDragon(Professor.RedDragon),
+    PinkFair(Professor.PinkFair);
 
     private final Professor associatedProfessor;
 
     private static final Random randomizer = new Random();
     private static final List<Student> values = List.of(values());
 
-    Student(Professor professor){
+    Student(Professor professor) {
         associatedProfessor = professor;
     }
 
