@@ -5,4 +5,5 @@ public enum Wizard {
     Wizard2,
     Wizard3,
     Wizard4
+
 }

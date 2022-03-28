@@ -24,6 +24,7 @@ public class AvailableCardsDeck {
 
 
     }
+
     public int getCount(){
         return cardDeck.size();
     }

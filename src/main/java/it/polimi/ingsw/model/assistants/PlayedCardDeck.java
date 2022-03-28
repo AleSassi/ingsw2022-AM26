@@ -24,4 +24,5 @@ public class PlayedCardDeck {
     public void AddCardOnTop(AssistantCard card) {
         assistantCardsDeck.add(card);
     }
+
 }
