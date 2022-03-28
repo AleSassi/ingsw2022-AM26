@@ -3,14 +3,19 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.assistants.Wizard;
 import it.polimi.ingsw.model.characters.*;
 import it.polimi.ingsw.model.student.*;
+import it.polimi.ingsw.model.assistants.*;
 import java.util.*;
 
 public class Player {
 
     private final String nickname;
+    private int availableTowers;
+    private final Tower towerColor;
 
     public Player(String nickname, Wizard wiz, Tower towerColor, int initialTowerCount) {
         this.nickname = nickname;
+        this.towerColor = towerColor;
+        this.availableTowers = initialTowerCount;
     }
 
     public String getNickname() {
@@ -68,15 +73,17 @@ public class Player {
     }
 
     public Tower getTowerType() {
-        return Tower.Black;
+        return towerColor;
     }
 
     public void gainTower() {
 
     }
 
-    public Tower pickAndRemoveTower() {
-        return Tower.Black;
+    public Tower pickAndRemoveTower() throws InsufficientTowersException {
+        if (availableTowers == 0) throw new InsufficientTowersException();
+        availableTowers -= 1;
+        return towerColor;
     }
 
     public void addAllStudentsToEntrance(StudentCollection sc) {
