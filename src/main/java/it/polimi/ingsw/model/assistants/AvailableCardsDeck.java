@@ -9,6 +9,21 @@ public class AvailableCardsDeck {
     /**
      *return the number of card in the deck
      */
+
+    public AvailableCardsDeck(){
+        cardDeck.add(AssistantCard.TURTLE);
+        cardDeck.add(AssistantCard.ELEPHANT);
+        cardDeck.add(AssistantCard.DOG);
+        cardDeck.add(AssistantCard.OCTOPUS);
+        cardDeck.add(AssistantCard.SNAKE);
+        cardDeck.add(AssistantCard.FOX);
+        cardDeck.add(AssistantCard.EAGLE);
+        cardDeck.add(AssistantCard.CAT);
+        cardDeck.add(AssistantCard.PEAFOWL);
+        cardDeck.add(AssistantCard.LION);
+
+
+    }
     public int getCount(){
         return cardDeck.size();
     }

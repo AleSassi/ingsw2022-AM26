@@ -1,25 +1,31 @@
 package it.polimi.ingsw.model.assistants;
 
-public final class AssistantCard {
+public enum AssistantCard {
+    TURTLE(1,1),
+    ELEPHANT(2,1),
+    DOG(3,2),
+    OCTOPUS(4,2),
+    SNAKE(5,3),
+    FOX(6,3),
+    EAGLE(7,4),
+    CAT(8,4),
+    PEAFOWL(9,5),
+    LION(10,5);
 
-    private final int cardID;
-    private int priorityNumber;
-    private int motherNatureSteps;
+    private int  priorityNumber;
+    private int  motherNatureSteps;
 
-    public AssistantCard(int id){
-        cardID = id;
-    }
 
-    /**
-     *constructor with id parameter
-     */
-    public int getCardID(){
-       return cardID;
+    private AssistantCard(int prioritynumber, int mothernatureSteps){
+        this.priorityNumber=prioritynumber;
+        this.motherNatureSteps=mothernatureSteps;
     }
 
     public int getPriorityNumber(){
         return priorityNumber;
+
     }
+
 
     public int getMotherNatureSteps(){
         return motherNatureSteps;

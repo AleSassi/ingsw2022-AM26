@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.assistants.AssistantCard;
 import it.polimi.ingsw.model.assistants.Wizard;
 import it.polimi.ingsw.model.characters.*;
 import it.polimi.ingsw.model.student.*;
