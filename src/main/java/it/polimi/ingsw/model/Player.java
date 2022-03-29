@@ -11,11 +11,14 @@ public class Player {
     private final String nickname;
     private int availableTowers;
     private final Tower towerColor;
+    private final boolean[] controlledProfessors;
+    private CharacterCard playedCard;
 
     public Player(String nickname, Wizard wiz, Tower towerColor, int initialTowerCount) {
         this.nickname = nickname;
         this.towerColor = towerColor;
         this.availableTowers = initialTowerCount;
+        this.controlledProfessors = new boolean[Professor.values().length];
     }
 
     public String getNickname() {
@@ -31,7 +34,13 @@ public class Player {
     }
 
     public List<Professor> getControlledProfessors() {
-        return null;
+        List<Professor> professors = new ArrayList<>();
+        for (int professorIdx = 0; professorIdx < Professor.values().length; professorIdx++) {
+            if (controlledProfessors[professorIdx]) {
+                professors.add(Professor.values()[professorIdx]);
+            }
+        }
+        return professors;
     }
 
     public int getCountAtTable(Student s) {
@@ -39,7 +48,7 @@ public class Player {
     }
 
     public CharacterCard getActiveCharacterCard() {
-        return null;
+        return playedCard;
     }
 
     public void playAssistantCardAtIndex(int cardIndex) {
@@ -65,11 +74,11 @@ public class Player {
     }
 
     public void addProfessor(Professor p) {
-
+        controlledProfessors[Professor.getRawValueOf(p)] = true;
     }
 
     public void removeProfessor(Professor p) {
-
+        controlledProfessors[Professor.getRawValueOf(p)] = false;
     }
 
     public Tower getTowerType() {
@@ -91,7 +100,8 @@ public class Player {
     }
 
     public void playCharacterCard(CharacterCard card) {
-
+        card.purchase();
+        playedCard = card;
     }
 
     public void deactivateCard() {

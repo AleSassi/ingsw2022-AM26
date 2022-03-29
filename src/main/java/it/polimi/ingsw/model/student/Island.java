@@ -69,6 +69,9 @@ public class Island extends StudentHost {
 
     public void setTower(Tower t) {
         activeTowerType = t;
+        if (towerCount == 0) {
+            towerCount += 1;
+        }
     }
 
     public void setMotherNaturePresent(Boolean present) {

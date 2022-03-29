@@ -9,6 +9,9 @@ public class StudentCollection {
     public StudentCollection() {
         this.students = new ArrayList<>(Student.values().length);
         this.randomizer = new Random();
+        for (int index = 0; index < Student.values().length; index++) {
+            this.students.add(0);
+        }
     }
 
     public int getCount(Student s) {
@@ -37,17 +40,19 @@ public class StudentCollection {
     }
 
     public Student pickRandom() throws EmptyCollectionException {
+        if (getTotalCount() == 0) throw new EmptyCollectionException();
         int ranInt = randomizer.nextInt(0, getTotalCount());
         List<Integer> progressiveCounts = getProgressiveCounts();
         for (int index = 0; index < progressiveCounts.size(); index++) {
             int lowerRangeBounds = index == 0 ? 0 : progressiveCounts.get(index - 1);
             int upperRangeBounds = progressiveCounts.get(index);
-            if (ranInt >= lowerRangeBounds && ranInt <= upperRangeBounds) {
+            if (ranInt >= lowerRangeBounds && ranInt < upperRangeBounds) {
                 Student pickedStudent = Student.values()[index];
                 removeStudents(pickedStudent, 1);
                 return pickedStudent;
             }
         }
+        //Will never be executed
         throw new EmptyCollectionException("StudentCollection ERROR: Could not find a random student in a collection, that mathematically should never happen");
     }
 
@@ -68,8 +73,7 @@ public class StudentCollection {
 
         StudentCollection that = (StudentCollection) o;
 
-        if (!students.equals(that.students)) return false;
-        return randomizer.equals(that.randomizer);
+        return students.equals(that.students);
     }
 
     @Override

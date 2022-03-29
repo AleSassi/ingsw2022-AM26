@@ -2,12 +2,16 @@ package it.polimi.ingsw.model.student;
 
 public class Cloud extends StudentHost {
 
-    public StudentCollection extractAllStudentsAndRemove() throws EmptyCollectionException {
+    public StudentCollection extractAllStudentsAndRemove() {
         StudentCollection result = new StudentCollection();
         for (Student s : Student.values()) {
             int studentCount = getCount(s);
-            removeStudent(s, studentCount);
-            result.addStudents(s, studentCount);
+            try {
+                removeStudent(s, studentCount);
+                result.addStudents(s, studentCount);
+            } catch (EmptyCollectionException e) {
+                //Do nothing - Ignore the student because its count is 0
+            }
         }
         return result;
 
