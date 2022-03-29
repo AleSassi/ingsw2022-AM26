@@ -31,9 +31,9 @@ The final version will include:
 Test cases are currently being implemented progressively as new classes are created. The following table will provide a report of the coverage, as shown by Maven in IntelliJ IDEA.
 Test cases aim for 100% coverage.
 
-| Package    | Tested Class           | Coverage |
-|:-----------|:-----------------------|:--------:|
-| Model      | Global Package         | -/- (-%) |
+| Package | Tested Class   | Line Coverage | Method Coverage |
+|:--------|:---------------|:-------------:|:---------------:|
+| Model   | Global Package | 90% (579/643) |  87% (156/179)  |
 
 ### The Developers
 - **Alessandro Sassi** (email: alessandro5.sassi@mail.polimi.it)
