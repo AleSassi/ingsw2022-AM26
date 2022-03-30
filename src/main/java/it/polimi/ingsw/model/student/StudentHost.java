@@ -15,7 +15,7 @@ public class StudentHost {
     public void placeStudents(Student s, int count) {
         hostedStudents.addStudents(s, count);
     }
-    public void removeStudent(Student s, int count) throws EmptyCollectionException {
+    public void removeStudents(Student s, int count) throws EmptyCollectionException {
         if (hostedStudents.getCount(s) == 0) throw new EmptyCollectionException();
         hostedStudents.removeStudents(s, count);
     }
