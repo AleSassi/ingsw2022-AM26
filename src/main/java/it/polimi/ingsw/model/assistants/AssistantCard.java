@@ -12,12 +12,12 @@ public enum AssistantCard {
     PEAFOWL(9,5),
     LION(10,5);
 
-    private int  priorityNumber;
+    private final int   priorityNumber;
 
-    private int  motherNatureSteps;
+    private final int  motherNatureSteps;
 
 
-    private AssistantCard(int prioritynumber, int mothernatureSteps){
+    AssistantCard(int prioritynumber, int mothernatureSteps){
         this.priorityNumber=prioritynumber;
         this.motherNatureSteps=mothernatureSteps;
     }

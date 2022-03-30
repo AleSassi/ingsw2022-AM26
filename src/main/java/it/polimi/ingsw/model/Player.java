@@ -13,6 +13,9 @@ public class Player {
     private final Tower towerColor;
     private final boolean[] controlledProfessors;
     private CharacterCard playedCard;
+    private AvailableCardsDeck mydeck;
+    private PlayedCardDeck myplayedcard;
+
 
     public Player(String nickname, Wizard wiz, Tower towerColor, int initialTowerCount) {
         this.nickname = nickname;
@@ -21,6 +24,7 @@ public class Player {
         this.controlledProfessors = new boolean[Professor.values().length];
     }
 
+    //pronto
     public String getNickname() {
         return nickname;
     }
@@ -47,12 +51,16 @@ public class Player {
         return 0;
     }
 
+    //pronto
     public CharacterCard getActiveCharacterCard() {
         return playedCard;
     }
-
+    //pronto
     public void playAssistantCardAtIndex(int cardIndex) {
-
+    AssistantCard temp;
+    temp=mydeck.getCard(cardIndex);
+    mydeck.removeCard(cardIndex);
+    myplayedcard.AddCardOnTop(temp);
     }
 
     public void addStudentToEntrance(Student s) {
