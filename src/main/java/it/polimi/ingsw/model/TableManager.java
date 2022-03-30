@@ -131,7 +131,7 @@ public class TableManager {
         int newIslandIdx = circularWrap(currentIslandIdx + steps, islands.size());
         islands.get(currentIslandIdx).setMotherNaturePresent(false);
         islands.get(newIslandIdx).setMotherNaturePresent(true);
-        if (islands.get(newIslandIdx).isHasStopCard()) {
+        if (islands.get(newIslandIdx).itHasStopCard()) {
             islandIndexWithJustRemovedStopCard = newIslandIdx;
             // We need to find the StopCardActivatorCard to give the card back
             for (CharacterCard characterCard: playableCharacterCards) {

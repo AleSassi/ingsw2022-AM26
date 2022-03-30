@@ -40,7 +40,7 @@ class TableManagerTest {
         assertEquals(2, tableManager.getNumberOfClouds());
         assertEquals(12, tableManager.getNumberOfIslands());
         for (int islandIdx = 0; islandIdx < 12; islandIdx++) {
-            assertFalse(tableManager.getIslandAtIndex(islandIdx).isHasStopCard());
+            assertFalse(tableManager.getIslandAtIndex(islandIdx).itHasStopCard());
             if (tableManager.getIslandAtIndex(islandIdx).isMotherNaturePresent()) {
                 for (Student s: Student.values()) {
                     assertEquals(0, tableManager.getIslandAtIndex(islandIdx).getCount(s));

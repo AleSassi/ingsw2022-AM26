@@ -4,10 +4,20 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Class StudentHostTest test StudentHost
+ * Coverage 100%
+ *
+ * @author Federico Albertini
+ * @see StudentHost
+ */
 class StudentHostTest {
 
+    /**
+     * Method getCountTest test that can return the count of student of the same type
+     */
     @Test
-    void getCount() {
+    void getCountTest() {
         StudentHost host = new StudentHost();
         for(Student s: Student.values()){
             host.placeStudents(s, 10);
@@ -15,14 +25,20 @@ class StudentHostTest {
         }
     }
 
+    /**
+     * Method isEmptyTest test that can return true if the StudentHost is empty
+     */
     @Test
-    void isEmpty() {
+    void isEmptyTest() {
         StudentHost host = new StudentHost();
         assertTrue(host.isEmpty());
     }
 
+    /**
+     * Method placeStudentsTest test that can place student of a given type and number correctly
+     */
     @Test
-    void placeStudents() {
+    void placeStudentsTest() {
         StudentHost host = new StudentHost();
         for(Student s: Student.values()){
             host.placeStudents(s, 10);
@@ -30,8 +46,11 @@ class StudentHostTest {
         }
     }
 
+    /**
+     * Method removeStudentTest test that can remove student of a given type and number correctly
+     */
     @Test
-    void removeStudent() {
+    void removeStudentTest() {
         StudentHost host = new StudentHost();
         assertDoesNotThrow(() -> {
             for(Student s: Student.values()){
@@ -42,8 +61,11 @@ class StudentHostTest {
         });
     }
 
+    /**
+     * Method removeRandomTest test that can remove a random student from a StudentHost
+     */
     @Test
-    void removeRandom() {
+    void removeRandomTest() {
         StudentHost host = new StudentHost();
         for(Student s: Student.values()){
             host.placeStudents(s, 10);
@@ -60,8 +82,11 @@ class StudentHostTest {
 
     }
 
+    /**
+     * Method mergeHostedStudentWithTest test that can merge two HostedStudent together correctly
+     */
     @Test
-    void mergeHostedStudentWith() {
+    void mergeHostedStudentWithTest() {
         StudentHost host1 = new StudentHost();
         StudentHost host2 = new StudentHost();
         for(Student s: Student.values()){

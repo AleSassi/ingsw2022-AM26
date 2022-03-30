@@ -25,7 +25,7 @@ public class StopCardActivatorCard extends CharacterCard {
         switch (userInfo.getStopCardMovementMode()) {
             case ToCard -> {
                 if (userInfo.getSourceIslandIndex() == -1) throw new CharacterCardIncorrectParametersException("StopCardActivatorCard ERROR: sourceIslandIndex must be set in UserInfo to collect the StopCard from the Island!");
-                if (t.getIslandAtIndex(userInfo.getSourceIslandIndex()).isHasStopCard()) {
+                if (t.getIslandAtIndex(userInfo.getSourceIslandIndex()).itHasStopCard()) {
                     if (availableStopCards == 4) throw new CharacterCardNoMoreUsesAvailableException("StopCardActivatorCard ERROR: you can collect only up to 4 StopCards!");
                     restoreStopCard();
                     t.getIslandAtIndex(userInfo.getTargetIslandIndex()).setStopCard(false);
@@ -33,7 +33,7 @@ public class StopCardActivatorCard extends CharacterCard {
             }
             case ToIsland -> {
                 if (userInfo.getTargetIslandIndex() == -1) throw new CharacterCardIncorrectParametersException("StopCardActivatorCard ERROR: targetIslandIndex must be set in UserInfo to place a StopCard on an Island!");
-                if (!t.getIslandAtIndex(userInfo.getTargetIslandIndex()).isHasStopCard()) {
+                if (!t.getIslandAtIndex(userInfo.getTargetIslandIndex()).itHasStopCard()) {
                     try {
                         removeStopCard();
                         t.getIslandAtIndex(userInfo.getTargetIslandIndex()).setStopCard(true);

@@ -13,7 +13,7 @@ public class Island extends StudentHost {
     private Tower activeTowerType = null;
     private boolean hasStopCard = false;
 
-    public boolean isHasStopCard() {
+    public boolean itHasStopCard() {
         return hasStopCard;
     }
 
@@ -35,7 +35,7 @@ public class Island extends StudentHost {
 
     /**
      * This method returns the influence of a given Player
-     * @param p Player wich we calculate the influence
+     * @param p Player which we calculate the influence
      * @return the value of the Player
      */
     public int getInfluence(Player p) {
@@ -69,9 +69,7 @@ public class Island extends StudentHost {
 
     public void setTower(Tower t) {
         activeTowerType = t;
-        if (towerCount == 0) {
-            towerCount += 1;
-        }
+        towerCount = 1;
     }
 
     public void setMotherNaturePresent(Boolean present) {

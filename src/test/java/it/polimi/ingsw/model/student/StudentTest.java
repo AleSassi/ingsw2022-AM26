@@ -16,7 +16,7 @@ class StudentTest {
      * Method getAssociatedProfessor test that can return the Professor associated to the Student
      */
     @org.junit.jupiter.api.Test
-    void getAssociatedProfessor() {
+    void getAssociatedProfessorTest() {
         for(Student s : Student.values()) {
             Professor p = s.getAssociatedProfessor();
             switch (s) {
@@ -33,7 +33,7 @@ class StudentTest {
      * Method getRawValueOf tests that can return the index of the list of Students
      */
     @org.junit.jupiter.api.Test
-    void getRawValueOf() {
+    void getRawValueOfTest() {
         int i = 0;
         for(Student s : Student.values()) {
            assertEquals(Student.getRawValueOf(s), i);
@@ -45,7 +45,7 @@ class StudentTest {
      * Method getRandomStudent test that returns a random Student
      */
     @org.junit.jupiter.api.Test
-    void getRandomStudent() {
+    void getRandomStudentTest() {
         Student s = Student.getRandomStudent();
         assertNotNull(Student.getRandomStudent());
         switch (s) {
@@ -58,13 +58,6 @@ class StudentTest {
 
     }
 
-    @org.junit.jupiter.api.Test
-    void values() {
-        assertEquals(0, 0);
-    }
 
-    @org.junit.jupiter.api.Test
-    void valueOf() {
-        assertEquals(0, 0);
-    }
+
 }
