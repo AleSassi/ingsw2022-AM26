@@ -33,7 +33,7 @@ Test cases aim for 100% coverage.
 
 | Package | Tested Class   | Line Coverage | Method Coverage |
 |:--------|:---------------|:-------------:|:---------------:|
-| Model   | Global Package | 90% (579/643) |  87% (156/179)  |
+| Model   | Global Package | 95% (605/631) |  95% (172/180)  |
 
 ### The Developers
 - **Alessandro Sassi** (email: alessandro5.sassi@mail.polimi.it)
