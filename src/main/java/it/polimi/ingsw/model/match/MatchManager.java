@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Professor;
 import it.polimi.ingsw.model.TableManager;
+import it.polimi.ingsw.model.assistants.AssistantCard;
 import it.polimi.ingsw.model.assistants.Wizard;
 import it.polimi.ingsw.model.student.EmptyCollectionException;
 import it.polimi.ingsw.model.student.Student;
@@ -13,7 +14,7 @@ import java.security.PublicKey;
 import java.util.*;
 
 public abstract class MatchManager {
-    private List<Player> playersSortedByCurrentTurnOrder = new ArrayList<>();
+    private List<Player> playersSortedByCurrentTurnOrder;
     private MatchVariant matchVariant;
     private int currentLeadPlayer = 0;
     private MatchPhase matchPhase;
@@ -29,11 +30,12 @@ public abstract class MatchManager {
         playerCount = playersNicknames.size();
         matchVariant = variant;
         managedTable = new TableManager(pawnCounts.getCloudTileCount(), variant == MatchVariant.ExpertRulesSet);
-        playersSortedByCurrentTurnOrder = getPlayersSortedByRoundTurnOrder();
+        playersSortedByCurrentTurnOrder = getAllPlayers();
 
     }
 
     protected abstract void addPlayer(String nickname, Wizard wiz) throws InvalidPlayerCountException;
+
     protected abstract List<Player> getAllPlayers ();
 
     private void initEntrance(Player p) throws EmptyCollectionException {
@@ -52,7 +54,12 @@ public abstract class MatchManager {
         return currentLeadPlayer;
     }
 
-    public boolean moveToNextPlayer() {
+    private boolean isAssistantCardPlayable(int cardIdxForCurrentPlayer) {
+        AssistantCard lastPlayedCard = playersSortedByCurrentTurnOrder.get(currentLeadPlayer).getLastPlayedAssistantCard();
+        return false;
+    }
+
+    public boolean moveToNextPlayer() throws EmptyCollectionException, InvalidPlayerCountException {
         if (currentLeadPlayer == playersSortedByCurrentTurnOrder.size()-1) {
             currentLeadPlayer = 0;
             if(matchPhase == MatchPhase.PlanPhaseStepTwo) {
@@ -60,25 +67,48 @@ public abstract class MatchManager {
                 playersSortedByCurrentTurnOrder = getPlayersSortedByRoundTurnOrder();
             }
             else {
+                PP_FirstPlayerPickFromCloudCards();
                 matchPhase = matchPhase.nextPhase();
             }
             return true;
         } else {
             currentLeadPlayer++;
             if(matchPhase == MatchPhase.ActionPhaseStepThree) matchPhase = MatchPhase.ActionPhaseStepOne;
-            else if(matchPhase == MatchPhase.PlanPhaseStepTwo) matchPhase = MatchPhase.PlanPhaseStepOne;
             return false;
         }
     }
 
-    public void  PP_FirstPlayerPickFromCloudCards() throws InvalidPlayerCountException, EmptyCollectionException {
+    /**
+     * This method fills all the cloud with the correct number of students
+     * @throws InvalidPlayerCountException
+     * @throws EmptyCollectionException
+     */
+    public void PP_FirstPlayerPickFromCloudCards() throws InvalidPlayerCountException, EmptyCollectionException {
         int numberOfStudent = pawnCounts.getStudentsDrawnForCloud();
-            StudentCollection result = managedTable.pickStudentsFromBag(numberOfStudent);
-            for(Student s: Student.values()) {
-                managedTable.placeStudentOnCloud(s, result.getCount(s));
+        StudentCollection tmp;
+        for(int cloudIdx = managedTable.getNumberOfClouds(); cloudIdx > 0; cloudIdx--){
+            tmp = managedTable.pickStudentsFromBag(numberOfStudent);
+            for(Student s : Student.values()) {
+                managedTable.placeStudentOnCloud(s, cloudIdx, tmp.getCount(s));
             }
+        }
 
 
 
+
+    }
+
+    public void PP_PlayAssistantCard(int cardIndex) throws AssistantCardNotPlayableException {
+        if(isAssistantCardPlayable(cardIndex)) {
+            playersSortedByCurrentTurnOrder.get(currentLeadPlayer).playAssistantCardAtIndex(cardIndex);
+        } else throw new AssistantCardNotPlayableException();
+    }
+
+    public void AP_MoveStudentsToIsland(Student s, int islandIdx) {
+        managedTable.placeStudentOnIsland(s, islandIdx);
+    }
+
+    public void AP_AP_MoveStudentsToDiningRoom(Student s, Player p) {
+        p.placeStudentAtTableAndGetCoin(s);
     }
 }

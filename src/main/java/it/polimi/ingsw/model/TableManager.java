@@ -114,10 +114,9 @@ public class TableManager {
         return managedClouds.get(cloudIdx).extractAllStudentsAndRemove();
     }
 
-    public void placeStudentOnCloud(Student s, int cloudIdx) throws IndexOutOfBoundsException {
+    public void placeStudentOnCloud(Student s, int cloudIdx, int count) throws IndexOutOfBoundsException {
         if (cloudIdx < 0 || cloudIdx > managedClouds.size()) throw new IndexOutOfBoundsException();
-
-        managedClouds.get(cloudIdx).placeStudents(s, 1);
+        managedClouds.get(cloudIdx).placeStudents(s, count);
     }
 
     public void placeStudentOnIsland(Student s, int islandIdx) throws IndexOutOfBoundsException {
