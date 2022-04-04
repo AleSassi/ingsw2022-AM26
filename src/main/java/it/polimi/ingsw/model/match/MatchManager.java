@@ -71,5 +71,14 @@ public abstract class MatchManager {
         }
     }
 
+    public void  PP_FirstPlayerPickFromCloudCards() throws InvalidPlayerCountException, EmptyCollectionException {
+        int numberOfStudent = pawnCounts.getStudentsDrawnForCloud();
+            StudentCollection result = managedTable.pickStudentsFromBag(numberOfStudent);
+            for(Student s: Student.values()) {
+                managedTable.placeStudentOnCloud(s, result.getCount(s));
+            }
 
+
+
+    }
 }
