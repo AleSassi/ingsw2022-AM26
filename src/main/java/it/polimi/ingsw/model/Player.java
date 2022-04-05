@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.assistants.Wizard;
 import it.polimi.ingsw.model.characters.*;
+import it.polimi.ingsw.model.match.MatchManager;
 import it.polimi.ingsw.model.student.*;
 import it.polimi.ingsw.model.assistants.*;
 import java.util.*;
@@ -13,8 +14,13 @@ public class Player {
     private final Tower towerColor;
     private final boolean[] controlledProfessors;
     private CharacterCard playedCard;
-    private AvailableCardsDeck mydeck;
+    private final AvailableCardsDeck mydeck;
     private PlayedCardDeck myplayedcard;
+    private final SchoolBoard Board;
+    private int Avaiblecoin;
+    MatchManager match;
+    private Wizard wiz;
+
 
 
     public Player(String nickname, Wizard wiz, Tower towerColor, int initialTowerCount) {
@@ -22,40 +28,51 @@ public class Player {
         this.towerColor = towerColor;
         this.availableTowers = initialTowerCount;
         this.controlledProfessors = new boolean[Professor.values().length];
+        Board=new SchoolBoard(towerColor);
+        mydeck=new AvailableCardsDeck();
     }
 
-    //pronto
+    /**
+     *return nickname of player
+     */
     public String getNickname() {
         return nickname;
     }
-
-    public List<AssistantCard> getAvailableAssistantCards() {
-        return null;
+    /**
+     *return list of card that player can use
+     */
+    public ArrayList<AssistantCard> getAvailableAssistantCards() {
+        int i;
+        ArrayList<AssistantCard> mycards= new ArrayList<AssistantCard>();
+        int numberofcard=mydeck.getCount();
+        for(i=0;i<numberofcard;i++){
+        mycards.add(mydeck.getCard(i));
+        }
+        return mycards;
     }
 
     public AssistantCard getLastPlayedAssistantCard() {
-        return null;
+       AssistantCard Lastcard=myplayedcard.topCard();
+       return Lastcard;
     }
 
-    public List<Professor> getControlledProfessors() {
-        List<Professor> professors = new ArrayList<>();
-        for (int professorIdx = 0; professorIdx < Professor.values().length; professorIdx++) {
-            if (controlledProfessors[professorIdx]) {
-                professors.add(Professor.values()[professorIdx]);
-            }
-        }
-        return professors;
+    public ArrayList<Professor> getControlledProfessors() {
+        return Board.getControlledProfessor();
+
     }
 
     public int getCountAtTable(Student s) {
-        return 0;
+     int Count=Board.GetCountAtTheTable(s);
+     return Count;
     }
 
-    //pronto
+
+
     public CharacterCard getActiveCharacterCard() {
         return playedCard;
     }
-    //pronto
+
+
     public void playAssistantCardAtIndex(int cardIndex) {
     AssistantCard temp;
     temp=mydeck.getCard(cardIndex);
@@ -63,30 +80,47 @@ public class Player {
     myplayedcard.AddCardOnTop(temp);
     }
 
+
     public void addStudentToEntrance(Student s) {
+        Board.addStudentToEntrance(s);
 
     }
-    public void removeStudentFromEntrance(Student s) {
+
+
+    public void removeStudentFromEntrance(Student s)throws EmptyCollectionException  {
+        try{
+            Board.RemoveStudentFromEntrance(s);
+            }
+        catch (EmptyCollectionException e){
+            throw e;
+        }
+    }
+
+
+    public void placeStudentAtTableAndGetCoin(Student s) {
+
+        Board.AddStudentToTable(s);
+        this.Avaiblecoin=this.Avaiblecoin+1;
 
     }
 
-    /**
-     * Returns the number of students with the same type as S currently in the Dining Room
-     */
-    public int placeStudentAtTableAndGetCoin(Student s) {
-        return 0;
-    }
+    public void removeStudentFromTable(Student s)throws EmptyCollectionException{
+        try{
+        Board.RemoveStudentTable(s);}
+        catch(EmptyCollectionException e){
+            throw e;
 
-    public void removeStudentFromTable(Student s) {
-
+        }
     }
 
     public void addProfessor(Professor p) {
         controlledProfessors[Professor.getRawValueOf(p)] = true;
+
     }
 
     public void removeProfessor(Professor p) {
-        controlledProfessors[Professor.getRawValueOf(p)] = false;
+
+
     }
 
     public Tower getTowerType() {
@@ -104,23 +138,36 @@ public class Player {
     }
 
     public void addAllStudentsToEntrance(StudentCollection sc) {
-
+        int i;
+        for(Student s:Student.values()) {
+            int Count=sc.getCount(s);
+            for(i=0;i<Count;i++){
+                addStudentToEntrance(s);}
+    }
     }
 
-    public void playCharacterCard(CharacterCard card) {
+    public boolean playCharacterCard(CharacterCard card) {
         card.purchase();
+        int price=card.getPrice();
+        if(price<this.Avaiblecoin){
         playedCard = card;
+        this.Avaiblecoin=(this.Avaiblecoin)-price;
+        return true;}
+        else{
+            return false;
+        }
+
     }
 
     public void deactivateCard() {
+        playedCard=null;
 
     }
 
-    private boolean isWinner() {
-        return false;
-    }
+
 
     public void notifyVictory() {
+        match.notify();
 
     }
 
