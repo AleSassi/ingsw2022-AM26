@@ -127,50 +127,54 @@ public class StudentHostingCard extends CharacterCard {
         }
         //endregion
 
-        // Remove Student from the movement source
-        switch (movementSource) {
-            case PlayerEntrance -> {
-                for (int repetition = 0; repetition < numberOfStudentsToMove; repetition++) {
-                    pSource.removeStudentFromEntrance(s);
+        try {
+            // Remove Student from the movement source
+            switch (movementSource) {
+                case PlayerEntrance -> {
+                    for (int repetition = 0; repetition < numberOfStudentsToMove; repetition++) {
+                        pSource.removeStudentFromEntrance(s);
+                    }
                 }
-            }
-            case PlayerTable -> {
-                for (int repetition = 0; repetition < numberOfStudentsToMove; repetition++) {
-                    pSource.removeStudentFromTable(s);
+                case PlayerTable -> {
+                    for (int repetition = 0; repetition < numberOfStudentsToMove; repetition++) {
+                        pSource.removeStudentFromTable(s);
+                    }
                 }
+                case Self -> hostedStudents.removeStudents(s, numberOfStudentsToMove);
             }
-            case Self -> hostedStudents.removeStudents(s, numberOfStudentsToMove);
-        }
 
-        // Add the student to the movement destination
-        switch (movementDestination) {
-            case PlayerEntrance -> {
-                StudentCollection sc = new StudentCollection();
-                sc.addStudents(s, numberOfStudentsToMove);
-                pDest.addAllStudentsToEntrance(sc);
-            }
-            case PlayerTable -> {
-                for (int repetition = 0; repetition < numberOfStudentsToMove; repetition++) {
-                    pDest.placeStudentAtTableAndGetCoin(s);
+            // Add the student to the movement destination
+            switch (movementDestination) {
+                case PlayerEntrance -> {
+                    StudentCollection sc = new StudentCollection();
+                    sc.addStudents(s, numberOfStudentsToMove);
+                    pDest.addAllStudentsToEntrance(sc);
                 }
-            }
-            case Self -> hostedStudents.addStudents(s, numberOfStudentsToMove);
-            case TableBag -> {
-                for (int repetition = 0; repetition < numberOfStudentsToMove; repetition++) {
-                    tableManager.putStudentInBag(s);
+                case PlayerTable -> {
+                    for (int repetition = 0; repetition < numberOfStudentsToMove; repetition++) {
+                        pDest.placeStudentAtTableAndGetCoin(s);
+                    }
                 }
+                case Self -> hostedStudents.addStudents(s, numberOfStudentsToMove);
+                case TableBag -> {
+                    for (int repetition = 0; repetition < numberOfStudentsToMove; repetition++) {
+                        tableManager.putStudentInBag(s);
+                    }
+                }
+                case ChosenIsland -> tableManager.getIslandAtIndex(dstIslandIndex).placeStudents(s, numberOfStudentsToMove);
             }
-            case ChosenIsland -> tableManager.getIslandAtIndex(dstIslandIndex).placeStudents(s, numberOfStudentsToMove);
-        }
 
-        // Invariant: The card always has a number of students equal to the one specified by the Character. Students must always be picked from the Bag in this case. We auto-update hostedStudents here in this case
-        if (hostedStudents.getTotalCount() < getCharacter().getHostedStudentsCount() && autoUpdateToMatchMaxStudentCount) {
-            try {
-                hostedStudents.mergeWithCollection(tableManager.pickStudentsFromBag(getCharacter().getHostedStudentsCount() - hostedStudents.getTotalCount()));
-            } catch (EmptyCollectionException e) {
-                //If the Bag is Empty we fall here and do not collect a new Student
-                e.printStackTrace();
+            // Invariant: The card always has a number of students equal to the one specified by the Character. Students must always be picked from the Bag in this case. We auto-update hostedStudents here in this case
+            if (hostedStudents.getTotalCount() < getCharacter().getHostedStudentsCount() && autoUpdateToMatchMaxStudentCount) {
+                try {
+                    hostedStudents.mergeWithCollection(tableManager.pickStudentsFromBag(getCharacter().getHostedStudentsCount() - hostedStudents.getTotalCount()));
+                } catch (EmptyCollectionException e) {
+                    //If the Bag is Empty we fall here and do not collect a new Student
+                    e.printStackTrace();
+                }
             }
+        } catch (EmptyCollectionException e) {
+            e.printStackTrace();
         }
     }
 

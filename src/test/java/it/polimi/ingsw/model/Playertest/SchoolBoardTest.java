@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.Playertest;
 import it.polimi.ingsw.model.InsufficientTowersException;
 import it.polimi.ingsw.model.SchoolBoard;
 import it.polimi.ingsw.model.Tower;
+import it.polimi.ingsw.model.student.EmptyCollectionException;
 import it.polimi.ingsw.model.student.Student;
 import org.junit.jupiter.api.Test;
 
@@ -16,9 +17,9 @@ class SchoolBoardTest {
         board.AddStudentToTable(Student.BlueUnicorn);
         board.AddStudentToTable(Student.BlueUnicorn);
         assertEquals(board.GetCountAtTheTable(Student.BlueUnicorn), 2);
-        assertDoesNotThrow(board.RemoveStudentTable(Student.BlueUnicorn));
-        assertDoesNotThrow(board.RemoveStudentTable(Student.BlueUnicorn));
-        assertThrows(board.RemoveStudentTable(Student.BlueUnicorn));
+        assertDoesNotThrow(() -> board.RemoveStudentTable(Student.BlueUnicorn));
+        assertDoesNotThrow(() -> board.RemoveStudentTable(Student.BlueUnicorn));
+        assertThrows(EmptyCollectionException.class, () -> board.RemoveStudentTable(Student.BlueUnicorn));
 
 
     }
@@ -46,8 +47,8 @@ class SchoolBoardTest {
     void removeStudentFromEntrance() {
         SchoolBoard board=new SchoolBoard(Tower.Black);
         board.addStudentToEntrance(Student.BlueUnicorn);
-        assertDoesNotThrow(board.RemoveStudentFromEntrance(Student.BlueUnicorn));
-        assertThrows(board.RemoveStudentFromEntrance(Student.BlueUnicorn));
+        assertDoesNotThrow(() -> board.RemoveStudentFromEntrance(Student.BlueUnicorn));
+        assertThrows(EmptyCollectionException.class, () -> board.RemoveStudentFromEntrance(Student.BlueUnicorn));
     }
 
 
@@ -57,6 +58,6 @@ class SchoolBoardTest {
         try{
         assertEquals(board.PickAndRemove(), Tower.Black);}
         catch(InsufficientTowersException e){}
-        assertDoesNotThrow(board.PickAndRemove());
+        assertDoesNotThrow(() -> board.PickAndRemove());
     }
 }
