@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.Playertest;
+package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.InsufficientTowersException;
 import it.polimi.ingsw.model.Player;
@@ -23,34 +23,31 @@ class PlayerTest {
 
     @Test
     void getNickname() {
-        Player test=new Player("giovanni", Wizard.Wizard1, Tower.Black, 8 );
-        String name=test.getNickname();
+        Player test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8 );
+        String name = test.getNickname();
         assertEquals(name, "giovanni");
     }
 
     @Test
     void getAvailableAssistantCards() {
-        Player test=new Player("giovanni", Wizard.Wizard1, Tower.Black, 8 );
-        ArrayList<AssistantCard> mycards=new ArrayList<>();
-        mycards=test.getAvailableAssistantCards();
-        AvailableCardsDeck testdeck=new AvailableCardsDeck();
-        int size= mycards.size();
-        for(int i=0;i<size;i++){
-            assertEquals(mycards.get(i), testdeck.getCard(i) );
+        Player test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8 );
+        ArrayList<AssistantCard> myCards = test.getAvailableAssistantCards();
+        AvailableCardsDeck testDeck = new AvailableCardsDeck();
+        int size = myCards.size();
+        for (int i = 0; i < size; i++){
+            assertEquals(myCards.get(i), testDeck.getCard(i) );
         }
     }
 
     @Test
     void getLastPlayedAssistantCard() {
-        Player test=new Player("giovanni", Wizard.Wizard1, Tower.Black, 8 );
-        AvailableCardsDeck testdeck=new AvailableCardsDeck();
-        AssistantCard Card=testdeck.getCard(3);
+        Player test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8 );
+        AvailableCardsDeck testDeck = new AvailableCardsDeck();
+        AssistantCard card = testDeck.getCard(3);
         test.playAssistantCardAtIndex(3);
-        assertEquals(test.getLastPlayedAssistantCard(), Card);
-        ArrayList<AssistantCard> newdeck=test.getAvailableAssistantCards();
-        assertNotEquals(newdeck.get(3), Card);
-
-
+        assertEquals(test.getLastPlayedAssistantCard(), card);
+        ArrayList<AssistantCard> newDeck = test.getAvailableAssistantCards();
+        assertFalse(newDeck.contains(card));
     }
 
     @Test

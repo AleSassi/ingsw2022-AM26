@@ -5,72 +5,84 @@ import it.polimi.ingsw.model.student.Student;
 import it.polimi.ingsw.model.student.StudentHost;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class SchoolBoard {
-    private int AvaibleTowerCount;
-    StudentHost diningRoom=new StudentHost();
-    StudentHost Entrance=new StudentHost();
-    private Tower towertype;
-    ArrayList<Professor> prof=new ArrayList<Professor>();
 
-    public SchoolBoard(Tower tower){
-        towertype=tower;
+    private int availableTowerCount;
+    private final Tower towerType;
+    private final StudentHost diningRoom;
+    private final StudentHost entrance;
+    private final boolean[] controlledProfessors;
 
+    public SchoolBoard(Tower tower, int initialTowerCount) {
+        towerType = tower;
+        availableTowerCount = initialTowerCount;
+        controlledProfessors = new boolean[Professor.values().length];
+        diningRoom = new StudentHost();
+        entrance = new StudentHost();
     }
 
-    public int GetCountAtTheTable(Student s){
-    return diningRoom.getCount(s);
+    public int getCountAtTable(Student s) {
+        return diningRoom.getCount(s);
     }
 
-
-    public int getAvaibleTowerTowers(){
-        return AvaibleTowerCount;
+    public int getAvailableTowerCount() {
+        return availableTowerCount;
     }
 
-    public ArrayList<Professor> getControlledProfessor(){
-        return prof;
+    public Tower getTowerType() {
+        return towerType;
     }
 
-    public void addStudentToEntrance(Student s){
-        Entrance.placeStudents(s, 1);
-
+    public ArrayList<Professor> getControlledProfessors() {
+        ArrayList<Professor> result = new ArrayList<>();
+        for (int i = 0; i < controlledProfessors.length; i++) {
+            if (controlledProfessors[i]) {
+                result.add(Professor.values()[i]);
+            }
+        }
+        return result;
     }
 
-    public void RemoveStudentFromEntrance(Student s) throws EmptyCollectionException{
-        if(Entrance.getCount(s)==0){
-            throw new EmptyCollectionException();
+    public void setControlledProfessor(Professor professor) {
+        int profIndex = Arrays.asList(Professor.values()).indexOf(professor);
+        controlledProfessors[profIndex] = true;
+    }
+
+    public void removeProfessorControl(Professor professor) {
+        int profIndex = Arrays.asList(Professor.values()).indexOf(professor);
+        controlledProfessors[profIndex] = false;
+    }
+
+    public void addStudentToEntrance(Student s) {
+        entrance.placeStudents(s, 1);
+    }
+
+    public void removeStudentFromEntrance(Student s) throws EmptyCollectionException {
+        if (entrance.getCount(s) == 0) throw new EmptyCollectionException();
         
-        }else{
-        Entrance.removeStudents(s, 1);}
-
+        entrance.removeStudents(s, 1);
     }
 
 
-    public void AddStudentToTable(Student s){
+    public void addStudentToTable(Student s) {
         diningRoom.placeStudents(s, 1);
-
-        }
-
-    public void RemoveStudentTable(Student s) throws EmptyCollectionException{
-        try
-        {diningRoom.removeStudents(s, 1);}
-        catch(EmptyCollectionException e){
-            throw e;
-
-        }
-        }
-
-    public void gainTower(){
-        AvaibleTowerCount+=1;
     }
 
-    public Tower PickAndRemove() throws InsufficientTowersException {
-        if(this.AvaibleTowerCount==0){
-            throw new InsufficientTowersException();}
-        else{
-    this.AvaibleTowerCount=this.AvaibleTowerCount-1;
-    return towertype;}
+    public void removeStudentFromTable(Student s) throws EmptyCollectionException {
+        diningRoom.removeStudents(s, 1);
+    }
 
+    public void gainTower() {
+        availableTowerCount += 1;
+    }
 
+    public Tower pickAndRemoveTower() throws InsufficientTowersException {
+        if (this.availableTowerCount == 0) throw new InsufficientTowersException();
+
+        this.availableTowerCount -= 1;
+        return towerType;
     }
 }

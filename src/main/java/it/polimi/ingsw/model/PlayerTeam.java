@@ -4,31 +4,27 @@ package it.polimi.ingsw.model;
 import java.util.ArrayList;
 
 public class PlayerTeam {
-    private ArrayList<Player> playerlist = new ArrayList<>();
-    private int lead;
-    private int Cont;
 
+    private final ArrayList<Player> players = new ArrayList<>();
+    private int leadPlayerIndex;
 
-    public void addplayer(Player Play){
-        playerlist.add(Play);
-        this.Cont++;
-        if(Play.getAvaibletowercount()!=0){
-            lead=Cont-1;
+    public void addPlayer(Player player) {
+        players.add(player);
+        if (player.getAvailableTowerCount() != 0) {
+            leadPlayerIndex = players.size() - 1;
         }
     }
 
-    public ArrayList<Player> getPlayerlist() {
-        return playerlist;
+    public ArrayList<Player> getAllPlayers() {
+        return players;
     }
 
-    public boolean containsPlayer(Player Play){
-      Boolean bool;
-      bool=playerlist.contains(Play);
-      return bool;
+    public boolean containsPlayer(Player player) {
+        return players.contains(player);
     }
 
-    public Player getLead() {
-        return playerlist.get(lead);
+    public Player getLeadPlayer() {
+        return players.get(leadPlayerIndex);
     }
 }
 
