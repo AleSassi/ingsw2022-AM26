@@ -6,6 +6,16 @@ import java.util.ArrayList;
 public class PlayerTeam {
     private ArrayList<Player> playerlist = new ArrayList<>();
     private int lead;
+    private int Cont;
+
+
+    public void addplayer(Player Play){
+        playerlist.add(Play);
+        this.Cont++;
+        if(Play.getAvaibletowercount()!=0){
+            lead=Cont-1;
+        }
+    }
 
     public ArrayList<Player> getPlayerlist() {
         return playerlist;

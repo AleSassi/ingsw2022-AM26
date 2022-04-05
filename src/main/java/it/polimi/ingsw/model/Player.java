@@ -14,18 +14,19 @@ public class Player {
     private final Tower towerColor;
     private final boolean[] controlledProfessors;
     private CharacterCard playedCard;
-    private final AvailableCardsDeck mydeck;
-    private PlayedCardDeck myplayedcard;
+    private  AvailableCardsDeck mydeck=new AvailableCardsDeck();
+    private final PlayedCardDeck myplayedcard=new PlayedCardDeck();
     private final SchoolBoard Board;
     private int Avaiblecoin;
     MatchManager match;
-    private Wizard wiz;
+    private final Wizard wiz;
 
 
 
     public Player(String nickname, Wizard wiz, Tower towerColor, int initialTowerCount) {
         this.nickname = nickname;
         this.towerColor = towerColor;
+        this.wiz=wiz;
         this.availableTowers = initialTowerCount;
         this.controlledProfessors = new boolean[Professor.values().length];
         Board=new SchoolBoard(towerColor);
@@ -43,7 +44,7 @@ public class Player {
      */
     public ArrayList<AssistantCard> getAvailableAssistantCards() {
         int i;
-        ArrayList<AssistantCard> mycards= new ArrayList<AssistantCard>();
+        ArrayList<AssistantCard> mycards= new ArrayList<>();
         int numberofcard=mydeck.getCount();
         for(i=0;i<numberofcard;i++){
         mycards.add(mydeck.getCard(i));
@@ -52,8 +53,7 @@ public class Player {
     }
 
     public AssistantCard getLastPlayedAssistantCard() {
-       AssistantCard Lastcard=myplayedcard.topCard();
-       return Lastcard;
+        return myplayedcard.topCard();
     }
 
     public ArrayList<Professor> getControlledProfessors() {
@@ -62,8 +62,7 @@ public class Player {
     }
 
     public int getCountAtTable(Student s) {
-     int Count=Board.GetCountAtTheTable(s);
-     return Count;
+     return Board.GetCountAtTheTable(s);
     }
 
 
@@ -119,7 +118,7 @@ public class Player {
     }
 
     public void removeProfessor(Professor p) {
-
+        controlledProfessors[Professor.getRawValueOf(p)] = false;
 
     }
 
@@ -169,6 +168,9 @@ public class Player {
     public void notifyVictory() {
         match.notify();
 
+    }
+    public int getAvaibletowercount(){
+        return this.availableTowers;
     }
 
 }
