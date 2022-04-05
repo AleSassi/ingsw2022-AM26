@@ -57,4 +57,31 @@ class CharacterTest {
             }
         }
     }
+
+    /**
+     * Tests that the getter for whether it changes influence is correct for all enums
+     */
+    @Test
+    void testChangesInfluenceCorrect() {
+        for (Character character: Character.values()) {
+            switch (character) {
+                case Centaurus, Swordsman, Mushroom -> assertTrue(character.getChangesInfluence());
+                default -> assertFalse(character.getChangesInfluence());
+            }
+        }
+    }
+
+    /**
+     * Tests that the getter for whether it chamges the MN step count is correct for all enums
+     */
+    @Test
+    void testChangesMNStepsCorrect() {
+        for (Character character: Character.values()) {
+            if (character == Character.Magician) {
+                assertTrue(character.getChangesMNSteps());
+            } else {
+                assertFalse(character.getChangesMNSteps());
+            }
+        }
+    }
 }

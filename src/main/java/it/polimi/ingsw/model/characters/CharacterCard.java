@@ -40,6 +40,10 @@ public abstract class CharacterCard {
         return priceIncrement;
     }
 
+    public int getPrice() {
+        return getCharacter().getInitialPrice() + getPriceIncrement();
+    }
+
     public int getTimesUsedInCurrentTurn() {
         return timesUsedInCurrentTurn;
     }

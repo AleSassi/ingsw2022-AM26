@@ -30,9 +30,6 @@ public class GenericModifierCard extends CharacterCard {
                 if (excludedStudent == null) {
                     excludedStudent = userInfo.getSrcStudentColor();
                 }
-                System.out.println(excludedStudent);
-                System.out.println(userInfo.getSrcStudentColor());
-                System.out.println(userInfo.getTargetIslandIndex());
                 if (userInfo.getTargetIslandIndex() == -1) return 0;
                 return getModifier(t, currentPlayer, userInfo.getTargetIslandIndex(), false, false, true, false, false, false);
             };

@@ -114,10 +114,10 @@ public class TableManager {
         return managedClouds.get(cloudIdx).extractAllStudentsAndRemove();
     }
 
-    public void placeStudentOnCloud(Student s, int cloudIdx) throws IndexOutOfBoundsException {
+    public void placeStudentOnCloud(Student s, int cloudIdx, int count) throws IndexOutOfBoundsException {
         if (cloudIdx < 0 || cloudIdx > managedClouds.size()) throw new IndexOutOfBoundsException();
 
-        managedClouds.get(cloudIdx).placeStudents(s, 1);
+        managedClouds.get(cloudIdx).placeStudents(s, count);
     }
 
     public void placeStudentOnIsland(Student s, int islandIdx) throws IndexOutOfBoundsException {
@@ -175,7 +175,7 @@ public class TableManager {
      * @param to The Player that will gain control of the Island (or in a Team match, the Player of the team that owns the Towers). This parameter cannot be <code>null</code>.
      * @throws IslandSkippedControlAssignmentForStopCardException If the Island had a Stop Card on it before the start of this turn, thus the control change will not occur.
      * @throws IllegalArgumentException If the parameters are incorrect (e.g.: if <code>from</code> is <code>null</code> but the Island already has an Island, or if <code>from</code> is not the Player that previously controlled the Island).
-     */
+     x*/
     public void changeControlOfCurrentIsland(Player from, Player to) throws IslandSkippedControlAssignmentForStopCardException, IllegalArgumentException {
         if (getCurrentIslandIndex() == islandIndexWithJustRemovedStopCard) throw new IslandSkippedControlAssignmentForStopCardException();
         Island currentIsland = getCurrentIsland();

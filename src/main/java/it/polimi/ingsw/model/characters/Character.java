@@ -58,4 +58,8 @@ public enum Character {
             }
         }
     }
+
+    public boolean getChangesMNSteps() {
+        return this == Character.Magician;
+    }
 }

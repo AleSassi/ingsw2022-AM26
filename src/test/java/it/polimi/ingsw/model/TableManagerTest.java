@@ -205,9 +205,9 @@ class TableManagerTest {
     @Test
     void verifySetToCloud() {
         for (int cloudIdx = 0; cloudIdx < tableManager.getNumberOfClouds(); cloudIdx++) {
-            tableManager.placeStudentOnCloud(Student.BlueUnicorn, cloudIdx);
-            tableManager.placeStudentOnCloud(Student.BlueUnicorn, cloudIdx);
-            tableManager.placeStudentOnCloud(Student.BlueUnicorn, cloudIdx);
+            tableManager.placeStudentOnCloud(Student.BlueUnicorn, cloudIdx, 1);
+            tableManager.placeStudentOnCloud(Student.BlueUnicorn, cloudIdx, 1);
+            tableManager.placeStudentOnCloud(Student.BlueUnicorn, cloudIdx, 1);
             assertEquals(3, tableManager.pickStudentsFromCloud(cloudIdx).getCount(Student.BlueUnicorn));
         }
     }
