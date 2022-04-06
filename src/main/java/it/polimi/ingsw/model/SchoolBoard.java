@@ -10,6 +10,7 @@ import java.util.Collections;
 
 public class SchoolBoard {
 
+    private final int maxTowerCount;
     private int availableTowerCount;
     private final Tower towerType;
     private final StudentHost diningRoom;
@@ -22,6 +23,7 @@ public class SchoolBoard {
         controlledProfessors = new boolean[Professor.values().length];
         diningRoom = new StudentHost();
         entrance = new StudentHost();
+        maxTowerCount = initialTowerCount;
     }
 
     public int getCountAtTable(Student s) {
@@ -75,7 +77,8 @@ public class SchoolBoard {
         diningRoom.removeStudents(s, 1);
     }
 
-    public void gainTower() {
+    public void gainTower() throws TooManyTowersException {
+        if (availableTowerCount == maxTowerCount) throw new TooManyTowersException();
         availableTowerCount += 1;
     }
 

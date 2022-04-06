@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.assistants.Wizard;
+import it.polimi.ingsw.model.characters.CharacterCard;
 import it.polimi.ingsw.model.characters.CharacterCardParamSet;
 import it.polimi.ingsw.model.characters.StudentHostingCard;
 import it.polimi.ingsw.model.student.*;
@@ -322,7 +323,7 @@ class TableManagerTest {
         Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
         Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 8);
 
-        tableManager.getCurrentIsland().setTower(Tower.Black);
+        assertDoesNotThrow(() -> tableManager.getCurrentIsland().setTower(testPlayer.pickAndRemoveTower()));
         tableManager.getIslandAtIndex(tableManager.circularWrap(tableManager.getCurrentIslandIndex() + 1, 12)).setTower(Tower.White);
         assertDoesNotThrow(() -> tableManager.changeControlOfCurrentIsland(testPlayer, testPlayer2));
         assertEquals(Tower.White, tableManager.getCurrentIsland().getActiveTowerType());
@@ -434,6 +435,10 @@ class TableManagerTest {
             tableManager.getCurrentIsland().setStopCard(true);
         }
         if (checkCards) {
+            CharacterCard pickedCard = tableManager.getCardAtIndex(activatedCardIndex);
+            for (int i = 0; i < pickedCard.getPrice() * 3; i++) {
+                testPlayer.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+            }
             testPlayer.playCharacterCard(tableManager.getCardAtIndex(activatedCardIndex));
         }
         //Simulate MN movement here

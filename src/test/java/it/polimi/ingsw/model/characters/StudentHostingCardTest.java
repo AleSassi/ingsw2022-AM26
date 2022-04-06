@@ -305,7 +305,7 @@ class StudentHostingCardTest {
             Student pickedStudent = collectionInCard.pickRandom();
             assertEquals(0, card.useCard(tableManager, null, player, new CharacterCardParamSet(pickedStudent, Student.BlueUnicorn, null, null, false, 0, 0, 0, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
             //Test that the Student was moved to the Entrance
-            assertDoesNotThrow(() -> player.removeStudentFromEntrance(pickedStudent));
+            assertDoesNotThrow(() -> player.removeStudentFromTable(pickedStudent));
         });
 
         StudentCollection collectionInCard = card.getHostedStudents();
@@ -367,7 +367,7 @@ class StudentHostingCardTest {
 
         assertDoesNotThrow(() -> {
             StudentCollection collectionInCard = card.getHostedStudents();
-            assertEquals(0, card.useCard(null, players, player, new CharacterCardParamSet(Student.BlueUnicorn, Student.BlueUnicorn, null, null, false, 0, 0, 0, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
+            assertEquals(0, card.useCard(tableManager, players, player, new CharacterCardParamSet(Student.BlueUnicorn, Student.BlueUnicorn, null, null, false, 0, 0, 0, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
             assertEquals(card.getHostedStudents(), collectionInCard);
         });
     }

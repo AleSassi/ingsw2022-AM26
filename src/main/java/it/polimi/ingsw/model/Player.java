@@ -73,7 +73,7 @@ public class Player {
 
     public void placeStudentAtTableAndGetCoin(Student s) {
         board.addStudentToTable(s);
-        if (board.getCountAtTable(s) % 3 == board.getCountAtTable(s) / 3) {
+        if (board.getCountAtTable(s) % 3 == 0) {
             this.availableCoins += 1;
         }
     }
@@ -94,7 +94,7 @@ public class Player {
         return board.getTowerType();
     }
 
-    public void gainTower() {
+    public void gainTower() throws TooManyTowersException {
         board.gainTower();
     }
 
@@ -117,7 +117,7 @@ public class Player {
 
     public boolean playCharacterCard(CharacterCard card) {
         int price = card.getPrice();
-        if (price < this.availableCoins) {
+        if (price <= this.availableCoins) {
             card.purchase();
             playedCard = card;
             this.availableCoins -= price;

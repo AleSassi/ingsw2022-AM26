@@ -194,6 +194,8 @@ public class TableManager {
         } catch (InsufficientTowersException e) {
             // Notify match end by the Player who would have owned the Island
             to.notifyVictory();
+        } catch (TooManyTowersException e) {
+            e.printStackTrace();
         }
     }
 

@@ -9,9 +9,7 @@ import java.util.List;
 
 public class IndependentPlayerMatchManager extends MatchManager {
 
-    private List<Player> players = new ArrayList<>();
-    private IndependentPlayerMatchManager matchManager = new IndependentPlayerMatchManager();
-
+    private final List<Player> players = new ArrayList<>();
 
     @Override
     protected void addPlayer(String nickname, Wizard wiz) throws InvalidPlayerCountException {
