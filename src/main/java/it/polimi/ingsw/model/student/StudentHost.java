@@ -26,8 +26,4 @@ public class StudentHost {
         return hostedStudents.pickRandom();
     }
 
-    public void mergeHostedStudentWith(StudentHost other) {
-        hostedStudents.mergeWithCollection(other.hostedStudents);
-    }
-
 }

@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.Professor;
 import it.polimi.ingsw.model.Tower;
 import it.polimi.ingsw.model.assistants.Wizard;
 import org.hamcrest.core.Is;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,7 +19,12 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class IslandTest {
 
-    Island island = new Island();
+    private Island island;
+
+    @BeforeEach
+    void initIsland() {
+        island = new Island();
+    }
 
     /**
      * Method itHasStopCardTest tests that can return true if StopCard is present on an island
@@ -151,5 +157,32 @@ class IslandTest {
     void setMotherNaturePresentTest() {
         island.setMotherNaturePresent(true);
         assertTrue(island.isMotherNaturePresent());
+    }
+
+    /**
+     * Method mergeHostedStudentWithTest test that can merge two HostedStudent together correctly
+     */
+    @Test
+    void mergeHostedStudentWithTest() {
+        Island island1 = new Island();
+        for(Student s: Student.values()){
+            island.placeStudents(s, 5);
+            island1.placeStudents(s, 10);
+        }
+        island.mergeHostedStudentWith(island1);
+
+        for(Student s: Student.values()){
+            assertEquals(island.getCount(s), 15);
+        }
+    }
+
+    @Test
+    void nullTest() {
+        assertEquals(0, island.getInfluence(null));
+        assertFalse(island.isUnifiableWith(null));
+        island.acquireIsland(null);
+        assertEquals(0, island.getNumberOfSameStudents(null));
+        island.mergeHostedStudentWith(null);
+        island.setTower(null);
     }
 }

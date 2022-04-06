@@ -17,6 +17,8 @@ public class StudentCollection {
     }
 
     public int getCount(Student s) {
+        if (s == null) return 0;
+
         int studentIndex = Student.getRawValueOf(s);
         return students.get(studentIndex);
     }
@@ -26,6 +28,8 @@ public class StudentCollection {
     }
 
     public void removeStudents(Student s, int count) throws CollectionUnderflowError {
+        if (s == null) return;
+
         int studentIndex = Student.getRawValueOf(s);
         if (students.get(studentIndex) - count < 0) throw new CollectionUnderflowError();
 
@@ -33,11 +37,19 @@ public class StudentCollection {
     }
 
     public void addStudents(Student s, int count) {
+        if (s == null) return;
+
         int studentIndex = Student.getRawValueOf(s);
+        if (count < 0) {
+            // We silently fail when the number of students is negative
+            return;
+        }
         students.set(studentIndex, students.get(studentIndex) + count);
     }
 
     public void mergeWithCollection(StudentCollection otherCollection) {
+        if (otherCollection == null) return;
+
         for (Student s: Student.values()) {
             addStudents(s, otherCollection.getCount(s));
         }

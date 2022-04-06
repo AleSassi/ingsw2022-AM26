@@ -16,6 +16,5 @@ public class Cloud extends StudentHost {
             }
         }
         return result;
-
     }
 }

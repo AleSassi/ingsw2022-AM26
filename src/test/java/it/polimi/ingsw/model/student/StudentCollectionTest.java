@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.student;
 
+import it.polimi.ingsw.exceptions.CollectionUnderflowError;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,7 +15,12 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class StudentCollectionTest {
 
-    StudentCollection collection = new StudentCollection();
+    private StudentCollection collection;
+
+    @BeforeEach
+    void initCollection() {
+        collection = new StudentCollection();
+    }
 
     /**
      * Method getCountTest tests that can return the count of a single type of student
@@ -118,7 +125,23 @@ class StudentCollectionTest {
     }
 
     @Test
-    void test() {
+    void underflowTest() {
+        StudentCollection collection = new StudentCollection();
+        collection.addStudents(Student.BlueUnicorn, 10);
+        collection.addStudents(Student.RedDragon, 5);
+        collection.addStudents(Student.GreenFrog, -1);
+        assertEquals(0, collection.getCount(Student.GreenFrog));
+        assertThrows(CollectionUnderflowError.class, () -> collection.removeStudents(Student.BlueUnicorn, 11));
+        assertThrows(CollectionUnderflowError.class, () -> collection.removeStudents(Student.GreenFrog, 1));
+        assertDoesNotThrow(() -> collection.removeStudents(Student.PinkFair, 0));
+    }
 
+    @Test
+    void nullTest() {
+        StudentCollection collection = new StudentCollection();
+        collection.addStudents(null, 20);
+        assertDoesNotThrow(() -> collection.removeStudents(null, 10));
+        collection.mergeWithCollection(null);
+        collection.getCount(null);
     }
 }

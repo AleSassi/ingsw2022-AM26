@@ -57,8 +57,5 @@ class StudentTest {
             case RedDragon -> assertEquals(Student.RedDragon, s);
             case BlueUnicorn -> assertEquals(Student.BlueUnicorn, s);
         }
-
     }
-
-
 }

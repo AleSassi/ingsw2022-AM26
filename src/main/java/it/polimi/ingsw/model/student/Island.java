@@ -39,6 +39,8 @@ public class Island extends StudentHost {
      * @return the value of the Player
      */
     public int getInfluence(Player p) {
+        if (p == null) return 0;
+
         int influence = 0;
         for (Student s : Student.values()) {
             if (p.getControlledProfessors().contains(s.getAssociatedProfessor())) {
@@ -52,10 +54,14 @@ public class Island extends StudentHost {
     }
 
     public boolean isUnifiableWith(Island island) {
+        if (island == null) return false;
+
         return (this.activeTowerType == island.activeTowerType && (this.towerCount > 0 && island.towerCount > 0));
     }
 
     public void acquireIsland(Island island) {
+        if (island == null) return;
+
         if (isUnifiableWith(island)) {
             this.towerCount += island.getTowerCount();
             mergeHostedStudentWith(island);
@@ -63,16 +69,28 @@ public class Island extends StudentHost {
         }
     }
 
+    public void mergeHostedStudentWith(Island other) {
+        if (other == null) return;
+
+        for (Student student: Student.values()) {
+            placeStudents(student, other.getCount(student));
+        }
+    }
+
     public int getNumberOfSameStudents(Student s) {
+        if (s == null) return 0;
+
         return getCount(s);
     }
 
     public void setTower(Tower t) {
+        if (t == null) return;
+
         activeTowerType = t;
         towerCount = 1;
     }
 
-    public void setMotherNaturePresent(Boolean present) {
+    public void setMotherNaturePresent(boolean present) {
         isMotherNaturePresent = present;
     }
 

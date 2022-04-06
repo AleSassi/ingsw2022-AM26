@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.student;
 
+import it.polimi.ingsw.exceptions.CollectionUnderflowError;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -82,21 +83,23 @@ class StudentHostTest {
 
     }
 
-    /**
-     * Method mergeHostedStudentWithTest test that can merge two HostedStudent together correctly
-     */
     @Test
-    void mergeHostedStudentWithTest() {
-        StudentHost host1 = new StudentHost();
-        StudentHost host2 = new StudentHost();
-        for(Student s: Student.values()){
-            host1.placeStudents(s, 5);
-            host2.placeStudents(s, 10);
-        }
-        host1.mergeHostedStudentWith(host2);
+    void underflowTest() {
+        StudentHost studentHost = new StudentHost();
+        studentHost.placeStudents(Student.BlueUnicorn, 10);
+        studentHost.placeStudents(Student.RedDragon, 5);
+        studentHost.placeStudents(Student.GreenFrog, -1);
+        assertEquals(0, studentHost.getCount(Student.GreenFrog));
+        assertThrows(CollectionUnderflowError.class, () -> studentHost.removeStudents(Student.BlueUnicorn, 11));
+        assertThrows(CollectionUnderflowError.class, () -> studentHost.removeStudents(Student.GreenFrog, 1));
+        assertDoesNotThrow(() -> studentHost.removeStudents(Student.PinkFair, 0));
+    }
 
-        for(Student s: Student.values()){
-            assertEquals(host1.getCount(s), 15);
-        }
+    @Test
+    void nullTest() {
+        StudentHost studentHost = new StudentHost();
+        studentHost.placeStudents(null, 20);
+        assertDoesNotThrow(() -> studentHost.removeStudents(null, 10));
+        studentHost.getCount(null);
     }
 }
