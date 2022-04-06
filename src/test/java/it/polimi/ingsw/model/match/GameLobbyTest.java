@@ -40,7 +40,7 @@ class GameLobbyTest {
             lobby.addPlayer("Ale", Wizard.Wizard2);
         });
     }
-
+    /*
     @Test
     void testMatchManagerCreation() {
         GameLobby lobby = new GameLobby(2, MatchVariant.BasicRulesSet);
@@ -76,5 +76,5 @@ class GameLobbyTest {
             assertTrue(createdManager.getAllPlayers().stream().map(Player::getNickname).toList().contains("Prof"));
         });
     }
-
+    */
 }
