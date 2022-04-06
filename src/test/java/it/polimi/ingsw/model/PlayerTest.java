@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.exceptions.CollectionUnderflowError;
+import it.polimi.ingsw.exceptions.TooManyTowersException;
 import it.polimi.ingsw.model.assistants.*;
 import it.polimi.ingsw.model.characters.*;
 import it.polimi.ingsw.model.characters.Character;
@@ -94,7 +96,7 @@ class PlayerTest {
             test.removeStudentFromEntrance(Student.BlueUnicorn);
             test.removeStudentFromEntrance(Student.BlueUnicorn);
         });
-        assertThrows(EmptyCollectionException.class, () -> test.removeStudentFromEntrance(Student.BlueUnicorn));
+        assertThrows(CollectionUnderflowError.class, () -> test.removeStudentFromEntrance(Student.BlueUnicorn));
     }
 
 
@@ -132,11 +134,11 @@ class PlayerTest {
         sc.addStudents(Student.BlueUnicorn, 1);
         sc.addStudents(Student.GreenFrog, 1);
         test.addAllStudentsToEntrance(sc);
-        assertThrows(EmptyCollectionException.class, () -> test.removeStudentFromEntrance(Student.RedDragon));
+        assertThrows(CollectionUnderflowError.class, () -> test.removeStudentFromEntrance(Student.RedDragon));
         assertDoesNotThrow(() -> {
             test.removeStudentFromEntrance(Student.BlueUnicorn);
             test.removeStudentFromEntrance(Student.GreenFrog);
         });
-        assertThrows(EmptyCollectionException.class, () -> test.removeStudentFromEntrance(Student.BlueUnicorn));
+        assertThrows(CollectionUnderflowError.class, () -> test.removeStudentFromEntrance(Student.BlueUnicorn));
     }
 }

@@ -1,9 +1,6 @@
 package it.polimi.ingsw.model.characters;
 
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.TableManager;
-import it.polimi.ingsw.model.student.Student;
-import it.polimi.ingsw.model.student.StudentHost;
+import it.polimi.ingsw.exceptions.UnavailableCardException;
 
 import java.util.*;
 

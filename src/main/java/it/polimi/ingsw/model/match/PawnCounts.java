@@ -1,7 +1,9 @@
 package it.polimi.ingsw.model.match;
 
+import it.polimi.ingsw.exceptions.InvalidPlayerCountException;
+
 public class PawnCounts {
-    private int playerCount;
+    private final int playerCount;
 
     public PawnCounts(int playerCount) {
         this.playerCount = playerCount;
@@ -11,7 +13,7 @@ public class PawnCounts {
         return  playerCount;
     }
 
-    public int getTowerPerPlayerCount() throws InvalidPlayerCountException{
+    public int getTowerPerPlayerCount() throws InvalidPlayerCountException {
         return switch (playerCount) {
             case 2 -> 8;
             case 3 -> 6;

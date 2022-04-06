@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.student;
 
 import it.polimi.ingsw.model.Professor;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -15,9 +17,9 @@ class StudentTest {
     /**
      * Method getAssociatedProfessor test that can return the Professor associated to the Student
      */
-    @org.junit.jupiter.api.Test
+    @Test
     void getAssociatedProfessorTest() {
-        for(Student s : Student.values()) {
+        for (Student s : Student.values()) {
             Professor p = s.getAssociatedProfessor();
             switch (s) {
                 case YellowElf -> assertEquals(Professor.YellowElf, p);
@@ -32,19 +34,19 @@ class StudentTest {
     /**
      * Method getRawValueOf tests that can return the index of the list of Students
      */
-    @org.junit.jupiter.api.Test
+    @Test
     void getRawValueOfTest() {
         int i = 0;
-        for(Student s : Student.values()) {
-           assertEquals(Student.getRawValueOf(s), i);
-           i++;
+        for (Student s : Student.values()) {
+            assertEquals(Student.getRawValueOf(s), i);
+            i++;
         }
     }
 
     /**
      * Method getRandomStudent test that returns a random Student
      */
-    @org.junit.jupiter.api.Test
+    @Test
     void getRandomStudentTest() {
         Student s = Student.getRandomStudent();
         assertNotNull(Student.getRandomStudent());
@@ -57,7 +59,6 @@ class StudentTest {
         }
 
     }
-
 
 
 }

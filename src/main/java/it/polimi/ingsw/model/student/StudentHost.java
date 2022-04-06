@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.student;
 
+import it.polimi.ingsw.exceptions.CollectionUnderflowError;
+
 public class StudentHost {
 
     private final StudentCollection hostedStudents = new StudentCollection();
@@ -15,12 +17,12 @@ public class StudentHost {
     public void placeStudents(Student s, int count) {
         hostedStudents.addStudents(s, count);
     }
-    public void removeStudents(Student s, int count) throws EmptyCollectionException {
-        if (hostedStudents.getCount(s) == 0) throw new EmptyCollectionException();
+
+    public void removeStudents(Student s, int count) throws CollectionUnderflowError {
         hostedStudents.removeStudents(s, count);
     }
 
-    public Student removeRandom() throws EmptyCollectionException {
+    public Student removeRandom() throws CollectionUnderflowError {
         return hostedStudents.pickRandom();
     }
 

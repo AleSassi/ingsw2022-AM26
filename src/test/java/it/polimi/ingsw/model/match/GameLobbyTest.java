@@ -1,12 +1,9 @@
 package it.polimi.ingsw.model.match;
 
-import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.exceptions.LobbyFullException;
+import it.polimi.ingsw.exceptions.NicknameNotUniqueException;
 import it.polimi.ingsw.model.assistants.Wizard;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 

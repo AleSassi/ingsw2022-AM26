@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.exceptions.CollectionUnderflowError;
+import it.polimi.ingsw.exceptions.InsufficientTowersException;
+import it.polimi.ingsw.exceptions.TooManyTowersException;
 import it.polimi.ingsw.model.assistants.Wizard;
 import it.polimi.ingsw.model.characters.*;
 import it.polimi.ingsw.model.student.*;
@@ -87,7 +90,7 @@ public class Player {
     /**
      * remove a student of type s from entance
      */
-    public void removeStudentFromEntrance(Student s) throws EmptyCollectionException {
+    public void removeStudentFromEntrance(Student s) throws CollectionUnderflowError {
         board.removeStudentFromEntrance(s);
     }
     /**
@@ -103,7 +106,7 @@ public class Player {
     /**
      * remove a student of type s from diningroom
      */
-    public void removeStudentFromTable(Student s) throws EmptyCollectionException {
+    public void removeStudentFromTable(Student s) throws CollectionUnderflowError {
         board.removeStudentFromTable(s);
     }
 

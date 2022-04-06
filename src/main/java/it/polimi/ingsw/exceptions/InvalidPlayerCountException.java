@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.match;
+package it.polimi.ingsw.exceptions;
 
 public class InvalidPlayerCountException extends Exception{
     public InvalidPlayerCountException(){

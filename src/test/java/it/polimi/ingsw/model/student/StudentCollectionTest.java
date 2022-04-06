@@ -46,7 +46,7 @@ class StudentCollectionTest {
         StudentCollection hostedStudent = new StudentCollection();
         for (Student s : Student.values()) {
             hostedStudent.addStudents(s, 10);
-            hostedStudent.removeStudents(s, 10);
+            assertDoesNotThrow(() -> hostedStudent.removeStudents(s, 10));
             assertEquals(hostedStudent.getCount(s), 0);
         }
     }
@@ -113,15 +113,12 @@ class StudentCollectionTest {
         collection2.addStudents(Student.GreenFrog, 3);
         collection3.addStudents(Student.GreenFrog, 3);
         collection3.addStudents(Student.RedDragon, 2);
-        assertTrue(collection.equals(collection2));
-        assertFalse(collection.equals(collection3));
+        assertEquals(collection, collection2);
+        assertNotEquals(collection, collection3);
     }
 
     @Test
-    void testHashCodeTest() {
-        //TODO:
+    void test() {
+
     }
-
-
-
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.characters.*;
 import it.polimi.ingsw.model.student.*;
 
@@ -48,7 +49,7 @@ public class TableManager {
                 }
                 islands.add(newIsland);
             }
-        } catch (EmptyCollectionException e) {
+        } catch (CollectionUnderflowError e) {
             e.printStackTrace();
         }
         // Initialize the Bag
@@ -98,7 +99,7 @@ public class TableManager {
         return islands.get(islandIndex);
     }
 
-    public StudentCollection pickStudentsFromBag(int count) throws EmptyCollectionException {
+    public StudentCollection pickStudentsFromBag(int count) throws CollectionUnderflowError {
         StudentCollection result = new StudentCollection();
         for (int studentIdx = 0; studentIdx < count; studentIdx++) {
             result.addStudents(studentBag.removeRandom(), 1);

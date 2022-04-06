@@ -1,16 +1,15 @@
 package it.polimi.ingsw.model.match;
 
+import it.polimi.ingsw.exceptions.AssistantCardNotPlayableException;
+import it.polimi.ingsw.exceptions.InvalidPlayerCountException;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Professor;
 import it.polimi.ingsw.model.TableManager;
 import it.polimi.ingsw.model.assistants.AssistantCard;
 import it.polimi.ingsw.model.assistants.Wizard;
-import it.polimi.ingsw.model.student.EmptyCollectionException;
+import it.polimi.ingsw.exceptions.CollectionUnderflowError;
 import it.polimi.ingsw.model.student.Student;
 import it.polimi.ingsw.model.student.StudentCollection;
-import org.w3c.dom.ls.LSInput;
 
-import java.security.PublicKey;
 import java.util.*;
 
 public abstract class MatchManager {
@@ -38,7 +37,7 @@ public abstract class MatchManager {
 
     protected abstract List<Player> getAllPlayers ();
 
-    private void initEntrance(Player p) throws EmptyCollectionException {
+    private void initEntrance(Player p) throws CollectionUnderflowError {
         StudentCollection sc = new StudentCollection();
         sc = managedTable.pickStudentsFromBag(pawnCounts.getStudentsPickedFromBag());
         p.addAllStudentsToEntrance(sc);
@@ -59,14 +58,13 @@ public abstract class MatchManager {
         return false;
     }
 
-    public boolean moveToNextPlayer() throws EmptyCollectionException, InvalidPlayerCountException {
+    public boolean moveToNextPlayer() throws CollectionUnderflowError, InvalidPlayerCountException {
         if (currentLeadPlayer == playersSortedByCurrentTurnOrder.size()-1) {
             currentLeadPlayer = 0;
             if(matchPhase == MatchPhase.PlanPhaseStepTwo) {
                 matchPhase = matchPhase.nextPhase();
                 playersSortedByCurrentTurnOrder = getPlayersSortedByRoundTurnOrder();
-            }
-            else {
+            } else {
                 PP_FirstPlayerPickFromCloudCards();
                 matchPhase = matchPhase.nextPhase();
             }
@@ -81,9 +79,9 @@ public abstract class MatchManager {
     /**
      * This method fills all the cloud with the correct number of students
      * @throws InvalidPlayerCountException
-     * @throws EmptyCollectionException
+     * @throws CollectionUnderflowError
      */
-    public void PP_FirstPlayerPickFromCloudCards() throws InvalidPlayerCountException, EmptyCollectionException {
+    public void PP_FirstPlayerPickFromCloudCards() throws InvalidPlayerCountException, CollectionUnderflowError {
         int numberOfStudent = pawnCounts.getStudentsDrawnForCloud();
         StudentCollection tmp;
         for(int cloudIdx = managedTable.getNumberOfClouds(); cloudIdx > 0; cloudIdx--){
@@ -92,10 +90,6 @@ public abstract class MatchManager {
                 managedTable.placeStudentOnCloud(s, cloudIdx, tmp.getCount(s));
             }
         }
-
-
-
-
     }
 
     public void PP_PlayAssistantCard(int cardIndex) throws AssistantCardNotPlayableException {

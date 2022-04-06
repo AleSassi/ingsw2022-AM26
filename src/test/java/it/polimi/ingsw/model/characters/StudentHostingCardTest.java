@@ -1,14 +1,13 @@
 package it.polimi.ingsw.model.characters;
 
+import it.polimi.ingsw.exceptions.CharacterCardNoMoreUsesAvailableException;
+import it.polimi.ingsw.exceptions.CollectionUnderflowError;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Professor;
 import it.polimi.ingsw.model.TableManager;
 import it.polimi.ingsw.model.Tower;
 import it.polimi.ingsw.model.assistants.Wizard;
-import it.polimi.ingsw.model.student.EmptyCollectionException;
-import it.polimi.ingsw.model.student.Island;
-import it.polimi.ingsw.model.student.Student;
-import it.polimi.ingsw.model.student.StudentCollection;
+import it.polimi.ingsw.model.student.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -136,10 +135,10 @@ class StudentHostingCardTest {
 
     /**
      * Tests that the abbot card can only be called once per turn
-     * @throws EmptyCollectionException Thrown when the card has no students on it (should never happen)
+     * @throws CollectionUnderflowError Thrown when the card has no students on it (should never happen)
      */
     @Test
-    void verifyUseCountAbbot() throws EmptyCollectionException {
+    void verifyUseCountAbbot() throws CollectionUnderflowError {
         // We force no character cards on the Table to avoid the auto-setup of Character cards
         fakePlayerSetup(Character.Abbot, false);
 
@@ -206,10 +205,10 @@ class StudentHostingCardTest {
 
     /**
      * Tests that the Circus card can only be called once per turn
-     * @throws EmptyCollectionException Thrown when the card has no students on it (should never happen)
+     * @throws CollectionUnderflowError Thrown when the card has no students on it (should never happen)
      */
     @Test
-    void verifyMultiUsageCircus() throws EmptyCollectionException {
+    void verifyMultiUsageCircus() throws CollectionUnderflowError {
         // We force no character cards on the Table to avoid the auto-setup of Character card
         fakePlayerSetup(Character.Circus, false);
         assertDoesNotThrow(() -> {
@@ -296,7 +295,7 @@ class StudentHostingCardTest {
      * Tests the use of the Queen card and its usage limit
      */
     @Test
-    void verifyUsageQueen() throws EmptyCollectionException {
+    void verifyUsageQueen() throws CollectionUnderflowError {
         // We force no character cards on the Table to avoid the auto-setup of Character cards
         fakePlayerSetup(Character.Queen, false, true, false);
 

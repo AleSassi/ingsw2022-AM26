@@ -1,9 +1,11 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.exceptions.CollectionUnderflowError;
+import it.polimi.ingsw.exceptions.IslandSkippedControlAssignmentForStopCardException;
+import it.polimi.ingsw.exceptions.IslandSkippedInfluenceForStopCardException;
 import it.polimi.ingsw.model.assistants.Wizard;
 import it.polimi.ingsw.model.characters.CharacterCard;
 import it.polimi.ingsw.model.characters.CharacterCardParamSet;
-import it.polimi.ingsw.model.characters.StudentHostingCard;
 import it.polimi.ingsw.model.student.*;
 import org.junit.jupiter.api.*;
 
@@ -164,7 +166,7 @@ class TableManagerTest {
                 pickedStudents.mergeWithCollection(tableManager.pickStudentsFromBag(1));
             }
         });
-        assertThrows(EmptyCollectionException.class, () -> tableManager.pickStudentsFromBag(1));
+        assertThrows(CollectionUnderflowError.class, () -> tableManager.pickStudentsFromBag(1));
         for (Student s: Student.values()) {
             assertEquals(24 - studentsInCards.getCount(s), pickedStudents.getCount(s));
         }

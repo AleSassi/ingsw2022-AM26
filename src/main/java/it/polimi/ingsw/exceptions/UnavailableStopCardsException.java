@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.characters;
+package it.polimi.ingsw.exceptions;
 
 public class UnavailableStopCardsException extends Exception {
     public UnavailableStopCardsException(String message) {

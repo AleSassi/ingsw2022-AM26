@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.characters;
 
+import it.polimi.ingsw.exceptions.CharacterCardIncorrectParametersException;
+import it.polimi.ingsw.exceptions.CharacterCardNoMoreUsesAvailableException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.assistants.Wizard;
 import it.polimi.ingsw.model.student.Student;

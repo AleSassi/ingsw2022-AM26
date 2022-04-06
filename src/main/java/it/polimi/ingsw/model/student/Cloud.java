@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.student;
 
+import it.polimi.ingsw.exceptions.CollectionUnderflowError;
+
 public class Cloud extends StudentHost {
 
     public StudentCollection extractAllStudentsAndRemove() {
@@ -9,7 +11,7 @@ public class Cloud extends StudentHost {
             try {
                 removeStudents(s, studentCount);
                 result.addStudents(s, studentCount);
-            } catch (EmptyCollectionException e) {
+            } catch (CollectionUnderflowError e) {
                 //Do nothing - Ignore the student because its count is 0
             }
         }

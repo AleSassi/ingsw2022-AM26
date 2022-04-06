@@ -1,12 +1,13 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.student.EmptyCollectionException;
+import it.polimi.ingsw.exceptions.CollectionUnderflowError;
+import it.polimi.ingsw.exceptions.InsufficientTowersException;
+import it.polimi.ingsw.exceptions.TooManyTowersException;
 import it.polimi.ingsw.model.student.Student;
 import it.polimi.ingsw.model.student.StudentHost;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 public class SchoolBoard {
 
@@ -62,9 +63,7 @@ public class SchoolBoard {
         entrance.placeStudents(s, 1);
     }
 
-    public void removeStudentFromEntrance(Student s) throws EmptyCollectionException {
-        if (entrance.getCount(s) == 0) throw new EmptyCollectionException();
-        
+    public void removeStudentFromEntrance(Student s) throws CollectionUnderflowError {
         entrance.removeStudents(s, 1);
     }
 
@@ -73,9 +72,7 @@ public class SchoolBoard {
         diningRoom.placeStudents(s, 1);
     }
 
-    public void removeStudentFromTable(Student s) throws EmptyCollectionException {
-        if (diningRoom.getCount(s) == 0) throw new EmptyCollectionException();
-
+    public void removeStudentFromTable(Student s) throws CollectionUnderflowError {
         diningRoom.removeStudents(s, 1);
     }
 

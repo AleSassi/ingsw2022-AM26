@@ -11,21 +11,21 @@ class PlayerTeamTest {
 
     @Test
     void getAllPlayers() {
-        PlayerTeam team1=new PlayerTeam();
-        Player player1=new Player("pippo", Wizard.Wizard1,Tower.Black,8  );
-        Player player2=new Player("giovanni", Wizard.Wizard1,Tower.Black,8  );
+        PlayerTeam team1 = new PlayerTeam();
+        Player player1 = new Player("pippo", Wizard.Wizard1, Tower.Black, 8);
+        Player player2 = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8);
         team1.addPlayer(player1);
         team1.addPlayer(player2);
-        ArrayList<Player> lista=team1.getAllPlayers();
+        ArrayList<Player> lista = team1.getAllPlayers();
         assertTrue(lista.contains(player1));
         assertTrue(lista.contains(player2));
     }
 
     @Test
     void containsPlayer() {
-        PlayerTeam team1=new PlayerTeam();
-        Player player1=new Player("pippo", Wizard.Wizard1,Tower.Black,8  );
-        Player player2=new Player("giovanni", Wizard.Wizard1,Tower.Black,8  );
+        PlayerTeam team1 = new PlayerTeam();
+        Player player1 = new Player("pippo", Wizard.Wizard1, Tower.Black, 8);
+        Player player2 = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8);
         team1.addPlayer(player1);
         assertTrue(team1.containsPlayer(player1));
         assertFalse(team1.containsPlayer(player2));
@@ -35,9 +35,9 @@ class PlayerTeamTest {
 
     @Test
     void getLeadPlayer() {
-        PlayerTeam team1=new PlayerTeam();
-        Player player1=new Player("pippo", Wizard.Wizard1,Tower.Black,8  );
-        Player player2=new Player("giovanni", Wizard.Wizard1,Tower.Black,0 );
+        PlayerTeam team1 = new PlayerTeam();
+        Player player1 = new Player("pippo", Wizard.Wizard1, Tower.Black, 8);
+        Player player2 = new Player("giovanni", Wizard.Wizard1, Tower.Black, 0);
         team1.addPlayer(player1);
         team1.addPlayer(player2);
         assertEquals(player1, team1.getLeadPlayer());

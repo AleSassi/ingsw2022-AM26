@@ -1,4 +1,6 @@
 package it.polimi.ingsw.model.student;
+import it.polimi.ingsw.exceptions.CollectionUnderflowError;
+
 import java.util.*;
 
 public class StudentCollection {
@@ -23,8 +25,10 @@ public class StudentCollection {
         return students.stream().mapToInt(element -> element).sum();
     }
 
-    public void removeStudents(Student s, int count) {
+    public void removeStudents(Student s, int count) throws CollectionUnderflowError {
         int studentIndex = Student.getRawValueOf(s);
+        if (students.get(studentIndex) - count < 0) throw new CollectionUnderflowError();
+
         students.set(studentIndex, students.get(studentIndex) - count);
     }
 
@@ -39,8 +43,8 @@ public class StudentCollection {
         }
     }
 
-    public Student pickRandom() throws EmptyCollectionException {
-        if (getTotalCount() == 0) throw new EmptyCollectionException();
+    public Student pickRandom() throws CollectionUnderflowError {
+        if (getTotalCount() == 0) throw new CollectionUnderflowError();
         int ranInt = randomizer.nextInt(0, getTotalCount());
         List<Integer> progressiveCounts = getProgressiveCounts();
         for (int index = 0; index < progressiveCounts.size(); index++) {
@@ -53,7 +57,7 @@ public class StudentCollection {
             }
         }
         //Will never be executed
-        throw new EmptyCollectionException("StudentCollection ERROR: Could not find a random student in a collection, that mathematically should never happen");
+        throw new CollectionUnderflowError("StudentCollection ERROR: Could not find a random student in a collection, that mathematically should never happen");
     }
 
     private List<Integer> getProgressiveCounts() {

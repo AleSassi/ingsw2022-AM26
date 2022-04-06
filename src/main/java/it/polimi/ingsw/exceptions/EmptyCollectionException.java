@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.student;
+package it.polimi.ingsw.exceptions;
 
 public class EmptyCollectionException extends Exception {
     public EmptyCollectionException(){

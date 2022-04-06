@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.characters;
 
+import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.student.*;
 
@@ -86,7 +87,7 @@ public class StudentHostingCard extends CharacterCard {
         int numberOfStudentsToPick = getCharacter().getHostedStudentsCount();
         try {
             hostedStudents = t.pickStudentsFromBag(numberOfStudentsToPick);
-        } catch (EmptyCollectionException e) {
+        } catch (CollectionUnderflowError e) {
             // Will never be executed, since the Bag always has the required number of Students at the beginning of a match
             e.printStackTrace();
         }
@@ -168,12 +169,12 @@ public class StudentHostingCard extends CharacterCard {
             if (hostedStudents.getTotalCount() < getCharacter().getHostedStudentsCount() && autoUpdateToMatchMaxStudentCount) {
                 try {
                     hostedStudents.mergeWithCollection(tableManager.pickStudentsFromBag(getCharacter().getHostedStudentsCount() - hostedStudents.getTotalCount()));
-                } catch (EmptyCollectionException e) {
+                } catch (CollectionUnderflowError e) {
                     //If the Bag is Empty we fall here and do not collect a new Student
                     e.printStackTrace();
                 }
             }
-        } catch (EmptyCollectionException e) {
+        } catch (CollectionUnderflowError e) {
             e.printStackTrace();
         }
     }

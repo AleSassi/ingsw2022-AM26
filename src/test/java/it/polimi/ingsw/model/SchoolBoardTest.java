@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.student.EmptyCollectionException;
+import it.polimi.ingsw.exceptions.CollectionUnderflowError;
+import it.polimi.ingsw.exceptions.InsufficientTowersException;
 import it.polimi.ingsw.model.student.Student;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +17,7 @@ class SchoolBoardTest {
         assertEquals(board.getCountAtTable(Student.BlueUnicorn), 2);
         assertDoesNotThrow(() -> board.removeStudentFromTable(Student.BlueUnicorn));
         assertDoesNotThrow(() -> board.removeStudentFromTable(Student.BlueUnicorn));
-        assertThrows(EmptyCollectionException.class, () -> board.removeStudentFromTable(Student.BlueUnicorn));
+        assertThrows(CollectionUnderflowError.class, () -> board.removeStudentFromTable(Student.BlueUnicorn));
     }
 
     @Test
@@ -56,7 +57,7 @@ class SchoolBoardTest {
         SchoolBoard board = new SchoolBoard(Tower.Black, 8);
         board.addStudentToEntrance(Student.BlueUnicorn);
         assertDoesNotThrow(() -> board.removeStudentFromEntrance(Student.BlueUnicorn));
-        assertThrows(EmptyCollectionException.class, () -> board.removeStudentFromEntrance(Student.BlueUnicorn));
+        assertThrows(CollectionUnderflowError.class, () -> board.removeStudentFromEntrance(Student.BlueUnicorn));
     }
 
     @Test
@@ -64,7 +65,7 @@ class SchoolBoardTest {
         SchoolBoard board = new SchoolBoard(Tower.Black, 8);
         board.addStudentToTable(Student.BlueUnicorn);
         assertDoesNotThrow(() -> board.removeStudentFromTable(Student.BlueUnicorn));
-        assertThrows(EmptyCollectionException.class, () -> board.removeStudentFromTable(Student.BlueUnicorn));
+        assertThrows(CollectionUnderflowError.class, () -> board.removeStudentFromTable(Student.BlueUnicorn));
     }
 
     @Test
