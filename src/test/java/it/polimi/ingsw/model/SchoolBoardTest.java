@@ -58,4 +58,23 @@ class SchoolBoardTest {
         assertDoesNotThrow(() -> board.removeStudentFromEntrance(Student.BlueUnicorn));
         assertThrows(EmptyCollectionException.class, () -> board.removeStudentFromEntrance(Student.BlueUnicorn));
     }
+
+    @Test
+    void removeStudentFromDiningRoomTest() {
+        SchoolBoard board = new SchoolBoard(Tower.Black, 8);
+        board.addStudentToTable(Student.BlueUnicorn);
+        assertDoesNotThrow(() -> board.removeStudentFromTable(Student.BlueUnicorn));
+        assertThrows(EmptyCollectionException.class, () -> board.removeStudentFromTable(Student.BlueUnicorn));
+    }
+
+    @Test
+    void GetTowerType() {
+        SchoolBoard board = new SchoolBoard(Tower.Black, 8);
+        assertEquals(board.getTowerType(), Tower.Black );
+    }
+
+
+
 }
+
+

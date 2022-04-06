@@ -74,11 +74,13 @@ public class SchoolBoard {
     }
 
     public void removeStudentFromTable(Student s) throws EmptyCollectionException {
+        if (diningRoom.getCount(s) == 0) throw new EmptyCollectionException();
+
         diningRoom.removeStudents(s, 1);
     }
 
     public void gainTower() throws TooManyTowersException {
-        if (availableTowerCount == maxTowerCount) throw new TooManyTowersException();
+        if (availableTowerCount == maxTowerCount) {throw new TooManyTowersException();}
         availableTowerCount += 1;
     }
 
