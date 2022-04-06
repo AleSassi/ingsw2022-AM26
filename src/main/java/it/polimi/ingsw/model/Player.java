@@ -41,36 +41,58 @@ public class Player {
         return cards;
     }
 
+    /**
+     * return played assistant card
+     */
     public AssistantCard getLastPlayedAssistantCard() {
         return playedCardDeck.topCard();
     }
+
+
 
     public ArrayList<Professor> getControlledProfessors() {
         return board.getControlledProfessors();
     }
 
+    /**
+     * return number of student(with type S) in the dining room
+     */
     public int getCountAtTable(Student s) {
         return board.getCountAtTable(s);
     }
 
+    /**
+     * return the active characther card
+     */
+
     public CharacterCard getActiveCharacterCard() {
         return playedCard;
     }
+
+    /**
+     * allow player to use card from avaible deck of assistant
+     */
 
     public void playAssistantCardAtIndex(int cardIndex) {
         AssistantCard temp = availableCardsDeck.getCard(cardIndex);
         availableCardsDeck.removeCard(cardIndex);
         playedCardDeck.AddCardOnTop(temp);
     }
-
+    /**
+     * add a student of type s to entance
+     */
     public void addStudentToEntrance(Student s) {
         board.addStudentToEntrance(s);
     }
-
+    /**
+     * remove a student of type s from entance
+     */
     public void removeStudentFromEntrance(Student s) throws EmptyCollectionException {
         board.removeStudentFromEntrance(s);
     }
-
+    /**
+     * add a student to dining room e give a coin if it is the third student added
+     */
     public void placeStudentAtTableAndGetCoin(Student s) {
         board.addStudentToTable(s);
         if (board.getCountAtTable(s) % 3 == 0) {
@@ -78,6 +100,9 @@ public class Player {
         }
     }
 
+    /**
+     * remove a student of type s from diningroom
+     */
     public void removeStudentFromTable(Student s) throws EmptyCollectionException {
         board.removeStudentFromTable(s);
     }
