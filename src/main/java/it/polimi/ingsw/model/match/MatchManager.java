@@ -1,15 +1,16 @@
 package it.polimi.ingsw.model.match;
 
-import it.polimi.ingsw.exceptions.AssistantCardNotPlayableException;
-import it.polimi.ingsw.exceptions.InvalidPlayerCountException;
+import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.TableManager;
 import it.polimi.ingsw.model.assistants.AssistantCard;
 import it.polimi.ingsw.model.assistants.Wizard;
-import it.polimi.ingsw.exceptions.CollectionUnderflowError;
+import it.polimi.ingsw.model.characters.CharacterCard;
 import it.polimi.ingsw.model.student.Student;
 import it.polimi.ingsw.model.student.StudentCollection;
+import org.w3c.dom.ls.LSInput;
 
+import java.security.PublicKey;
 import java.util.*;
 
 public abstract class MatchManager {
@@ -35,33 +36,40 @@ public abstract class MatchManager {
 
     protected abstract void addPlayer(String nickname, Wizard wiz) throws InvalidPlayerCountException;
 
-    protected abstract List<Player> getAllPlayers ();
+    protected abstract List<Player> getAllPlayers();
 
     private void initEntrance(Player p) throws CollectionUnderflowError {
-        StudentCollection sc = new StudentCollection();
+        StudentCollection sc;
         sc = managedTable.pickStudentsFromBag(pawnCounts.getStudentsPickedFromBag());
         p.addAllStudentsToEntrance(sc);
     }
 
     public List<Player> getPlayersSortedByRoundTurnOrder() {
         List<Player> tmp = getAllPlayers();
-        Collections.sort(tmp,(player1, player2) -> { return player1.getLastPlayedAssistantCard().getPriorityNumber() - player2.getLastPlayedAssistantCard().getPriorityNumber(); });
+        Collections.sort(tmp, (player1, player2) -> player1.getLastPlayedAssistantCard().getPriorityNumber() - player2.getLastPlayedAssistantCard().getPriorityNumber());
         return tmp;
     }
 
-    public int getCurrentPlayer() {
-        return currentLeadPlayer;
+    public Player getCurrentPlayer() {
+        return playersSortedByCurrentTurnOrder.get(currentLeadPlayer);
     }
 
-    private boolean isAssistantCardPlayable(int cardIdxForCurrentPlayer) {
-        AssistantCard lastPlayedCard = playersSortedByCurrentTurnOrder.get(currentLeadPlayer).getLastPlayedAssistantCard();
-        return false;
+    public boolean isAssistantCardPlayable(int cardIdxForCurrentPlayer) {
+        boolean result = true;
+        for (Player p : getAllPlayers()) {
+            if (p.getLastPlayedAssistantCard() == getCurrentPlayer().getAvailableAssistantCards().get(cardIdxForCurrentPlayer)) {
+                result = false;
+                break;
+            }
+        }
+        boolean isOnlyOnePlayable = getCurrentPlayer().getAvailableAssistantCards().stream().noneMatch((card) -> !(getAllPlayers().stream().filter((p) -> !p.equals(getCurrentPlayer())).map(Player::getLastPlayedAssistantCard).toList().contains(card)));
+        return result || isOnlyOnePlayable;
     }
 
     public boolean moveToNextPlayer() throws CollectionUnderflowError, InvalidPlayerCountException {
-        if (currentLeadPlayer == playersSortedByCurrentTurnOrder.size()-1) {
+        if (currentLeadPlayer == playersSortedByCurrentTurnOrder.size() - 1) {
             currentLeadPlayer = 0;
-            if(matchPhase == MatchPhase.PlanPhaseStepTwo) {
+            if (matchPhase == MatchPhase.PlanPhaseStepTwo) {
                 matchPhase = matchPhase.nextPhase();
                 playersSortedByCurrentTurnOrder = getPlayersSortedByRoundTurnOrder();
             } else {
@@ -71,38 +79,61 @@ public abstract class MatchManager {
             return true;
         } else {
             currentLeadPlayer++;
-            if(matchPhase == MatchPhase.ActionPhaseStepThree) matchPhase = MatchPhase.ActionPhaseStepOne;
+            if (matchPhase == MatchPhase.ActionPhaseStepThree) matchPhase = MatchPhase.ActionPhaseStepOne;
             return false;
         }
     }
 
-    /**
-     * This method fills all the cloud with the correct number of students
-     * @throws InvalidPlayerCountException
-     * @throws CollectionUnderflowError
-     */
-    public void PP_FirstPlayerPickFromCloudCards() throws InvalidPlayerCountException, CollectionUnderflowError {
+
+    private void PP_FirstPlayerPickFromCloudCards() throws InvalidPlayerCountException, CollectionUnderflowError {
         int numberOfStudent = pawnCounts.getStudentsDrawnForCloud();
         StudentCollection tmp;
-        for(int cloudIdx = managedTable.getNumberOfClouds(); cloudIdx > 0; cloudIdx--){
+        for (int cloudIdx = managedTable.getNumberOfClouds(); cloudIdx > 0; cloudIdx--) {
             tmp = managedTable.pickStudentsFromBag(numberOfStudent);
-            for(Student s : Student.values()) {
+            for (Student s : Student.values()) {
                 managedTable.placeStudentOnCloud(s, cloudIdx, tmp.getCount(s));
             }
         }
     }
 
-    public void PP_PlayAssistantCard(int cardIndex) throws AssistantCardNotPlayableException {
-        if(isAssistantCardPlayable(cardIndex)) {
+    private void PP_PlayAssistantCard(int cardIndex) throws AssistantCardNotPlayableException {
+        if (isAssistantCardPlayable(cardIndex)) {
             playersSortedByCurrentTurnOrder.get(currentLeadPlayer).playAssistantCardAtIndex(cardIndex);
         } else throw new AssistantCardNotPlayableException();
     }
 
-    public void AP_MoveStudentsToIsland(Student s, int islandIdx) {
+    private void AP_MoveStudentsToIsland(Student s, int islandIdx) {
         managedTable.placeStudentOnIsland(s, islandIdx);
     }
 
-    public void AP_AP_MoveStudentsToDiningRoom(Student s, Player p) {
-        p.placeStudentAtTableAndGetCoin(s);
+    private void AP_MoveStudentsToDiningRoom(Student s) {
+        getCurrentPlayer().placeStudentAtTableAndGetCoin(s);
     }
+
+    private void AP_CollectAllStudentsFromCloud(int cloudIdx) {
+        StudentCollection sc;
+        sc = managedTable.pickStudentsFromCloud(cloudIdx);
+        getCurrentPlayer().addAllStudentsToEntrance(sc);
+    }
+
+    private void AP_MoveMotherNatureBySteps(int steps) {
+        int newSteps = steps;
+        if (getCurrentPlayer().getActiveCharacterCard() != null) {
+            if (getCurrentPlayer().getActiveCharacterCard().getCharacter().getChangesMNSteps()) {
+                try {
+                    steps += getCurrentPlayer().getActiveCharacterCard().useCard(managedTable, null, getCurrentPlayer(), null);
+                } catch (CharacterCardIncorrectParametersException | CharacterCardNoMoreUsesAvailableException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        managedTable.moveMotherNature(steps);
+    }
+
+    public boolean purchaseCharacterCards(int cardIndex) {
+        CharacterCard card = managedTable.getCardAtIndex(cardIndex);
+        return getCurrentPlayer().playCharacterCard(card);
+    }
+
+
 }
