@@ -19,21 +19,36 @@ public class GenericModifierCard extends CharacterCard {
                 // When computing the control of a Professor, if we add 1 to the "real" value of the Player the ">" check becomes ">=", as required by the card
                 return getModifier(t, currentPlayer, -1, true, false, false, false, false, false);
             };
-            case Ambassador -> executor = (TableManager t, List<Player> players, Player currentPlayer, CharacterCardParamSet userInfo) -> getModifier(t, currentPlayer, userInfo.getTargetIslandIndex(), false, true, false, false, false, false);
+            case Ambassador -> executor = (TableManager t, List<Player> players, Player currentPlayer, CharacterCardParamSet userInfo) -> {
+                if (userInfo == null) throw new CharacterCardIncorrectParametersException("GenericModifierCard ERROR: userInfo is NULL");
+                
+                return getModifier(t, currentPlayer, userInfo.getTargetIslandIndex(), false, true, false, false, false, false);
+            };
             case Magician -> executor = (TableManager t, List<Player> players, Player currentPlayer, CharacterCardParamSet userInfo) -> {
+                if (userInfo == null) throw new CharacterCardIncorrectParametersException("GenericModifierCard ERROR: userInfo is NULL");
+    
                 if (getTimesUsedInCurrentTurn() == 1) {
+                    int additionalSteps = userInfo.getChosenMotherNatureAdditionalSteps();
+                    if (additionalSteps < 0 || additionalSteps > 2) throw new CharacterCardIncorrectParametersException("GenericModifierCard ERROR: addtionalMNSteps must be between 0 and 2");
                     savedModifier = userInfo.getChosenMotherNatureAdditionalSteps();
                 }
                 return getModifier(t, currentPlayer, -1, false, false, false, false, false, true);
             };
-            case Centaurus -> executor = (TableManager t, List<Player> players, Player currentPlayer, CharacterCardParamSet userInfo) -> getModifier(t, currentPlayer, userInfo.getTargetIslandIndex(), false, false, false, true, false, false);
+            case Centaurus -> executor = (TableManager t, List<Player> players, Player currentPlayer, CharacterCardParamSet userInfo) -> {
+                if (userInfo == null) throw new CharacterCardIncorrectParametersException("GenericModifierCard ERROR: userInfo is NULL");
+    
+                return getModifier(t, currentPlayer, userInfo.getTargetIslandIndex(), false, false, false, true, false, false);
+            };
             case Swordsman -> executor = (TableManager t, List<Player> players, Player currentPlayer, CharacterCardParamSet userInfo) -> getModifier(t, currentPlayer, -1, false, false, false, false, true, false);
             case Mushroom -> executor = (TableManager t, List<Player> players, Player currentPlayer, CharacterCardParamSet userInfo) -> {
+                if (userInfo == null) throw new CharacterCardIncorrectParametersException("GenericModifierCard ERROR: userInfo is NULL");
+    
                 if (excludedStudent == null) {
                     excludedStudent = userInfo.getSrcStudentColor();
                 }
-                if (userInfo.getTargetIslandIndex() == -1) return 0;
-                return getModifier(t, currentPlayer, userInfo.getTargetIslandIndex(), false, false, true, false, false, false);
+                int islandIdx = userInfo.getTargetIslandIndex();
+                if (islandIdx < 0 || islandIdx >= t.getNumberOfIslands()) throw new CharacterCardIncorrectParametersException("GenericModifierCard ERROR: Island index out of range");
+                return getModifier(t, currentPlayer, islandIdx, false, false, true, false, false, false);
             };
             default -> executor = null;
         }
@@ -61,9 +76,10 @@ public class GenericModifierCard extends CharacterCard {
     }
 
     private int getModifier(TableManager tableManager, Player player, int targetIslandIndex, boolean increasesProfControl, boolean readsTargetIslandInfluence, boolean ignoresSavedStudents, boolean ignoresTowers, boolean isConstant, boolean readsModifiedMotherNatureSteps) throws CharacterCardIncorrectParametersException {
-        if (ignoresSavedStudents && (excludedStudent == null || targetIslandIndex == -1)) throw new CharacterCardIncorrectParametersException("GenericModifierCard ERROR: Attempting to ignore saved students, but excludedStudents has not been set or targetIslandIndex is not valid!");
-        if (ignoresTowers && targetIslandIndex == -1) throw new CharacterCardIncorrectParametersException("GenericModifierCard ERROR: Attempting to ignore towers on island, but targetIslandIndex is not valid!");
-        if (readsTargetIslandInfluence && (targetIslandIndex == -1 || player == null)) throw new CharacterCardIncorrectParametersException("GenericModifierCard ERROR: Attempting to read influence on island, but targetIslandIndex is not valid or player is null!");
+        boolean islandIdxOutOfRange = (targetIslandIndex < 0 || targetIslandIndex >= tableManager.getNumberOfIslands());
+        if (ignoresSavedStudents && (excludedStudent == null || islandIdxOutOfRange)) throw new CharacterCardIncorrectParametersException("GenericModifierCard ERROR: Attempting to ignore saved students, but excludedStudents has not been set or targetIslandIndex is not valid!");
+        if (ignoresTowers && islandIdxOutOfRange) throw new CharacterCardIncorrectParametersException("GenericModifierCard ERROR: Attempting to ignore towers on island, but targetIslandIndex is not valid!");
+        if (readsTargetIslandInfluence && (islandIdxOutOfRange || player == null)) throw new CharacterCardIncorrectParametersException("GenericModifierCard ERROR: Attempting to read influence on island, but targetIslandIndex is not valid or player is null!");
 
         return (boolToInt(increasesProfControl))
                 + (boolToInt(ignoresSavedStudents) * (excludedStudent == null ? 0 : -1 * tableManager.getIslandAtIndex(targetIslandIndex).getNumberOfSameStudents(excludedStudent)))

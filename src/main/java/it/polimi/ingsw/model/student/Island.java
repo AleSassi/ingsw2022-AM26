@@ -1,11 +1,6 @@
 package it.polimi.ingsw.model.student;
 
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Professor;
-import it.polimi.ingsw.model.Tower;
-
-import java.util.ArrayList;
-import java.util.List;
+import it.polimi.ingsw.model.*;
 
 public class Island extends StudentHost {
     private int towerCount = 0;

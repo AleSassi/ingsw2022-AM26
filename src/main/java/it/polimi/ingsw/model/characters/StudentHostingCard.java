@@ -14,10 +14,13 @@ public class StudentHostingCard extends CharacterCard {
         super(character);
         switch (character) {
             case Abbot -> executor = (TableManager t, List<Player> players, Player currentPlayer, CharacterCardParamSet userInfo) -> {
+                if (userInfo == null) throw new CharacterCardIncorrectParametersException("StudentHostingCard ERROR: CharacterCardParamSet is NULL");
+                
                 checkMaxUsesInTurn(character);
                 int dstIslandIdx = userInfo.getTargetIslandIndex();
                 Student chosenStudentType = userInfo.getSrcStudentColor();
-                if (chosenStudentType == null || dstIslandIdx == -1 || hostedStudents.getCount(chosenStudentType) < 1) throw new CharacterCardIncorrectParametersException();
+                if (t == null || chosenStudentType == null || (dstIslandIdx < 0 || dstIslandIdx >= t.getNumberOfIslands()) || hostedStudents.getCount(chosenStudentType) < 1) throw new CharacterCardIncorrectParametersException();
+                
                 try {
                     moveStudents(chosenStudentType, 1, null, null, dstIslandIdx, t, StudentMovementSource.Self, StudentMovementDestination.ChosenIsland, true);
                 } catch (StudentHostingCardIncorrectUpdateParametersException e) {
@@ -26,10 +29,13 @@ public class StudentHostingCard extends CharacterCard {
                 return 0;
             };
             case Circus -> executor = (TableManager t, List<Player> players, Player currentPlayer, CharacterCardParamSet userInfo) -> {
+                if (userInfo == null) throw new CharacterCardIncorrectParametersException("StudentHostingCard ERROR: CharacterCardParamSet is NULL");
+                
                 checkMaxUsesInTurn(character);
                 Student studentFromCard = userInfo.getSrcStudentColor();
                 Student studentFromEntrance = userInfo.getDstStudentColor();
                 if (currentPlayer == null || studentFromCard == null || studentFromEntrance == null) throw new CharacterCardIncorrectParametersException();
+                
                 try {
                     moveStudents(studentFromCard, 1, null, currentPlayer, -1, t, StudentMovementSource.Self, StudentMovementDestination.PlayerEntrance, false);
                     moveStudents(studentFromEntrance, 1, currentPlayer, null, -1, t, StudentMovementSource.PlayerEntrance, StudentMovementDestination.Self, true);
@@ -39,10 +45,13 @@ public class StudentHostingCard extends CharacterCard {
                 return 0;
             };
             case Musician -> executor = (TableManager t, List<Player> players, Player currentPlayer, CharacterCardParamSet userInfo) -> {
+                if (userInfo == null) throw new CharacterCardIncorrectParametersException("StudentHostingCard ERROR: CharacterCardParamSet is NULL");
+                
                 checkMaxUsesInTurn(character);
                 Student studentFromEntrance = userInfo.getSrcStudentColor();
                 Student studentFromDiningRoom = userInfo.getDstStudentColor();
                 if (currentPlayer == null || studentFromDiningRoom == null || studentFromEntrance == null) throw new CharacterCardIncorrectParametersException();
+                
                 try {
                     moveStudents(studentFromDiningRoom, 1, currentPlayer, currentPlayer, -1, t, StudentMovementSource.PlayerTable, StudentMovementDestination.PlayerEntrance, false);
                     moveStudents(studentFromEntrance, 1, currentPlayer, currentPlayer, -1, t, StudentMovementSource.PlayerEntrance, StudentMovementDestination.PlayerTable, true);
@@ -52,9 +61,12 @@ public class StudentHostingCard extends CharacterCard {
                 return 0;
             };
             case Queen -> executor = (TableManager t, List<Player> players, Player currentPlayer, CharacterCardParamSet userInfo) -> {
+                if (userInfo == null) throw new CharacterCardIncorrectParametersException("StudentHostingCard ERROR: CharacterCardParamSet is NULL");
+                
                 checkMaxUsesInTurn(character);
                 Student chosenStudentType = userInfo.getSrcStudentColor();
                 if (chosenStudentType == null || currentPlayer == null || hostedStudents.getCount(chosenStudentType) < 1) throw new CharacterCardIncorrectParametersException();
+                
                 try {
                     moveStudents(chosenStudentType, 1, null, currentPlayer, -1, t, StudentMovementSource.Self, StudentMovementDestination.PlayerTable, true);
                 } catch (StudentHostingCardIncorrectUpdateParametersException e) {
@@ -63,9 +75,12 @@ public class StudentHostingCard extends CharacterCard {
                 return 0;
             };
             case Thief -> executor = (TableManager t, List<Player> players, Player currentPlayer, CharacterCardParamSet userInfo) -> {
+                if (userInfo == null) throw new CharacterCardIncorrectParametersException("StudentHostingCard ERROR: CharacterCardParamSet is NULL");
+                
                 checkMaxUsesInTurn(character);
                 Student chosenStudentType = userInfo.getSrcStudentColor();
                 if (chosenStudentType == null || players == null) throw new CharacterCardIncorrectParametersException();
+                
                 for (Player player: players) {
                     int numberOfStudentsToRemove = Math.min(3, player.getCountAtTable(chosenStudentType));
                     try {

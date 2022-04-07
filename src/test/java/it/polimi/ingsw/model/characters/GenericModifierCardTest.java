@@ -1,11 +1,13 @@
 package it.polimi.ingsw.model.characters;
 
+import it.polimi.ingsw.exceptions.CharacterCardIncorrectParametersException;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Professor;
 import it.polimi.ingsw.model.TableManager;
 import it.polimi.ingsw.model.Tower;
 import it.polimi.ingsw.model.assistants.Wizard;
 import it.polimi.ingsw.model.student.Student;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -200,12 +202,9 @@ class GenericModifierCardTest {
         fakePlayerSetup(Character.Mushroom);
         TableManager copyTableManager = new TableManager(2, false);
         tableManager.copyTo(copyTableManager);
-
-        assertDoesNotThrow(() -> {
-            assertEquals(0, card.useCard(tableManager, null, player, new CharacterCardParamSet(Student.BlueUnicorn, Student.BlueUnicorn, null, null, false, 0, -1, -1, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
-            //The table must not be modified
-            assertEquals(tableManager, copyTableManager);
-        });
+        
+        assertThrows(CharacterCardIncorrectParametersException.class, () -> card.useCard(tableManager, null, player, new CharacterCardParamSet(Student.BlueUnicorn, Student.BlueUnicorn, null, null, false, 0, -1, -1, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
+        assertEquals(tableManager, copyTableManager);
     }
 
     /**
@@ -290,6 +289,24 @@ class GenericModifierCardTest {
         fakePlayerSetup(Character.Magician);
         int code = card.hashCode();
         assertEquals(code, card.hashCode());
+    }
+    
+    @RepeatedTest(100)
+    void testInvalidParameters() {
+        Character[] characters = {Character.Ambassador, Character.Magician, Character.Centaurus, Character.Mushroom};
+        for (Character character: characters) {
+            fakePlayerSetup(character);
+            card.purchase();
+            assertThrows(CharacterCardIncorrectParametersException.class, () -> card.useCard(tableManager, null, null, null));
+            card.purchase();
+            assertThrows(CharacterCardIncorrectParametersException.class, () -> card.useCard(tableManager, null, player, new CharacterCardParamSet(null, null, null, null, false, -1, -1, -1, CharacterCardParamSet.StopCardMovementMode.ToCard)));
+            card.purchase();
+            assertThrows(CharacterCardIncorrectParametersException.class, () -> card.useCard(tableManager, null, player, new CharacterCardParamSet(null, null, null, null, false, -1, 13, 13, CharacterCardParamSet.StopCardMovementMode.ToCard)));
+            if (character == Character.Ambassador || character == Character.Mushroom || character == Character.Centaurus) {
+                card.purchase();
+                assertThrows(CharacterCardIncorrectParametersException.class, () -> card.useCard(tableManager, null, player, new CharacterCardParamSet(Student.BlueUnicorn, Student.BlueUnicorn, null, null, false, -1, 13, 13, CharacterCardParamSet.StopCardMovementMode.ToCard)));
+            }
+        }
     }
 
     /**

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.characters;
 
+import it.polimi.ingsw.exceptions.CharacterCardIncorrectParametersException;
 import it.polimi.ingsw.exceptions.CharacterCardNoMoreUsesAvailableException;
 import it.polimi.ingsw.exceptions.CollectionUnderflowError;
 import it.polimi.ingsw.model.Player;
@@ -8,6 +9,7 @@ import it.polimi.ingsw.model.TableManager;
 import it.polimi.ingsw.model.Tower;
 import it.polimi.ingsw.model.assistants.Wizard;
 import it.polimi.ingsw.model.student.*;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -171,7 +173,7 @@ class StudentHostingCardTest {
             StudentCollection collectionInCard = card.getHostedStudents();
             Student pickedStudent = collectionInCard.pickRandom();
             int studentsOnIsland = tableManager.getIslandAtIndex(0).getNumberOfSameStudents(pickedStudent);
-            assertEquals(0, card.useCard(null, null, player, new CharacterCardParamSet(pickedStudent, Student.BlueUnicorn, null, null, false, 0, 0, 0, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
+            assertThrows(CharacterCardIncorrectParametersException.class, () -> card.useCard(null, null, player, new CharacterCardParamSet(pickedStudent, Student.BlueUnicorn, null, null, false, 0, 0, 0, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
             //Check that the Student was moved to the Island
             Island zeroIsland = tableManager.getIslandAtIndex(0);
             assertEquals(studentsOnIsland, zeroIsland.getNumberOfSameStudents(pickedStudent));
@@ -381,6 +383,24 @@ class StudentHostingCardTest {
         card.copyTo(card2);
         assertEquals(card, card2);
         assertEquals(card.hashCode(), card2.hashCode());
+    }
+    
+    @RepeatedTest(100)
+    void testInvalidParameters() {
+        Character[] characters = {Character.Abbot, Character.Circus, Character.Musician, Character.Queen, Character.Thief};
+        for (Character character: characters) {
+            fakePlayerSetup(character, false);
+            card.purchase();
+            assertThrows(CharacterCardIncorrectParametersException.class, () -> card.useCard(tableManager, null, null, null));
+            card.purchase();
+            assertThrows(CharacterCardIncorrectParametersException.class, () -> card.useCard(tableManager, null, player, new CharacterCardParamSet(null, null, null, null, false, -1, -1, -1, CharacterCardParamSet.StopCardMovementMode.ToCard)));
+            card.purchase();
+            assertThrows(CharacterCardIncorrectParametersException.class, () -> card.useCard(tableManager, null, player, new CharacterCardParamSet(null, null, null, null, false, -1, 13, 13, CharacterCardParamSet.StopCardMovementMode.ToCard)));
+            if (character == Character.Abbot) {
+                card.purchase();
+                assertThrows(CharacterCardIncorrectParametersException.class, () -> card.useCard(tableManager, null, player, new CharacterCardParamSet(Student.BlueUnicorn, Student.BlueUnicorn, null, null, false, -1, 13, 13, CharacterCardParamSet.StopCardMovementMode.ToCard)));
+            }
+        }
     }
 
     /**
