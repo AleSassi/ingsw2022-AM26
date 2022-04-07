@@ -98,8 +98,14 @@ public abstract class MatchManager {
 
     private void PP_PlayAssistantCard(int cardIndex) throws AssistantCardNotPlayableException {
         if (isAssistantCardPlayable(cardIndex)) {
-            playersSortedByCurrentTurnOrder.get(currentLeadPlayer).playAssistantCardAtIndex(cardIndex);
-        } else throw new AssistantCardNotPlayableException();
+            try {
+                playersSortedByCurrentTurnOrder.get(currentLeadPlayer).playAssistantCardAtIndex(cardIndex);
+            } catch (CollectionUnderflowError e) {
+                throw new AssistantCardNotPlayableException();
+            }
+        } else {
+            throw new AssistantCardNotPlayableException();
+        }
     }
 
     private void AP_MoveStudentsToIsland(Student s, int islandIdx) {

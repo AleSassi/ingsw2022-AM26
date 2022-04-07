@@ -76,10 +76,10 @@ public class Player {
      * allow player to use card from avaible deck of assistant
      */
 
-    public void playAssistantCardAtIndex(int cardIndex) {
+    public void playAssistantCardAtIndex(int cardIndex) throws CollectionUnderflowError {
         AssistantCard temp = availableCardsDeck.getCard(cardIndex);
         availableCardsDeck.removeCard(cardIndex);
-        playedCardDeck.AddCardOnTop(temp);
+        playedCardDeck.addCardOnTop(temp);
     }
     /**
      * add a student of type s to entance

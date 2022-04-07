@@ -36,7 +36,7 @@ class PlayerTest {
         Player test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8);
         AvailableCardsDeck testDeck = new AvailableCardsDeck();
         AssistantCard card = testDeck.getCard(3);
-        test.playAssistantCardAtIndex(3);
+        assertDoesNotThrow(() -> test.playAssistantCardAtIndex(3));
         assertEquals(test.getLastPlayedAssistantCard(), card);
         ArrayList<AssistantCard> newDeck = test.getAvailableAssistantCards();
         assertFalse(newDeck.contains(card));
