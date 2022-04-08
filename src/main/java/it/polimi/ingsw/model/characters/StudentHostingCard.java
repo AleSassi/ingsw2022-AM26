@@ -24,7 +24,7 @@ public class StudentHostingCard extends CharacterCard {
                 try {
                     moveStudents(chosenStudentType, 1, null, null, dstIslandIdx, t, StudentMovementSource.Self, StudentMovementDestination.ChosenIsland, true);
                 } catch (StudentHostingCardIncorrectUpdateParametersException e) {
-                    e.printStackTrace();
+                    throw new CharacterCardIncorrectParametersException("StudentHostingCard ERROR: Incorrect Update Parameters - " + e.getMessage());
                 }
                 return 0;
             };
@@ -40,7 +40,7 @@ public class StudentHostingCard extends CharacterCard {
                     moveStudents(studentFromCard, 1, null, currentPlayer, -1, t, StudentMovementSource.Self, StudentMovementDestination.PlayerEntrance, false);
                     moveStudents(studentFromEntrance, 1, currentPlayer, null, -1, t, StudentMovementSource.PlayerEntrance, StudentMovementDestination.Self, true);
                 } catch (StudentHostingCardIncorrectUpdateParametersException e) {
-                    e.printStackTrace();
+                    throw new CharacterCardIncorrectParametersException("StudentHostingCard ERROR: Incorrect Update Parameters - " + e.getMessage());
                 }
                 return 0;
             };
@@ -56,7 +56,7 @@ public class StudentHostingCard extends CharacterCard {
                     moveStudents(studentFromDiningRoom, 1, currentPlayer, currentPlayer, -1, t, StudentMovementSource.PlayerTable, StudentMovementDestination.PlayerEntrance, false);
                     moveStudents(studentFromEntrance, 1, currentPlayer, currentPlayer, -1, t, StudentMovementSource.PlayerEntrance, StudentMovementDestination.PlayerTable, true);
                 } catch (StudentHostingCardIncorrectUpdateParametersException e) {
-                    e.printStackTrace();
+                    throw new CharacterCardIncorrectParametersException("StudentHostingCard ERROR: Incorrect Update Parameters - " + e.getMessage());
                 }
                 return 0;
             };
@@ -70,7 +70,7 @@ public class StudentHostingCard extends CharacterCard {
                 try {
                     moveStudents(chosenStudentType, 1, null, currentPlayer, -1, t, StudentMovementSource.Self, StudentMovementDestination.PlayerTable, true);
                 } catch (StudentHostingCardIncorrectUpdateParametersException e) {
-                    e.printStackTrace();
+                    throw new CharacterCardIncorrectParametersException("StudentHostingCard ERROR: Incorrect Update Parameters - " + e.getMessage());
                 }
                 return 0;
             };
@@ -86,7 +86,7 @@ public class StudentHostingCard extends CharacterCard {
                     try {
                         moveStudents(chosenStudentType, numberOfStudentsToRemove, player, null, -1, t, StudentMovementSource.PlayerTable, StudentMovementDestination.TableBag, false);
                     } catch (StudentHostingCardIncorrectUpdateParametersException e) {
-                        e.printStackTrace();
+                        throw new CharacterCardIncorrectParametersException("StudentHostingCard ERROR: Incorrect Update Parameters - " + e.getMessage());
                     }
                 }
                 return 0;

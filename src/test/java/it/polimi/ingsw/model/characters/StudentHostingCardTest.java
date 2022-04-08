@@ -249,8 +249,8 @@ class StudentHostingCardTest {
             StudentCollection collectionInCard = card.getHostedStudents();
             StudentCollection collectionInCardCopy = card.getHostedStudents();
             Student pickedStudent = collectionInCardCopy.pickRandom();
-            assertEquals(0, card.useCard(null, null, player, new CharacterCardParamSet(pickedStudent, Student.BlueUnicorn, null, null, false, 0, 0, 0, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
-            assertEquals(card.getHostedStudents(), collectionInCard);
+            assertThrows(CharacterCardIncorrectParametersException.class, () -> card.useCard(null, null, player, new CharacterCardParamSet(pickedStudent, Student.BlueUnicorn, null, null, false, 0, 0, 0, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
+            assertEquals(collectionInCard, card.getHostedStudents());
         });
     }
 
@@ -285,12 +285,10 @@ class StudentHostingCardTest {
     void verifyIncorrectUsageMusician() {
         // We force no character cards on the Table to avoid the auto-setup of Character cards
         fakePlayerSetup(Character.Musician, false);
-
-        assertDoesNotThrow(() -> {
-            StudentCollection collectionInCard = card.getHostedStudents();
-            assertEquals(0, card.useCard(null, null, player, new CharacterCardParamSet(Student.BlueUnicorn, Student.BlueUnicorn, null, null, false, 0, 0, 0, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
-            assertEquals(card.getHostedStudents(), collectionInCard);
-        });
+    
+        StudentCollection collectionInCard = card.getHostedStudents();
+        assertThrows(CharacterCardIncorrectParametersException.class, () -> card.useCard(null, null, player, new CharacterCardParamSet(Student.BlueUnicorn, Student.BlueUnicorn, null, null, false, 0, 0, 0, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
+        assertEquals(card.getHostedStudents(), collectionInCard);
     }
 
     /**
@@ -326,7 +324,7 @@ class StudentHostingCardTest {
             StudentCollection collectionInCard = card.getHostedStudents();
             StudentCollection collectionInCardCopy = card.getHostedStudents();
             Student pickedStudent = collectionInCardCopy.pickRandom();
-            assertEquals(0, card.useCard(null, null, player, new CharacterCardParamSet(pickedStudent, Student.BlueUnicorn, null, null, false, 0, 0, 0, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
+            assertThrows(CharacterCardIncorrectParametersException.class, () -> card.useCard(null, null, player, new CharacterCardParamSet(pickedStudent, Student.BlueUnicorn, null, null, false, 0, 0, 0, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
             assertEquals(card.getHostedStudents(), collectionInCard);
         });
     }
