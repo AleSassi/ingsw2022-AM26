@@ -50,11 +50,15 @@ public class SchoolBoard {
     }
 
     public void setControlledProfessor(Professor professor) {
+        if (professor == null) return;
+        
         int profIndex = Arrays.asList(Professor.values()).indexOf(professor);
         controlledProfessors[profIndex] = true;
     }
 
     public void removeProfessorControl(Professor professor) {
+        if (professor == null) return;
+        
         int profIndex = Arrays.asList(Professor.values()).indexOf(professor);
         controlledProfessors[profIndex] = false;
     }

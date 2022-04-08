@@ -144,21 +144,6 @@ public class StudentHostingCard extends CharacterCard {
         //endregion
 
         try {
-            // Remove Student from the movement source
-            switch (movementSource) {
-                case PlayerEntrance -> {
-                    for (int repetition = 0; repetition < numberOfStudentsToMove; repetition++) {
-                        pSource.removeStudentFromEntrance(s);
-                    }
-                }
-                case PlayerTable -> {
-                    for (int repetition = 0; repetition < numberOfStudentsToMove; repetition++) {
-                        pSource.removeStudentFromTable(s);
-                    }
-                }
-                case Self -> hostedStudents.removeStudents(s, numberOfStudentsToMove);
-            }
-
             // Add the student to the movement destination
             switch (movementDestination) {
                 case PlayerEntrance -> {
@@ -179,6 +164,21 @@ public class StudentHostingCard extends CharacterCard {
                 }
                 case ChosenIsland -> tableManager.getIslandAtIndex(dstIslandIndex).placeStudents(s, numberOfStudentsToMove);
             }
+            
+            // Remove Student from the movement source
+            switch (movementSource) {
+                case PlayerEntrance -> {
+                    for (int repetition = 0; repetition < numberOfStudentsToMove; repetition++) {
+                        pSource.removeStudentFromEntrance(s);
+                    }
+                }
+                case PlayerTable -> {
+                    for (int repetition = 0; repetition < numberOfStudentsToMove; repetition++) {
+                        pSource.removeStudentFromTable(s);
+                    }
+                }
+                case Self -> hostedStudents.removeStudents(s, numberOfStudentsToMove);
+            }
 
             // Invariant: The card always has a number of students equal to the one specified by the Character. Students must always be picked from the Bag in this case. We auto-update hostedStudents here in this case
             if (hostedStudents.getTotalCount() < getCharacter().getHostedStudentsCount() && autoUpdateToMatchMaxStudentCount) {
@@ -189,7 +189,7 @@ public class StudentHostingCard extends CharacterCard {
                     e.printStackTrace();
                 }
             }
-        } catch (CollectionUnderflowError e) {
+        } catch (CollectionUnderflowError | TableFullException e) {
             e.printStackTrace();
         }
     }

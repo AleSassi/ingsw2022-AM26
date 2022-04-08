@@ -1,11 +1,13 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.exceptions.CollectionUnderflowError;
+import it.polimi.ingsw.exceptions.TableFullException;
 import it.polimi.ingsw.exceptions.TooManyTowersException;
 import it.polimi.ingsw.model.assistants.*;
 import it.polimi.ingsw.model.characters.*;
 import it.polimi.ingsw.model.characters.Character;
 import it.polimi.ingsw.model.student.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -13,16 +15,21 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerTest {
+    
+    private Player test;
 
+    @BeforeEach
+    void initPlayer() {
+        test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8);
+    }
+    
     @Test
     void getNicknameTest() {
-        Player test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8);
         assertEquals("giovanni", test.getNickname());
     }
 
     @Test
     void testAvailableAssistantCards() {
-        Player test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8);
         ArrayList<AssistantCard> myCards = test.getAvailableAssistantCards();
         AvailableCardsDeck testDeck = new AvailableCardsDeck();
         int size = myCards.size();
@@ -33,7 +40,6 @@ class PlayerTest {
 
     @Test
     void getLastPlayedAssistantCardTest() {
-        Player test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8);
         AvailableCardsDeck testDeck = new AvailableCardsDeck();
         AssistantCard card = testDeck.getCard(3);
         assertDoesNotThrow(() -> test.playAssistantCardAtIndex(3));
@@ -44,7 +50,6 @@ class PlayerTest {
 
     @Test
     void getControlledProfessorsTest() {
-        Player test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8);
         test.addProfessor(Professor.GreenFrog);
         test.addProfessor(Professor.GreenFrog);
         test.addProfessor(Professor.BlueUnicorn);
@@ -59,25 +64,27 @@ class PlayerTest {
 
     @Test
     void getCountAtTableAndPlaceStudent() {
-        Player test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8);
-        test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-        test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-        test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-        assertEquals(test.getCountAtTable(Student.BlueUnicorn), 3);
-        test.placeStudentAtTableAndGetCoin(Student.GreenFrog);
-        assertEquals(test.getCountAtTable(Student.GreenFrog), 1);
-        assertEquals(test.getCountAtTable(Student.BlueUnicorn), 3);
+        assertDoesNotThrow(() -> {
+            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+            assertEquals(test.getCountAtTable(Student.BlueUnicorn), 3);
+            test.placeStudentAtTableAndGetCoin(Student.GreenFrog);
+            assertEquals(test.getCountAtTable(Student.GreenFrog), 1);
+            assertEquals(test.getCountAtTable(Student.BlueUnicorn), 3);
+        });
     }
 
     @Test
     void testCharacterCard() {
-        Player test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8);
-        test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-        test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-        test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-        test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-        test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-        test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+        assertDoesNotThrow(() -> {
+            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+        });
         CharacterCard testcard = new StopCardActivatorCard(Character.Herbalist);
         test.playCharacterCard(testcard);
         CharacterCard testedcard = test.getActiveCharacterCard();
@@ -89,7 +96,6 @@ class PlayerTest {
 
     @Test
     void addAndRemoveStudentToEntrance() {
-        Player test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8);
         test.addStudentToEntrance(Student.BlueUnicorn);
         test.addStudentToEntrance(Student.BlueUnicorn);
         assertDoesNotThrow(() -> {
@@ -102,7 +108,6 @@ class PlayerTest {
 
     @Test
     void addRemoveProfessor() {
-        Player test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8);
         test.addProfessor(Professor.GreenFrog);
         test.addProfessor(Professor.GreenFrog);
         test.removeProfessor(Professor.GreenFrog);
@@ -112,13 +117,11 @@ class PlayerTest {
 
     @Test
     void getTowerType() {
-        Player test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8);
         assertEquals(test.getTowerType(), Tower.Black);
     }
 
     @Test
     void testTowerPickAndRemove() {
-        Player test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8);
         assertThrows(TooManyTowersException.class, test::gainTower);
         assertDoesNotThrow(() -> {
             assertEquals(Tower.Black, test.pickAndRemoveTower());
@@ -129,7 +132,6 @@ class PlayerTest {
 
     @Test
     void addAllStudentsToEntrance() {
-        Player test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 1);
         StudentCollection sc = new StudentCollection();
         sc.addStudents(Student.BlueUnicorn, 1);
         sc.addStudents(Student.GreenFrog, 1);
@@ -140,5 +142,39 @@ class PlayerTest {
             test.removeStudentFromEntrance(Student.GreenFrog);
         });
         assertThrows(CollectionUnderflowError.class, () -> test.removeStudentFromEntrance(Student.BlueUnicorn));
+    }
+    
+    @Test
+    void testMoreThan10StudentsAtTable() {
+        assertDoesNotThrow(() -> {
+            for (int i = 0; i < 10; i++) {
+                test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+            }
+        });
+        assertThrows(TableFullException.class, () -> test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn));
+    }
+    
+    @Test
+    void testEmptyAssistantCardDeck() {
+        assertDoesNotThrow(() -> {
+            for (int i = 0; i < 10; i++) {
+                test.playAssistantCardAtIndex(0);
+            }
+        });
+        assertThrows(CollectionUnderflowError.class, () -> test.playAssistantCardAtIndex(0));
+    }
+    
+    @Test
+    void nullTest() {
+        assertDoesNotThrow(() -> {
+            test.removeStudentFromTable(null);
+            test.addAllStudentsToEntrance(null);
+            test.deactivateCard();
+            test.addProfessor(null);
+            test.removeProfessor(null);
+            test.getCountAtTable(null);
+            test.playCharacterCard(null);
+        });
+        assertThrows(IndexOutOfBoundsException.class, () -> test.playAssistantCardAtIndex(-1));
     }
 }

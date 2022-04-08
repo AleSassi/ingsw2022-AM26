@@ -1,10 +1,7 @@
 package it.polimi.ingsw.model.student;
 
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Professor;
-import it.polimi.ingsw.model.Tower;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.assistants.Wizard;
-import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

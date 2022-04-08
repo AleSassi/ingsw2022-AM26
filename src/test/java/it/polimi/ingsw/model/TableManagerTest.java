@@ -438,9 +438,11 @@ class TableManagerTest {
         }
         if (checkCards) {
             CharacterCard pickedCard = tableManager.getCardAtIndex(activatedCardIndex);
-            for (int i = 0; i < pickedCard.getPrice() * 3; i++) {
-                testPlayer.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-            }
+            assertDoesNotThrow(() -> {
+                for (int i = 0; i < pickedCard.getPrice() * 3; i++) {
+                    testPlayer.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+                }
+            });
             testPlayer.playCharacterCard(tableManager.getCardAtIndex(activatedCardIndex));
         }
         //Simulate MN movement here

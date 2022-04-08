@@ -445,14 +445,16 @@ class StudentHostingCardTest {
             player.addStudentToEntrance(Student.GreenFrog);
             player.addStudentToEntrance(Student.PinkFair);
             player.addStudentToEntrance(Student.YellowElf);
-            player.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-            player.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-            player.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-            player.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-            player.placeStudentAtTableAndGetCoin(Student.RedDragon);
-            player.placeStudentAtTableAndGetCoin(Student.GreenFrog);
-            player.placeStudentAtTableAndGetCoin(Student.PinkFair);
-            player.placeStudentAtTableAndGetCoin(Student.YellowElf);
+            assertDoesNotThrow(() -> {
+                player.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+                player.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+                player.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+                player.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+                player.placeStudentAtTableAndGetCoin(Student.RedDragon);
+                player.placeStudentAtTableAndGetCoin(Student.GreenFrog);
+                player.placeStudentAtTableAndGetCoin(Student.PinkFair);
+                player.placeStudentAtTableAndGetCoin(Student.YellowElf);
+            });
         }
         if (autoplaceTestStudents) {
             player.addProfessor(Professor.BlueUnicorn);
@@ -475,13 +477,15 @@ class StudentHostingCardTest {
         secondPlayer.addStudentToEntrance(Student.GreenFrog);
         secondPlayer.addStudentToEntrance(Student.PinkFair);
         secondPlayer.addStudentToEntrance(Student.YellowElf);
-        secondPlayer.placeStudentAtTableAndGetCoin(Student.GreenFrog);
-        secondPlayer.placeStudentAtTableAndGetCoin(Student.GreenFrog);
-        secondPlayer.placeStudentAtTableAndGetCoin(Student.GreenFrog);
-        secondPlayer.placeStudentAtTableAndGetCoin(Student.RedDragon);
-        secondPlayer.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-        secondPlayer.placeStudentAtTableAndGetCoin(Student.PinkFair);
-        secondPlayer.placeStudentAtTableAndGetCoin(Student.YellowElf);
+        assertDoesNotThrow(() -> {
+            secondPlayer.placeStudentAtTableAndGetCoin(Student.GreenFrog);
+            secondPlayer.placeStudentAtTableAndGetCoin(Student.GreenFrog);
+            secondPlayer.placeStudentAtTableAndGetCoin(Student.GreenFrog);
+            secondPlayer.placeStudentAtTableAndGetCoin(Student.RedDragon);
+            secondPlayer.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+            secondPlayer.placeStudentAtTableAndGetCoin(Student.PinkFair);
+            secondPlayer.placeStudentAtTableAndGetCoin(Student.YellowElf);
+        });
         players.add(secondPlayer);
     }
 

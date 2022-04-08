@@ -3,14 +3,11 @@ package it.polimi.ingsw.model.match;
 import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.TableManager;
-import it.polimi.ingsw.model.assistants.AssistantCard;
 import it.polimi.ingsw.model.assistants.Wizard;
 import it.polimi.ingsw.model.characters.CharacterCard;
 import it.polimi.ingsw.model.student.Student;
 import it.polimi.ingsw.model.student.StudentCollection;
-import org.w3c.dom.ls.LSInput;
 
-import java.security.PublicKey;
 import java.util.*;
 
 public abstract class MatchManager {
@@ -100,7 +97,7 @@ public abstract class MatchManager {
         if (isAssistantCardPlayable(cardIndex)) {
             try {
                 playersSortedByCurrentTurnOrder.get(currentLeadPlayer).playAssistantCardAtIndex(cardIndex);
-            } catch (CollectionUnderflowError e) {
+            } catch (CollectionUnderflowError | IndexOutOfBoundsException e) {
                 throw new AssistantCardNotPlayableException();
             }
         } else {
@@ -112,7 +109,7 @@ public abstract class MatchManager {
         managedTable.placeStudentOnIsland(s, islandIdx);
     }
 
-    private void AP_MoveStudentsToDiningRoom(Student s) {
+    private void AP_MoveStudentsToDiningRoom(Student s) throws TableFullException {
         getCurrentPlayer().placeStudentAtTableAndGetCoin(s);
     }
 

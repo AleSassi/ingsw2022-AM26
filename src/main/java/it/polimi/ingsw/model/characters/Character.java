@@ -62,4 +62,8 @@ public enum Character {
     public boolean getChangesMNSteps() {
         return this == Character.Magician;
     }
+    
+    public boolean getChangesProfControl() {
+        return this == Character.CheeseMan;
+    }
 }
