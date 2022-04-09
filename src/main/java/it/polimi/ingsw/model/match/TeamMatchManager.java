@@ -20,7 +20,7 @@ public class TeamMatchManager extends MatchManager{
             PlayerTeam team = new PlayerTeam();
             teams.add(team);
         }
-        Tower towerType = Tower.Black;
+        Tower towerType = null;
         if(teams.size() == 1) {
             towerType = Tower.Black;
         } else if(teams.size() == 2) {
@@ -41,4 +41,14 @@ public class TeamMatchManager extends MatchManager{
         }
         return result;
     }
+
+    @Override
+    protected List<Player> getPlayersWithTowers() {
+        List<Player> result = new ArrayList<>();
+        result.add(teams.get(0).getLeadPlayer());
+        result.add(teams.get(1).getLeadPlayer());
+        return result;
+    }
+
+
 }

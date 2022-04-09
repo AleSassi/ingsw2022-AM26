@@ -251,6 +251,14 @@ public class TableManager {
         return false;
     }
 
+    public int getBagStudentCount() {
+        int result = 0;
+        for(Student s :Student.values()) {
+            result += studentBag.getCount(s);
+        }
+        return result;
+    }
+
     /**
      * Adjusts a range as circular and 'wraps around' the value to become in bounds
      * @param left: The current number, or the 'numerator'

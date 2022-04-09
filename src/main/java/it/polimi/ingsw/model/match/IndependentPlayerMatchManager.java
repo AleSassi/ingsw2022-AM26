@@ -29,4 +29,11 @@ public class IndependentPlayerMatchManager extends MatchManager {
     protected List<Player> getAllPlayers() {
         return  players;
     }
+
+    @Override
+    protected List<Player> getPlayersWithTowers() {
+        return getAllPlayers();
+    }
+
+
 }

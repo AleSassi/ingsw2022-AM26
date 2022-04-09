@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.match;
 
+import it.polimi.ingsw.exceptions.CollectionUnderflowError;
+import it.polimi.ingsw.exceptions.InvalidPlayerCountException;
 import it.polimi.ingsw.exceptions.LobbyFullException;
 import it.polimi.ingsw.exceptions.NicknameNotUniqueException;
 import it.polimi.ingsw.model.assistants.Wizard;
@@ -44,7 +46,7 @@ public class GameLobby {
         }
     }
 
-    public MatchManager startGame() {
+    public MatchManager startGame() throws InvalidPlayerCountException, CollectionUnderflowError {
         if (state == GameLobbyState.Full) {
             MatchManager manager;
             if (getNumberOfPlayers() < 4) {

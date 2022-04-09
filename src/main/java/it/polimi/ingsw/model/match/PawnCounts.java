@@ -31,8 +31,13 @@ public class PawnCounts {
         };
     }
 
-    public int getStudentsPickedFromBag() {
-        return 8;
+    public int getStudentsPickedFromBag() throws InvalidPlayerCountException {
+        return switch (playerCount) {
+            case 2 -> 7;
+            case 3 -> 9;
+            case 4 -> 7;
+            default -> throw new InvalidPlayerCountException("Unexpected value: " + playerCount);
+        };
     }
 
     public int getStudentsMovedToRoom() throws InvalidPlayerCountException {
