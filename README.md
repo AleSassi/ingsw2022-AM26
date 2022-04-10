@@ -1,8 +1,8 @@
 # Software Engineering Project AY 2021-2022, Group AM26: Eriantys
 
-<img src="https://craniointernational.com/2021/wp-content/uploads/2021/06/ERIANTYS-BOX-3D.png" height=192px alt="Eriantys Box Image"/>
+<img src="https://craniointernational.com/2021/wp-content/uploads/2021/06/ERIANTYS-BOX-3D.png" height=256px alt="Eriantys Box Image"/>
 
-Eriantys is a board game whose reimplementation using the Java language is the final test of the **Software Engineering* course.
+Eriantys is a board game whose reimplementation using the Java language is the final test of the **Software Engineering** course.
 
 **Teacher** Alessandro Margara
 
