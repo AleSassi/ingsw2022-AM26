@@ -124,11 +124,13 @@ public class Player {
 	public void removeStudentFromTable(Student s) throws CollectionUnderflowError {
 		board.removeStudentFromTable(s);
 	}
-	
+
 	public void addProfessor(Professor p) {
 		board.setControlledProfessor(p);
 	}
-	
+	/**
+	 * remove a professor
+	 */
 	public void removeProfessor(Professor p) {
 		board.removeProfessorControl(p);
 	}
@@ -136,7 +138,9 @@ public class Player {
 	public Tower getTowerType() {
 		return board.getTowerType();
 	}
-	
+	/**
+	 * remove a professor from table
+	 */
 	public void gainTower() throws TooManyTowersException {
 		board.gainTower();
 	}
@@ -144,11 +148,16 @@ public class Player {
 	public int getAvailableTowerCount() {
 		return board.getAvailableTowerCount();
 	}
-	
+	/**
+	 * return the color of tower and decrement the towercounter on schoolboard
+	 */
 	public Tower pickAndRemoveTower() throws InsufficientTowersException {
 		return board.pickAndRemoveTower();
 	}
-	
+	/**
+	 * the method have a collection like parameter, it take all student
+	 * belonging to the collection, and add it all to the entrance
+	 */
 	public void addAllStudentsToEntrance(StudentCollection sc) {
 		if (sc == null) return;
 		
@@ -159,7 +168,9 @@ public class Player {
 			}
 		}
 	}
-	
+	/**
+	 * allow play to active character card (set the active card and decrese the player's coin
+	 */
 	public boolean playCharacterCard(CharacterCard card) {
 		if (card == null) return false;
 		
@@ -172,7 +183,9 @@ public class Player {
 		}
 		return false;
 	}
-	
+	/**
+	 * deactivate the character card
+	 */
 	public void deactivateCard() {
 		playedCard = null;
 	}
@@ -180,7 +193,9 @@ public class Player {
 	public void notifyVictory() {
 		//TODO: We should use Listener to notify the victory of a Player
 	}
-	
+	/**
+	 * create a player copy
+	 */
 	public Player copy() {
 		try {
 			Player copy = new Player(nickname, wizard, getTowerType(), 0);

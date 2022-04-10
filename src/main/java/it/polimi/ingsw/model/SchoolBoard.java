@@ -13,7 +13,9 @@ public class SchoolBoard {
     private StudentHost diningRoom;
     private StudentHost entrance;
     private boolean[] controlledProfessors;
-
+    /**
+     * constructor
+     */
     public SchoolBoard(Tower tower, int initialTowerCount) throws IncorrectConstructorParametersException {
         if (tower == null || initialTowerCount < 0 || initialTowerCount > 8) throw new IncorrectConstructorParametersException();
         
@@ -24,10 +26,13 @@ public class SchoolBoard {
         entrance = new StudentHost();
         maxTowerCount = initialTowerCount;
     }
-
+    /**
+     * return the number  of student that has type s present in the diningroom
+     */
     public int getCountAtTable(Student s) {
         return diningRoom.getCount(s);
     }
+
 
     public int getAvailableTowerCount() {
         return availableTowerCount;
@@ -37,6 +42,9 @@ public class SchoolBoard {
         return towerType;
     }
 
+    /**
+     * return the nuumber of professor
+     */
     public ArrayList<Professor> getControlledProfessors() {
         ArrayList<Professor> result = new ArrayList<>();
         for (int i = 0; i < controlledProfessors.length; i++) {
@@ -60,35 +68,52 @@ public class SchoolBoard {
         int profIndex = Arrays.asList(Professor.values()).indexOf(professor);
         controlledProfessors[profIndex] = false;
     }
-
+    /**
+     * insert a student with type s to the entrance
+     */
     public void addStudentToEntrance(Student s) {
         entrance.placeStudents(s, 1);
     }
 
+
+    /**
+     * remove a student with type s from the entrance
+     */
     public void removeStudentFromEntrance(Student s) throws CollectionUnderflowError {
         entrance.removeStudents(s, 1);
     }
-
+    /**
+     * insert a student with type s to the dining room
+     */
     public void addStudentToTable(Student s) {
         diningRoom.placeStudents(s, 1);
     }
 
+    /**
+     * remove a student with type s from the dining room
+     */
     public void removeStudentFromTable(Student s) throws CollectionUnderflowError {
         diningRoom.removeStudents(s, 1);
     }
-
+    /**
+     * increment the number of avaible tower
+     */
     public void gainTower() throws TooManyTowersException {
         if (availableTowerCount == maxTowerCount) {throw new TooManyTowersException();}
         availableTowerCount += 1;
     }
-
+    /**
+     * return the color of tower and decrement the towercounter on schoolboard
+     */
     public Tower pickAndRemoveTower() throws InsufficientTowersException {
         if (this.availableTowerCount == 0) throw new InsufficientTowersException();
 
         this.availableTowerCount -= 1;
         return towerType;
     }
-    
+    /**
+     * create a copy of school board
+     */
     public SchoolBoard copy() {
         try {
             SchoolBoard result = new SchoolBoard(towerType, maxTowerCount);
