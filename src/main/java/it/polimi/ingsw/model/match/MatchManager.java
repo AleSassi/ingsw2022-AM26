@@ -66,7 +66,7 @@ public abstract class MatchManager {
 	 * @param motherNatureSteps  Steps to move mother nature
 	 * @param cloudIdx           Cloud's idx from which to pick the students
 	 */
-	public boolean runAction(int AssistantCardIndex, Student studentToMove, int islandDestination, boolean moveToIsland, int motherNatureSteps, int cloudIdx) throws StudentMovementInvalidException, AssistantCardNotPlayableException {
+	public void runAction(int AssistantCardIndex, Student studentToMove, int islandDestination, boolean moveToIsland, int motherNatureSteps, int cloudIdx) throws StudentMovementInvalidException, AssistantCardNotPlayableException {
 		switch (matchPhase) {
 			case PlanPhaseStepTwo -> PP_PlayAssistantCard(AssistantCardIndex);
 			case ActionPhaseStepOne -> {
@@ -82,7 +82,9 @@ public abstract class MatchManager {
 			}
 			case ActionPhaseStepThree -> AP_CollectAllStudentsFromCloud(cloudIdx);
 		}
-		return moveToNextPlayer();
+		if (matchPhase == MatchPhase.ActionPhaseStepThree && moveToNextPlayer()) {
+			roundCheckMatchEnd();
+		}
 	}
 	
 	/**
