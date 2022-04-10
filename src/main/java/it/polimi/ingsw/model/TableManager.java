@@ -98,6 +98,18 @@ public class TableManager {
 
         return islands.get(islandIndex);
     }
+    
+    public boolean isProfessorAvailable(Professor professor) {
+        return availableProfessors.contains(professor);
+    }
+    
+    public boolean isBagEmpty() {
+        return studentBag.isEmpty();
+    }
+    
+    public void removeProfessor(Professor professor) {
+        availableProfessors.remove(professor);
+    }
 
     public StudentCollection pickStudentsFromBag(int count) throws CollectionUnderflowError {
         StudentCollection result = new StudentCollection();
@@ -249,14 +261,6 @@ public class TableManager {
             return true;
         }
         return false;
-    }
-
-    public int getBagStudentCount() {
-        int result = 0;
-        for(Student s :Student.values()) {
-            result += studentBag.getCount(s);
-        }
-        return result;
     }
 
     /**

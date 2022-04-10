@@ -42,4 +42,16 @@ class CloudTest {
 
         assertThrows(CollectionUnderflowError.class, () -> cloud.removeRandom());
     }
+    
+    /**
+     * Test that the Cloud returns an empty collection if the Cloud itself is empty
+     */
+    @Test
+    void extractAllStudentsFromEmptyCloud() {
+        assertDoesNotThrow(() -> {
+            StudentCollection result;
+            result = cloud.extractAllStudentsAndRemove();
+            assertEquals(0, result.getTotalCount());
+        });
+    }
 }

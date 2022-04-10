@@ -2,50 +2,83 @@ package it.polimi.ingsw.model.match;
 
 import it.polimi.ingsw.exceptions.InvalidPlayerCountException;
 
-public class PawnCounts {
-    private final int playerCount;
-
-    public PawnCounts(int playerCount) {
-        this.playerCount = playerCount;
-    }
-
-    public int getCloudTileCount(){
-        return  playerCount;
-    }
-
-    public int getTowerPerPlayerCount() throws InvalidPlayerCountException {
-        return switch (playerCount) {
-            case 2 -> 8;
-            case 3 -> 6;
-            case 4 -> 8;  //should be different?
-            default -> throw new InvalidPlayerCountException("Unexpected value: " + playerCount);
-        };
-    }
-
-    public int getStudentsDrawnForCloud() throws InvalidPlayerCountException {
-        return switch (playerCount) {
-            case 2 -> 3;
-            case 3 -> 4;
-            case 4 -> 3;
-            default -> throw new InvalidPlayerCountException("Unexpected value: " + playerCount);
-        };
-    }
-
-    public int getStudentsPickedFromBag() throws InvalidPlayerCountException {
-        return switch (playerCount) {
-            case 2 -> 7;
-            case 3 -> 9;
-            case 4 -> 7;
-            default -> throw new InvalidPlayerCountException("Unexpected value: " + playerCount);
-        };
-    }
-
-    public int getStudentsMovedToRoom() throws InvalidPlayerCountException {
-        return switch (playerCount) {
-            case 2 -> 7;
-            case 3 -> 9;
-            case 4 -> 7;
-            default -> throw new InvalidPlayerCountException("Unexpected value: " + playerCount);
-        };
-    }
+class PawnCounts {
+	
+	private final int playerCount;
+	private final int cloudTileCount;
+	private final int towersPerPlayer;
+	private final int studentsDrawnFromCloud;
+	private final int studentsPickedFromBag;
+	private final int studentsMovedToRoom;
+	
+	public PawnCounts(int playerCount) throws InvalidPlayerCountException {
+		if (playerCount < 2 || playerCount > 4) throw new InvalidPlayerCountException();
+		
+		this.playerCount = playerCount;
+		this.cloudTileCount = initCloudTileCount();
+		this.towersPerPlayer = initTowersPerPlayer();
+		this.studentsDrawnFromCloud = initStudentsFromCloud();
+		this.studentsPickedFromBag = initStudentsFromBag();
+		this.studentsMovedToRoom = initStudentsToRoom();
+	}
+	
+	private int initCloudTileCount() {
+		return playerCount;
+	}
+	
+	private int initTowersPerPlayer() {
+		if (playerCount == 2 || playerCount == 4) {
+			return 8;
+		} else {
+			return 6;
+		}
+	}
+	
+	private int initStudentsFromCloud() {
+		if (playerCount == 2 || playerCount == 4) {
+			return 3;
+		} else {
+			return 4;
+		}
+	}
+	
+	private int initStudentsFromBag() {
+		if (playerCount == 2 || playerCount == 4) {
+			return 7;
+		} else {
+			return 9;
+		}
+	}
+	
+	private int initStudentsToRoom() {
+		if (playerCount == 2 || playerCount == 4) {
+			return 7;
+		} else {
+			return 9;
+		}
+	}
+	
+	public int getPlayerCount() {
+		return playerCount;
+	}
+	
+	public int getCloudTileCount() {
+		return cloudTileCount;
+	}
+	
+	public int getTowersPerPlayer() {
+		return towersPerPlayer;
+	}
+	
+	public int getStudentsDrawnFromCloud() {
+		return studentsDrawnFromCloud;
+	}
+	
+	public int getStudentsPickedFromBag() {
+		return studentsPickedFromBag;
+	}
+	
+	public int getStudentsMovedToRoom() {
+		return studentsMovedToRoom;
+	}
 }

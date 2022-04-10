@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,7 +27,7 @@ class PlayerTeamTest {
 
     @Test
     void getAllPlayers() {
-        ArrayList<Player> playerList = testTeam.getAllPlayers();
+        List<Player> playerList = testTeam.getAllPlayers();
         assertTrue(playerList.contains(player1));
         assertTrue(playerList.contains(player2));
     }

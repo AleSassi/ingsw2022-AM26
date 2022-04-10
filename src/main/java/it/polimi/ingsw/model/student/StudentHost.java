@@ -25,5 +25,25 @@ public class StudentHost {
     public Student removeRandom() throws CollectionUnderflowError {
         return hostedStudents.pickRandom();
     }
-
+    
+    public StudentHost copy() {
+        StudentHost result = new StudentHost();
+        result.hostedStudents.mergeWithCollection(hostedStudents);
+        return result;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        
+        StudentHost that = (StudentHost) o;
+    
+        return hostedStudents.equals(that.hostedStudents);
+    }
+    
+    @Override
+    public int hashCode() {
+        return hostedStudents.hashCode();
+    }
 }

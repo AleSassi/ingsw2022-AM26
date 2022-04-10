@@ -67,7 +67,7 @@ class StudentHostingCardTest {
         for (int repetition = 0; repetition < repetitions; repetition++) {
             card.purchase();
         }
-        assertEquals(repetitions, card.getPriceIncrement());
+        assertEquals(1, card.getPriceIncrement());
         assertEquals(0, card.getTimesUsedInCurrentTurn());
     }
 
@@ -85,7 +85,7 @@ class StudentHostingCardTest {
         assertEquals(1, card.getPriceIncrement());
         assertEquals(repetitions, card.getTimesUsedInCurrentTurn());
         card.purchase();
-        assertEquals(2, card.getPriceIncrement());
+        assertEquals(1, card.getPriceIncrement());
         assertEquals(0, card.getTimesUsedInCurrentTurn());
     }
 

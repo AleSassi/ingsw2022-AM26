@@ -19,7 +19,9 @@ public abstract class CharacterCard {
     }
 
     public void purchase() {
-        priceIncrement += 1;
+        if (priceIncrement == 0) {
+            priceIncrement += 1;
+        }
         timesUsedInCurrentTurn = 0;
     }
 

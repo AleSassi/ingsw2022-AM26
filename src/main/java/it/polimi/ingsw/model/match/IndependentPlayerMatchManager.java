@@ -11,30 +11,37 @@ import java.util.List;
 
 public class IndependentPlayerMatchManager extends MatchManager {
 
-    private final List<Player> players = new ArrayList<>();
-
+    private final List<Player> players;
+    
+    public IndependentPlayerMatchManager() {
+        players = new ArrayList<>();
+    }
+    
     @Override
-    protected void addPlayer(String nickname, Wizard wiz) throws InvalidPlayerCountException, IncorrectConstructorParametersException {
-        Tower tower;
+    protected void addPlayer(String nickname, Wizard wiz, int maxTowerCount) throws InvalidPlayerCountException, IncorrectConstructorParametersException {
+        if (players.size() > 3) throw new InvalidPlayerCountException();
+        
+        Tower tower = null;
         switch (players.size()) {
             case 0 -> tower = Tower.Black;
             case 1 -> tower = Tower.White;
             case 2 -> tower = Tower.Gray;
-            default -> throw new InvalidPlayerCountException();
         }
-        Player player = new Player(nickname, wiz, tower,getPawnCounts().getTowerPerPlayerCount());
-        players.add(player);
+        players.add(new Player(nickname, wiz, tower, maxTowerCount));
     }
 
     @Override
     protected List<Player> getAllPlayers() {
-        return  players;
+        // We should copy the Players list to avoid object modifications
+        List<Player> result = new ArrayList<>();
+        for (Player player: players) {
+            result.add(player.copy());
+        }
+        return result;
     }
 
     @Override
     protected List<Player> getPlayersWithTowers() {
         return getAllPlayers();
     }
-
-
 }

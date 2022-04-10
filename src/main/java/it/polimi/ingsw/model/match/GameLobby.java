@@ -43,7 +43,7 @@ public class GameLobby {
         }
     }
 
-    public MatchManager startGame() throws InvalidPlayerCountException, IncorrectConstructorParametersException, CollectionUnderflowError {
+    public MatchManager startGame() throws InvalidPlayerCountException, IncorrectConstructorParametersException {
         if (state == GameLobbyState.Full) {
             MatchManager manager;
             if (getNumberOfPlayers() < 4) {
@@ -51,7 +51,7 @@ public class GameLobby {
             } else {
                 manager = new TeamMatchManager();
             }
-            manager.setUpMatch(variant, playersInLobby, chosenWizards);
+            manager.startMatch(variant, playersInLobby, chosenWizards);
             state = GameLobbyState.MatchRunning;
             return manager;
         }

@@ -69,7 +69,7 @@ class StopCardActivatorCardTest {
         for (int repetition = 0; repetition < repetitions; repetition++) {
             card.purchase();
         }
-        assertEquals(repetitions, card.getPriceIncrement());
+        assertEquals(1, card.getPriceIncrement());
         assertEquals(0, card.getTimesUsedInCurrentTurn());
     }
 
@@ -87,7 +87,7 @@ class StopCardActivatorCardTest {
         assertEquals(1, card.getPriceIncrement());
         assertEquals(repetitions, card.getTimesUsedInCurrentTurn());
         card.purchase();
-        assertEquals(2, card.getPriceIncrement());
+        assertEquals(1, card.getPriceIncrement());
         assertEquals(0, card.getTimesUsedInCurrentTurn());
     }
 

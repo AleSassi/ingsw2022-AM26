@@ -7,17 +7,24 @@ public enum MatchPhase {
     ActionPhaseStepTwo,
     ActionPhaseStepThree;
 
-    MatchPhase matchPhase;
-
     public MatchPhase nextPhase() {
-        switch (matchPhase) {
-            case PlanPhaseStepOne -> matchPhase = PlanPhaseStepTwo;
-            case PlanPhaseStepTwo -> matchPhase = ActionPhaseStepOne;
-            case ActionPhaseStepOne -> matchPhase = ActionPhaseStepTwo;
-            case ActionPhaseStepTwo -> matchPhase = ActionPhaseStepThree;
-            case ActionPhaseStepThree -> matchPhase = PlanPhaseStepOne;
-
+        switch (this) {
+            case PlanPhaseStepOne, ActionPhaseStepThree -> {
+                return PlanPhaseStepTwo;
+            }
+            case PlanPhaseStepTwo -> {
+                return ActionPhaseStepOne;
+            }
+            case ActionPhaseStepOne -> {
+                return ActionPhaseStepTwo;
+            }
+            case ActionPhaseStepTwo -> {
+                return ActionPhaseStepThree;
+            }
+            default -> {
+                //Will never be executed
+                return null;
+            }
         }
-        return matchPhase;
     }
 }

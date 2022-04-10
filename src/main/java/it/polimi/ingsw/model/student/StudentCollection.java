@@ -81,6 +81,12 @@ public class StudentCollection {
         }
         return result;
     }
+    
+    public StudentCollection copy() {
+        StudentCollection result = new StudentCollection();
+        result.mergeWithCollection(this);
+        return result;
+    }
 
     @Override
     public boolean equals(Object o) {

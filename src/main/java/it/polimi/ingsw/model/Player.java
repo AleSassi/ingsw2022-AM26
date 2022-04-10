@@ -11,14 +11,16 @@ public class Player {
 	
 	private final String nickname;
 	private CharacterCard playedCard;
-	private final AvailableCardsDeck availableCardsDeck;
-	private final PlayedCardDeck playedCardDeck;
-	private final SchoolBoard board;
+	private AvailableCardsDeck availableCardsDeck;
+	private PlayedCardDeck playedCardDeck;
+	private SchoolBoard board;
 	private int availableCoins;
+	private final Wizard wizard;
 	
 	public Player(String nickname, Wizard wiz, Tower towerColor, int initialTowerCount) throws IncorrectConstructorParametersException {
 		if (nickname == null || wiz == null) throw new IncorrectConstructorParametersException();
 		
+		this.wizard = wiz;
 		this.nickname = nickname;
 		this.board = new SchoolBoard(towerColor, initialTowerCount);
 		this.availableCardsDeck = new AvailableCardsDeck();
@@ -165,7 +167,49 @@ public class Player {
 	}
 	
 	public void notifyVictory() {
-		//We should use Listener to notify the victory of a Player
+		//TODO: We should use Listener to notify the victory of a Player
 	}
 	
+	public Player copy() {
+		try {
+			Player copy = new Player(nickname, wizard, getTowerType(), 0);
+			copy.playedCard = playedCard;
+			copy.availableCardsDeck = availableCardsDeck;
+			copy.playedCardDeck = playedCardDeck;
+			copy.board = board.copy();
+			copy.availableCoins = availableCoins;
+			return copy;
+		} catch (IncorrectConstructorParametersException e) {
+			e.printStackTrace();
+			return this;
+		}
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		
+		Player player = (Player) o;
+		
+		if (availableCoins != player.availableCoins) return false;
+		if (!nickname.equals(player.nickname)) return false;
+		if (!Objects.equals(playedCard, player.playedCard)) return false;
+		if (!availableCardsDeck.equals(player.availableCardsDeck)) return false;
+		if (!playedCardDeck.equals(player.playedCardDeck)) return false;
+		if (!board.equals(player.board)) return false;
+		return wizard == player.wizard;
+	}
+	
+	@Override
+	public int hashCode() {
+		int result = nickname.hashCode();
+		result = 31 * result + (playedCard != null ? playedCard.hashCode() : 0);
+		result = 31 * result + availableCardsDeck.hashCode();
+		result = 31 * result + playedCardDeck.hashCode();
+		result = 31 * result + board.hashCode();
+		result = 31 * result + availableCoins;
+		result = 31 * result + wizard.hashCode();
+		return result;
+	}
 }

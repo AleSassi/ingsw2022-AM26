@@ -11,14 +11,14 @@ class GameLobbyTest {
 
     @Test
     void testEmptyMatch() {
-        GameLobby lobby = new GameLobby(3, MatchVariant.BasicRulesSet);
+        GameLobby lobby = new GameLobby(3, MatchVariant.BasicRuleSet);
         assertEquals(GameLobbyState.FillableWithPlayers, lobby.getCurrentState());
         assertEquals(0, lobby.getNumberOfPlayers());
     }
 
     @Test
     void testFullMatch() {
-        GameLobby lobby = new GameLobby(2, MatchVariant.BasicRulesSet);
+        GameLobby lobby = new GameLobby(2, MatchVariant.BasicRuleSet);
         assertDoesNotThrow(() -> {
             lobby.addPlayer("Ale", Wizard.Wizard1);
             assertEquals(1, lobby.getNumberOfPlayers());
@@ -31,16 +31,16 @@ class GameLobbyTest {
 
     @Test
     void testUniqueNicknameException() {
-        GameLobby lobby = new GameLobby(2, MatchVariant.BasicRulesSet);
+        GameLobby lobby = new GameLobby(2, MatchVariant.BasicRuleSet);
         assertThrows(NicknameNotUniqueException.class, () -> {
             lobby.addPlayer("Ale", Wizard.Wizard1);
             lobby.addPlayer("Ale", Wizard.Wizard2);
         });
     }
-    /*
+    
     @Test
     void testMatchManagerCreation() {
-        GameLobby lobby = new GameLobby(2, MatchVariant.BasicRulesSet);
+        GameLobby lobby = new GameLobby(2, MatchVariant.BasicRuleSet);
         assertDoesNotThrow(() -> {
             lobby.addPlayer("Ale", Wizard.Wizard1);
             assertNull(lobby.startGame());
@@ -55,7 +55,7 @@ class GameLobbyTest {
 
     @Test
     void testTeamMatchManagerCreation() {
-        GameLobby lobby = new GameLobby(4, MatchVariant.BasicRulesSet);
+        GameLobby lobby = new GameLobby(4, MatchVariant.BasicRuleSet);
         assertDoesNotThrow(() -> {
             lobby.addPlayer("Ale", Wizard.Wizard1);
             assertNull(lobby.startGame());
@@ -73,5 +73,4 @@ class GameLobbyTest {
             assertTrue(createdManager.getAllPlayers().stream().map(Player::getNickname).toList().contains("Prof"));
         });
     }
-    */
 }

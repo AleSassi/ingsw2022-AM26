@@ -88,6 +88,28 @@ public class Island extends StudentHost {
     public void setMotherNaturePresent(boolean present) {
         isMotherNaturePresent = present;
     }
-
-
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        
+        Island island = (Island) o;
+        
+        if (towerCount != island.towerCount) return false;
+        if (isMotherNaturePresent != island.isMotherNaturePresent) return false;
+        if (hasStopCard != island.hasStopCard) return false;
+        return activeTowerType == island.activeTowerType;
+    }
+    
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + towerCount;
+        result = 31 * result + (isMotherNaturePresent ? 1 : 0);
+        result = 31 * result + (activeTowerType != null ? activeTowerType.hashCode() : 0);
+        result = 31 * result + (hasStopCard ? 1 : 0);
+        return result;
+    }
 }

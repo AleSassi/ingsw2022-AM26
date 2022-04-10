@@ -10,9 +10,9 @@ public class SchoolBoard {
     private final int maxTowerCount;
     private int availableTowerCount;
     private final Tower towerType;
-    private final StudentHost diningRoom;
-    private final StudentHost entrance;
-    private final boolean[] controlledProfessors;
+    private StudentHost diningRoom;
+    private StudentHost entrance;
+    private boolean[] controlledProfessors;
 
     public SchoolBoard(Tower tower, int initialTowerCount) throws IncorrectConstructorParametersException {
         if (tower == null || initialTowerCount < 0 || initialTowerCount > 8) throw new IncorrectConstructorParametersException();
@@ -87,5 +87,46 @@ public class SchoolBoard {
 
         this.availableTowerCount -= 1;
         return towerType;
+    }
+    
+    public SchoolBoard copy() {
+        try {
+            SchoolBoard result = new SchoolBoard(towerType, maxTowerCount);
+            result.availableTowerCount = availableTowerCount;
+            result.diningRoom = diningRoom.copy();
+            result.entrance = entrance.copy();
+            result.controlledProfessors = controlledProfessors.clone();
+            return result;
+        } catch (IncorrectConstructorParametersException e) {
+            // Should never happen
+            e.printStackTrace();
+            return this;
+        }
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        
+        SchoolBoard that = (SchoolBoard) o;
+        
+        if (maxTowerCount != that.maxTowerCount) return false;
+        if (availableTowerCount != that.availableTowerCount) return false;
+        if (towerType != that.towerType) return false;
+        if (!diningRoom.equals(that.diningRoom)) return false;
+        if (!entrance.equals(that.entrance)) return false;
+        return Arrays.equals(controlledProfessors, that.controlledProfessors);
+    }
+    
+    @Override
+    public int hashCode() {
+        int result = maxTowerCount;
+        result = 31 * result + availableTowerCount;
+        result = 31 * result + (towerType != null ? towerType.hashCode() : 0);
+        result = 31 * result + diningRoom.hashCode();
+        result = 31 * result + entrance.hashCode();
+        result = 31 * result + Arrays.hashCode(controlledProfessors);
+        return result;
     }
 }
