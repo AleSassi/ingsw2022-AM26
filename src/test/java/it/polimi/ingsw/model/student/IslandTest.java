@@ -79,18 +79,20 @@ class IslandTest {
      */
     @Test
     void getInfluenceTest() {
-        Player p1 = new Player("Ale", Wizard.Wizard1, Tower.Black, 6);
-        Player p2 = new Player("Leo", Wizard.Wizard2, Tower.Gray, 6);
-        island.placeStudents(Student.YellowElf, 2);
-        island.placeStudents(Student.BlueUnicorn, 3);
-        island.placeStudents(Student.GreenFrog, 2);
-        island.setTower(Tower.Black);
-        p1.addProfessor(Professor.YellowElf);
-        p1.addProfessor(Professor.BlueUnicorn);
-        p2.addProfessor(Professor.GreenFrog);
-
-        assertEquals(6, island.getInfluence(p1));
-        assertEquals(2, island.getInfluence(p2));
+        assertDoesNotThrow(() -> {
+            Player p1 = new Player("Ale", Wizard.Wizard1, Tower.Black, 6);
+            Player p2 = new Player("Leo", Wizard.Wizard2, Tower.Gray, 6);
+            island.placeStudents(Student.YellowElf, 2);
+            island.placeStudents(Student.BlueUnicorn, 3);
+            island.placeStudents(Student.GreenFrog, 2);
+            island.setTower(Tower.Black);
+            p1.addProfessor(Professor.YellowElf);
+            p1.addProfessor(Professor.BlueUnicorn);
+            p2.addProfessor(Professor.GreenFrog);
+    
+            assertEquals(6, island.getInfluence(p1));
+            assertEquals(2, island.getInfluence(p2));
+        });
 
     }
 

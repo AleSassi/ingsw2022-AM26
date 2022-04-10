@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.match;
 
+import it.polimi.ingsw.exceptions.IncorrectConstructorParametersException;
 import it.polimi.ingsw.exceptions.InvalidPlayerCountException;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Tower;
@@ -13,7 +14,7 @@ public class IndependentPlayerMatchManager extends MatchManager {
     private final List<Player> players = new ArrayList<>();
 
     @Override
-    protected void addPlayer(String nickname, Wizard wiz) throws InvalidPlayerCountException {
+    protected void addPlayer(String nickname, Wizard wiz) throws InvalidPlayerCountException, IncorrectConstructorParametersException {
         Tower tower;
         switch (players.size()) {
             case 0 -> tower = Tower.Black;

@@ -434,57 +434,59 @@ class StudentHostingCardTest {
             card.setupWithTable(tableManager);
         }
         //Simulate the Player putting some Students on Island 0
-        player = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
-        if (initEntrance) {
-            player.addStudentToEntrance(Student.BlueUnicorn);
-            player.addStudentToEntrance(Student.BlueUnicorn);
-            player.addStudentToEntrance(Student.BlueUnicorn);
-            player.addStudentToEntrance(Student.RedDragon);
-            player.addStudentToEntrance(Student.GreenFrog);
-            player.addStudentToEntrance(Student.PinkFair);
-            player.addStudentToEntrance(Student.YellowElf);
-            assertDoesNotThrow(() -> {
-                player.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-                player.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-                player.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-                player.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-                player.placeStudentAtTableAndGetCoin(Student.RedDragon);
-                player.placeStudentAtTableAndGetCoin(Student.GreenFrog);
-                player.placeStudentAtTableAndGetCoin(Student.PinkFair);
-                player.placeStudentAtTableAndGetCoin(Student.YellowElf);
-            });
-        }
-        if (autoplaceTestStudents) {
-            player.addProfessor(Professor.BlueUnicorn);
-            player.addProfessor(Professor.GreenFrog);
-            tableManager.placeStudentOnIsland(Student.BlueUnicorn, 0);
-            tableManager.placeStudentOnIsland(Student.BlueUnicorn, 0);
-            tableManager.placeStudentOnIsland(Student.BlueUnicorn, 0);
-            tableManager.placeStudentOnIsland(Student.RedDragon, 0);
-            tableManager.placeStudentOnIsland(Student.RedDragon, 0);
-            tableManager.placeStudentOnIsland(Student.GreenFrog, 0);
-        }
-        players = new ArrayList<>();
-        players.add(player);
-
-        Player secondPlayer = new Player("Fede", Wizard.Wizard2, Tower.White, 8);
-        secondPlayer.addStudentToEntrance(Student.RedDragon);
-        secondPlayer.addStudentToEntrance(Student.RedDragon);
-        secondPlayer.addStudentToEntrance(Student.RedDragon);
-        secondPlayer.addStudentToEntrance(Student.BlueUnicorn);
-        secondPlayer.addStudentToEntrance(Student.GreenFrog);
-        secondPlayer.addStudentToEntrance(Student.PinkFair);
-        secondPlayer.addStudentToEntrance(Student.YellowElf);
         assertDoesNotThrow(() -> {
-            secondPlayer.placeStudentAtTableAndGetCoin(Student.GreenFrog);
-            secondPlayer.placeStudentAtTableAndGetCoin(Student.GreenFrog);
-            secondPlayer.placeStudentAtTableAndGetCoin(Student.GreenFrog);
-            secondPlayer.placeStudentAtTableAndGetCoin(Student.RedDragon);
-            secondPlayer.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-            secondPlayer.placeStudentAtTableAndGetCoin(Student.PinkFair);
-            secondPlayer.placeStudentAtTableAndGetCoin(Student.YellowElf);
+            player = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
+            if (initEntrance) {
+                player.addStudentToEntrance(Student.BlueUnicorn);
+                player.addStudentToEntrance(Student.BlueUnicorn);
+                player.addStudentToEntrance(Student.BlueUnicorn);
+                player.addStudentToEntrance(Student.RedDragon);
+                player.addStudentToEntrance(Student.GreenFrog);
+                player.addStudentToEntrance(Student.PinkFair);
+                player.addStudentToEntrance(Student.YellowElf);
+                assertDoesNotThrow(() -> {
+                    player.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+                    player.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+                    player.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+                    player.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+                    player.placeStudentAtTableAndGetCoin(Student.RedDragon);
+                    player.placeStudentAtTableAndGetCoin(Student.GreenFrog);
+                    player.placeStudentAtTableAndGetCoin(Student.PinkFair);
+                    player.placeStudentAtTableAndGetCoin(Student.YellowElf);
+                });
+            }
+            if (autoplaceTestStudents) {
+                player.addProfessor(Professor.BlueUnicorn);
+                player.addProfessor(Professor.GreenFrog);
+                tableManager.placeStudentOnIsland(Student.BlueUnicorn, 0);
+                tableManager.placeStudentOnIsland(Student.BlueUnicorn, 0);
+                tableManager.placeStudentOnIsland(Student.BlueUnicorn, 0);
+                tableManager.placeStudentOnIsland(Student.RedDragon, 0);
+                tableManager.placeStudentOnIsland(Student.RedDragon, 0);
+                tableManager.placeStudentOnIsland(Student.GreenFrog, 0);
+            }
+            players = new ArrayList<>();
+            players.add(player);
+    
+            Player secondPlayer = new Player("Fede", Wizard.Wizard2, Tower.White, 8);
+            secondPlayer.addStudentToEntrance(Student.RedDragon);
+            secondPlayer.addStudentToEntrance(Student.RedDragon);
+            secondPlayer.addStudentToEntrance(Student.RedDragon);
+            secondPlayer.addStudentToEntrance(Student.BlueUnicorn);
+            secondPlayer.addStudentToEntrance(Student.GreenFrog);
+            secondPlayer.addStudentToEntrance(Student.PinkFair);
+            secondPlayer.addStudentToEntrance(Student.YellowElf);
+            assertDoesNotThrow(() -> {
+                secondPlayer.placeStudentAtTableAndGetCoin(Student.GreenFrog);
+                secondPlayer.placeStudentAtTableAndGetCoin(Student.GreenFrog);
+                secondPlayer.placeStudentAtTableAndGetCoin(Student.GreenFrog);
+                secondPlayer.placeStudentAtTableAndGetCoin(Student.RedDragon);
+                secondPlayer.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+                secondPlayer.placeStudentAtTableAndGetCoin(Student.PinkFair);
+                secondPlayer.placeStudentAtTableAndGetCoin(Student.YellowElf);
+            });
+            players.add(secondPlayer);
         });
-        players.add(secondPlayer);
     }
 
 }

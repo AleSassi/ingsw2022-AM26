@@ -198,9 +198,11 @@ class StopCardActivatorCardTest {
         tableManager = new TableManager(2, false);
         initCard();
         //Simulate the Player putting some Students on Island 0
-        player = new Player("Test", Wizard.Wizard1, Tower.Black, 8);
-        player.addProfessor(Professor.BlueUnicorn);
-        player.addProfessor(Professor.GreenFrog);
+        assertDoesNotThrow(() -> {
+            player = new Player("Test", Wizard.Wizard1, Tower.Black, 8);
+            player.addProfessor(Professor.BlueUnicorn);
+            player.addProfessor(Professor.GreenFrog);
+        });
         tableManager.placeStudentOnIsland(Student.BlueUnicorn, 0);
         tableManager.placeStudentOnIsland(Student.BlueUnicorn, 0);
         tableManager.placeStudentOnIsland(Student.BlueUnicorn, 0);

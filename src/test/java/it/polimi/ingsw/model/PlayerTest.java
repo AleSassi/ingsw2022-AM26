@@ -20,7 +20,9 @@ class PlayerTest {
 
     @BeforeEach
     void initPlayer() {
-        test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8);
+        assertDoesNotThrow(() -> {
+            test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8);
+        });
     }
     
     @Test

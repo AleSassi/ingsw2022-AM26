@@ -16,7 +16,9 @@ public class Player {
 	private final SchoolBoard board;
 	private int availableCoins;
 	
-	public Player(String nickname, Wizard wiz, Tower towerColor, int initialTowerCount) {
+	public Player(String nickname, Wizard wiz, Tower towerColor, int initialTowerCount) throws IncorrectConstructorParametersException {
+		if (nickname == null || wiz == null) throw new IncorrectConstructorParametersException();
+		
 		this.nickname = nickname;
 		this.board = new SchoolBoard(towerColor, initialTowerCount);
 		this.availableCardsDeck = new AvailableCardsDeck();

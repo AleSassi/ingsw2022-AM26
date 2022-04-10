@@ -1,13 +1,9 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.CollectionUnderflowError;
-import it.polimi.ingsw.exceptions.InsufficientTowersException;
-import it.polimi.ingsw.exceptions.TooManyTowersException;
-import it.polimi.ingsw.model.student.Student;
-import it.polimi.ingsw.model.student.StudentHost;
+import it.polimi.ingsw.exceptions.*;
+import it.polimi.ingsw.model.student.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 public class SchoolBoard {
 
@@ -18,7 +14,9 @@ public class SchoolBoard {
     private final StudentHost entrance;
     private final boolean[] controlledProfessors;
 
-    public SchoolBoard(Tower tower, int initialTowerCount) {
+    public SchoolBoard(Tower tower, int initialTowerCount) throws IncorrectConstructorParametersException {
+        if (tower == null || initialTowerCount < 0 || initialTowerCount > 8) throw new IncorrectConstructorParametersException();
+        
         towerType = tower;
         availableTowerCount = initialTowerCount;
         controlledProfessors = new boolean[Professor.values().length];
@@ -70,7 +68,6 @@ public class SchoolBoard {
     public void removeStudentFromEntrance(Student s) throws CollectionUnderflowError {
         entrance.removeStudents(s, 1);
     }
-
 
     public void addStudentToTable(Student s) {
         diningRoom.placeStudents(s, 1);

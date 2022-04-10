@@ -3,15 +3,22 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.exceptions.CollectionUnderflowError;
 import it.polimi.ingsw.exceptions.InsufficientTowersException;
 import it.polimi.ingsw.model.student.Student;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class SchoolBoardTest {
-
+    
+    private SchoolBoard board;
+    
+    @BeforeEach
+    void initBoard() {
+        assertDoesNotThrow(() -> board = new SchoolBoard(Tower.Black, 8));
+    }
+    
     @Test
     void testStudentAddAndRemove() {
-        SchoolBoard board = new SchoolBoard(Tower.Black, 8);
         board.addStudentToTable(Student.BlueUnicorn);
         board.addStudentToTable(Student.BlueUnicorn);
         assertEquals(board.getCountAtTable(Student.BlueUnicorn), 2);
@@ -22,9 +29,12 @@ class SchoolBoardTest {
 
     @Test
     void testTowerRemoveAndAdd() {
-        SchoolBoard board = new SchoolBoard(Tower.Black, 6);
         int count = board.getAvailableTowerCount();
         assertDoesNotThrow(() -> {
+            board.pickAndRemoveTower();
+            assertEquals(7, board.getAvailableTowerCount());
+            board.pickAndRemoveTower();
+            assertEquals(6, board.getAvailableTowerCount());
             board.pickAndRemoveTower();
             assertEquals(5, board.getAvailableTowerCount());
             board.pickAndRemoveTower();
@@ -45,7 +55,6 @@ class SchoolBoardTest {
 
     @Test
     void getControlledProfessorTest() {
-        SchoolBoard board = new SchoolBoard(Tower.Black, 8);
         assertTrue(board.getControlledProfessors().isEmpty());
         board.setControlledProfessor(Professor.BlueUnicorn);
         assertEquals(1, board.getControlledProfessors().size());
@@ -54,7 +63,6 @@ class SchoolBoardTest {
 
     @Test
     void removeStudentFromEntranceTest() {
-        SchoolBoard board = new SchoolBoard(Tower.Black, 8);
         board.addStudentToEntrance(Student.BlueUnicorn);
         assertDoesNotThrow(() -> board.removeStudentFromEntrance(Student.BlueUnicorn));
         assertThrows(CollectionUnderflowError.class, () -> board.removeStudentFromEntrance(Student.BlueUnicorn));
@@ -62,7 +70,6 @@ class SchoolBoardTest {
 
     @Test
     void removeStudentFromDiningRoomTest() {
-        SchoolBoard board = new SchoolBoard(Tower.Black, 8);
         board.addStudentToTable(Student.BlueUnicorn);
         assertDoesNotThrow(() -> board.removeStudentFromTable(Student.BlueUnicorn));
         assertThrows(CollectionUnderflowError.class, () -> board.removeStudentFromTable(Student.BlueUnicorn));
@@ -70,12 +77,25 @@ class SchoolBoardTest {
 
     @Test
     void GetTowerType() {
-        SchoolBoard board = new SchoolBoard(Tower.Black, 8);
         assertEquals(board.getTowerType(), Tower.Black );
     }
-
-
-
+    
+    @Test
+    void testNullParams() {
+        assertDoesNotThrow(() -> {
+            assertEquals(0, board.getCountAtTable(null));
+            board.setControlledProfessor(null);
+            assertTrue(board.getControlledProfessors().isEmpty());
+            board.removeStudentFromTable(null);
+            board.removeStudentFromEntrance(null);
+            board.addStudentToEntrance(null);
+            board.addStudentToTable(null);
+        });
+    }
+    
+    @Test
+    void testInvalidConstructor() {
+    }
 }
 
 

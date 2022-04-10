@@ -31,7 +31,7 @@ public abstract class MatchManager {
      * @param wiz
      *
      */
-    public void setUpMatch(MatchVariant variant, List<String> playersNicknames, List<Wizard> wiz) throws InvalidPlayerCountException, CollectionUnderflowError {
+    public void setUpMatch(MatchVariant variant, List<String> playersNicknames, List<Wizard> wiz) throws InvalidPlayerCountException, IncorrectConstructorParametersException, CollectionUnderflowError {
         playerCount = playersNicknames.size();
         managedTable = new TableManager(pawnCounts.getCloudTileCount(), variant == MatchVariant.ExpertRulesSet);
 
@@ -47,7 +47,7 @@ public abstract class MatchManager {
     /**
      * Create and adds the player with the nickname and wizard
      */
-    protected abstract void addPlayer(String nickname, Wizard wiz) throws InvalidPlayerCountException;
+    protected abstract void addPlayer(String nickname, Wizard wiz) throws InvalidPlayerCountException, IncorrectConstructorParametersException;
 
     /**
      * return the list of all player in order of addition

@@ -268,12 +268,14 @@ class TableManagerTest {
      */
     @Test
     void testChangeControl() {
-        Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
-        Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 8);
-
-        assertDoesNotThrow(() -> tableManager.getCurrentIsland().setTower(testPlayer.pickAndRemoveTower()));
-        assertDoesNotThrow(() -> tableManager.changeControlOfCurrentIsland(testPlayer, testPlayer2));
-        assertEquals(Tower.White, tableManager.getCurrentIsland().getActiveTowerType());
+        assertDoesNotThrow(() -> {
+            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
+            Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 8);
+    
+            assertDoesNotThrow(() -> tableManager.getCurrentIsland().setTower(testPlayer.pickAndRemoveTower()));
+            assertDoesNotThrow(() -> tableManager.changeControlOfCurrentIsland(testPlayer, testPlayer2));
+            assertEquals(Tower.White, tableManager.getCurrentIsland().getActiveTowerType());
+        });
     }
 
     /**
@@ -281,12 +283,14 @@ class TableManagerTest {
      */
     @Test
     void testChangeControlWrongParams() {
-        Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
-        Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 8);
-
-        tableManager.getCurrentIsland().setTower(Tower.White);
-        assertThrows(IllegalArgumentException.class, () -> tableManager.changeControlOfCurrentIsland(testPlayer, testPlayer2));
-        assertEquals(Tower.White, tableManager.getCurrentIsland().getActiveTowerType());
+        assertDoesNotThrow(() -> {
+            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
+            Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 8);
+    
+            tableManager.getCurrentIsland().setTower(Tower.White);
+            assertThrows(IllegalArgumentException.class, () -> tableManager.changeControlOfCurrentIsland(testPlayer, testPlayer2));
+            assertEquals(Tower.White, tableManager.getCurrentIsland().getActiveTowerType());
+        });
     }
 
     /**
@@ -294,14 +298,16 @@ class TableManagerTest {
      */
     @Test
     void testChangeControl_WithStopCard() {
-        Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
-        Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 8);
-
-        tableManager.getCurrentIsland().setStopCard(true);
-        tableManager.moveMotherNature(12);
-        tableManager.getCurrentIsland().setTower(Tower.Black);
-        assertThrows(IslandSkippedControlAssignmentForStopCardException.class, () -> tableManager.changeControlOfCurrentIsland(testPlayer, testPlayer2));
-        assertEquals(Tower.Black, tableManager.getCurrentIsland().getActiveTowerType());
+        assertDoesNotThrow(() -> {
+            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
+            Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 8);
+    
+            tableManager.getCurrentIsland().setStopCard(true);
+            tableManager.moveMotherNature(12);
+            tableManager.getCurrentIsland().setTower(Tower.Black);
+            assertThrows(IslandSkippedControlAssignmentForStopCardException.class, () -> tableManager.changeControlOfCurrentIsland(testPlayer, testPlayer2));
+            assertEquals(Tower.Black, tableManager.getCurrentIsland().getActiveTowerType());
+        });
     }
 
     /**
@@ -309,12 +315,14 @@ class TableManagerTest {
      */
     @Test
     void testChangeControl_WithVictoryCondition() {
-        Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
-        Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 0);
-
-        tableManager.getCurrentIsland().setTower(Tower.Black);
-        assertDoesNotThrow(() -> tableManager.changeControlOfCurrentIsland(testPlayer, testPlayer2));
-        assertEquals(Tower.White, tableManager.getCurrentIsland().getActiveTowerType());
+        assertDoesNotThrow(() -> {
+            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
+            Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 0);
+    
+            tableManager.getCurrentIsland().setTower(Tower.Black);
+            assertDoesNotThrow(() -> tableManager.changeControlOfCurrentIsland(testPlayer, testPlayer2));
+            assertEquals(Tower.White, tableManager.getCurrentIsland().getActiveTowerType());
+        });
     }
 
     /**
@@ -322,15 +330,17 @@ class TableManagerTest {
      */
     @Test
     void testUnificationPossible() {
-        Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
-        Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 8);
-
-        assertDoesNotThrow(() -> tableManager.getCurrentIsland().setTower(testPlayer.pickAndRemoveTower()));
-        tableManager.getIslandAtIndex(tableManager.circularWrap(tableManager.getCurrentIslandIndex() + 1, 12)).setTower(Tower.White);
-        assertDoesNotThrow(() -> tableManager.changeControlOfCurrentIsland(testPlayer, testPlayer2));
-        assertEquals(Tower.White, tableManager.getCurrentIsland().getActiveTowerType());
-        assertEquals(2, tableManager.getCurrentIsland().getTowerCount());
-        assertEquals(11, tableManager.getNumberOfIslands());
+        assertDoesNotThrow(() -> {
+            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
+            Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 8);
+    
+            assertDoesNotThrow(() -> tableManager.getCurrentIsland().setTower(testPlayer.pickAndRemoveTower()));
+            tableManager.getIslandAtIndex(tableManager.circularWrap(tableManager.getCurrentIslandIndex() + 1, 12)).setTower(Tower.White);
+            assertDoesNotThrow(() -> tableManager.changeControlOfCurrentIsland(testPlayer, testPlayer2));
+            assertEquals(Tower.White, tableManager.getCurrentIsland().getActiveTowerType());
+            assertEquals(2, tableManager.getCurrentIsland().getTowerCount());
+            assertEquals(11, tableManager.getNumberOfIslands());
+        });
     }
 
     /**
@@ -338,28 +348,30 @@ class TableManagerTest {
      */
     @Test
     void testMatchEnd_IslandsCondition() {
-        Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 6);
-        Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 6);
-        Player testPlayer3 = new Player("Leo", Wizard.Wizard1, Tower.Gray, 6);
-
         assertDoesNotThrow(() -> {
-            //Force the Islands to merge
-            for (int i = 0; i < 4; i++) {
-                tableManager.changeControlOfCurrentIsland(null, testPlayer);
-                tableManager.moveMotherNature(1);
-            }
-
-            for (int i = 4; i < 8; i++) {
-                tableManager.changeControlOfCurrentIsland(null, testPlayer2);
-                tableManager.moveMotherNature(1);
-            }
-
-            for (int i = 8; i < 12; i++) {
-                tableManager.changeControlOfCurrentIsland(null, testPlayer3);
-                tableManager.moveMotherNature(1);
-            }
+            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 6);
+            Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 6);
+            Player testPlayer3 = new Player("Leo", Wizard.Wizard1, Tower.Gray, 6);
+    
+            assertDoesNotThrow(() -> {
+                //Force the Islands to merge
+                for (int i = 0; i < 4; i++) {
+                    tableManager.changeControlOfCurrentIsland(null, testPlayer);
+                    tableManager.moveMotherNature(1);
+                }
+        
+                for (int i = 4; i < 8; i++) {
+                    tableManager.changeControlOfCurrentIsland(null, testPlayer2);
+                    tableManager.moveMotherNature(1);
+                }
+        
+                for (int i = 8; i < 12; i++) {
+                    tableManager.changeControlOfCurrentIsland(null, testPlayer3);
+                    tableManager.moveMotherNature(1);
+                }
+            });
+            assertEquals(3, tableManager.getNumberOfIslands());
         });
-        assertEquals(3, tableManager.getNumberOfIslands());
     }
 
     /**
@@ -424,59 +436,61 @@ class TableManagerTest {
 
         int currentIslandIdx = tableManager.getCurrentIslandIndex();
 
-        Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
-        testPlayer.addProfessor(Professor.BlueUnicorn);
-        testPlayer.addProfessor(Professor.PinkFair);
-
-        if (placeTowerOfSelf) {
-            tableManager.getCurrentIsland().setTower(Tower.Black);
-        } else if (placeTowerOfOtherPlayer) {
-            tableManager.getCurrentIsland().setTower(Tower.White);
-        }
-        if (placeStopCard) {
-            tableManager.getCurrentIsland().setStopCard(true);
-        }
-        if (checkCards) {
-            CharacterCard pickedCard = tableManager.getCardAtIndex(activatedCardIndex);
-            assertDoesNotThrow(() -> {
-                for (int i = 0; i < pickedCard.getPrice() * 3; i++) {
-                    testPlayer.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-                }
-            });
-            testPlayer.playCharacterCard(tableManager.getCardAtIndex(activatedCardIndex));
-        }
-        //Simulate MN movement here
-        tableManager.moveMotherNature(12);
-        if (placeStopCard) {
-            assertThrows(IslandSkippedInfluenceForStopCardException.class, () -> tableManager.getInfluenceOnCurrentIsland(testPlayer));
-        } else {
-            assertDoesNotThrow(() -> {
-                //To set up cards that require an additional call before the influence count (usually performed by the MatchManager after a command from the Controller)
-                if (testPlayer.getActiveCharacterCard().getCharacter().getChangesInfluence()) {
-                    testPlayer.getActiveCharacterCard().useCard(tableManager, List.of(testPlayer), testPlayer, new CharacterCardParamSet(Student.BlueUnicorn, Student.BlueUnicorn, null, null, false, 0, currentIslandIdx, currentIslandIdx, CharacterCardParamSet.StopCardMovementMode.ToCard));
-                }
-                int computedInfluence = tableManager.getInfluenceOnCurrentIsland(testPlayer);
-                if (!checkCards) {
-                    if (placeTowerOfSelf) {
-                        assertEquals(5 + blueCount + pinkCount, computedInfluence);
-                    } else {
-                        assertEquals(4 + blueCount + pinkCount, computedInfluence);
+        assertDoesNotThrow(() -> {
+            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
+            testPlayer.addProfessor(Professor.BlueUnicorn);
+            testPlayer.addProfessor(Professor.PinkFair);
+    
+            if (placeTowerOfSelf) {
+                tableManager.getCurrentIsland().setTower(Tower.Black);
+            } else if (placeTowerOfOtherPlayer) {
+                tableManager.getCurrentIsland().setTower(Tower.White);
+            }
+            if (placeStopCard) {
+                tableManager.getCurrentIsland().setStopCard(true);
+            }
+            if (checkCards) {
+                CharacterCard pickedCard = tableManager.getCardAtIndex(activatedCardIndex);
+                assertDoesNotThrow(() -> {
+                    for (int i = 0; i < pickedCard.getPrice() * 3; i++) {
+                        testPlayer.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
                     }
-                } else {
-                    //Reset the card purchase
-                    testPlayer.getActiveCharacterCard().purchase();
-                    //Get the card modifier if necessary
-                    int modifier = 0;
+                });
+                testPlayer.playCharacterCard(tableManager.getCardAtIndex(activatedCardIndex));
+            }
+            //Simulate MN movement here
+            tableManager.moveMotherNature(12);
+            if (placeStopCard) {
+                assertThrows(IslandSkippedInfluenceForStopCardException.class, () -> tableManager.getInfluenceOnCurrentIsland(testPlayer));
+            } else {
+                assertDoesNotThrow(() -> {
+                    //To set up cards that require an additional call before the influence count (usually performed by the MatchManager after a command from the Controller)
                     if (testPlayer.getActiveCharacterCard().getCharacter().getChangesInfluence()) {
-                        modifier = testPlayer.getActiveCharacterCard().useCard(tableManager, List.of(testPlayer), testPlayer, new CharacterCardParamSet(Student.BlueUnicorn, Student.BlueUnicorn, null, null, false, 0, currentIslandIdx, currentIslandIdx, CharacterCardParamSet.StopCardMovementMode.ToCard));
+                        testPlayer.getActiveCharacterCard().useCard(tableManager, List.of(testPlayer), testPlayer, new CharacterCardParamSet(Student.BlueUnicorn, Student.BlueUnicorn, null, null, false, 0, currentIslandIdx, currentIslandIdx, CharacterCardParamSet.StopCardMovementMode.ToCard));
                     }
-                    if (placeTowerOfSelf) {
-                        assertEquals(5 + blueCount + pinkCount + modifier, computedInfluence);
+                    int computedInfluence = tableManager.getInfluenceOnCurrentIsland(testPlayer);
+                    if (!checkCards) {
+                        if (placeTowerOfSelf) {
+                            assertEquals(5 + blueCount + pinkCount, computedInfluence);
+                        } else {
+                            assertEquals(4 + blueCount + pinkCount, computedInfluence);
+                        }
                     } else {
-                        assertEquals(4 + blueCount + pinkCount + modifier, computedInfluence);
+                        //Reset the card purchase
+                        testPlayer.getActiveCharacterCard().purchase();
+                        //Get the card modifier if necessary
+                        int modifier = 0;
+                        if (testPlayer.getActiveCharacterCard().getCharacter().getChangesInfluence()) {
+                            modifier = testPlayer.getActiveCharacterCard().useCard(tableManager, List.of(testPlayer), testPlayer, new CharacterCardParamSet(Student.BlueUnicorn, Student.BlueUnicorn, null, null, false, 0, currentIslandIdx, currentIslandIdx, CharacterCardParamSet.StopCardMovementMode.ToCard));
+                        }
+                        if (placeTowerOfSelf) {
+                            assertEquals(5 + blueCount + pinkCount + modifier, computedInfluence);
+                        } else {
+                            assertEquals(4 + blueCount + pinkCount + modifier, computedInfluence);
+                        }
                     }
-                }
-            });
-        }
+                });
+            }
+        });
     }
 }
