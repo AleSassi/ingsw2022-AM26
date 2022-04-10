@@ -127,7 +127,7 @@ public abstract class MatchManager {
 	public List<Player> getPlayersSortedByRoundTurnOrder() {
 		//TODO: Need to alter the sorting lambda to account for when the Player has the same priority number
 		List<Player> result = getAllPlayers();
-		result.sort(Comparator.comparingInt(player -> player.getLastPlayedAssistantCard().getPriorityNumber()));
+		result.sort(Comparator.comparingInt(player -> (player.getLastPlayedAssistantCard().getPriorityNumber() - player.getAssistantCardOrderModifier())));
 		return result;
 	}
 	
@@ -225,6 +225,12 @@ public abstract class MatchManager {
 		
 		try {
 			playersSortedByCurrentTurnOrder.get(currentLeadPlayer).playAssistantCardAtIndex(cardIndex);
+			//If the Assistant card has already been played, the current Player must play after the other
+			int numberOfSameCardsOnTable = (int) getAllPlayers().stream().filter((player) -> !player.equals(getCurrentPlayer())).map(Player::getLastPlayedAssistantCard).filter((card) -> card.equals(getCurrentPlayer().getLastPlayedAssistantCard())).count();
+			boolean isAlreadyPlayed = numberOfSameCardsOnTable > 1;
+			if (isAlreadyPlayed) {
+				getCurrentPlayer().setAssistantCardOrderModifier(numberOfSameCardsOnTable);
+			}
 		} catch (CollectionUnderflowError | IndexOutOfBoundsException e) {
 			throw new AssistantCardNotPlayableException();
 		}

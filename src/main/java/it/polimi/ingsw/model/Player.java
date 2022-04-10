@@ -16,6 +16,7 @@ public class Player {
 	private SchoolBoard board;
 	private int availableCoins;
 	private final Wizard wizard;
+	private int assistantCardOrderModifier;
 	
 	public Player(String nickname, Wizard wiz, Tower towerColor, int initialTowerCount) throws IncorrectConstructorParametersException {
 		if (nickname == null || wiz == null) throw new IncorrectConstructorParametersException();
@@ -26,6 +27,15 @@ public class Player {
 		this.availableCardsDeck = new AvailableCardsDeck();
 		this.playedCardDeck = new PlayedCardDeck();
 		this.availableCoins = 0;
+		this.assistantCardOrderModifier = 0;
+	}
+	
+	public int getAssistantCardOrderModifier() {
+		return assistantCardOrderModifier;
+	}
+	
+	public void setAssistantCardOrderModifier(int assistantCardOrderModifier) {
+		this.assistantCardOrderModifier = assistantCardOrderModifier;
 	}
 	
 	/**
@@ -78,6 +88,7 @@ public class Player {
 	
 	public void playAssistantCardAtIndex(int cardIndex) throws CollectionUnderflowError {
 		playedCardDeck.addCardOnTop(availableCardsDeck.removeCard(cardIndex));
+		assistantCardOrderModifier = 0;
 	}
 	
 	/**
@@ -193,6 +204,7 @@ public class Player {
 		Player player = (Player) o;
 		
 		if (availableCoins != player.availableCoins) return false;
+		if (assistantCardOrderModifier != player.assistantCardOrderModifier) return false;
 		if (!nickname.equals(player.nickname)) return false;
 		if (!Objects.equals(playedCard, player.playedCard)) return false;
 		if (!availableCardsDeck.equals(player.availableCardsDeck)) return false;
@@ -210,6 +222,7 @@ public class Player {
 		result = 31 * result + board.hashCode();
 		result = 31 * result + availableCoins;
 		result = 31 * result + wizard.hashCode();
+		result = 31 * result + assistantCardOrderModifier;
 		return result;
 	}
 }
