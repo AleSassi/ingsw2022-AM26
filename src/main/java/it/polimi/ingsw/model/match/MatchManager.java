@@ -25,10 +25,7 @@ public abstract class MatchManager {
 	//region Public methods (used by the Controller to run actions)
 	/**
 	 * Constructs and sets up the match by adding all players, initializing the TableManager and initializing the entrance for each player
-	 *
-	 * @param variant          Choose by the first player, Basic or Experts
-	 * @param playersNicknames
-	 * @param wiz
+	 * @param variant Choose by the first player, Basic or Experts
 	 */
 	public void startMatch(MatchVariant variant, List<String> playersNicknames, List<Wizard> wiz) throws InvalidPlayerCountException, IncorrectConstructorParametersException {
 		int playerCount = playersNicknames.size();
@@ -189,8 +186,15 @@ public abstract class MatchManager {
 	 */
 	protected abstract List<Player> getPlayersWithTowers();
 	//endregion
-	
+
+	//region TestMethod
+	public void setMatchPhase(MatchPhase matchPhase) {
+		this.matchPhase = matchPhase;
+	}
+	//endregion
+
 	//region Private methods & Game Phase methods
+	
 	/**
 	 * Initialize Player's p entrance
 	 */
@@ -222,7 +226,6 @@ public abstract class MatchManager {
 	 */
 	private void PP_PlayAssistantCard(int cardIndex) throws AssistantCardNotPlayableException {
 		if (!isAssistantCardPlayable(cardIndex)) throw new AssistantCardNotPlayableException();
-		
 		try {
 			playersSortedByCurrentTurnOrder.get(currentLeadPlayer).playAssistantCardAtIndex(cardIndex);
 			//If the Assistant card has already been played, the current Player must play after the other
@@ -364,4 +367,6 @@ public abstract class MatchManager {
 			}
 		}
 	}
+
+	//endregion
 }

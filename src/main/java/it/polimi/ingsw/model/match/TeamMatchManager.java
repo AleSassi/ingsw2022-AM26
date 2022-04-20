@@ -16,7 +16,10 @@ public class TeamMatchManager extends MatchManager {
 	public TeamMatchManager() {
 		teams = new ArrayList<>();
 	}
-	
+
+	/**
+	 * If there isn't an available team it create one and add the player to it, if there is one it will just add the player to it
+	 */
 	@Override
 	protected void addPlayer(String nickname, Wizard wiz, int maxTowerCount) throws IncorrectConstructorParametersException {
 		if (teams.isEmpty() || teams.get(teams.size() - 1).getAllPlayers().size() == 2) {
@@ -39,7 +42,7 @@ public class TeamMatchManager extends MatchManager {
 		Player player = new Player(nickname, wiz, towerType, numberOfTowers);
 		teams.get(teams.size() - 1).addPlayer(player);
 	}
-	
+
 	@Override
 	protected List<Player> getAllPlayers() {
 		List<Player> result = new ArrayList<>();
@@ -48,7 +51,9 @@ public class TeamMatchManager extends MatchManager {
 		}
 		return result;
 	}
-	
+	/**
+	 * Returns just the player with towers for each team
+	 */
 	@Override
 	protected List<Player> getPlayersWithTowers() {
 		List<Player> result = new ArrayList<>();

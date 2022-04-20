@@ -10,7 +10,9 @@ class PawnCounts {
 	private final int studentsDrawnFromCloud;
 	private final int studentsPickedFromBag;
 	private final int studentsMovedToRoom;
-	
+	/**
+	 * Initialize al the variables depending on the number of players
+	 */
 	public PawnCounts(int playerCount) throws InvalidPlayerCountException {
 		if (playerCount < 2 || playerCount > 4) throw new InvalidPlayerCountException();
 		
@@ -21,7 +23,7 @@ class PawnCounts {
 		this.studentsPickedFromBag = initStudentsFromBag();
 		this.studentsMovedToRoom = initStudentsToRoom();
 	}
-	
+
 	private int initCloudTileCount() {
 		return playerCount;
 	}
