@@ -96,6 +96,7 @@ public class Player {
 	 */
 	public void addStudentToEntrance(Student s) {
 		board.addStudentToEntrance(s);
+		//System.out.println("Studente: " + s);
 	}
 	
 	/**
@@ -160,10 +161,10 @@ public class Player {
 	 */
 	public void addAllStudentsToEntrance(StudentCollection sc) {
 		if (sc == null) return;
-		
 		for (Student s : Student.values()) {
 			int Count = sc.getCount(s);
 			for (int i = 0; i < Count; i++) {
+				//System.out.println("Count: " + Count);
 				addStudentToEntrance(s);
 			}
 		}
@@ -209,6 +210,10 @@ public class Player {
 			e.printStackTrace();
 			return this;
 		}
+	}
+
+	public int getStudentInEntrance() {
+		return board.getNumberOfStudentsInEntrance();
 	}
 	
 	@Override

@@ -165,6 +165,7 @@ public abstract class MatchManager {
 	 */
 	public void useCharacterCard(CharacterCardParamSet userInfo) throws CharacterCardIncorrectParametersException, CharacterCardNoMoreUsesAvailableException {
 		if (getCurrentPlayer().getActiveCharacterCard() != null) {
+
 			getCurrentPlayer().getActiveCharacterCard().useCard(managedTable, getAllPlayers(), getCurrentPlayer(), userInfo);
 		}
 	}
@@ -191,6 +192,10 @@ public abstract class MatchManager {
 	public void setMatchPhase(MatchPhase matchPhase) {
 		this.matchPhase = matchPhase;
 	}
+
+	public TableManager getManagedTable() {
+		return managedTable;
+	}
 	//endregion
 
 	//region Private methods & Game Phase methods
@@ -200,7 +205,7 @@ public abstract class MatchManager {
 	 */
 	private void initEntrance(Player p) {
 		try {
-			p.addAllStudentsToEntrance(managedTable.pickStudentsFromBag(pawnCounts.getStudentsPickedFromBag()));
+			p.addAllStudentsToEntrance(managedTable.pickStudentsFromBag(pawnCounts.getStudentsMovedToRoom()));
 		} catch (CollectionUnderflowError e) {
 			// This exception should never be raised, since the Bag should always have more than enough Students to initialize all Players
 			e.printStackTrace();
@@ -229,10 +234,12 @@ public abstract class MatchManager {
 		try {
 			playersSortedByCurrentTurnOrder.get(currentLeadPlayer).playAssistantCardAtIndex(cardIndex);
 			//If the Assistant card has already been played, the current Player must play after the other
-			int numberOfSameCardsOnTable = (int) getAllPlayers().stream().filter((player) -> !player.equals(getCurrentPlayer())).map(Player::getLastPlayedAssistantCard).filter((card) -> card.equals(getCurrentPlayer().getLastPlayedAssistantCard())).count();
-			boolean isAlreadyPlayed = numberOfSameCardsOnTable > 1;
-			if (isAlreadyPlayed) {
-				getCurrentPlayer().setAssistantCardOrderModifier(numberOfSameCardsOnTable);
+			if (getCurrentPlayer().getLastPlayedAssistantCard() == null) {
+				int numberOfSameCardsOnTable = (int) getAllPlayers().stream().filter((player) -> !player.equals(getCurrentPlayer())).map(Player::getLastPlayedAssistantCard).filter((card) -> card.equals(getCurrentPlayer().getLastPlayedAssistantCard())).count();
+				boolean isAlreadyPlayed = numberOfSameCardsOnTable > 1;
+				if (isAlreadyPlayed) {
+					getCurrentPlayer().setAssistantCardOrderModifier(numberOfSameCardsOnTable);
+				}
 			}
 		} catch (CollectionUnderflowError | IndexOutOfBoundsException e) {
 			throw new AssistantCardNotPlayableException();
@@ -247,7 +254,7 @@ public abstract class MatchManager {
 			getCurrentPlayer().removeStudentFromEntrance(s);
 			managedTable.placeStudentOnIsland(s, islandIdx);
 		} catch (CollectionUnderflowError e) {
-			throw new StudentMovementInvalidException("ActionPhase ERROR: the student " + s + "cannot be moved to island " + islandIdx + "since the Player does not have such Student in its Entrance space");
+			throw new StudentMovementInvalidException("ActionPhase ERROR: the student " + s + " cannot be moved to island " + islandIdx + " since the Player does not have such Student in its Entrance space");
 		}
 	}
 	

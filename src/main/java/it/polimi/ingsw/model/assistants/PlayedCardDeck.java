@@ -12,6 +12,9 @@ public class PlayedCardDeck {
 	 * @return The last <code>AssistantCard</code> that the Player owning this Deck has played. This card sits on top of the currently visible Deck.
 	 */
 	public AssistantCard topCard() {
+		if(assistantCardsDeck.size() == 0) {
+			return null;
+		}
 		return assistantCardsDeck.get(assistantCardsDeck.size() - 1);
 	}
 	

@@ -61,7 +61,6 @@ public class TableManager {
         managedClouds = new ArrayList<>();
         for (int cloudIdx = 0; cloudIdx < cloudTileCount; cloudIdx++) {
             managedClouds.add(new Cloud());
-
         }
         if (allowsCharacterCards) {
             //Set up the Character cards
@@ -79,7 +78,7 @@ public class TableManager {
         return islands.size();
     }
 
-    protected int getCurrentIslandIndex() {
+    public int getCurrentIslandIndex() {
         for (int islandIdx = 0; islandIdx < islands.size(); islandIdx++) {
             if (islands.get(islandIdx).isMotherNaturePresent()) {
                 return islandIdx;
@@ -269,10 +268,13 @@ public class TableManager {
      * @param right: The upper bound maximum range number, or the 'denominator'
      * @return The adjusted value according to the denominator
      */
-    protected int circularWrap(int left, int right) {
+    public int circularWrap(int left, int right) {
         return ((left % right) + right) % right;
     }
 
+    public List<CharacterCard> getPlayableCharacterCards() {
+        return playableCharacterCards;
+    }
     public void copyTo(TableManager copyDst) {
         copyDst.playableCharacterCards = playableCharacterCards;
         copyDst.managedClouds = managedClouds;

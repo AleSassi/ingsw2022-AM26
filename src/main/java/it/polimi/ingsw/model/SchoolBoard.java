@@ -128,7 +128,18 @@ public class SchoolBoard {
             return this;
         }
     }
-    
+
+    /**
+     * This method is used just for the test
+     */
+    public int getNumberOfStudentsInEntrance() {
+        int result = 0;
+        for (Student s : Student.values()) {
+            result += entrance.getCount(s);
+        }
+
+        return result;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
