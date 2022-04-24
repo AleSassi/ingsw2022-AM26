@@ -3,8 +3,8 @@ import java.util.*;
 
 public class Notification {
 
-    private NotificationName name;
-    private HashMap<String, Object> userInfo;
+    private final NotificationName name;
+    private final HashMap<String, Object> userInfo;
 
     public Notification(NotificationName name, HashMap<String, Object> userInfo) {
         this.name = name;
