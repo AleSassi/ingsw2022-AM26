@@ -1,5 +1,9 @@
 package it.polimi.ingsw.model.match;
 
+import it.polimi.ingsw.controller.notifications.Notification;
+import it.polimi.ingsw.controller.notifications.NotificationCenter;
+import it.polimi.ingsw.controller.notifications.NotificationKeys;
+import it.polimi.ingsw.controller.notifications.NotificationName;
 import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Professor;
@@ -8,11 +12,12 @@ import it.polimi.ingsw.model.Tower;
 import it.polimi.ingsw.model.assistants.Wizard;
 import it.polimi.ingsw.model.characters.CharacterCard;
 import it.polimi.ingsw.model.characters.CharacterCardParamSet;
+import it.polimi.ingsw.model.student.Island;
 import it.polimi.ingsw.model.student.Student;
 import it.polimi.ingsw.model.student.StudentCollection;
 
-import java.util.Comparator;
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public abstract class MatchManager {
  
@@ -51,6 +56,12 @@ public abstract class MatchManager {
 			e.printStackTrace();
 		}
 		matchPhase = MatchPhase.PlanPhaseStepTwo;
+		
+		// Register for notification listening
+		NotificationCenter.shared().addObserver(this::didReceiveMatchVictoryNotification, NotificationName.PlayerVictory, managedTable);
+		for (Player player: getAllPlayers()) {
+			NotificationCenter.shared().addObserver(this::didReceiveMatchVictoryNotification, NotificationName.PlayerVictory, player);
+		}
 	}
 	
 	/**
@@ -367,13 +378,50 @@ public abstract class MatchManager {
 	 * Check the Match End conditions: Player has no more tower, no students left in the bag, no more assistant cards available
 	 */
 	private void roundCheckMatchEnd() {
-		for (Player p : getAllPlayers()) {
-			if (p.getAvailableAssistantCards().size() == 0 || managedTable.isBagEmpty()) {
-				//TODO: Notify Match End
-				break;
+		if (!managedTable.checkAndNotifyMatchEnd()) {
+			for (Player p : getAllPlayers()) {
+				if (p.getAvailableAssistantCards().size() == 0) {
+					//Notify Match End
+					List<Tower> winningTowers = managedTable.getWinningTowers();
+					resolveParityAndNotifyWinnerNicknames(winningTowers);
+					break;
+				}
 			}
 		}
 	}
-
+	
+	private void didReceiveMatchVictoryNotification(Notification notification) {
+		if (notification.getUserInfo() != null && notification.getUserInfo().containsKey(NotificationKeys.WinnerTowerType.getRawValue())) {
+			List<Tower> winningTowers = (List<Tower>) notification.getUserInfo().get(NotificationKeys.WinnerTowerType.getRawValue());
+			resolveParityAndNotifyWinnerNicknames(winningTowers);
+		}
+	}
+	
+	private void resolveParityAndNotifyWinnerNicknames(List<Tower> winningTowers) {
+		List<Player> activePlayers = getAllPlayers();
+		int currentMax = 0;
+		List<String> winnerNicknames = new ArrayList<>();
+		if (winningTowers.size() == 1) {
+			winnerNicknames.addAll(activePlayers.stream().filter((player) -> player.getTowerType() == winningTowers.get(0)).map(Player::getNickname).toList());
+		} else {
+			for (Tower winningTower: winningTowers) {
+				winnerNicknames = getWinnerNicknames(activePlayers, currentMax, winnerNicknames, winningTower);
+			}
+		}
+		HashMap<String, Object> userInfo = new HashMap<>();
+		userInfo.put(NotificationKeys.WinnerNickname.getRawValue(), winnerNicknames);
+		NotificationCenter.shared().post(NotificationName.PlayerVictory, this, userInfo);
+	}
+	
+	private List<String> getWinnerNicknames(List<Player> activePlayers, int currentMax, List<String> winnerNicknames, Tower winningTower) {
+		int controlledProfCountWithTower = activePlayers.stream().filter((player) -> player.getTowerType() == winningTower).mapToInt((player) -> player.getControlledProfessors().size()).sum();
+		if (controlledProfCountWithTower > currentMax) {
+			winnerNicknames = activePlayers.stream().filter((player) -> player.getTowerType() == winningTower).map(Player::getNickname).toList();
+		} else if (controlledProfCountWithTower == currentMax) {
+			winnerNicknames.addAll(activePlayers.stream().filter((player) -> player.getTowerType() == winningTower).map(Player::getNickname).toList());
+		}
+		return winnerNicknames;
+	}
+	
 	//endregion
 }

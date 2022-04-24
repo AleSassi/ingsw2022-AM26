@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.notifications.NotificationCenter;
+import it.polimi.ingsw.controller.notifications.NotificationKeys;
+import it.polimi.ingsw.controller.notifications.NotificationName;
 import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.assistants.*;
 import it.polimi.ingsw.model.characters.CharacterCard;
@@ -170,7 +173,7 @@ public class Player {
 		}
 	}
 	/**
-	 * allow play to active character card (set the active card and decrese the player's coin
+	 * allow play to active character card (set the active card and decrease the player's coin
 	 */
 	public boolean playCharacterCard(CharacterCard card) {
 		if (card == null) return false;
@@ -192,7 +195,12 @@ public class Player {
 	}
 	
 	public void notifyVictory() {
-		//TODO: We should use Listener to notify the victory of a Player
+		//The Player has built its last Tower. Notify his victory
+		HashMap<String, Object> userInfo = new HashMap<>();
+		List<Tower> winningTower = new ArrayList<>();
+		winningTower.add(getTowerType());
+		userInfo.put(NotificationKeys.WinnerTowerType.getRawValue(), winningTower);
+		NotificationCenter.shared().post(NotificationName.PlayerVictory, this, userInfo);
 	}
 	/**
 	 * create a player copy

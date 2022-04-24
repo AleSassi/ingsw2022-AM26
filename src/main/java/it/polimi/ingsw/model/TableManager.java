@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.notifications.NotificationCenter;
+import it.polimi.ingsw.controller.notifications.NotificationKeys;
+import it.polimi.ingsw.controller.notifications.NotificationName;
 import it.polimi.ingsw.exceptions.*;
 import it.polimi.ingsw.model.characters.*;
 import it.polimi.ingsw.model.student.*;
@@ -237,21 +240,33 @@ public class TableManager {
     }
 
     private void notifyMatchEnd() {
-        //TODO: This will notify the MatchManager that somebody has won the Match. The Match manager will then get the winning players based on which Players have the Tower indicated by the notification
-        Tower winningTower, winningCandidate;
-        int winningTowerCount = 0;
+        //This will notify the MatchManager that somebody has won the Match. The Match manager will then get the winning players based on which Players have the Tower indicated by the notification, and resolve parity if needed
+        //Send the notification
+        HashMap<String, Object> userInfo = new HashMap<>();
+        userInfo.put(NotificationKeys.WinnerTowerType.getRawValue(), getWinningTowers());
+        NotificationCenter.shared().post(NotificationName.PlayerVictory, this, userInfo);
+    }
+    
+    public List<Tower> getWinningTowers() {
+        int[] towerCounts = new int[Tower.values().length];
         for (Island island: islands) {
-            if (island.getTowerCount() > winningTowerCount) {
-                winningTowerCount = island.getTowerCount();
-                winningTower = island.getActiveTowerType();
-                winningCandidate = null;
-            } else if (island.getTowerCount() == winningTowerCount) {
-                winningTowerCount = island.getTowerCount();
-                winningTower = island.getActiveTowerType();
-                winningCandidate = winningTower;
+            if (island.getActiveTowerType() != null) {
+                towerCounts[island.getActiveTowerType().index()] += island.getTowerCount();
             }
         }
-        //Send the notification
+        //Find the max value
+        int currentMax = 0;
+        for (int towerCount: towerCounts) {
+            currentMax = Math.max(currentMax, towerCount);
+        }
+        //Find the list of Towers (in case of parity) to send to the MatchManager - parity will be resolved by the Manager (which knows the Players in the Match)
+        List<Tower> candidateWinners = new ArrayList<>();
+        for (int index = 0; index < towerCounts.length; index++) {
+            if (towerCounts[index] == currentMax) {
+                candidateWinners.add(Tower.values()[index]);
+            }
+        }
+        return candidateWinners;
     }
 
     public boolean checkAndNotifyMatchEnd() {
