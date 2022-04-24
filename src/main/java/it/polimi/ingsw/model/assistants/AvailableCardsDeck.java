@@ -39,5 +39,19 @@ public class AvailableCardsDeck {
 		return cardDeck.remove(index);
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		
+		AvailableCardsDeck that = (AvailableCardsDeck) o;
+		
+		return cardDeck.equals(that.cardDeck);
+	}
+	
+	@Override
+	public int hashCode() {
+		return cardDeck.hashCode();
+	}
 }
 

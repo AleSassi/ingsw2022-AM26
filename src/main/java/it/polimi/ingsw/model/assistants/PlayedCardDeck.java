@@ -29,4 +29,18 @@ public class PlayedCardDeck {
 		assistantCardsDeck.add(card);
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		
+		PlayedCardDeck that = (PlayedCardDeck) o;
+		
+		return assistantCardsDeck.equals(that.assistantCardsDeck);
+	}
+	
+	@Override
+	public int hashCode() {
+		return assistantCardsDeck.hashCode();
+	}
 }
