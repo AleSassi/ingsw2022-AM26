@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller.network.messages;
 
-import it.polimi.ingsw.exceptions.MessageDecodeException;
+import it.polimi.ingsw.exceptions.model.MessageDecodeException;
 import it.polimi.ingsw.model.assistants.Wizard;
 import it.polimi.ingsw.model.match.MatchVariant;
 import org.junit.jupiter.api.BeforeEach;

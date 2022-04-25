@@ -1,7 +1,7 @@
 package it.polimi.ingsw.controller.network.messages;
 
 import com.google.gson.*;
-import it.polimi.ingsw.exceptions.MessageDecodeException;
+import it.polimi.ingsw.exceptions.model.MessageDecodeException;
 
 public class PingPongMessage extends NetworkMessage {
 	

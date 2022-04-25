@@ -1,4 +1,4 @@
-package it.polimi.ingsw.exceptions;
+package it.polimi.ingsw.exceptions.model;
 
 public class StudentHostingCardIncorrectUpdateParametersException extends Exception {
     public StudentHostingCardIncorrectUpdateParametersException(String message) {

@@ -1,6 +1,9 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.*;
+import it.polimi.ingsw.exceptions.model.CollectionUnderflowError;
+import it.polimi.ingsw.exceptions.model.IncorrectConstructorParametersException;
+import it.polimi.ingsw.exceptions.model.InsufficientTowersException;
+import it.polimi.ingsw.exceptions.model.TooManyTowersException;
 import it.polimi.ingsw.model.student.*;
 
 import java.util.*;

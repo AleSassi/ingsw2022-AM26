@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.match;
 
-import it.polimi.ingsw.exceptions.*;
+import it.polimi.ingsw.exceptions.model.*;
 import it.polimi.ingsw.model.assistants.Wizard;
 
 import java.util.*;

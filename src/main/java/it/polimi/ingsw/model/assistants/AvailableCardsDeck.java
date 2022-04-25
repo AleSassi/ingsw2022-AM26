@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.assistants;
 
-import it.polimi.ingsw.exceptions.CollectionUnderflowError;
+import it.polimi.ingsw.exceptions.model.CollectionUnderflowError;
 
 import java.util.ArrayList;
 

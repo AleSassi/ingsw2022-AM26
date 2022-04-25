@@ -6,7 +6,7 @@ import it.polimi.ingsw.controller.notifications.Notification;
 import it.polimi.ingsw.controller.notifications.NotificationCenter;
 import it.polimi.ingsw.controller.notifications.NotificationKeys;
 import it.polimi.ingsw.controller.notifications.NotificationName;
-import it.polimi.ingsw.exceptions.*;
+import it.polimi.ingsw.exceptions.model.*;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Professor;
 import it.polimi.ingsw.model.TableManager;
@@ -14,11 +14,9 @@ import it.polimi.ingsw.model.Tower;
 import it.polimi.ingsw.model.assistants.Wizard;
 import it.polimi.ingsw.model.characters.CharacterCard;
 import it.polimi.ingsw.model.characters.CharacterCardParamSet;
-import it.polimi.ingsw.model.student.Island;
 import it.polimi.ingsw.model.student.Student;
 import it.polimi.ingsw.model.student.StudentCollection;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public abstract class MatchManager {

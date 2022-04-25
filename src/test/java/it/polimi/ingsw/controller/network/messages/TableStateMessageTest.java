@@ -1,10 +1,7 @@
 package it.polimi.ingsw.controller.network.messages;
 
-import it.polimi.ingsw.exceptions.MessageDecodeException;
-import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.exceptions.model.MessageDecodeException;
 import it.polimi.ingsw.model.TableManager;
-import it.polimi.ingsw.model.Tower;
-import it.polimi.ingsw.model.assistants.Wizard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

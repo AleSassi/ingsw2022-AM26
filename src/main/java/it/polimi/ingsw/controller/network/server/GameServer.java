@@ -1,9 +1,11 @@
-package it.polimi.ingsw.controller.network;
+package it.polimi.ingsw.controller.network.server;
 
 import it.polimi.ingsw.controller.network.messages.NetworkMessage;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.*;
 
 public class GameServer {
 
@@ -11,7 +13,7 @@ public class GameServer {
 	private ServerSocket serverSocket;
 	
 	public GameServer(int desiredPort) {
-	
+		this.serverPort = desiredPort;
 	}
 	
 	public void startListeningIncomingConnections() {

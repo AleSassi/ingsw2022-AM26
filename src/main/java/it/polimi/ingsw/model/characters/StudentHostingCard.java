@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.characters;
 
-import it.polimi.ingsw.exceptions.*;
+import it.polimi.ingsw.exceptions.model.*;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.student.*;
 

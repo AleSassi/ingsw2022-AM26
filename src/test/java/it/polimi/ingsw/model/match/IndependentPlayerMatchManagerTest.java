@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.match;
 
-import it.polimi.ingsw.exceptions.*;
+import it.polimi.ingsw.exceptions.model.CharacterCardIncorrectParametersException;
+import it.polimi.ingsw.exceptions.model.CharacterCardNoMoreUsesAvailableException;
+import it.polimi.ingsw.exceptions.model.CollectionUnderflowError;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Professor;
 import it.polimi.ingsw.model.Tower;

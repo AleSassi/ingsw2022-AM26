@@ -2,7 +2,7 @@ package it.polimi.ingsw.controller.network.messages;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import it.polimi.ingsw.exceptions.MessageDecodeException;
+import it.polimi.ingsw.exceptions.model.MessageDecodeException;
 import it.polimi.ingsw.model.match.MatchPhase;
 import org.jetbrains.annotations.NotNull;
 

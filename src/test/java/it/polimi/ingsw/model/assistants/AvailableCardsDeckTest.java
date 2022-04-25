@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.assistants;
 
-import it.polimi.ingsw.exceptions.CollectionUnderflowError;
+import it.polimi.ingsw.exceptions.model.CollectionUnderflowError;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

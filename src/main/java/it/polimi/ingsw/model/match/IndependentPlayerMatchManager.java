@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.match;
 
-import it.polimi.ingsw.exceptions.IncorrectConstructorParametersException;
-import it.polimi.ingsw.exceptions.InvalidPlayerCountException;
+import it.polimi.ingsw.exceptions.model.IncorrectConstructorParametersException;
+import it.polimi.ingsw.exceptions.model.InvalidPlayerCountException;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Tower;
 import it.polimi.ingsw.model.assistants.Wizard;

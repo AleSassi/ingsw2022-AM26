@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.student;
 
-import it.polimi.ingsw.exceptions.CollectionUnderflowError;
+import it.polimi.ingsw.exceptions.model.CollectionUnderflowError;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

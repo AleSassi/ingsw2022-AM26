@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.match;
 
-import it.polimi.ingsw.exceptions.IncorrectConstructorParametersException;
+import it.polimi.ingsw.exceptions.model.IncorrectConstructorParametersException;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.PlayerTeam;
 import it.polimi.ingsw.model.Tower;

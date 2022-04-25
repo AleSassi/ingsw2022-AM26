@@ -1,18 +1,16 @@
 package it.polimi.ingsw.controller;
-import it.polimi.ingsw.controller.network.GameServer;
+import it.polimi.ingsw.controller.network.server.GameServer;
 import it.polimi.ingsw.controller.network.messages.*;
 import it.polimi.ingsw.controller.notifications.Notification;
 import it.polimi.ingsw.controller.notifications.NotificationCenter;
 import it.polimi.ingsw.controller.notifications.NotificationKeys;
 import it.polimi.ingsw.controller.notifications.NotificationName;
-import it.polimi.ingsw.exceptions.*;
+import it.polimi.ingsw.exceptions.model.*;
 import it.polimi.ingsw.model.match.GameLobby;
 import it.polimi.ingsw.model.match.GameLobbyState;
 import it.polimi.ingsw.model.match.MatchManager;
 import it.polimi.ingsw.model.match.MatchPhase;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.*;
 
 public class GameController {
 	

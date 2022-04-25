@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.match;
 
-import it.polimi.ingsw.exceptions.InvalidPlayerCountException;
+import it.polimi.ingsw.exceptions.model.InvalidPlayerCountException;
 
 class PawnCounts {
 	

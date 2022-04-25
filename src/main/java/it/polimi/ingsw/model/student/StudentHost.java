@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model.student;
 
-import it.polimi.ingsw.exceptions.CollectionUnderflowError;
-
-import java.util.List;
+import it.polimi.ingsw.exceptions.model.CollectionUnderflowError;
 
 public class StudentHost {
 

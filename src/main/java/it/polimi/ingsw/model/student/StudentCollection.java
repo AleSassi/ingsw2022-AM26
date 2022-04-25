@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.student;
-import com.google.gson.annotations.Expose;
-import it.polimi.ingsw.exceptions.CollectionUnderflowError;
+import it.polimi.ingsw.exceptions.model.CollectionUnderflowError;
 
 import java.util.*;
 

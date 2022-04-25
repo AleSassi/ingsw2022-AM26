@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.CollectionUnderflowError;
-import it.polimi.ingsw.exceptions.InsufficientTowersException;
+import it.polimi.ingsw.exceptions.model.CollectionUnderflowError;
+import it.polimi.ingsw.exceptions.model.InsufficientTowersException;
 import it.polimi.ingsw.model.student.Student;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

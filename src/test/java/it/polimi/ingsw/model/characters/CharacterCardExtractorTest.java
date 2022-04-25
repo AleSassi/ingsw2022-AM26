@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.characters;
 
-import it.polimi.ingsw.exceptions.UnavailableCardException;
+import it.polimi.ingsw.exceptions.model.UnavailableCardException;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.characters;
 
-import it.polimi.ingsw.exceptions.CharacterCardIncorrectParametersException;
+import it.polimi.ingsw.exceptions.model.CharacterCardIncorrectParametersException;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Professor;
 import it.polimi.ingsw.model.TableManager;

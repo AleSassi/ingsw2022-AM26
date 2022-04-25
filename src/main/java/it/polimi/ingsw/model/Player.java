@@ -1,10 +1,9 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.controller.network.messages.PlayerStateMessage;
 import it.polimi.ingsw.controller.notifications.NotificationCenter;
 import it.polimi.ingsw.controller.notifications.NotificationKeys;
 import it.polimi.ingsw.controller.notifications.NotificationName;
-import it.polimi.ingsw.exceptions.*;
+import it.polimi.ingsw.exceptions.model.*;
 import it.polimi.ingsw.model.assistants.*;
 import it.polimi.ingsw.model.characters.CharacterCard;
 import it.polimi.ingsw.model.student.*;

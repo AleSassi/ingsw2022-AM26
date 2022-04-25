@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.characters;
 
-import it.polimi.ingsw.exceptions.CharacterCardIncorrectParametersException;
-import it.polimi.ingsw.exceptions.CharacterCardNoMoreUsesAvailableException;
+import it.polimi.ingsw.exceptions.model.CharacterCardIncorrectParametersException;
+import it.polimi.ingsw.exceptions.model.CharacterCardNoMoreUsesAvailableException;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.TableManager;
 

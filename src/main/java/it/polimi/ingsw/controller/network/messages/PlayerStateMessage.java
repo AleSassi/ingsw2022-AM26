@@ -2,7 +2,7 @@ package it.polimi.ingsw.controller.network.messages;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import it.polimi.ingsw.exceptions.MessageDecodeException;
+import it.polimi.ingsw.exceptions.model.MessageDecodeException;
 import it.polimi.ingsw.model.SchoolBoard;
 import it.polimi.ingsw.model.assistants.AssistantCard;
 import it.polimi.ingsw.model.assistants.Wizard;

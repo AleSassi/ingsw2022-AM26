@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.CollectionUnderflowError;
-import it.polimi.ingsw.exceptions.IslandSkippedControlAssignmentForStopCardException;
-import it.polimi.ingsw.exceptions.IslandSkippedInfluenceForStopCardException;
+import it.polimi.ingsw.exceptions.model.CollectionUnderflowError;
+import it.polimi.ingsw.exceptions.model.IslandSkippedControlAssignmentForStopCardException;
+import it.polimi.ingsw.exceptions.model.IslandSkippedInfluenceForStopCardException;
 import it.polimi.ingsw.model.assistants.Wizard;
 import it.polimi.ingsw.model.characters.CharacterCard;
 import it.polimi.ingsw.model.characters.CharacterCardParamSet;

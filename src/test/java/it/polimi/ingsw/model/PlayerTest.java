@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.exceptions.CollectionUnderflowError;
-import it.polimi.ingsw.exceptions.TableFullException;
-import it.polimi.ingsw.exceptions.TooManyTowersException;
+import it.polimi.ingsw.exceptions.model.CollectionUnderflowError;
+import it.polimi.ingsw.exceptions.model.TableFullException;
+import it.polimi.ingsw.exceptions.model.TooManyTowersException;
 import it.polimi.ingsw.model.assistants.*;
 import it.polimi.ingsw.model.characters.*;
 import it.polimi.ingsw.model.characters.Character;
