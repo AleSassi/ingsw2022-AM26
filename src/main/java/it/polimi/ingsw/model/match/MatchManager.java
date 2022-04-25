@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.match;
 
+import it.polimi.ingsw.controller.network.messages.PlayerStateMessage;
+import it.polimi.ingsw.controller.network.messages.TableStateMessage;
 import it.polimi.ingsw.controller.notifications.Notification;
 import it.polimi.ingsw.controller.notifications.NotificationCenter;
 import it.polimi.ingsw.controller.notifications.NotificationKeys;
@@ -146,6 +148,10 @@ public abstract class MatchManager {
 		return playersSortedByCurrentTurnOrder.get(currentLeadPlayer);
 	}
 	
+	public MatchPhase getMatchPhase() {
+		return matchPhase;
+	}
+	
 	/**
 	 * Checks if the assistant card is playable by checking the card that has been played by the lst player is the same as the one he wants to play
 	 */
@@ -199,16 +205,17 @@ public abstract class MatchManager {
 	protected abstract List<Player> getPlayersWithTowers();
 	//endregion
 
-	//region TestMethod
-	public void setMatchPhase(MatchPhase matchPhase) {
+	//TODO: Can we remove these and create a test case where we properly simulate a Match?
+	//region Methods used to simplify testing of match phases
+	protected void setMatchPhase(MatchPhase matchPhase) {
 		this.matchPhase = matchPhase;
 	}
 
-	public TableManager getManagedTable() {
+	protected TableManager getManagedTable() {
 		return managedTable;
 	}
 
-	public void setCurrentLeadPlayer(int currentLeadPlayer) {
+	protected void setCurrentLeadPlayer(int currentLeadPlayer) {
 		this.currentLeadPlayer = currentLeadPlayer;
 	}
 	//endregion
@@ -426,6 +433,30 @@ public abstract class MatchManager {
 		}
 		return winnerNicknames;
 	}
+	//endregion
 	
+	//region Messages
+	public TableStateMessage generateTableStateMessage() {
+		return managedTable.getStateMessage();
+	}
+	
+	public PlayerStateMessage generatePlayerStateMessage(String playerNickname) {
+		List<Player> players = getAllPlayers();
+		for (Player player: players) {
+			if (Objects.equals(player.getNickname(), playerNickname)) {
+				//Generate message
+				Integer activeCharacterCardIdx = null;
+				for (int characterIdx = 0; characterIdx < managedTable.getPlayableCharacterCards().size(); characterIdx++) {
+					CharacterCard characterCard = managedTable.getPlayableCharacterCards().get(characterIdx);
+					if (characterCard.getCharacter() == player.getActiveCharacterCard().getCharacter()) {
+						activeCharacterCardIdx = characterIdx;
+						break;
+					}
+				}
+				return new PlayerStateMessage(player.getNickname(), activeCharacterCardIdx, player.getAvailableAssistantCards(), player.getLastPlayedAssistantCard(), player.getBoard(), player.getAvailableCoins(), player.getWizard());
+			}
+		}
+		return null;
+	}
 	//endregion
 }

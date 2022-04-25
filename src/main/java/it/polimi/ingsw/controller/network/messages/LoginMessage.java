@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller.network.messages;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import it.polimi.ingsw.exceptions.MessageDecodeException;
+import it.polimi.ingsw.model.assistants.Wizard;
 import it.polimi.ingsw.model.match.MatchVariant;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,11 +14,13 @@ public class LoginMessage extends NetworkMessage {
 	private String nickname;
 	private Integer desiredNumberOfPlayers;
 	private MatchVariant matchVariant;
+	private Wizard chosenWizard;
 	
-	public LoginMessage(@NotNull String nickname, int desiredNumberOfPlayers, @NotNull MatchVariant matchVariant) {
+	public LoginMessage(@NotNull String nickname, int desiredNumberOfPlayers, @NotNull MatchVariant matchVariant, @NotNull Wizard chosenWizard) {
 		this.nickname = nickname;
 		this.desiredNumberOfPlayers = desiredNumberOfPlayers;
 		this.matchVariant = matchVariant;
+		this.chosenWizard = chosenWizard;
 	}
 	
 	public LoginMessage(String serializedString) throws MessageDecodeException {
@@ -36,6 +39,10 @@ public class LoginMessage extends NetworkMessage {
 		return matchVariant;
 	}
 	
+	public Wizard getChosenWizard() {
+		return chosenWizard;
+	}
+	
 	@Override
 	String serialize() {
 		//TODO: Can we put this code into the Network Message Abstract Class?
@@ -51,8 +58,9 @@ public class LoginMessage extends NetworkMessage {
 			nickname = decoded.nickname;
 			desiredNumberOfPlayers = decoded.desiredNumberOfPlayers;
 			matchVariant = decoded.matchVariant;
+			chosenWizard = decoded.chosenWizard;
 			
-			if (nickname == null || desiredNumberOfPlayers == null || matchVariant == null) {
+			if (nickname == null || desiredNumberOfPlayers == null || matchVariant == null || chosenWizard == null) {
 				throw new MessageDecodeException();
 			}
 		} catch (JsonParseException e) {
@@ -67,8 +75,10 @@ public class LoginMessage extends NetworkMessage {
 		
 		LoginMessage that = (LoginMessage) o;
 		
-		if (!Objects.equals(desiredNumberOfPlayers, that.desiredNumberOfPlayers)) return false;
-		if (!Objects.equals(nickname, that.nickname)) return false;
-		return matchVariant == that.matchVariant;
+		if (!nickname.equals(that.nickname)) return false;
+		if (!desiredNumberOfPlayers.equals(that.desiredNumberOfPlayers)) return false;
+		if (matchVariant != that.matchVariant) return false;
+		return chosenWizard == that.chosenWizard;
 	}
+	
 }

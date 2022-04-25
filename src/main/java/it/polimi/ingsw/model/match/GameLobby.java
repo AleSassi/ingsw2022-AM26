@@ -24,7 +24,15 @@ public class GameLobby {
     public int getNumberOfPlayers() {
         return playersInLobby.size();
     }
-
+    
+    public int getMaxPlayerCount() {
+        return maxPlayerCount;
+    }
+    
+    public String[] getPlayerNicknames() {
+        return playersInLobby.toArray(new String[0]);
+    }
+    
     private boolean nicknameIsUnique(String nickname) {
         return !playersInLobby.contains(nickname);
     }
@@ -33,9 +41,10 @@ public class GameLobby {
         return state;
     }
 
-    public void addPlayer(String nickname, Wizard wiz) throws LobbyFullException, NicknameNotUniqueException {
+    public void addPlayer(String nickname, Wizard wiz) throws LobbyFullException, NicknameNotUniqueException, WizardAlreadyChosenException {
         if (state == GameLobbyState.Full || state == GameLobbyState.MatchRunning || playersInLobby.size() + 1 > maxPlayerCount) throw new LobbyFullException();
         if (!nicknameIsUnique(nickname)) throw new NicknameNotUniqueException();
+        if (chosenWizards.contains(wiz)) throw new WizardAlreadyChosenException();
         playersInLobby.add(nickname);
         chosenWizards.add(wiz);
         if (playersInLobby.size() == maxPlayerCount) {

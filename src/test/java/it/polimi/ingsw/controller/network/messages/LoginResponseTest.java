@@ -13,7 +13,7 @@ class LoginResponseTest {
 	
 	@BeforeEach
 	void initMessage() {
-		message = new LoginResponse("Ale", true, 2);
+		message = new LoginResponse("Ale", true, 2, null);
 	}
 	
 	@Test

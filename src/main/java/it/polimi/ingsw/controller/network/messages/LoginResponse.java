@@ -12,11 +12,13 @@ public class LoginResponse extends NetworkMessage {
 	private String nickname;
 	private Boolean loginAccepted;
 	private Integer numberOfPlayersRemainingToFillLobby; //If 0 the match is about to start -> client prepares the UI for the match
+	private String rejectionReason;
 	
-	public LoginResponse(@NotNull String nickname, boolean loginAccepted, int numberOfPlayersRemainingToFillLobby) {
+	public LoginResponse(@NotNull String nickname, boolean loginAccepted, int numberOfPlayersRemainingToFillLobby, String rejectionReason) {
 		this.nickname = nickname;
 		this.loginAccepted = loginAccepted;
 		this.numberOfPlayersRemainingToFillLobby = numberOfPlayersRemainingToFillLobby;
+		this.rejectionReason = rejectionReason;
 	}
 	
 	public LoginResponse(String serializedString) throws MessageDecodeException {
@@ -35,6 +37,10 @@ public class LoginResponse extends NetworkMessage {
 		return numberOfPlayersRemainingToFillLobby;
 	}
 	
+	public String getRejectionReason() {
+		return rejectionReason;
+	}
+	
 	@Override
 	String serialize() {
 		Gson gson = new Gson();
@@ -49,6 +55,7 @@ public class LoginResponse extends NetworkMessage {
 			nickname = decoded.nickname;
 			loginAccepted = decoded.loginAccepted;
 			numberOfPlayersRemainingToFillLobby = decoded.numberOfPlayersRemainingToFillLobby;
+			rejectionReason = decoded.rejectionReason;
 			
 			if (nickname == null || loginAccepted == null || numberOfPlayersRemainingToFillLobby == null) {
 				throw new MessageDecodeException();
@@ -67,6 +74,7 @@ public class LoginResponse extends NetworkMessage {
 		
 		if (loginAccepted != that.loginAccepted) return false;
 		if (!Objects.equals(numberOfPlayersRemainingToFillLobby, that.numberOfPlayersRemainingToFillLobby)) return false;
+		if (!Objects.equals(rejectionReason, that.rejectionReason)) return false;
 		return Objects.equals(nickname, that.nickname);
 	}
 }

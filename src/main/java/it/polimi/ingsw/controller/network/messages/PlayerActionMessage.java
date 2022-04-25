@@ -5,6 +5,7 @@ import com.google.gson.JsonParseException;
 import it.polimi.ingsw.exceptions.MessageDecodeException;
 import it.polimi.ingsw.model.characters.Character;
 import it.polimi.ingsw.model.characters.CharacterCardParamSet;
+import it.polimi.ingsw.model.match.MatchPhase;
 import it.polimi.ingsw.model.student.Student;
 import org.jetbrains.annotations.NotNull;
 
@@ -141,6 +142,29 @@ public class PlayerActionMessage extends NetworkMessage {
 		DidMoveStudent,
 		DidMoveMNBySteps,
 		DidChooseCloudIsland,
-		DidPlayCharacterCard
+		DidPlayCharacterCard;
+		
+		public boolean isValidForMatchPhase(MatchPhase matchPhase) {
+			switch (matchPhase) {
+				case PlanPhaseStepOne -> {
+					// Performed automagically
+					return false;
+				}
+				case PlanPhaseStepTwo -> {
+					return this == DidPlayAssistantCard;
+				}
+				case ActionPhaseStepOne -> {
+					//TODO: Should we restrict character card usage only in this phase?
+					return this == DidMoveStudent || this == DidPlayCharacterCard;
+				}
+				case ActionPhaseStepTwo -> {
+					return this == DidMoveMNBySteps;
+				}
+				case ActionPhaseStepThree -> {
+					return this == DidChooseCloudIsland;
+				}
+			}
+			return false;
+		}
 	}
 }

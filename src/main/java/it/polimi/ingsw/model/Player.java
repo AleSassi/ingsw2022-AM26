@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.network.messages.PlayerStateMessage;
 import it.polimi.ingsw.controller.notifications.NotificationCenter;
 import it.polimi.ingsw.controller.notifications.NotificationKeys;
 import it.polimi.ingsw.controller.notifications.NotificationName;

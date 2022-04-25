@@ -3,7 +3,8 @@ package it.polimi.ingsw.controller.notifications;
 public enum NotificationKeys {
 	
 	WinnerNickname("WinnerNickname"),
-	WinnerTowerType("WinnerTowerType");
+	WinnerTowerType("WinnerTowerType"),
+	IncomingNetworkMessage("IncomingNetworkMessage");
 	
 	private final String rawValue;
 	
