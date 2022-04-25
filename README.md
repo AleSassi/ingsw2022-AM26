@@ -18,8 +18,8 @@ The final version will include:
 ### Implemented Features
 | Feature          |                                                                                      Implementation Status                                                                                      |
 |:-----------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| Basic ruleset    |                [![IMPLEMENTING](https://img.shields.io/badge/-Implementing-yellow)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/model)                 |
-| Complete ruleset |                [![IMPLEMENTING](https://img.shields.io/badge/-Implementing-yellow)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/model)                 |
+| Basic ruleset    |               [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/model)               |
+| Complete ruleset |               [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/model)               |
 | Socket & Network |                                                        [![To be implemented](https://img.shields.io/badge/-To%20be%20implemented-red)]()                                                        |
 | CLI              |                                                        [![To be implemented](https://img.shields.io/badge/-To%20be%20implemented-red)]()                                                        |
 | GUI              |                                                        [![To be implemented](https://img.shields.io/badge/-To%20be%20implemented-red)]()                                                        |
