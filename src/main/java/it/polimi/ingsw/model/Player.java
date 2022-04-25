@@ -85,6 +85,18 @@ public class Player {
 		return playedCard;
 	}
 	
+	public SchoolBoard getBoard() {
+		return board.copy();
+	}
+	
+	public int getAvailableCoins() {
+		return availableCoins;
+	}
+	
+	public Wizard getWizard() {
+		return wizard;
+	}
+	
 	/**
 	 * allow player to use card from avaible deck of assistant
 	 */

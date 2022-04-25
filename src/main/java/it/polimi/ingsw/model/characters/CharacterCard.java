@@ -11,7 +11,8 @@ public abstract class CharacterCard {
     private Character character;
     private int priceIncrement = 0;
     private int timesUsedInCurrentTurn = 0;
-    protected CharacterCardExecutor executor;
+    //TODO: When implementing state preservation make sure to have some way to recreate the executors (e.g. at first use if null run the constructor?)
+    protected transient CharacterCardExecutor executor; //Make transient to avoid serialization
 
     public CharacterCard(Character character) {
         this.character = character;

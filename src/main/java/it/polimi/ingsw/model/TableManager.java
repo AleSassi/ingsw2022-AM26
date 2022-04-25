@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.network.messages.TableStateMessage;
 import it.polimi.ingsw.controller.notifications.NotificationCenter;
 import it.polimi.ingsw.controller.notifications.NotificationKeys;
 import it.polimi.ingsw.controller.notifications.NotificationName;
@@ -80,7 +81,7 @@ public class TableManager {
     public int getNumberOfIslands() {
         return islands.size();
     }
-
+    
     public int getCurrentIslandIndex() {
         for (int islandIdx = 0; islandIdx < islands.size(); islandIdx++) {
             if (islands.get(islandIdx).isMotherNaturePresent()) {
@@ -275,6 +276,10 @@ public class TableManager {
             return true;
         }
         return false;
+    }
+    
+    public TableStateMessage getStateMessage() {
+        return new TableStateMessage(availableProfessors, islands, studentBag, managedClouds, playableCharacterCards);
     }
 
     /**

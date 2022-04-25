@@ -1,18 +1,18 @@
 package it.polimi.ingsw.model.student;
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.exceptions.CollectionUnderflowError;
 
 import java.util.*;
 
 public class StudentCollection {
 
-    private final List<Integer> students;
-    private final Random randomizer;
+    private final int[] students;
+    private final transient Random randomizer = new Random();
 
     public StudentCollection() {
-        this.students = new ArrayList<>(Student.values().length);
-        this.randomizer = new Random();
+        this.students = new int[Student.values().length];
         for (int index = 0; index < Student.values().length; index++) {
-            this.students.add(0);
+            this.students[index] = 0;
         }
     }
 
@@ -20,20 +20,20 @@ public class StudentCollection {
         if (s == null) return 0;
 
         int studentIndex = Student.getRawValueOf(s);
-        return students.get(studentIndex);
+        return students[studentIndex];
     }
 
     public int getTotalCount() {
-        return students.stream().mapToInt(element -> element).sum();
+        return Arrays.stream(students).sum();
     }
 
     public void removeStudents(Student s, int count) throws CollectionUnderflowError {
         if (s == null) return;
 
         int studentIndex = Student.getRawValueOf(s);
-        if (students.get(studentIndex) - count < 0) throw new CollectionUnderflowError();
+        if (students[studentIndex] - count < 0) throw new CollectionUnderflowError();
 
-        students.set(studentIndex, students.get(studentIndex) - count);
+        students[studentIndex] = students[studentIndex] - count;
     }
 
     public void addStudents(Student s, int count) {
@@ -44,7 +44,7 @@ public class StudentCollection {
             // We silently fail when the number of students is negative
             return;
         }
-        students.set(studentIndex, students.get(studentIndex) + count);
+        students[studentIndex] = students[studentIndex] + count;
     }
 
     public void mergeWithCollection(StudentCollection otherCollection) {
@@ -73,7 +73,7 @@ public class StudentCollection {
     }
 
     private List<Integer> getProgressiveCounts() {
-        List<Integer> result = new ArrayList<>(students.size());
+        List<Integer> result = new ArrayList<>(students.length);
         int lastProgressiveCount = 0;
         for (Integer studentCount: students) {
             result.add(lastProgressiveCount + studentCount);
@@ -95,12 +95,12 @@ public class StudentCollection {
 
         StudentCollection that = (StudentCollection) o;
 
-        return students.equals(that.students);
+        return Arrays.equals(students, that.students);
     }
 
     @Override
     public int hashCode() {
-        int result = students.hashCode();
+        int result = Arrays.hashCode(students);
         result = 31 * result + randomizer.hashCode();
         return result;
     }
