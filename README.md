@@ -20,7 +20,7 @@ The final version will include:
 |:-----------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 | Basic ruleset    |               [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/model)               |
 | Complete ruleset |               [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/model)               |
-| Socket & Network |                                                        [![To be implemented](https://img.shields.io/badge/-To%20be%20implemented-red)]()                                                        |
+| Socket & Network |                                                             [![IMPLEMENTING](https://img.shields.io/badge/-Implementing-yellow)]()                                                              |
 | CLI              |                                                        [![To be implemented](https://img.shields.io/badge/-To%20be%20implemented-red)]()                                                        |
 | GUI              |                                                        [![To be implemented](https://img.shields.io/badge/-To%20be%20implemented-red)]()                                                        |
 | Persistence      |                                                        [![To be implemented](https://img.shields.io/badge/-To%20be%20implemented-red)]()                                                        |
