@@ -207,6 +207,10 @@ public abstract class MatchManager {
 	public TableManager getManagedTable() {
 		return managedTable;
 	}
+
+	public void setCurrentLeadPlayer(int currentLeadPlayer) {
+		this.currentLeadPlayer = currentLeadPlayer;
+	}
 	//endregion
 
 	//region Private methods & Game Phase methods
@@ -278,7 +282,7 @@ public abstract class MatchManager {
 			getCurrentPlayer().placeStudentAtTableAndGetCoin(s);
 			AP_CheckAndAssignProfessorTo(s);
 		} catch (CollectionUnderflowError e) {
-			throw new StudentMovementInvalidException("ActionPhase ERROR: the student " + s + "cannot be moved to its table in the Dining Room since the Player does not have such Student in its Entrance space");
+			throw new StudentMovementInvalidException(getCurrentPlayer().getNickname() + " " + s + "cannot be moved to its table in the Dining Room since the Player does not have such Student in its Entrance space");
 		} catch (TableFullException e) {
 			throw new StudentMovementInvalidException("ActionPhase ERROR: the student " + s + "cannot be moved to its table in the Dining Room since the Table is already full");
 		}

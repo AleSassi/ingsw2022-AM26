@@ -111,7 +111,6 @@ public class Player {
 	 */
 	public void addStudentToEntrance(Student s) {
 		board.addStudentToEntrance(s);
-		//System.out.println("Studente: " + s);
 	}
 	
 	/**
@@ -232,7 +231,7 @@ public class Player {
 		}
 	}
 
-	public int getStudentInEntrance() {
+	public int getStudentsInEntrance() {
 		return board.getNumberOfStudentsInEntrance();
 	}
 	
@@ -265,4 +264,6 @@ public class Player {
 		result = 31 * result + assistantCardOrderModifier;
 		return result;
 	}
+
+
 }

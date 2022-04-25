@@ -34,7 +34,7 @@ public class TableManager {
                 playableCharacterCards.removeIf((card) -> true);
             }
         }
-        availableProfessors = List.of(Professor.values());
+        availableProfessors = new ArrayList<>(Arrays.asList(Professor.values()));
         StudentHost initialBag = new StudentHost();
         for (Student s: Student.values()) {
             initialBag.placeStudents(s, 2);

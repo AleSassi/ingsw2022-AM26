@@ -9,6 +9,7 @@ public class StudentCollection {
     private final int[] students;
     private final transient Random randomizer = new Random();
 
+
     public StudentCollection() {
         this.students = new int[Student.values().length];
         for (int index = 0; index < Student.values().length; index++) {

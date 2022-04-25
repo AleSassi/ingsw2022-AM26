@@ -2,6 +2,8 @@ package it.polimi.ingsw.model.student;
 
 import it.polimi.ingsw.exceptions.CollectionUnderflowError;
 
+import java.util.List;
+
 public class StudentHost {
 
     private final StudentCollection hostedStudents = new StudentCollection();
@@ -46,4 +48,6 @@ public class StudentHost {
     public int hashCode() {
         return hostedStudents.hashCode();
     }
+
+
 }

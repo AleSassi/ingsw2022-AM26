@@ -165,4 +165,6 @@ public class SchoolBoard {
         result = 31 * result + Arrays.hashCode(controlledProfessors);
         return result;
     }
+
+
 }
