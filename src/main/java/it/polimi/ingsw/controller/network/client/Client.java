@@ -67,8 +67,8 @@ public class Client {
                 }
             });
             thread.start();
-        } catch (IOException ignored) {
-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
