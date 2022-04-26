@@ -12,6 +12,9 @@ import it.polimi.ingsw.model.match.MatchManager;
 import it.polimi.ingsw.model.match.MatchPhase;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class GameController {
 	
 	private final GameServer server;
@@ -24,6 +27,10 @@ public class GameController {
 		NotificationCenter.shared().addObserver(this::didReceiveLoginMessage, NotificationName.ServerDidReceiveLoginMessage, this);
 		NotificationCenter.shared().addObserver(this::didReceivePlayerActionMessage, NotificationName.ServerDidReceivePlayerActionMessage, this);
 		NotificationCenter.shared().addObserver(this::didReceiveTerminationMessage, NotificationName.ServerDidTerminateMatch, this);
+	}
+	
+	public boolean containsPlayerWithNickname(String nickname) {
+		return Arrays.stream(lobby.getPlayerNicknames()).toList().contains(nickname);
 	}
 	
 	private void didReceiveLoginMessage(Notification notification) {
