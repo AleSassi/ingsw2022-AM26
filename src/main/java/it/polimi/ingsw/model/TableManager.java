@@ -161,6 +161,9 @@ public class TableManager {
             islandIndexWithJustRemovedStopCard = -1;
         }
     }
+    public Cloud getCloud(int idx) {
+        return managedClouds.get(idx);
+    }
 
     public CharacterCard getCardAtIndex(int cardIndex) throws IndexOutOfBoundsException {
         return playableCharacterCards.get(cardIndex);

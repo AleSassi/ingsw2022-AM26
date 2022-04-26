@@ -148,7 +148,7 @@ class IndependentPlayerMatchManagerTest {
     }
 
     /**
-     * This method test that the check and change of the island's control works corretly
+     * This method test that the check and change of the island's control works correctly
      */
     @RepeatedTest(100)
     void actionPhaseTwoControlTest() {
@@ -202,6 +202,24 @@ class IndependentPlayerMatchManagerTest {
     }
 
     /**
+     * This method test that the actionPhaseThree works correctly
+     */
+    @Test
+    void actionPhaseThreeTest() {
+        matchManager.setMatchPhase(MatchPhase.ActionPhaseStepThree);
+        assertDoesNotThrow(() -> {
+            matchManager.runAction(0, null, 0, false, 0, 0);
+        });
+        assertEquals(9, matchManager.getCurrentPlayer().getStudentsInEntrance());
+        int totCount = 0;
+        for(Student s: Student.values()) {
+            totCount += matchManager.getManagedTable().getCloud(0).getCount(s);
+        }
+        assertEquals(0, totCount);
+    }
+
+
+    /**
      * This method tests that moveToNextPlayer works correctly
      */
     @Test
@@ -236,11 +254,6 @@ class IndependentPlayerMatchManagerTest {
         matchManager.moveToNextPlayer();
         assertEquals("Ale", matchManager.getCurrentPlayer().getNickname());
     }
-
-    @Test
-    void isAssistantCardPlayable() {
-    }
-
 
     /**
      * This method test that the list of all players is returned correctly
