@@ -10,6 +10,6 @@ public abstract class NetworkMessage {
 	
 	NetworkMessage() {}
 	
-	abstract String serialize();
+	public abstract String serialize();
 	protected abstract void deserialize(String serializedString) throws MessageDecodeException;
 }

@@ -87,7 +87,7 @@ public class PlayerActionMessage extends NetworkMessage {
 	}
 	
 	@Override
-	String serialize() {
+	public String serialize() {
 		Gson gson = new Gson();
 		return gson.toJson(this);
 	}

@@ -42,7 +42,7 @@ public class LoginMessage extends NetworkMessage {
 	}
 	
 	@Override
-	String serialize() {
+	public String serialize() {
 		//TODO: Can we put this code into the Network Message Abstract Class?
 		Gson gson = new Gson();
 		return gson.toJson(this);

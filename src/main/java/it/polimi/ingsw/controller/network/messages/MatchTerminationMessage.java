@@ -24,7 +24,7 @@ public class MatchTerminationMessage extends NetworkMessage {
 	}
 	
 	@Override
-	String serialize() {
+	public String serialize() {
 		Gson gson = new Gson();
 		return gson.toJson(this);
 	}

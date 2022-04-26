@@ -42,7 +42,7 @@ public class LoginResponse extends NetworkMessage {
 	}
 	
 	@Override
-	String serialize() {
+	public String serialize() {
 		Gson gson = new Gson();
 		return gson.toJson(this);
 	}
