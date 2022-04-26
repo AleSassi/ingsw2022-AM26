@@ -83,7 +83,8 @@ public class Client {
                 outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
             }
             outputStreamWriter.write(m.serialize());
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
