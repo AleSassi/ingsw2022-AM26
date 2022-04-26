@@ -5,5 +5,14 @@ public enum NotificationName {
 	ServerDidReceiveLoginMessage,
 	ServerDidReceivePlayerActionMessage,
 	ServerDidTerminateMatch,
-	PlayerVictory
+	PlayerVictory,
+	ClientDidReceiveLoginMessage,
+	ClientDidReceiveActivePlayerMessage,
+	ClientDidReceiveMatchStateMessage,
+	ClientDidReceiveMatchTerminationMessage,
+	ClientDidReceivePlayerActionMessage,
+	ClientDidReceivePlayerActionResponse,
+	ClientDidReceivePlayerStateMessage,
+	ClientDidReceiveTableStateMessage,
+	ClientDidReceiveVictoryMessage,
 }
