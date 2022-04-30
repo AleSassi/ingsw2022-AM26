@@ -53,12 +53,14 @@ public class GameServer {
 	
 	private void startPingTimer() {
 		Timer pingTimer = new Timer("PingTimer");
+		int pingDelayMS = 5000;
+		int pingIntervalMS = 5000;
 		pingTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
 				pingClients();
 			}
-		}, 1000, 5000);
+		}, pingDelayMS, pingIntervalMS);
 	}
 	
 	private void createClientConnection(Socket clientSocket, ExecutorService executor) {
@@ -68,14 +70,27 @@ public class GameServer {
 	private void pingClients() {
 		// Signal disconnection if at least one client did not send the PONG response in time
 		List<VirtualClient> disconnectedClients = connectedClients.stream().filter((client) -> !receivedPingsInCurrentTrip.contains(client.getNickname())).toList();
+		List<VirtualClient> associatedDisconnectedClients = new ArrayList<>();
 		for (VirtualClient disconnectedClient: disconnectedClients) {
 			// Signal the termination
 			//TODO: With multiple concurrent matches we need to find the match to which the Player belongs to. In this case it is not needed, since we only have one match
 			if (activeController.containsPlayerWithNickname(disconnectedClient.getNickname())) {
+				System.out.println("Client disconnected, terminating message");
 				NotificationCenter.shared().post(NotificationName.ServerDidTerminateMatch, activeController, null);
-				break;
+				for (VirtualClient associatedClient: connectedClients) {
+					if (activeController.containsPlayerWithNickname(associatedClient.getNickname())) {
+						associatedClient.notifyPlayerDisconnection();
+						associatedClient.terminateConnection();
+						associatedDisconnectedClients.add(associatedClient);
+					}
+				}
+			} else {
+				System.out.println("Client disconnected, but not logged in");
+				disconnectedClient.terminateConnection();
 			}
 		}
+		connectedClients.removeAll(disconnectedClients);
+		connectedClients.removeAll(associatedDisconnectedClients);
 		receivedPingsInCurrentTrip = new ArrayList<>();
 		PingPongMessage pingMessage = new PingPongMessage(true);
 		broadcastMessage(pingMessage);

@@ -13,6 +13,8 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VirtualClient {
 	
@@ -28,7 +30,7 @@ public class VirtualClient {
 		this.socket = socket;
 		this.decoder = new NetworkMessageDecoder();
 		this.parentServer = parentServer;
-		System.out.println("Accepted a connection to " + socket.getInetAddress());
+		System.out.println("Accepted a connection to " + socket.getRemoteSocketAddress());
 		// Create a Runnable instance that will listen to incoming messages
 		executorService.submit(() -> {
 			StringBuilder sb = new StringBuilder();
@@ -55,7 +57,19 @@ public class VirtualClient {
 				}
 				notifyPlayerDisconnection();
 			} catch (IOException e) {
-				e.printStackTrace();
+				try {
+					bufferedReader.close();
+					if (outputStreamWriter != null) {
+						outputStreamWriter.close();
+					}
+					if (!socket.isClosed()) {
+						socket.close();
+					}
+					bufferedReader = null;
+					outputStreamWriter = null;
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 			}
 		});
 	}
@@ -69,6 +83,7 @@ public class VirtualClient {
 			if (outputStreamWriter == null) {
 				outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
 			}
+			System.out.println("Sending " + message.serialize());
 			outputStreamWriter.write(message.serialize());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -87,9 +102,15 @@ public class VirtualClient {
 	}
 	
 	public void notifyPlayerDisconnection() {
+		sendMessage(new MatchTerminationMessage("Another Player disconnected and this Match has ended", true));
+	}
+	
+	public void terminateConnection() {
 		try {
-			bufferedReader.close();
-			outputStreamWriter.close();
+			if (outputStreamWriter != null) {
+				outputStreamWriter.close();
+			}
+			socket.shutdownInput();
 			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
