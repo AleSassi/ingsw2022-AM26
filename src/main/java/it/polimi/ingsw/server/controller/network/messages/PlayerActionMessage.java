@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.controller.network.messages;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
+import it.polimi.ingsw.server.controller.notifications.NotificationName;
 import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
 import it.polimi.ingsw.server.model.match.MatchPhase;
 import it.polimi.ingsw.server.model.student.Student;
@@ -114,6 +115,11 @@ public class PlayerActionMessage extends NetworkMessage {
 		} catch (JsonParseException e) {
 			throw new MessageDecodeException();
 		}
+	}
+	
+	@Override
+	public NotificationName clientReceivedMessageNotification() {
+		return null;
 	}
 	
 	@Override

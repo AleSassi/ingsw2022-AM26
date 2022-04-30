@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.controller.network.messages;
 
 import com.google.gson.*;
+import it.polimi.ingsw.server.controller.notifications.NotificationName;
 import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
 
 public class PingPongMessage extends NetworkMessage {
@@ -39,6 +40,11 @@ public class PingPongMessage extends NetworkMessage {
 		} catch (JsonParseException e) {
 			throw new MessageDecodeException();
 		}
+	}
+	
+	@Override
+	public NotificationName clientReceivedMessageNotification() {
+		return null;
 	}
 	
 	@Override

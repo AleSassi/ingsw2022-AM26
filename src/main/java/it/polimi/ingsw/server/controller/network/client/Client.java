@@ -17,9 +17,9 @@ import java.util.HashMap;
 
 public class Client {
 
-    private int serverPort;
-    private String ip;
-    private NetworkMessageDecoder decoder;
+    private final int serverPort;
+    private final String ip;
+    private final NetworkMessageDecoder decoder;
     private Socket socket;
 
     private BufferedReader bufferedReader;
@@ -28,37 +28,52 @@ public class Client {
     private Client(int serverPort, String ip) {
         this.serverPort = serverPort;
         this.ip = ip;
+        this.decoder = new NetworkMessageDecoder();
     }
 
     /**
      * This method opens the socket
      */
-    public void connectToServer(String ip, int serverPort) {
+    public void connectToServer() {
         try {
-            this.decoder = new NetworkMessageDecoder();
             this.socket = new Socket(ip, serverPort);
             Thread thread = new Thread(() -> {
-                StringBuilder stringBuilder = new StringBuilder();
+                StringBuilder sb = new StringBuilder();
                 try {
                     bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     while (true) {
                         String line;
                         while ((line = bufferedReader.readLine()) != null) {
-                            stringBuilder.append(line).append(System.lineSeparator());
+                            sb.append(line).append(System.lineSeparator());
                         }
-                        String json = stringBuilder.toString();
+                        String json = sb.toString();
+                        // Decode the JSON to NetworkMessage
                         try {
                             NetworkMessage message = decoder.decodeMessage(json);
+                            didReceiveMessage(message);
                             if (isTerminationMessage(message)) {
                                 break;
                             }
-                            didReceiveMessage(message);
                         } catch (MessageDecodeException e) {
+                            // The message is wrong - we do nothing
+                            //TODO: Send an error message (malformed response)
                             e.printStackTrace();
                         }
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    try {
+                        bufferedReader.close();
+                        if (outputStreamWriter != null) {
+                            outputStreamWriter.close();
+                        }
+                        if (!socket.isClosed()) {
+                            socket.close();
+                        }
+                        bufferedReader = null;
+                        outputStreamWriter = null;
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             });
             thread.start();
@@ -71,13 +86,12 @@ public class Client {
         return message instanceof MatchTerminationMessage;
     }
 
-
-    public void sendMessage(NetworkMessage m) {
+    public void sendMessage(NetworkMessage message) {
         try {
             if (outputStreamWriter == null) {
                 outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
             }
-            outputStreamWriter.write(m.serialize());
+            outputStreamWriter.write(message.serialize());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,39 +99,26 @@ public class Client {
 
     /**
      * This method send the notification to the relative listener
-     * @param m message
+     * @param message message
      */
-    private void didReceiveMessage(NetworkMessage m) {
+    private void didReceiveMessage(NetworkMessage message) {
         HashMap<String, Object> userInfo = new HashMap<>();
-        userInfo.put(NotificationKeys.IncomingNetworkMessage.getRawValue(), m);
-        if(m instanceof LoginResponse) {
-            NotificationCenter.shared().post(NotificationName.ClientDidReceiveLoginMessage, null, userInfo);
-        } else if (m instanceof ActivePlayerMessage) {
-            NotificationCenter.shared().post(NotificationName.ClientDidReceiveActivePlayerMessage, null, userInfo);
-        } else if (m instanceof MatchStateMessage) {
-            NotificationCenter.shared().post(NotificationName.ClientDidReceiveMatchStateMessage, null, userInfo);
-        } else if (m instanceof MatchTerminationMessage) {
-            NotificationCenter.shared().post(NotificationName.ClientDidReceiveMatchTerminationMessage, null, userInfo);
-        } else if (m instanceof PingPongMessage) {
+        userInfo.put(NotificationKeys.IncomingNetworkMessage.getRawValue(), message);
+        NotificationName clientNotificationName = message.clientReceivedMessageNotification();
+        if (clientNotificationName != null) {
+            NotificationCenter.shared().post(clientNotificationName, null, userInfo);
+        } else if (message instanceof PingPongMessage) {
             PingPongMessage pong = new PingPongMessage(false);
             sendMessage(pong);
-        } else if (m instanceof PlayerActionMessage) {
-            NotificationCenter.shared().post(NotificationName.ClientDidReceivePlayerActionMessage, null, userInfo);
-        } else if (m instanceof PlayerActionResponse) {
-            NotificationCenter.shared().post(NotificationName.ClientDidReceivePlayerActionResponse, null, userInfo);
-        } else if (m instanceof PlayerStateMessage) {
-            NotificationCenter.shared().post(NotificationName.ClientDidReceivePlayerStateMessage, null, userInfo);
-        } else if (m instanceof TableStateMessage) {
-            NotificationCenter.shared().post(NotificationName.ClientDidReceiveTableStateMessage, null, userInfo);
-        } else if (m instanceof VictoryMessage) {
-            NotificationCenter.shared().post(NotificationName.ClientDidReceiveVictoryMessage, null, userInfo);
         }
     }
 
     public void teardown() {
         try {
-            bufferedReader.close();
-            outputStreamWriter.close();
+            if (outputStreamWriter != null) {
+                outputStreamWriter.close();
+            }
+            socket.shutdownInput();
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
