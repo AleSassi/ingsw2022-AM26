@@ -29,6 +29,8 @@ public class Client {
         this.serverPort = serverPort;
         this.ip = ip;
         this.decoder = new NetworkMessageDecoder();
+        
+        NotificationCenter.shared().addObserver((notification) -> teardown(), NotificationName.ClientDidReceiveMatchTerminationMessage, null);
     }
 
     /**
@@ -113,7 +115,7 @@ public class Client {
         }
     }
 
-    public void teardown() {
+    private void teardown() {
         try {
             if (outputStreamWriter != null) {
                 outputStreamWriter.close();
