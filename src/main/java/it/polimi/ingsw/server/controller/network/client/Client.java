@@ -1,5 +1,7 @@
 package it.polimi.ingsw.server.controller.network.client;
 
+import it.polimi.ingsw.cli.ANSIColors;
+import it.polimi.ingsw.cli.StringFormatter;
 import it.polimi.ingsw.server.controller.notifications.NotificationCenter;
 import it.polimi.ingsw.server.controller.notifications.NotificationKeys;
 import it.polimi.ingsw.server.controller.notifications.NotificationName;
@@ -16,21 +18,35 @@ import java.util.HashMap;
 
 
 public class Client {
+    
+    private static Client instance;
 
     private final int serverPort;
-    private final String ip;
+    private final String serverIP;
     private final NetworkMessageDecoder decoder;
     private Socket socket;
 
     private BufferedReader bufferedReader;
     private OutputStreamWriter outputStreamWriter;
 
-    private Client(int serverPort, String ip) {
+    private Client(int serverPort, String serverIP) {
         this.serverPort = serverPort;
-        this.ip = ip;
+        this.serverIP = serverIP;
         this.decoder = new NetworkMessageDecoder();
         
         NotificationCenter.shared().addObserver((notification) -> teardown(), NotificationName.ClientDidReceiveMatchTerminationMessage, null);
+    }
+    
+    public static void createClient(String serverIP, int serverPort) {
+        if (instance == null) {
+            instance = new Client(serverPort, serverIP);
+        } else {
+            System.out.println(StringFormatter.formatWithColor("WARNING: common Client object already initialized with server address " + instance.serverIP + ":" + instance.serverPort, ANSIColors.Yellow));
+        }
+    }
+    
+    public static Client shared() {
+        return instance;
     }
 
     /**
@@ -38,7 +54,7 @@ public class Client {
      */
     public void connectToServer() {
         try {
-            this.socket = new Socket(ip, serverPort);
+            this.socket = new Socket(serverIP, serverPort);
             Thread thread = new Thread(() -> {
                 StringBuilder sb = new StringBuilder();
                 try {
