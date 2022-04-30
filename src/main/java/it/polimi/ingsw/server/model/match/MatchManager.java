@@ -2,10 +2,10 @@ package it.polimi.ingsw.server.model.match;
 
 import it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage;
 import it.polimi.ingsw.server.controller.network.messages.TableStateMessage;
-import it.polimi.ingsw.server.controller.notifications.Notification;
-import it.polimi.ingsw.server.controller.notifications.NotificationCenter;
-import it.polimi.ingsw.server.controller.notifications.NotificationKeys;
-import it.polimi.ingsw.server.controller.notifications.NotificationName;
+import it.polimi.ingsw.notifications.Notification;
+import it.polimi.ingsw.notifications.NotificationCenter;
+import it.polimi.ingsw.notifications.NotificationKeys;
+import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.exceptions.model.*;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Professor;

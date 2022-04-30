@@ -1,4 +1,4 @@
-package it.polimi.ingsw.server.controller.notifications;
+package it.polimi.ingsw.notifications;
 import java.util.*;
 
 public class Notification {

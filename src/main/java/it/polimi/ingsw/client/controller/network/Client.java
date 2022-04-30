@@ -1,10 +1,10 @@
-package it.polimi.ingsw.server.controller.network.client;
+package it.polimi.ingsw.client.controller.network;
 
-import it.polimi.ingsw.cli.ANSIColors;
-import it.polimi.ingsw.cli.StringFormatter;
-import it.polimi.ingsw.server.controller.notifications.NotificationCenter;
-import it.polimi.ingsw.server.controller.notifications.NotificationKeys;
-import it.polimi.ingsw.server.controller.notifications.NotificationName;
+import it.polimi.ingsw.utils.cli.ANSIColors;
+import it.polimi.ingsw.utils.cli.StringFormatter;
+import it.polimi.ingsw.notifications.NotificationCenter;
+import it.polimi.ingsw.notifications.NotificationKeys;
+import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
 import it.polimi.ingsw.server.controller.network.messages.*;
 

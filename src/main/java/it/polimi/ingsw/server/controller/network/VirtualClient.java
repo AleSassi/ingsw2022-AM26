@@ -1,4 +1,4 @@
-package it.polimi.ingsw.server.controller.network.server;
+package it.polimi.ingsw.server.controller.network;
 
 import it.polimi.ingsw.server.controller.network.messages.LoginMessage;
 import it.polimi.ingsw.server.controller.network.messages.MatchTerminationMessage;
@@ -13,8 +13,6 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VirtualClient {
 	

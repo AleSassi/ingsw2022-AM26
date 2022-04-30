@@ -1,9 +1,9 @@
 package it.polimi.ingsw.server.model;
 
 import it.polimi.ingsw.server.controller.network.messages.TableStateMessage;
-import it.polimi.ingsw.server.controller.notifications.NotificationCenter;
-import it.polimi.ingsw.server.controller.notifications.NotificationKeys;
-import it.polimi.ingsw.server.controller.notifications.NotificationName;
+import it.polimi.ingsw.notifications.NotificationCenter;
+import it.polimi.ingsw.notifications.NotificationKeys;
+import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.exceptions.model.*;
 import it.polimi.ingsw.server.model.characters.CharacterCard;
 import it.polimi.ingsw.server.model.characters.CharacterCardExtractor;

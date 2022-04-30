@@ -1,4 +1,4 @@
-package it.polimi.ingsw.cli;
+package it.polimi.ingsw.utils.cli;
 
 public class StringFormatter {
 	

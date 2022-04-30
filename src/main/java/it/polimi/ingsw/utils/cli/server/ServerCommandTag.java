@@ -1,4 +1,4 @@
-package it.polimi.ingsw.cli.server;
+package it.polimi.ingsw.utils.cli.server;
 
 import it.polimi.ingsw.server.exceptions.server.UnrecognizedCommandException;
 import org.jetbrains.annotations.NotNull;

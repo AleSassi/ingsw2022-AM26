@@ -1,6 +1,6 @@
-package it.polimi.ingsw.server.controller.notifications;
+package it.polimi.ingsw.notifications;
 
-import it.polimi.ingsw.server.controller.notifications.NotificationObserver;
+import it.polimi.ingsw.notifications.NotificationObserver;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Tower;
 import it.polimi.ingsw.server.model.assistants.Wizard;

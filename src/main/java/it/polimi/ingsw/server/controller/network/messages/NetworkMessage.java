@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server.controller.network.messages;
 
-import it.polimi.ingsw.server.controller.notifications.NotificationName;
+import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
 
 public abstract class NetworkMessage {

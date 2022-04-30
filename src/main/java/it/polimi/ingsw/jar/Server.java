@@ -1,9 +1,9 @@
 package it.polimi.ingsw.jar;
 
-import it.polimi.ingsw.cli.ANSIColors;
-import it.polimi.ingsw.cli.StringFormatter;
-import it.polimi.ingsw.cli.server.ServerCommandTag;
-import it.polimi.ingsw.server.controller.network.server.GameServer;
+import it.polimi.ingsw.utils.cli.ANSIColors;
+import it.polimi.ingsw.utils.cli.StringFormatter;
+import it.polimi.ingsw.utils.cli.server.ServerCommandTag;
+import it.polimi.ingsw.server.controller.network.GameServer;
 import it.polimi.ingsw.server.exceptions.server.UnavailablePortException;
 import it.polimi.ingsw.server.exceptions.server.UnrecognizedCommandException;
 
@@ -11,6 +11,14 @@ public class Server {
 	
 	private static final int minPort = 1024;
 	private static final int maxPort = 65535;
+	
+	public static int getMinPort() {
+		return minPort;
+	}
+	
+	public static int getMaxPort() {
+		return maxPort;
+	}
 	
 	public static void main(String[] args) {
 		if (args.length == 0) {

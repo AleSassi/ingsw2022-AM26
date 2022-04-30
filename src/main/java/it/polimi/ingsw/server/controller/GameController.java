@@ -1,10 +1,10 @@
 package it.polimi.ingsw.server.controller;
 import it.polimi.ingsw.server.controller.network.messages.*;
-import it.polimi.ingsw.server.controller.network.server.GameServer;
-import it.polimi.ingsw.server.controller.notifications.Notification;
-import it.polimi.ingsw.server.controller.notifications.NotificationCenter;
-import it.polimi.ingsw.server.controller.notifications.NotificationKeys;
-import it.polimi.ingsw.server.controller.notifications.NotificationName;
+import it.polimi.ingsw.server.controller.network.GameServer;
+import it.polimi.ingsw.notifications.Notification;
+import it.polimi.ingsw.notifications.NotificationCenter;
+import it.polimi.ingsw.notifications.NotificationKeys;
+import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.model.match.GameLobby;
 import it.polimi.ingsw.server.model.match.GameLobbyState;
 import it.polimi.ingsw.server.model.match.MatchManager;

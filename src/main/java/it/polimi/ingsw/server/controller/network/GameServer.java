@@ -1,10 +1,10 @@
-package it.polimi.ingsw.server.controller.network.server;
+package it.polimi.ingsw.server.controller.network;
 
 import it.polimi.ingsw.server.controller.GameController;
 import it.polimi.ingsw.server.controller.network.messages.*;
-import it.polimi.ingsw.server.controller.notifications.NotificationCenter;
-import it.polimi.ingsw.server.controller.notifications.NotificationKeys;
-import it.polimi.ingsw.server.controller.notifications.NotificationName;
+import it.polimi.ingsw.notifications.NotificationCenter;
+import it.polimi.ingsw.notifications.NotificationKeys;
+import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.exceptions.server.UnavailablePortException;
 
 import java.io.IOException;
