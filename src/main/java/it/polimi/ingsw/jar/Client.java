@@ -74,7 +74,9 @@ public class Client {
 				System.out.println(StringFormatter.formatWithColor("Missing some parameters required to start the client. See below for the list of parameters", ANSIColors.Red));
 				printHelpMenu();
 			} else {
-			
+				// Connect to the Server
+				System.out.println(StringFormatter.formatWithColor("Connecting to " + serverIP + ":" + serverPort + "...", ANSIColors.Green));
+				
 			}
 		}
 	}

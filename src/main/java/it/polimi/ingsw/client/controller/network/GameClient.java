@@ -17,9 +17,9 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 
 
-public class Client {
+public class GameClient {
     
-    private static Client instance;
+    private static GameClient instance;
 
     private final int serverPort;
     private final String serverIP;
@@ -29,7 +29,7 @@ public class Client {
     private BufferedReader bufferedReader;
     private OutputStreamWriter outputStreamWriter;
 
-    private Client(int serverPort, String serverIP) {
+    private GameClient(int serverPort, String serverIP) {
         this.serverPort = serverPort;
         this.serverIP = serverIP;
         this.decoder = new NetworkMessageDecoder();
@@ -39,13 +39,13 @@ public class Client {
     
     public static void createClient(String serverIP, int serverPort) {
         if (instance == null) {
-            instance = new Client(serverPort, serverIP);
+            instance = new GameClient(serverPort, serverIP);
         } else {
             System.out.println(StringFormatter.formatWithColor("WARNING: common Client object already initialized with server address " + instance.serverIP + ":" + instance.serverPort, ANSIColors.Yellow));
         }
     }
     
-    public static Client shared() {
+    public static GameClient shared() {
         return instance;
     }
 
