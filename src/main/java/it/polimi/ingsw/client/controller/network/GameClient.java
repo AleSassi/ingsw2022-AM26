@@ -10,10 +10,12 @@ import it.polimi.ingsw.server.controller.network.messages.*;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -52,30 +54,29 @@ public class GameClient {
     /**
      * This method opens the socket
      */
-    public void connectToServer() {
+    public void connectToServer() throws ConnectException {
         try {
             this.socket = new Socket(serverIP, serverPort);
+            this.outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
             Thread thread = new Thread(() -> {
-                StringBuilder sb = new StringBuilder();
                 try {
                     bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     while (true) {
-                        String line;
-                        while ((line = bufferedReader.readLine()) != null) {
-                            sb.append(line).append(System.lineSeparator());
-                        }
-                        String json = sb.toString();
-                        // Decode the JSON to NetworkMessage
-                        try {
-                            NetworkMessage message = decoder.decodeMessage(json);
-                            didReceiveMessage(message);
-                            if (isTerminationMessage(message)) {
-                                break;
+                        String json = bufferedReader.readLine();
+                        
+                        if (json != null && !json.isEmpty() && !json.isBlank()) {
+                            // Decode the JSON to NetworkMessage
+                            try {
+                                NetworkMessage message = decoder.decodeMessage(json);
+                                didReceiveMessage(message);
+                                if (isTerminationMessage(message)) {
+                                    break;
+                                }
+                            } catch (MessageDecodeException e) {
+                                // The message is wrong - we do nothing
+                                //TODO: Send an error message (malformed response)
+                                e.printStackTrace();
                             }
-                        } catch (MessageDecodeException e) {
-                            // The message is wrong - we do nothing
-                            //TODO: Send an error message (malformed response)
-                            e.printStackTrace();
                         }
                     }
                 } catch (IOException e) {
@@ -95,6 +96,8 @@ public class GameClient {
                 }
             });
             thread.start();
+        } catch (ConnectException e) {
+            throw new ConnectException();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -106,10 +109,8 @@ public class GameClient {
 
     public void sendMessage(NetworkMessage message) {
         try {
-            if (outputStreamWriter == null) {
-                outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
-            }
-            outputStreamWriter.write(message.serialize());
+            outputStreamWriter.write(message.serialize() + "\n");
+            outputStreamWriter.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

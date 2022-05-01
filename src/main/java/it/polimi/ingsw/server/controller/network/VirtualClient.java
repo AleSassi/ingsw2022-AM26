@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 
 public class VirtualClient {
@@ -31,26 +32,25 @@ public class VirtualClient {
 		System.out.println("Accepted a connection to " + socket.getRemoteSocketAddress());
 		// Create a Runnable instance that will listen to incoming messages
 		executorService.submit(() -> {
-			StringBuilder sb = new StringBuilder();
 			try {
 				bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				while (true) {
-					String line;
-					while ((line = bufferedReader.readLine()) != null) {
-						sb.append(line).append(System.lineSeparator());
-					}
-					String json = sb.toString();
-					// Decode the JSON to NetworkMessage
-					try {
-						NetworkMessage message = decoder.decodeMessage(json);
-						if (isTerminationMessage(message)) {
-							break;
+					String json = bufferedReader.readLine();
+					
+					if (json != null && !json.isEmpty() && !json.isBlank()) {
+						System.out.println("Server received " + json);
+						// Decode the JSON to NetworkMessage
+						try {
+							NetworkMessage message = decoder.decodeMessage(json);
+							if (isTerminationMessage(message)) {
+								break;
+							}
+							didReceiveMessage(message);
+						} catch (MessageDecodeException e) {
+							// The message is wrong - we do nothing
+							//TODO: Send an error message (malformed request)
+							e.printStackTrace();
 						}
-						didReceiveMessage(message);
-					} catch (MessageDecodeException e) {
-						// The message is wrong - we do nothing
-						//TODO: Send an error message (malformed request)
-						e.printStackTrace();
 					}
 				}
 				notifyPlayerDisconnection();
@@ -81,8 +81,8 @@ public class VirtualClient {
 			if (outputStreamWriter == null) {
 				outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
 			}
-			System.out.println("Sending " + message.serialize());
-			outputStreamWriter.write(message.serialize());
+			outputStreamWriter.write(message.serialize() + "\n");
+			outputStreamWriter.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

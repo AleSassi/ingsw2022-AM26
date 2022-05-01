@@ -20,6 +20,8 @@ public class GameServer {
 	private final GameController activeController; //TODO: In case of multiple matches, this can become a list of controllers, then use a getter to get the controller hosting the match for a nickname
 	
 	// For Ping-Pong round trips
+	private boolean isPinging = false;
+	private boolean isFirstPing = true;
 	private List<String> receivedPingsInCurrentTrip;
 	
 	public GameServer(int desiredPort) {
@@ -38,8 +40,7 @@ public class GameServer {
 			// Unavailable port
 			throw new UnavailablePortException();
 		}
-		System.out.println("Server ready");
-		startPingTimer();
+		System.out.println("Server ready - listening at address " + serverSocket.getLocalSocketAddress() + ":" + serverSocket.getLocalPort());
 		while (true) {
 			try {
 				createClientConnection(serverSocket.accept(), executor);
@@ -53,45 +54,53 @@ public class GameServer {
 	
 	private void startPingTimer() {
 		Timer pingTimer = new Timer("PingTimer");
-		int pingDelayMS = 5000;
-		int pingIntervalMS = 5000;
+		int pingDelayMS = 0;
+		int pingIntervalMS = 8000;
 		pingTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
 				pingClients();
 			}
 		}, pingDelayMS, pingIntervalMS);
+		isPinging = true;
 	}
 	
 	private void createClientConnection(Socket clientSocket, ExecutorService executor) {
 		connectedClients.add(new VirtualClient(clientSocket, executor, this));
+		if (!isPinging) {
+			startPingTimer();
+		}
 	}
 	
 	private void pingClients() {
 		// Signal disconnection if at least one client did not send the PONG response in time
-		List<VirtualClient> disconnectedClients = connectedClients.stream().filter((client) -> !receivedPingsInCurrentTrip.contains(client.getNickname())).toList();
-		List<VirtualClient> associatedDisconnectedClients = new ArrayList<>();
-		for (VirtualClient disconnectedClient: disconnectedClients) {
-			// Signal the termination
-			//TODO: With multiple concurrent matches we need to find the match to which the Player belongs to. In this case it is not needed, since we only have one match
-			if (activeController.containsPlayerWithNickname(disconnectedClient.getNickname())) {
-				System.out.println("Client disconnected, terminating message");
-				NotificationCenter.shared().post(NotificationName.ServerDidTerminateMatch, activeController, null);
-				for (VirtualClient associatedClient: connectedClients) {
-					if (activeController.containsPlayerWithNickname(associatedClient.getNickname())) {
-						associatedClient.notifyPlayerDisconnection();
-						associatedClient.terminateConnection();
-						associatedDisconnectedClients.add(associatedClient);
+		if (!isFirstPing) {
+			List<VirtualClient> disconnectedClients = connectedClients.stream().filter((client) -> !receivedPingsInCurrentTrip.contains(client.getNickname())).toList();
+			List<VirtualClient> associatedDisconnectedClients = new ArrayList<>();
+			for (VirtualClient disconnectedClient: disconnectedClients) {
+				// Signal the termination
+				//TODO: With multiple concurrent matches we need to find the match to which the Player belongs to. In this case it is not needed, since we only have one match
+				if (activeController.containsPlayerWithNickname(disconnectedClient.getNickname())) {
+					System.out.println("Client disconnected, terminating message");
+					NotificationCenter.shared().post(NotificationName.ServerDidTerminateMatch, activeController, null);
+					for (VirtualClient associatedClient: connectedClients) {
+						if (activeController.containsPlayerWithNickname(associatedClient.getNickname())) {
+							associatedClient.notifyPlayerDisconnection();
+							associatedClient.terminateConnection();
+							associatedDisconnectedClients.add(associatedClient);
+						}
 					}
+				} else {
+					System.out.println("Client disconnected, but not logged in");
+					disconnectedClient.terminateConnection();
 				}
-			} else {
-				System.out.println("Client disconnected, but not logged in");
-				disconnectedClient.terminateConnection();
 			}
+			connectedClients.removeAll(disconnectedClients);
+			connectedClients.removeAll(associatedDisconnectedClients);
+			receivedPingsInCurrentTrip = new ArrayList<>();
 		}
-		connectedClients.removeAll(disconnectedClients);
-		connectedClients.removeAll(associatedDisconnectedClients);
-		receivedPingsInCurrentTrip = new ArrayList<>();
+		isFirstPing = false;
+		System.out.println("Pinging...");
 		PingPongMessage pingMessage = new PingPongMessage(true);
 		broadcastMessage(pingMessage);
 	}
@@ -99,7 +108,8 @@ public class GameServer {
 	protected void didReceiveMessageFromClient(NetworkMessage message, String clientUsername) {
 		HashMap<String, Object> userInfo = new HashMap<>();
 		userInfo.put(NotificationKeys.IncomingNetworkMessage.getRawValue(), message);
-		if (message instanceof LoginMessage) {
+		if (message instanceof LoginMessage login) {
+			System.out.println("Received login message: nickname " + login.getNickname());
 			NotificationCenter.shared().post(NotificationName.ServerDidReceiveLoginMessage, activeController, userInfo);
 		} else if (message instanceof PlayerActionMessage) {
 			NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, activeController, userInfo);

@@ -1,13 +1,13 @@
 package it.polimi.ingsw.jar;
 
+import it.polimi.ingsw.client.controller.CLIManager;
+import it.polimi.ingsw.client.controller.network.GameClient;
 import it.polimi.ingsw.utils.cli.ANSIColors;
 import it.polimi.ingsw.utils.cli.StringFormatter;
 import it.polimi.ingsw.utils.cli.client.ClientCommandTag;
-import it.polimi.ingsw.utils.cli.server.ServerCommandTag;
-import it.polimi.ingsw.server.controller.network.GameServer;
-import it.polimi.ingsw.server.exceptions.server.UnavailablePortException;
 import it.polimi.ingsw.server.exceptions.server.UnrecognizedCommandException;
 
+import java.net.ConnectException;
 import java.util.regex.Pattern;
 
 public class Client {
@@ -76,7 +76,19 @@ public class Client {
 			} else {
 				// Connect to the Server
 				System.out.println(StringFormatter.formatWithColor("Connecting to " + serverIP + ":" + serverPort + "...", ANSIColors.Green));
-				
+				GameClient.createClient(serverIP, serverPort);
+				try {
+					GameClient.shared().connectToServer();
+					System.out.println(StringFormatter.formatWithColor("Connected to " + serverIP + ":" + serverPort, ANSIColors.Green));
+					if (clientMode.equals("gui")) {
+						//TODO: Start the GUI from here
+					} else {
+						// Start the CLI
+						CLIManager.shared().startGameLoop();
+					}
+				} catch (ConnectException e) {
+					System.out.println(StringFormatter.formatWithColor("ERROR: Could not connect to the server. Please connect to the Internet, ensure that the IP and Port values are correct and try again", ANSIColors.Red));
+				}
 			}
 		}
 	}

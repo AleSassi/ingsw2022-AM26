@@ -32,11 +32,10 @@ public class PingPongMessage extends NetworkMessage {
 		Gson gson = new Gson();
 		try {
 			PingPongMessage decoded = gson.fromJson(serializedString, PingPongMessage.class);
-			isPing = decoded.isPing;
-			
-			if (isPing == null) {
+			if (decoded == null || decoded.isPing == null) {
 				throw new MessageDecodeException();
 			}
+			isPing = decoded.isPing;
 		} catch (JsonParseException e) {
 			throw new MessageDecodeException();
 		}
