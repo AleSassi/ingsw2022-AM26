@@ -60,6 +60,13 @@ public class GameController {
 			//TODO: We assume that Login messages set the VirtualClient's nickname BEFORE calling the Server methods and invoking any notification
 			server.sendMessage(responseMessage, loginMessage.getNickname());
 			
+			if (success) {
+				for (String nickname: lobby.getPlayerNicknames()) {
+					if (!nickname.equals(loginMessage.getNickname())) {
+						server.sendMessage(responseMessage, nickname);
+					}
+				}
+			}
 			if (success && lobby.getCurrentState() == GameLobbyState.Full) {
 				startMatch();
 			}

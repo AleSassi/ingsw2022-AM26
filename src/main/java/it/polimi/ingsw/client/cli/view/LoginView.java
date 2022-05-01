@@ -1,39 +1,25 @@
-package it.polimi.ingsw.client.controller;
+package it.polimi.ingsw.client.cli.view;
 
 import it.polimi.ingsw.client.controller.network.GameClient;
+import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.server.controller.network.messages.LoginMessage;
 import it.polimi.ingsw.server.model.assistants.Wizard;
 import it.polimi.ingsw.server.model.match.MatchVariant;
 import it.polimi.ingsw.utils.cli.ANSIColors;
 import it.polimi.ingsw.utils.cli.StringFormatter;
 
-import java.io.InputStreamReader;
-import java.util.Scanner;
-
-public class CLIManager {
+public class LoginView extends TerminalView {
 	
-	private static CLIManager instance;
-	
-	private Scanner terminalScanner;
-	
-	public static CLIManager shared() {
-		if (instance == null) {
-			instance = new CLIManager();
-		}
-		return instance;
-	}
-	
-	public void startGameLoop() {
-		// Ask the Player to log in, send to the server
-		terminalScanner = new Scanner(new InputStreamReader(System.in));
+	@Override
+	public void run() {
 		System.out.println(StringFormatter.formatWithColor("Enter your nickname:\t", ANSIColors.Green));
-		String nickname = terminalScanner.nextLine();
+		String nickname = getTerminalScanner().nextLine();
 		Integer numberOfPlayers = null;
 		MatchVariant matchVariant = null;
 		Wizard wizard = null;
 		while (numberOfPlayers == null) {
 			System.out.println(StringFormatter.formatWithColor("Enter the number of players you would like to play with [2~4]:\t", ANSIColors.Green));
-			String numberOfPlayersStr = terminalScanner.nextLine();
+			String numberOfPlayersStr = getTerminalScanner().nextLine();
 			try {
 				numberOfPlayers = Integer.parseInt(numberOfPlayersStr);
 				if (numberOfPlayers < 2 || numberOfPlayers > 4) {
@@ -46,7 +32,7 @@ public class CLIManager {
 		}
 		while (matchVariant == null) {
 			System.out.println(StringFormatter.formatWithColor("Enter the match variant you would like to play in [Expert, Basic]:\t", ANSIColors.Green));
-			String inputVariant = terminalScanner.nextLine().toLowerCase();
+			String inputVariant = getTerminalScanner().nextLine().toLowerCase();
 			if (inputVariant.equals("expert")) {
 				matchVariant = MatchVariant.ExpertRuleSet;
 			} else if (inputVariant.equals("basic")) {
@@ -57,7 +43,7 @@ public class CLIManager {
 		}
 		while (wizard == null) {
 			System.out.println(StringFormatter.formatWithColor("Enter Wizard type [1~4]:\t", ANSIColors.Green));
-			String inputWizard = terminalScanner.nextLine();
+			String inputWizard = getTerminalScanner().nextLine();
 			try {
 				int inputWizardID = Integer.parseInt(inputWizard);
 				if (inputWizardID < 1 || inputWizardID > 4) {
@@ -69,9 +55,8 @@ public class CLIManager {
 				System.out.println(StringFormatter.formatWithColor("Invalid input: not a number", ANSIColors.Red));
 			}
 		}
-		
+		Client.setNickname(nickname);
 		LoginMessage loginMessage = new LoginMessage(nickname, numberOfPlayers, matchVariant, wizard);
 		GameClient.shared().sendMessage(loginMessage);
 	}
-	
 }

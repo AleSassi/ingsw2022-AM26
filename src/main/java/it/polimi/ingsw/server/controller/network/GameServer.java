@@ -22,13 +22,14 @@ public class GameServer {
 	// For Ping-Pong round trips
 	private boolean isPinging = false;
 	private boolean isFirstPing = true;
-	private List<String> receivedPingsInCurrentTrip;
+	private List<String> receivedPingsInCurrentTrip, sentPingsInCurrentTrip;
 	
 	public GameServer(int desiredPort) {
 		this.serverPort = desiredPort;
 		this.connectedClients = new ArrayList<>();
 		this.activeController = new GameController(this);
 		this.receivedPingsInCurrentTrip = new ArrayList<>();
+		this.sentPingsInCurrentTrip = new ArrayList<>();
 	}
 	
 	public void startListeningIncomingConnections() throws UnavailablePortException {
@@ -75,7 +76,7 @@ public class GameServer {
 	private void pingClients() {
 		// Signal disconnection if at least one client did not send the PONG response in time
 		if (!isFirstPing) {
-			List<VirtualClient> disconnectedClients = connectedClients.stream().filter((client) -> !receivedPingsInCurrentTrip.contains(client.getNickname())).toList();
+			List<VirtualClient> disconnectedClients = connectedClients.stream().filter((client) -> !receivedPingsInCurrentTrip.contains(client.getIpPortString()) && sentPingsInCurrentTrip.contains(client.getIpPortString())).toList();
 			List<VirtualClient> associatedDisconnectedClients = new ArrayList<>();
 			for (VirtualClient disconnectedClient: disconnectedClients) {
 				// Signal the termination
@@ -102,10 +103,11 @@ public class GameServer {
 		isFirstPing = false;
 		System.out.println("Pinging...");
 		PingPongMessage pingMessage = new PingPongMessage(true);
+		sentPingsInCurrentTrip = connectedClients.stream().map(VirtualClient::getIpPortString).toList();
 		broadcastMessage(pingMessage);
 	}
 	
-	protected void didReceiveMessageFromClient(NetworkMessage message, String clientUsername) {
+	protected void didReceiveMessageFromClient(NetworkMessage message, VirtualClient client) {
 		HashMap<String, Object> userInfo = new HashMap<>();
 		userInfo.put(NotificationKeys.IncomingNetworkMessage.getRawValue(), message);
 		if (message instanceof LoginMessage login) {
@@ -116,7 +118,7 @@ public class GameServer {
 		} else if (message instanceof MatchTerminationMessage) {
 			NotificationCenter.shared().post(NotificationName.ServerDidTerminateMatch, activeController, userInfo);
 		} else if (message instanceof PingPongMessage pingPongMessage) {
-			receivedPingsInCurrentTrip.add(clientUsername);
+			receivedPingsInCurrentTrip.add(client.getIpPortString());
 		}
 		// For any other wrong message types we do nothing
 	}

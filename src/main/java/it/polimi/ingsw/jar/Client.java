@@ -1,6 +1,6 @@
 package it.polimi.ingsw.jar;
 
-import it.polimi.ingsw.client.controller.CLIManager;
+import it.polimi.ingsw.client.cli.CLIManager;
 import it.polimi.ingsw.client.controller.network.GameClient;
 import it.polimi.ingsw.utils.cli.ANSIColors;
 import it.polimi.ingsw.utils.cli.StringFormatter;
@@ -14,6 +14,7 @@ public class Client {
 	
 	private static final Pattern ipPattern = Pattern.compile(
 			"^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
+	private static String nickname;
 	
 	public static void main(String[] args) {
 		if (args.length == 0) {
@@ -91,6 +92,7 @@ public class Client {
 				}
 			}
 		}
+		GameClient.shared().terminate();
 	}
 	
 	private static void printHelpMenu() {
@@ -105,4 +107,11 @@ public class Client {
 		return ipPattern.matcher(ip).matches();
 	}
 	
+	public static String getNickname() {
+		return nickname;
+	}
+	
+	public static void setNickname(String nickname) {
+		Client.nickname = nickname;
+	}
 }

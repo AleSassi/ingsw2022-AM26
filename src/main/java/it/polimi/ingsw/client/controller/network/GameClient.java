@@ -27,7 +27,7 @@ public class GameClient {
     private final String serverIP;
     private final NetworkMessageDecoder decoder;
     private Socket socket;
-
+    
     private BufferedReader bufferedReader;
     private OutputStreamWriter outputStreamWriter;
 
@@ -58,12 +58,15 @@ public class GameClient {
         try {
             this.socket = new Socket(serverIP, serverPort);
             this.outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
-            Thread thread = new Thread(() -> {
+            // Decode the JSON to NetworkMessage
+            // The message is wrong - we do nothing
+            //TODO: Send an error message (malformed response)
+            Thread readThread = new Thread(() -> {
                 try {
                     bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     while (true) {
                         String json = bufferedReader.readLine();
-                        
+                
                         if (json != null && !json.isEmpty() && !json.isBlank()) {
                             // Decode the JSON to NetworkMessage
                             try {
@@ -95,7 +98,7 @@ public class GameClient {
                     }
                 }
             });
-            thread.start();
+            readThread.start();
         } catch (ConnectException e) {
             throw new ConnectException();
         } catch (IOException e) {
@@ -137,12 +140,16 @@ public class GameClient {
             if (outputStreamWriter != null) {
                 outputStreamWriter.close();
             }
-            socket.shutdownInput();
-            socket.close();
+            if (socket != null && !socket.isClosed()) {
+                socket.shutdownInput();
+                socket.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-
+    public void terminate() {
+        teardown();
+    }
 }

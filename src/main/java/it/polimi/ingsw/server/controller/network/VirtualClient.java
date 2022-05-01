@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
@@ -76,6 +77,10 @@ public class VirtualClient {
 		return nickname;
 	}
 	
+	public String getIpPortString() {
+		return socket.getRemoteSocketAddress() + ":" + socket.getPort();
+	}
+	
 	public void sendMessage(NetworkMessage message) {
 		try {
 			if (outputStreamWriter == null) {
@@ -83,6 +88,9 @@ public class VirtualClient {
 			}
 			outputStreamWriter.write(message.serialize() + "\n");
 			outputStreamWriter.flush();
+		} catch (SocketException e) {
+			// Broken pipe - client disconnected
+			parentServer.didReceiveMessageFromClient(new MatchTerminationMessage("Client disconnected", false), this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -92,7 +100,7 @@ public class VirtualClient {
 		if (message instanceof LoginMessage loginMessage) {
 			nickname = loginMessage.getNickname();
 		}
-		parentServer.didReceiveMessageFromClient(message, nickname);
+		parentServer.didReceiveMessageFromClient(message, this);
 	}
 	
 	private boolean isTerminationMessage(NetworkMessage message) {
@@ -108,8 +116,10 @@ public class VirtualClient {
 			if (outputStreamWriter != null) {
 				outputStreamWriter.close();
 			}
-			socket.shutdownInput();
-			socket.close();
+			if (!socket.isClosed()) {
+				socket.shutdownInput();
+				socket.close();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
