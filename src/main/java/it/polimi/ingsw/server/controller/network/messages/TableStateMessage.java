@@ -6,6 +6,7 @@ import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
 import it.polimi.ingsw.server.model.Professor;
 import it.polimi.ingsw.server.model.characters.CharacterCard;
+import it.polimi.ingsw.server.model.characters.CharacterCardBean;
 import it.polimi.ingsw.server.model.student.Cloud;
 import it.polimi.ingsw.server.model.student.Island;
 import it.polimi.ingsw.server.model.student.StudentHost;
@@ -19,9 +20,9 @@ public class TableStateMessage extends NetworkMessage {
 	private List<Island> islands;
 	private StudentHost studentBag;
 	private List<Cloud> managedClouds;
-	private List<CharacterCard> playableCharacterCards;
+	private List<CharacterCardBean> playableCharacterCards;
 	
-	public TableStateMessage(List<Professor> availableProfessors, List<Island> islands, StudentHost studentBag, List<Cloud> managedClouds, List<CharacterCard> playableCharacterCards) {
+	public TableStateMessage(List<Professor> availableProfessors, List<Island> islands, StudentHost studentBag, List<Cloud> managedClouds, List<CharacterCardBean> playableCharacterCards) {
 		this.availableProfessors = availableProfessors;
 		this.islands = islands;
 		this.studentBag = studentBag;
@@ -49,7 +50,7 @@ public class TableStateMessage extends NetworkMessage {
 		return managedClouds;
 	}
 	
-	public List<CharacterCard> getPlayableCharacterCards() {
+	public List<CharacterCardBean> getPlayableCharacterCards() {
 		return playableCharacterCards;
 	}
 	

@@ -66,31 +66,35 @@ public class GameServer {
 		isPinging = true;
 	}
 	
-	private void createClientConnection(Socket clientSocket, ExecutorService executor) {
+	private synchronized void createClientConnection(Socket clientSocket, ExecutorService executor) {
 		connectedClients.add(new VirtualClient(clientSocket, executor, this));
 		if (!isPinging) {
 			startPingTimer();
 		}
 	}
 	
-	private void pingClients() {
+	private synchronized void pingClients() {
 		// Signal disconnection if at least one client did not send the PONG response in time
 		if (!isFirstPing) {
-			List<VirtualClient> disconnectedClients = connectedClients.stream().filter((client) -> !receivedPingsInCurrentTrip.contains(client.getIpPortString()) && sentPingsInCurrentTrip.contains(client.getIpPortString())).toList();
+			System.out.println(connectedClients.stream().map(VirtualClient::getNickname).toList());
+			System.out.println(receivedPingsInCurrentTrip);
+			System.out.println(sentPingsInCurrentTrip);
+			List<VirtualClient> disconnectedClients = connectedClients.stream().filter((client) -> !receivedPingsInCurrentTrip.contains(client.getNickname()) && sentPingsInCurrentTrip.contains(client.getNickname())).toList();
 			List<VirtualClient> associatedDisconnectedClients = new ArrayList<>();
 			for (VirtualClient disconnectedClient: disconnectedClients) {
 				// Signal the termination
 				//TODO: With multiple concurrent matches we need to find the match to which the Player belongs to. In this case it is not needed, since we only have one match
 				if (activeController.containsPlayerWithNickname(disconnectedClient.getNickname())) {
-					System.out.println("Client disconnected, terminating message");
-					NotificationCenter.shared().post(NotificationName.ServerDidTerminateMatch, activeController, null);
+					System.out.println("Client disconnected, terminating message for " + disconnectedClient.getNickname());
 					for (VirtualClient associatedClient: connectedClients) {
 						if (activeController.containsPlayerWithNickname(associatedClient.getNickname())) {
 							associatedClient.notifyPlayerDisconnection();
 							associatedClient.terminateConnection();
 							associatedDisconnectedClients.add(associatedClient);
+							connectedClients.remove(associatedClient);
 						}
 					}
+					NotificationCenter.shared().post(NotificationName.ServerDidTerminateMatch, activeController, null);
 				} else {
 					System.out.println("Client disconnected, but not logged in");
 					disconnectedClient.terminateConnection();
@@ -103,11 +107,11 @@ public class GameServer {
 		isFirstPing = false;
 		System.out.println("Pinging...");
 		PingPongMessage pingMessage = new PingPongMessage(true);
-		sentPingsInCurrentTrip = connectedClients.stream().map(VirtualClient::getIpPortString).toList();
+		sentPingsInCurrentTrip = connectedClients.stream().map(VirtualClient::getNickname).filter(Objects::nonNull).toList();
 		broadcastMessage(pingMessage);
 	}
 	
-	protected void didReceiveMessageFromClient(NetworkMessage message, VirtualClient client) {
+	protected synchronized void didReceiveMessageFromClient(NetworkMessage message, VirtualClient client) {
 		HashMap<String, Object> userInfo = new HashMap<>();
 		userInfo.put(NotificationKeys.IncomingNetworkMessage.getRawValue(), message);
 		if (message instanceof LoginMessage login) {
@@ -117,13 +121,14 @@ public class GameServer {
 			NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, activeController, userInfo);
 		} else if (message instanceof MatchTerminationMessage) {
 			NotificationCenter.shared().post(NotificationName.ServerDidTerminateMatch, activeController, userInfo);
-		} else if (message instanceof PingPongMessage pingPongMessage) {
-			receivedPingsInCurrentTrip.add(client.getIpPortString());
+		} else if (message instanceof PingPongMessage) {
+			receivedPingsInCurrentTrip.add(client.getNickname());
+			System.out.println("Received pong by " + client.getNickname());
 		}
 		// For any other wrong message types we do nothing
 	}
 	
-	public void sendMessage(NetworkMessage message, String playerNickname) {
+	public synchronized void sendMessage(NetworkMessage message, String playerNickname) {
 		for (VirtualClient client: connectedClients) {
 			if (playerNickname.equals(client.getNickname())) {
 				client.sendMessage(message);
@@ -132,9 +137,11 @@ public class GameServer {
 		}
 	}
 	
-	public void broadcastMessage(NetworkMessage message) {
+	public synchronized void broadcastMessage(NetworkMessage message) {
 		for (VirtualClient client: connectedClients) {
-			client.sendMessage(message);
+			if (client.getNickname() != null) {
+				client.sendMessage(message);
+			}
 		}
 	}
 

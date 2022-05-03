@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model.student;
 
 import it.polimi.ingsw.server.exceptions.model.CollectionUnderflowError;
+import it.polimi.ingsw.utils.cli.StringFormatter;
 
 public class StudentHost {
 
@@ -30,6 +31,10 @@ public class StudentHost {
         StudentHost result = new StudentHost();
         result.hostedStudents.mergeWithCollection(hostedStudents);
         return result;
+    }
+    
+    public StringBuilder toFormattedString() {
+        return hostedStudents.toFormattedString();
     }
     
     @Override

@@ -36,8 +36,15 @@ public class SchoolBoard {
     public int getCountAtTable(Student s) {
         return diningRoom.getCount(s);
     }
-
-
+    
+    public StudentHost getEntrance() {
+        return entrance.copy();
+    }
+    
+    public StudentHost getDiningRoom() {
+        return diningRoom.copy();
+    }
+    
     public int getAvailableTowerCount() {
         return availableTowerCount;
     }

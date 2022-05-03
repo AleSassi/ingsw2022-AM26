@@ -14,6 +14,7 @@ import it.polimi.ingsw.server.model.Tower;
 import it.polimi.ingsw.server.model.assistants.Wizard;
 import it.polimi.ingsw.server.model.characters.CharacterCard;
 import it.polimi.ingsw.server.model.characters.CharacterCardParamSet;
+import it.polimi.ingsw.server.model.student.Cloud;
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.server.model.student.StudentCollection;
 
@@ -26,6 +27,7 @@ public abstract class MatchManager {
 	private MatchPhase matchPhase;
 	private TableManager managedTable;
 	private PawnCounts pawnCounts;
+	private int numberOfStudentsPickedByCurrentPlayer_AP1 = 0;
 	
 	//region Public methods (used by the Controller to run actions)
 	/**
@@ -74,7 +76,7 @@ public abstract class MatchManager {
 	 * @param motherNatureSteps  Steps to move mother nature
 	 * @param cloudIdx           Cloud's idx from which to pick the students
 	 */
-	public void runAction(int AssistantCardIndex, Student studentToMove, int islandDestination, boolean moveToIsland, int motherNatureSteps, int cloudIdx) throws StudentMovementInvalidException, AssistantCardNotPlayableException {
+	public void runAction(int AssistantCardIndex, Student studentToMove, int islandDestination, boolean moveToIsland, int motherNatureSteps, int cloudIdx) throws StudentMovementInvalidException, AssistantCardNotPlayableException, CloudPickInvalidException {
 		switch (matchPhase) {
 			case PlanPhaseStepTwo -> PP_PlayAssistantCard(AssistantCardIndex);
 			case ActionPhaseStepOne -> {
@@ -90,7 +92,7 @@ public abstract class MatchManager {
 			}
 			case ActionPhaseStepThree -> AP_CollectAllStudentsFromCloud(cloudIdx);
 		}
-		if (matchPhase == MatchPhase.ActionPhaseStepThree && moveToNextPlayer()) {
+		if (moveToNextPlayer() && matchPhase == MatchPhase.ActionPhaseStepThree) {
 			roundCheckMatchEnd();
 		}
 	}
@@ -99,32 +101,47 @@ public abstract class MatchManager {
 	 * Change the currentPlayer to the next player in the playerSortedByCurrentOrder and change the phase according to the rules
 	 */
 	public boolean moveToNextPlayer() {
-		if (currentLeadPlayer == playersSortedByCurrentTurnOrder.size() - 1) {
-			if (matchPhase == MatchPhase.PlanPhaseStepTwo) {
-				playersSortedByCurrentTurnOrder = getPlayersSortedByRoundTurnOrder();
-				currentLeadPlayer = 0;
-			} else if (matchPhase == MatchPhase.ActionPhaseStepThree) {
-				currentLeadPlayer = 0;
-				// Perform planPhaseStepOne automatically
-				try {
-					PP_FillCloudCards();
-				} catch (CollectionUnderflowError e) {
-					System.out.println("MatchManager WARNING: Insufficient students in the Bag, the Cloud will have no students on it");
+		switch (matchPhase) {
+			case PlanPhaseStepTwo -> {
+				if (currentLeadPlayer == playersSortedByCurrentTurnOrder.size() - 1) {
+					playersSortedByCurrentTurnOrder = getPlayersSortedByRoundTurnOrder();
+					currentLeadPlayer = 0;
+					matchPhase = matchPhase.nextPhase();
+					return true;
+				} else {
+					currentLeadPlayer += 1;
 				}
 			}
-			matchPhase = matchPhase.nextPhase();
-			return true;
-		} else {
-			if (matchPhase == MatchPhase.ActionPhaseStepThree) {
-				matchPhase = MatchPhase.ActionPhaseStepOne;
-				currentLeadPlayer++;
-			} else if (matchPhase == MatchPhase.PlanPhaseStepTwo) {
-				currentLeadPlayer++;
-			} else {
+			case ActionPhaseStepOne -> {
+				numberOfStudentsPickedByCurrentPlayer_AP1 += 1;
+				if (numberOfStudentsPickedByCurrentPlayer_AP1 == 3) {
+					matchPhase = matchPhase.nextPhase();
+				}
+			}
+			case ActionPhaseStepTwo -> {
 				matchPhase = matchPhase.nextPhase();
 			}
-			return false;
+			case ActionPhaseStepThree -> {
+				numberOfStudentsPickedByCurrentPlayer_AP1 = 0;
+				boolean startsNewRound = false;
+				if (currentLeadPlayer == playersSortedByCurrentTurnOrder.size() - 1) {
+					currentLeadPlayer = 0;
+					// Perform planPhaseStepOne automatically
+					try {
+						PP_FillCloudCards();
+					} catch (CollectionUnderflowError e) {
+						System.out.println("MatchManager WARNING: Insufficient students in the Bag, the Cloud will have no students on it");
+					}
+					startsNewRound = true;
+					matchPhase = MatchPhase.PlanPhaseStepTwo;
+				} else {
+					currentLeadPlayer += 1;
+					matchPhase = MatchPhase.ActionPhaseStepOne;
+				}
+				return startsNewRound;
+			}
 		}
+		return false;
 	}
 	
 	/**
@@ -135,7 +152,7 @@ public abstract class MatchManager {
 	public List<Player> getPlayersSortedByRoundTurnOrder() {
 		//TODO: Need to alter the sorting lambda to account for when the Player has the same priority number
 		List<Player> result = getAllPlayers();
-		result.sort(Comparator.comparingInt(player -> (player.getLastPlayedAssistantCard().getPriorityNumber() - player.getAssistantCardOrderModifier())));
+		result.sort((playerA, playerB) -> (playerB.getLastPlayedAssistantCard().getPriorityNumber() - playerB.getAssistantCardOrderModifier()) - (playerA.getLastPlayedAssistantCard().getPriorityNumber() - playerA.getAssistantCardOrderModifier()));
 		return result;
 	}
 	
@@ -298,8 +315,12 @@ public abstract class MatchManager {
 	 *
 	 * @param cloudIdx clouds's id
 	 */
-	private void AP_CollectAllStudentsFromCloud(int cloudIdx) {
-		getCurrentPlayer().addAllStudentsToEntrance(managedTable.pickStudentsFromCloud(cloudIdx));
+	private void AP_CollectAllStudentsFromCloud(int cloudIdx) throws CloudPickInvalidException {
+		try {
+			getCurrentPlayer().addAllStudentsToEntrance(managedTable.pickStudentsFromCloud(cloudIdx));
+		} catch (CollectionUnderflowError e) {
+			throw new CloudPickInvalidException();
+		}
 	}
 	
 	/**
@@ -310,8 +331,10 @@ public abstract class MatchManager {
 		if (getCurrentPlayer().getActiveCharacterCard() != null && getCurrentPlayer().getActiveCharacterCard().getCharacter().getChangesMNSteps()) {
 			try {
 				stepsWithCardModifier += getCurrentPlayer().getActiveCharacterCard().useCard(managedTable, null, getCurrentPlayer(), null);
+				System.out.println(stepsWithCardModifier - steps);
 			} catch (CharacterCardIncorrectParametersException | CharacterCardNoMoreUsesAvailableException e) {
 				// Do nothing, the Steps will remain the default
+				System.out.println("Exception");
 			}
 		}
 		managedTable.moveMotherNature(stepsWithCardModifier);
@@ -352,31 +375,25 @@ public abstract class MatchManager {
 	 */
 	private void AP_CheckAndChangeCurrentIslandControl() {
 		try {
-			int currentPlayerInfluence = managedTable.getInfluenceOnCurrentIsland(getCurrentPlayer());
-			Player newIslandOwner = getCurrentPlayer();
-			for (Player p : getAllPlayers()) {
-				if (p != getCurrentPlayer()) {
-					if (currentPlayerInfluence < managedTable.getInfluenceOnCurrentIsland(p)) {
-						newIslandOwner = p;
-					}
-				}
-			}
 			Tower currentIslandTower = managedTable.getCurrentIsland().getActiveTowerType();
-			if (currentIslandTower == null) {
-				managedTable.changeControlOfCurrentIsland(null, newIslandOwner);
-			} else if (currentIslandTower != newIslandOwner.getTowerType()) {
-				Player teammateWithSameTowers = newIslandOwner;
-				Player oldIslandOwner = null;
-				for (Player p : getPlayersWithTowers()) {
-					if (p.getTowerType() == newIslandOwner.getTowerType() && p.getAvailableTowerCount() > 0) {
-						// P is the teammate with the Towers
-						teammateWithSameTowers = p;
-					} else if (p.getTowerType() == currentIslandTower && p.getAvailableTowerCount() > 0) {
-						// P is the old owner of the Island
-						oldIslandOwner = p;
+			// Find the previous owner
+			Optional<Player> previousOwner = getPlayersWithTowers().stream().filter((player) -> player.getTowerType() == currentIslandTower).findFirst();
+			// Find the new player that controls the island
+			for (Player player: getAllPlayers()) {
+				int influence = managedTable.getInfluenceOnCurrentIsland(player);
+				boolean playerControlsIsland = true;
+				for (Player otherPlayer: getAllPlayers()) {
+					if (!otherPlayer.equals(player)) {
+						if (managedTable.getInfluenceOnCurrentIsland(otherPlayer) >= influence) {
+							playerControlsIsland = false;
+							break;
+						}
 					}
 				}
-				managedTable.changeControlOfCurrentIsland(oldIslandOwner, teammateWithSameTowers);
+				if (playerControlsIsland) {
+					managedTable.changeControlOfCurrentIsland(previousOwner.orElse(null), player);
+					break;
+				}
 			}
 		} catch (IslandSkippedInfluenceForStopCardException | IslandSkippedControlAssignmentForStopCardException e) {
 			// If we skipped the Island due to the StopCard being there, we should not do anything

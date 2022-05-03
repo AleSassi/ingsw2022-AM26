@@ -5,6 +5,8 @@ import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.TableManager;
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.server.model.student.StudentCollection;
+import it.polimi.ingsw.server.model.student.StudentHost;
+import it.polimi.ingsw.utils.cli.StringFormatter;
 
 import java.util.*;
 
@@ -194,6 +196,11 @@ public class StudentHostingCard extends CharacterCard {
         } catch (CollectionUnderflowError | TableFullException e) {
             e.printStackTrace();
         }
+    }
+    
+    @Override
+    public CharacterCardBean beanify() {
+        return new CharacterCardBean(getCharacter(), getPrice() + getPriceIncrement(), null, -1, -1, hostedStudents);
     }
 
     @Override

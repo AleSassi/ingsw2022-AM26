@@ -94,7 +94,12 @@ public class GenericModifierCard extends CharacterCard {
     private int boolToInt(boolean bool) {
         return bool ? 1 : 0;
     }
-
+    
+    @Override
+    public CharacterCardBean beanify() {
+        return new CharacterCardBean(getCharacter(), getPrice() + getPriceIncrement(), excludedStudent, savedModifier, -1, null);
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

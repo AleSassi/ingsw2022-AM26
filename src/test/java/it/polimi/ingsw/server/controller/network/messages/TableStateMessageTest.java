@@ -21,14 +21,14 @@ class TableStateMessageTest {
 		});
 	}
 	
-	/*@Test
+	@Test
 	void testEncodeDecode() {
 		String encoded = message.serialize();
 		assertDoesNotThrow(() -> {
 			TableStateMessage messageDecoded = new TableStateMessage(encoded);
 			assertEquals(message, messageDecoded);
 		});
-	}*/
+	}
 	
 	@Test
 	void testWrongDecode() {

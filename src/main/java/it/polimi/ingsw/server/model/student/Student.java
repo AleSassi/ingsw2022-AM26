@@ -32,4 +32,25 @@ public enum Student {
         int randIndex = randomizer.nextInt(0, values.size());
         return values.get(randIndex);
     }
+    
+    public String getColor() {
+        switch (this) {
+            case YellowElf -> {
+                return "yellow";
+            }
+            case BlueUnicorn -> {
+                return "blue";
+            }
+            case GreenFrog -> {
+                return "green";
+            }
+            case RedDragon -> {
+                return "red";
+            }
+            case PinkFair -> {
+                return "pink";
+            }
+        }
+        return null;
+    }
 }

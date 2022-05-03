@@ -81,7 +81,7 @@ public class VirtualClient {
 		return socket.getRemoteSocketAddress() + ":" + socket.getPort();
 	}
 	
-	public void sendMessage(NetworkMessage message) {
+	public synchronized void sendMessage(NetworkMessage message) {
 		try {
 			if (outputStreamWriter == null) {
 				outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
@@ -96,7 +96,7 @@ public class VirtualClient {
 		}
 	}
 	
-	public void didReceiveMessage(NetworkMessage message) {
+	public synchronized void didReceiveMessage(NetworkMessage message) {
 		if (message instanceof LoginMessage loginMessage) {
 			nickname = loginMessage.getNickname();
 		}
@@ -111,7 +111,7 @@ public class VirtualClient {
 		sendMessage(new MatchTerminationMessage("Another Player disconnected and this Match has ended", true));
 	}
 	
-	public void terminateConnection() {
+	public synchronized void terminateConnection() {
 		try {
 			if (outputStreamWriter != null) {
 				outputStreamWriter.close();

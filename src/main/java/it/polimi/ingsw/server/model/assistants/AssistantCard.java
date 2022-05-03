@@ -1,5 +1,8 @@
 package it.polimi.ingsw.server.model.assistants;
 
+import it.polimi.ingsw.utils.cli.ANSIColors;
+import it.polimi.ingsw.utils.cli.StringFormatter;
+
 public enum AssistantCard {
 	TURTLE(1, 1),
 	ELEPHANT(2, 1),
@@ -27,5 +30,13 @@ public enum AssistantCard {
 	
 	public int getMotherNatureSteps() {
 		return motherNatureSteps;
+	}
+	
+	@Override
+	public String toString() {
+		return StringFormatter.formatWithColor(super.toString(), ANSIColors.Unknown) +
+				" (priority: " + priorityNumber +
+				", motherNatureSteps: " + motherNatureSteps +
+				')';
 	}
 }

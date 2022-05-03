@@ -128,8 +128,12 @@ public class TableManager {
         studentBag.placeStudents(s, 1);
     }
 
-    public StudentCollection pickStudentsFromCloud(int cloudIdx) {
-        return managedClouds.get(cloudIdx).extractAllStudentsAndRemove();
+    public StudentCollection pickStudentsFromCloud(int cloudIdx) throws CollectionUnderflowError {
+        StudentCollection pickedCollection = managedClouds.get(cloudIdx).extractAllStudentsAndRemove();
+        if (!studentBag.isEmpty() && pickedCollection.getTotalCount() == 0) {
+            throw new CollectionUnderflowError();
+        }
+        return pickedCollection;
     }
 
     public void placeStudentOnCloud(Student s, int cloudIdx, int count) throws IndexOutOfBoundsException {
@@ -284,7 +288,7 @@ public class TableManager {
     }
     
     public TableStateMessage getStateMessage() {
-        return new TableStateMessage(availableProfessors, islands, studentBag, managedClouds, playableCharacterCards);
+        return new TableStateMessage(availableProfessors, islands, studentBag, managedClouds, playableCharacterCards.stream().map(CharacterCard::beanify).toList());
     }
 
     /**
@@ -300,6 +304,7 @@ public class TableManager {
     public List<CharacterCard> getPlayableCharacterCards() {
         return playableCharacterCards;
     }
+    
     public void copyTo(TableManager copyDst) {
         copyDst.playableCharacterCards = playableCharacterCards;
         copyDst.managedClouds = managedClouds;

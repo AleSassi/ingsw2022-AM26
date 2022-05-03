@@ -64,6 +64,11 @@ public class StopCardActivatorCard extends CharacterCard {
     private void restoreStopCard() {
         availableStopCards += 1;
     }
+    
+    @Override
+    public CharacterCardBean beanify() {
+        return new CharacterCardBean(getCharacter(), getPrice() + getPriceIncrement(), null, -1, availableStopCards, null);
+    }
 
     @Override
     protected void copyTo(CharacterCard dstCard) {
