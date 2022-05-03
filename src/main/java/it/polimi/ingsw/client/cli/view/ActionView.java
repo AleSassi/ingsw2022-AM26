@@ -201,6 +201,12 @@ public class ActionView extends TerminalView {
 		endMatch();
 	}
 	
+	@Override
+	protected void didReceiveNetworkTimeoutNotification(Notification notification) {
+		System.out.println(StringFormatter.formatWithColor("The Client encountered an error. Reason: Timeout. The network connection with the Server might have been interrupted, or the Server might be too busy to respond", ANSIColors.Red));
+		endMatch();
+	}
+	
 	private void endMatch() {
 		GameClient.shared().terminate();
 		shouldEndMatch = true;

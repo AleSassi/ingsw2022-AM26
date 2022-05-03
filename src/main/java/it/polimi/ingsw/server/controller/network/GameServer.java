@@ -14,6 +14,9 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class GameServer {
+	
+	private final static int pingDelayMS = 0;
+	private final static int pingIntervalMS = 8000;
 
 	private final int serverPort;
 	private final List<VirtualClient> connectedClients;
@@ -53,10 +56,16 @@ public class GameServer {
 		executor.shutdown();
 	}
 	
+	public static int getPingDelayMS() {
+		return pingDelayMS;
+	}
+	
+	public static int getPingIntervalMS() {
+		return pingIntervalMS;
+	}
+	
 	private void startPingTimer() {
 		Timer pingTimer = new Timer("PingTimer");
-		int pingDelayMS = 0;
-		int pingIntervalMS = 8000;
 		pingTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {

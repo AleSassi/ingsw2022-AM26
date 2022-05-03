@@ -86,4 +86,8 @@ public class PlayerStateView extends TerminalView {
 		
 		return formattedString;
 	}
+	
+	@Override
+	protected void didReceiveNetworkTimeoutNotification(Notification notification) {
+	}
 }

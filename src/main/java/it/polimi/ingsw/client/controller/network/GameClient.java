@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.controller.network;
 
+import it.polimi.ingsw.server.controller.network.GameServer;
 import it.polimi.ingsw.utils.cli.ANSIColors;
 import it.polimi.ingsw.utils.cli.StringFormatter;
 import it.polimi.ingsw.notifications.NotificationCenter;
@@ -15,8 +16,9 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class GameClient {
@@ -27,6 +29,8 @@ public class GameClient {
     private final String serverIP;
     private final NetworkMessageDecoder decoder;
     private Socket socket;
+    private Timer pongTimer;
+    private TimerTask pongTimerTask;
     
     private BufferedReader bufferedReader;
     private OutputStreamWriter outputStreamWriter;
@@ -105,6 +109,23 @@ public class GameClient {
             e.printStackTrace();
         }
     }
+    
+    public void startPongTimeoutTimer() {
+        if (pongTimer == null) {
+            pongTimer = new Timer("PongTimer");
+        }
+        int pingDelayMS = GameServer.getPingDelayMS();
+        int pingIntervalMS = GameServer.getPingIntervalMS();
+        int pingDelayTolerance = 2000;
+        pongTimerTask = new TimerTask() {
+            @Override
+            public void run() {
+                NotificationCenter.shared().post(NotificationName.ClientDidTimeoutNetwork, null, null);
+                System.exit(0);
+            }
+        };
+        pongTimer.schedule(pongTimerTask, pingDelayMS + pingIntervalMS + pingDelayTolerance);
+    }
 
     private boolean isTerminationMessage(NetworkMessage message) {
         return message instanceof MatchTerminationMessage;
@@ -132,6 +153,10 @@ public class GameClient {
         } else if (message instanceof PingPongMessage) {
             PingPongMessage pong = new PingPongMessage(false);
             sendMessage(pong);
+            if (pongTimer != null) {
+                pongTimerTask.cancel();
+            }
+            startPongTimeoutTimer();
         }
     }
 

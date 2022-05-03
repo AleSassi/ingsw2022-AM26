@@ -14,4 +14,5 @@ public enum NotificationName {
 	ClientDidReceivePlayerStateMessage,
 	ClientDidReceiveTableStateMessage,
 	ClientDidReceiveVictoryMessage,
+	ClientDidTimeoutNetwork
 }

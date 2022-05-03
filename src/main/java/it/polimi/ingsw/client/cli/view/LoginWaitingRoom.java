@@ -75,4 +75,14 @@ public class LoginWaitingRoom extends TerminalView {
 			notify();
 		}
 	}
+	
+	@Override
+	protected void didReceiveNetworkTimeoutNotification(Notification notification) {
+		shouldQuit = true;
+		System.out.println(StringFormatter.formatWithColor("The Client encountered an error. Reason: Timeout. The network connection with the Server might have been interrupted, or the Server might be too busy to respond", ANSIColors.Red));
+		GameClient.shared().terminate();
+		synchronized (this) {
+			notify();
+		}
+	}
 }

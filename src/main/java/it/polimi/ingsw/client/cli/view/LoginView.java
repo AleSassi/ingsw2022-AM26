@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.cli.view;
 
 import it.polimi.ingsw.client.controller.network.GameClient;
 import it.polimi.ingsw.jar.Client;
+import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.server.controller.network.messages.LoginMessage;
 import it.polimi.ingsw.server.model.assistants.Wizard;
 import it.polimi.ingsw.server.model.match.MatchVariant;
@@ -58,8 +59,15 @@ public class LoginView extends TerminalView {
 		Client.setNickname(nickname);
 		LoginMessage loginMessage = new LoginMessage(nickname, numberOfPlayers, matchVariant, wizard);
 		GameClient.shared().sendMessage(loginMessage);
+		GameClient.shared().startPongTimeoutTimer();
 		// Once the LoginView finished, we start the LoginWaitingRoom
 		LoginWaitingRoom loginWaitingRoom = new LoginWaitingRoom(matchVariant);
 		loginWaitingRoom.run();
+	}
+	
+	@Override
+	protected void didReceiveNetworkTimeoutNotification(Notification notification) {
+		System.out.println(StringFormatter.formatWithColor("The Client encountered an error. Reason: Timeout. The network connection with the Server might have been interrupted, or the Server might be too busy to respond", ANSIColors.Red));
+		GameClient.shared().terminate();
 	}
 }

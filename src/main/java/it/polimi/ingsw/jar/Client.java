@@ -17,6 +17,7 @@ public class Client {
 	private static String nickname;
 	
 	public static void main(String[] args) {
+		
 		if (args.length == 0) {
 			// Print the help menu
 			printHelpMenu();
@@ -92,7 +93,9 @@ public class Client {
 				}
 			}
 		}
-		GameClient.shared().terminate();
+		if (GameClient.shared() != null) {
+			GameClient.shared().terminate();
+		}
 	}
 	
 	private static void printHelpMenu() {
