@@ -4,10 +4,13 @@ import it.polimi.ingsw.client.cli.view.LoginView;
 import it.polimi.ingsw.client.cli.view.LoginWaitingRoom;
 import it.polimi.ingsw.client.cli.view.TerminalView;
 import it.polimi.ingsw.client.controller.network.GameClient;
+import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
+import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.LoginMessage;
+import it.polimi.ingsw.server.controller.network.messages.MatchTerminationMessage;
 import it.polimi.ingsw.server.controller.network.messages.NetworkMessage;
 import it.polimi.ingsw.server.model.assistants.Wizard;
 import it.polimi.ingsw.server.model.match.MatchVariant;
@@ -31,9 +34,6 @@ public class CLIManager {
 	public void startGameLoop() {
 		// Ask the Player to log in, send to the server
 		TerminalView activeView = new LoginView();
-		activeView.run();
-		// Once the LoginView finished, we start the LoginWaitingRoom
-		activeView = new LoginWaitingRoom();
 		activeView.run();
 	}
 	

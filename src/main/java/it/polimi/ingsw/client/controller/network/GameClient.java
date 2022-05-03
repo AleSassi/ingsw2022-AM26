@@ -110,7 +110,7 @@ public class GameClient {
         return message instanceof MatchTerminationMessage;
     }
 
-    public void sendMessage(NetworkMessage message) {
+    public synchronized void sendMessage(NetworkMessage message) {
         try {
             outputStreamWriter.write(message.serialize() + "\n");
             outputStreamWriter.flush();
@@ -123,7 +123,7 @@ public class GameClient {
      * This method send the notification to the relative listener
      * @param message message
      */
-    private void didReceiveMessage(NetworkMessage message) {
+    private synchronized void didReceiveMessage(NetworkMessage message) {
         HashMap<String, Object> userInfo = new HashMap<>();
         userInfo.put(NotificationKeys.IncomingNetworkMessage.getRawValue(), message);
         NotificationName clientNotificationName = message.clientReceivedMessageNotification();
@@ -135,7 +135,7 @@ public class GameClient {
         }
     }
 
-    private void teardown() {
+    private synchronized void teardown() {
         try {
             if (outputStreamWriter != null) {
                 outputStreamWriter.close();

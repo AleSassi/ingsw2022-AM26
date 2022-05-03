@@ -104,6 +104,8 @@ public class GameController {
 							errorMessage = "Invalid move: the movement of the selected Student is not valid";
 						} catch (AssistantCardNotPlayableException e) {
 							errorMessage = "Invalid move: the Assistant Card you chose cannot be played, because other opponents have already played it before you";
+						} catch (CloudPickInvalidException e) {
+							errorMessage = "Invalid move: the Cloud you chose is empty. This is not allowed, unless the Bag is also empty";
 						}
 					}
 					if (errorMessage == null) {

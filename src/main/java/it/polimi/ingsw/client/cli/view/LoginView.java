@@ -58,5 +58,8 @@ public class LoginView extends TerminalView {
 		Client.setNickname(nickname);
 		LoginMessage loginMessage = new LoginMessage(nickname, numberOfPlayers, matchVariant, wizard);
 		GameClient.shared().sendMessage(loginMessage);
+		// Once the LoginView finished, we start the LoginWaitingRoom
+		LoginWaitingRoom loginWaitingRoom = new LoginWaitingRoom(matchVariant);
+		loginWaitingRoom.run();
 	}
 }
