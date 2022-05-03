@@ -463,7 +463,7 @@ public abstract class MatchManager {
 				Integer activeCharacterCardIdx = null;
 				for (int characterIdx = 0; characterIdx < managedTable.getPlayableCharacterCards().size(); characterIdx++) {
 					CharacterCard characterCard = managedTable.getPlayableCharacterCards().get(characterIdx);
-					if (characterCard.getCharacter() == player.getActiveCharacterCard().getCharacter()) {
+					if (player.getActiveCharacterCard() != null && characterCard.getCharacter() == player.getActiveCharacterCard().getCharacter()) {
 						activeCharacterCardIdx = characterIdx;
 						break;
 					}

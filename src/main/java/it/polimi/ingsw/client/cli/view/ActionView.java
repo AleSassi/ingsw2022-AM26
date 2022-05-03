@@ -151,6 +151,16 @@ public class ActionView extends TerminalView {
 							}
 							case PlayCharacterCard -> {
 								//Plays a Character card. Followed by the Index of the Character card to play
+								if (args.length > 1) {
+									try {
+										int cardIdx = Integer.parseInt(args[1]);
+										if (cardIdx >= 0 && cardIdx < tableView.getNumberOfCards()) {
+											successDecoding = true;
+											actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidPlayCharacterCard, -1, null, false, -1, -1, -1, cardIdx, null);
+										}
+									} catch (NumberFormatException ignored) {
+									}
+								}
 							}
 							default -> {
 								System.out.println(StringFormatter.formatWithColor("ERROR: Unrecognized command", ANSIColors.Red));

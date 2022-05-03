@@ -16,7 +16,7 @@ import java.util.concurrent.*;
 public class GameServer {
 	
 	private final static int pingDelayMS = 0;
-	private final static int pingIntervalMS = 8000;
+	private final static int pingIntervalMS = 2000;
 
 	private final int serverPort;
 	private final List<VirtualClient> connectedClients;

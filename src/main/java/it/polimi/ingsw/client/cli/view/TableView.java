@@ -18,6 +18,7 @@ public class TableView extends TerminalView {
 	
 	private int numberOfIslands;
 	private int numberOfClouds;
+	private int numberOfCards;
 	
 	public int getNumberOfIslands() {
 		return numberOfIslands;
@@ -25,6 +26,10 @@ public class TableView extends TerminalView {
 	
 	public int getNumberOfClouds() {
 		return numberOfClouds;
+	}
+	
+	public int getNumberOfCards() {
+		return numberOfCards;
 	}
 	
 	@Override
@@ -41,6 +46,7 @@ public class TableView extends TerminalView {
 		System.out.println(getCharacterCardsString(tableStateMessage));
 		numberOfIslands = tableStateMessage.getIslands().size();
 		numberOfClouds = tableStateMessage.getManagedClouds().size();
+		numberOfCards = tableStateMessage.getPlayableCharacterCards().size();
 	}
 	
 	private StringBuilder getCharacterCardsString(TableStateMessage tableStateMessage) {
