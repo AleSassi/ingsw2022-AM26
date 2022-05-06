@@ -8,12 +8,6 @@ Valutazione del diagramma UML delle classi del gruppo AM56.
 
 ## Lati positivi
 
-Indicare in questa sezione quali sono secondo voi i lati positivi dell'UML
-dell'altro gruppo. Se avete qualche difficoltà, provate a simulare il gioco a
-mano, immaginandovi quali sono le invocazioni di metodo che avvengono in certe
-situazioni che vi sembrano importanti (ad esempio, la fusione delle isole oppure
-il calcolo dell’influenza).
-
 - Rappresentare le diverse fasi di gioco trmite appositi Enum gestiti direttamente dal Model, per permettere al RoundHandler di sapere in ogni momento in quale fase del gioco si trova;
 - AdvancedGame sottoclasse di Game per aggiungere la funzionalità aggiuntiva dele carte personaggio al di sopra del gioco base.
 
