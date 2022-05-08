@@ -3,11 +3,18 @@ package it.polimi.ingsw.server.controller.network.messages;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import it.polimi.ingsw.notifications.NotificationName;
+import it.polimi.ingsw.server.exceptions.model.CollectionUnderflowError;
 import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
+import it.polimi.ingsw.server.model.Professor;
 import it.polimi.ingsw.server.model.SchoolBoard;
 import it.polimi.ingsw.server.model.assistants.AssistantCard;
 import it.polimi.ingsw.server.model.assistants.Wizard;
+import it.polimi.ingsw.server.model.student.Student;
+import it.polimi.ingsw.server.model.student.StudentHost;
+import it.polimi.ingsw.utils.cli.ANSIColors;
+import it.polimi.ingsw.utils.cli.StringFormatter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;

@@ -7,14 +7,17 @@ import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage;
 import it.polimi.ingsw.server.controller.network.messages.TableStateMessage;
+import it.polimi.ingsw.server.exceptions.model.CollectionUnderflowError;
 import it.polimi.ingsw.server.model.Professor;
 import it.polimi.ingsw.server.model.assistants.AssistantCard;
 import it.polimi.ingsw.server.model.characters.CharacterCardBean;
 import it.polimi.ingsw.server.model.student.Cloud;
 import it.polimi.ingsw.server.model.student.Island;
+import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.server.model.student.StudentHost;
 import it.polimi.ingsw.utils.cli.ANSIColors;
 import it.polimi.ingsw.utils.cli.StringFormatter;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -83,17 +86,96 @@ public class PlayerStateView extends TerminalView {
 	}
 	
 	private StringBuilder buildStringForSchoolBoard(PlayerStateMessage playerStateMessage) {
-		StringBuilder formattedString = new StringBuilder("School Board: ");
-		formattedString.append("\n");
-		formattedString.append("\tEntrance: ").append(playerStateMessage.getBoard().getEntrance().toFormattedString());
-		formattedString.append("\n\tDining Room: ").append(playerStateMessage.getBoard().getDiningRoom().toFormattedString());
-		formattedString.append("\t\tTowers: ").append(playerStateMessage.getBoard().getTowerType().toString()).append(" [").append(playerStateMessage.getBoard().getAvailableTowerCount()).append("]");
-		formattedString.append("\n\t").append(getAvailableProfessorsString(playerStateMessage));
-		formattedString.append("\n\tCoins: ").append(playerStateMessage.getAvailableCoins());
+		StringBuilder formattedString = new StringBuilder();
+		formattedString.append(getSchoolBoardASCIIArt(playerStateMessage));
+		formattedString.append("\nCoins: ").append(playerStateMessage.getAvailableCoins());
 		if (playerStateMessage.getLastPlayedAssistantCard() != null) {
-			formattedString.append("\n\tLast Played Assistant: ").append(playerStateMessage.getLastPlayedAssistantCard().toString());
+			formattedString.append("\nLast Played Assistant: ").append(playerStateMessage.getLastPlayedAssistantCard().toString());
 		}
 		return formattedString;
+	}
+	
+	private StringBuilder getSchoolBoardASCIIArt(PlayerStateMessage playerStateMessage) {
+		StringBuilder stringBuilder = new StringBuilder();
+		int studentRow = 0;
+		StudentHost entrance = playerStateMessage.getBoard().getEntrance().copy();
+		StudentHost diningRoom = playerStateMessage.getBoard().getDiningRoom().copy();
+		for (int line = 0; line < 11; line++) {
+			if (line < 1) {
+				stringBuilder.append(".".repeat(54));
+			} else if ((line - 1) % 2 == 0) {
+				stringBuilder.append(".".repeat(2));
+				if (studentRow == 0) {
+					stringBuilder.append(".".repeat(3));
+					extractAndPrintStudent(stringBuilder, entrance, null);
+				} else {
+					extractAndPrintStudent(stringBuilder, entrance, null);
+					stringBuilder.append(".");
+					extractAndPrintStudent(stringBuilder, entrance, null);
+				}
+				stringBuilder.append(".|.");
+				//Print the Dining Room, with a ** for coin spaces
+				Student rowStudent = Student.values()[studentRow];
+				for (int i = 0; i < 10; i++) {
+					extractAndPrintStudent(stringBuilder, diningRoom, rowStudent);
+					stringBuilder.append(".");
+				}
+				stringBuilder.append("|.");
+				//Print the Professors
+				Professor rowProfessor = rowStudent.getAssociatedProfessor();
+				if (playerStateMessage.getBoard().getControlledProfessors().contains(rowProfessor)) {
+					stringBuilder.append(StringFormatter.formatWithColor("PP", rowProfessor.getProfessorColor()));
+				} else {
+					stringBuilder.append(StringFormatter.formatWithColor("__", rowProfessor.getProfessorColor()));
+				}
+				stringBuilder.append(".|.");
+				//Print the Tower space
+				if (studentRow * 2 < playerStateMessage.getBoard().getAvailableTowerCount()) {
+					stringBuilder.append(StringFormatter.formatWithColor("TT", ANSIColors.Unknown));
+				} else {
+					stringBuilder.append(StringFormatter.formatWithColor("__", ANSIColors.Unknown));
+				}
+				stringBuilder.append(".");
+				if ((studentRow * 2) + 1 < playerStateMessage.getBoard().getAvailableTowerCount()) {
+					stringBuilder.append(StringFormatter.formatWithColor("TT", ANSIColors.Unknown));
+				} else {
+					stringBuilder.append(StringFormatter.formatWithColor("__", ANSIColors.Unknown));
+				}
+				stringBuilder.append("..");
+			} else {
+				stringBuilder.append(".".repeat(54));
+				studentRow += 1;
+			}
+			stringBuilder.append("\n");
+		}
+		return stringBuilder;
+	}
+	
+	private void extractAndPrintStudent(StringBuilder stringBuilder, StudentHost entrance, @Nullable Student lockedStudent) {
+		boolean hasPrintedStudent = false;
+		if (lockedStudent != null) {
+			try {
+				entrance.removeStudents(lockedStudent, 1);
+				// If it succeeded we print the student
+				stringBuilder.append(StringFormatter.formatWithColor("SS", lockedStudent.getAssociatedProfessor().getProfessorColor()));
+				hasPrintedStudent = true;
+			} catch (CollectionUnderflowError ignored) {
+			}
+		} else {
+			for (Student student: Student.values()) {
+				try {
+					entrance.removeStudents(student, 1);
+					// If it succeeded we print the student
+					stringBuilder.append(StringFormatter.formatWithColor("SS", student.getAssociatedProfessor().getProfessorColor()));
+					hasPrintedStudent = true;
+					break;
+				} catch (CollectionUnderflowError ignored) {
+				}
+			}
+		}
+		if (!hasPrintedStudent) {
+			stringBuilder.append("__");
+		}
 	}
 	
 	private StringBuilder getAvailableProfessorsString(PlayerStateMessage playerStateMessage) {
