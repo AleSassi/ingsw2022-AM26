@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.model.match;
 
+import it.polimi.ingsw.server.controller.network.messages.CharacterCardNetworkParamSet;
 import it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage;
 import it.polimi.ingsw.server.controller.network.messages.TableStateMessage;
 import it.polimi.ingsw.notifications.Notification;
@@ -17,6 +18,7 @@ import it.polimi.ingsw.server.model.characters.CharacterCardParamSet;
 import it.polimi.ingsw.server.model.student.Cloud;
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.server.model.student.StudentCollection;
+import it.polimi.ingsw.server.model.student.StudentHost;
 
 import java.util.*;
 
@@ -90,7 +92,12 @@ public abstract class MatchManager {
 				AP_MoveMotherNatureBySteps(motherNatureSteps);
 				AP_CheckAndChangeCurrentIslandControl();
 			}
-			case ActionPhaseStepThree -> AP_CollectAllStudentsFromCloud(cloudIdx);
+			case ActionPhaseStepThree -> {
+				AP_CollectAllStudentsFromCloud(cloudIdx);
+				if (getCurrentPlayer().getActiveCharacterCard() != null) {
+					getCurrentPlayer().getActiveCharacterCard().deactivate();
+				}
+			}
 		}
 		if (moveToNextPlayer() && matchPhase == MatchPhase.ActionPhaseStepThree) {
 			roundCheckMatchEnd();
@@ -118,9 +125,7 @@ public abstract class MatchManager {
 					matchPhase = matchPhase.nextPhase();
 				}
 			}
-			case ActionPhaseStepTwo -> {
-				matchPhase = matchPhase.nextPhase();
-			}
+			case ActionPhaseStepTwo -> matchPhase = matchPhase.nextPhase();
 			case ActionPhaseStepThree -> {
 				numberOfStudentsPickedByCurrentPlayer_AP1 = 0;
 				boolean startsNewRound = false;
@@ -195,11 +200,25 @@ public abstract class MatchManager {
 	/**
 	 * Executes the relative effect of the card that the player played
 	 */
-	public void useCharacterCard(CharacterCardParamSet userInfo) throws CharacterCardIncorrectParametersException, CharacterCardNoMoreUsesAvailableException {
+	public int useCharacterCard(CharacterCardNetworkParamSet userInfo) throws CharacterCardIncorrectParametersException, CharacterCardNoMoreUsesAvailableException, CharacterCardNotPurchasedException {
+		if (getCurrentPlayer().getActiveCharacterCard() != null) {
+			StudentHost sourceStudentHost = managedTable.getIslandAtIndex(userInfo.getSourceIslandIndex());
+			StudentHost destinationStudentHost = managedTable.getIslandAtIndex(userInfo.getTargetIslandIndex());
+			CharacterCardParamSet localUserInfo = new CharacterCardParamSet(userInfo.getSrcStudentColor(), userInfo.getDstStudentColor(), null, null, userInfo.isStudentDestinationIsSelf(), userInfo.getChosenMotherNatureAdditionalSteps(), userInfo.getSourceIslandIndex(), userInfo.getTargetIslandIndex(), userInfo.getStopCardMovementMode());
+			return getCurrentPlayer().getActiveCharacterCard().useCard(managedTable, getAllPlayers(), getCurrentPlayer(), localUserInfo);
+		}
+		return -1;
+	}
+	
+	/**
+	 * Executes the relative effect of the card that the player played
+	 */
+	private int useCharacterCard(CharacterCardParamSet userInfo) throws CharacterCardIncorrectParametersException, CharacterCardNoMoreUsesAvailableException, CharacterCardNotPurchasedException {
 		if (getCurrentPlayer().getActiveCharacterCard() != null) {
 
-			getCurrentPlayer().getActiveCharacterCard().useCard(managedTable, getAllPlayers(), getCurrentPlayer(), userInfo);
+			return getCurrentPlayer().getActiveCharacterCard().useCard(managedTable, getAllPlayers(), getCurrentPlayer(), userInfo);
 		}
+		return -1;
 	}
 	//endregion
 	

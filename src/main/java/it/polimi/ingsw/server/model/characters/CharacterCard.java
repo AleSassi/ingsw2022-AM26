@@ -36,6 +36,7 @@ public abstract class CharacterCard {
     public abstract int useCard(TableManager t, List<Player> players, Player currentPlayer, CharacterCardParamSet userInfo) throws CharacterCardIncorrectParametersException, CharacterCardNoMoreUsesAvailableException;
     public abstract StudentCollection getHostedStudents();
     public abstract CharacterCardBean beanify();
+    public abstract void deactivate();
     //endregion
 
     //region Getters for private properties

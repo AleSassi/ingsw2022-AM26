@@ -20,6 +20,8 @@ public class PlayerStateView extends TerminalView {
 	
 	private int numberOfCards = 0;
 	private int maxMNSteps = 0;
+	private Integer purchasedCharacterCard;
+	private StudentHost entrance, table;
 	
 	public int getNumberOfCards() {
 		return numberOfCards;
@@ -27,6 +29,18 @@ public class PlayerStateView extends TerminalView {
 	
 	public int getMaxMNSteps() {
 		return maxMNSteps;
+	}
+	
+	public Integer getPurchasedCharacterCard() {
+		return purchasedCharacterCard;
+	}
+	
+	public StudentHost getEntrance() {
+		return entrance;
+	}
+	
+	public StudentHost getTable() {
+		return table;
 	}
 	
 	@Override
@@ -44,6 +58,9 @@ public class PlayerStateView extends TerminalView {
 		if (playerStateMessage.getLastPlayedAssistantCard() != null) {
 			maxMNSteps = playerStateMessage.getLastPlayedAssistantCard().getMotherNatureSteps();
 		}
+		purchasedCharacterCard = playerStateMessage.getActiveCharacterCardIdx();
+		entrance = playerStateMessage.getBoard().getEntrance();
+		table = playerStateMessage.getBoard().getDiningRoom();
 	}
 	
 	private StringBuilder getControlledCardString(PlayerStateMessage playerStateMessage) {

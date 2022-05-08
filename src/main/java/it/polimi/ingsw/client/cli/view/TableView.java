@@ -6,9 +6,11 @@ import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.TableStateMessage;
 import it.polimi.ingsw.server.model.Professor;
+import it.polimi.ingsw.server.model.characters.Character;
 import it.polimi.ingsw.server.model.characters.CharacterCardBean;
 import it.polimi.ingsw.server.model.student.Cloud;
 import it.polimi.ingsw.server.model.student.Island;
+import it.polimi.ingsw.server.model.student.StudentCollection;
 import it.polimi.ingsw.server.model.student.StudentHost;
 import it.polimi.ingsw.utils.cli.StringFormatter;
 
@@ -18,7 +20,7 @@ public class TableView extends TerminalView {
 	
 	private int numberOfIslands;
 	private int numberOfClouds;
-	private int numberOfCards;
+	private List<CharacterCardBean> cardBeans;
 	
 	public int getNumberOfIslands() {
 		return numberOfIslands;
@@ -29,7 +31,15 @@ public class TableView extends TerminalView {
 	}
 	
 	public int getNumberOfCards() {
-		return numberOfCards;
+		return cardBeans.size();
+	}
+	
+	public Character getCharacterAtIndex(int characterIndex) {
+		return cardBeans.get(characterIndex).getCharacter();
+	}
+	
+	public StudentCollection getStudentsInCardAtIndex(int characterIndex) {
+		return cardBeans.get(characterIndex).getHostedStudents();
 	}
 	
 	@Override
@@ -46,7 +56,7 @@ public class TableView extends TerminalView {
 		System.out.println(getCharacterCardsString(tableStateMessage));
 		numberOfIslands = tableStateMessage.getIslands().size();
 		numberOfClouds = tableStateMessage.getManagedClouds().size();
-		numberOfCards = tableStateMessage.getPlayableCharacterCards().size();
+		cardBeans = tableStateMessage.getPlayableCharacterCards();
 	}
 	
 	private StringBuilder getCharacterCardsString(TableStateMessage tableStateMessage) {

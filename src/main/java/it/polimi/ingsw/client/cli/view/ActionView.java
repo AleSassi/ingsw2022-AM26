@@ -7,6 +7,7 @@ import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.*;
+import it.polimi.ingsw.server.exceptions.client.CharacterCardActionInvalidException;
 import it.polimi.ingsw.server.model.match.MatchPhase;
 import it.polimi.ingsw.server.model.match.MatchVariant;
 import it.polimi.ingsw.server.model.student.Student;
@@ -149,22 +150,38 @@ public class ActionView extends TerminalView {
 									}
 								}
 							}
-							case PlayCharacterCard -> {
-								//Plays a Character card. Followed by the Index of the Character card to play
+							case PurchaseCharacterCard -> {
+								//Purchases a Character card. Followed by the Index of the Character card to play
 								if (args.length > 1) {
 									try {
 										int cardIdx = Integer.parseInt(args[1]);
 										if (cardIdx >= 0 && cardIdx < tableView.getNumberOfCards()) {
 											successDecoding = true;
-											actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidPlayCharacterCard, -1, null, false, -1, -1, -1, cardIdx, null);
+											actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidPurchaseCharacterCard, -1, null, false, -1, -1, -1, cardIdx, null);
 										}
 									} catch (NumberFormatException ignored) {
 									}
 								}
 							}
-							default -> {
-								System.out.println(StringFormatter.formatWithColor("ERROR: Unrecognized command", ANSIColors.Red));
+							case PlayCharacterCard -> {
+								//Plays the purchased character card
+								if (playerStateView.getPurchasedCharacterCard() != null) {
+									// Now we must get the correct input for each card type
+									CharacterCardInputView inputView = new CharacterCardInputView(tableView, playerStateView);
+									try {
+										CharacterCardNetworkParamSet paramSet = inputView.run();
+										if (paramSet == null) {
+											printCaret();
+											continue;
+										} else {
+											successDecoding = true;
+											actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidPlayCharacterCard, -1, null, false, -1, -1, -1, playerStateView.getPurchasedCharacterCard(), paramSet);
+										}
+									} catch (CharacterCardActionInvalidException ignored) {
+									}
+								}
 							}
+							default -> System.out.println(StringFormatter.formatWithColor("ERROR: Unrecognized command", ANSIColors.Red));
 						}
 						if (successDecoding && actionMessage != null) {
 							GameClient.shared().sendMessage(actionMessage);
@@ -182,9 +199,15 @@ public class ActionView extends TerminalView {
 	private void didReceiveActionResponse(Notification notification) {
 		PlayerActionResponse response = (PlayerActionResponse) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
 		if (response.isActionSuccess()) {
-			System.out.println(StringFormatter.formatWithColor("Action of type " + response.getActionType().toString() + " succeeded. Printing the table and player data...", ANSIColors.Green));
+			if (response.getActionType() == PlayerActionMessage.ActionType.DidPlayCharacterCard && !response.getDescriptiveErrorMessage().equals("")) {
+				System.out.println(StringFormatter.formatWithColor("Action of type " + response.getActionType().toString() + " succeeded. Returned: " + response.getDescriptiveErrorMessage(), ANSIColors.Green));
+				printCaret();
+			} else {
+				System.out.println(StringFormatter.formatWithColor("Action of type " + response.getActionType().toString() + " succeeded. Printing the table and player data...", ANSIColors.Green));
+			}
 		} else {
 			System.out.println(StringFormatter.formatWithColor("The command of type " + response.getActionType().toString() + " did not succeed. Reason: " + response.getDescriptiveErrorMessage(), ANSIColors.Red));
+			printCaret();
 		}
 	}
 	
@@ -228,7 +251,14 @@ public class ActionView extends TerminalView {
 			System.out.println(StringFormatter.formatWithColor("It's your turn! These are the commands you can use to play your turn:", ANSIColors.Green));
 			for (ClientActionCommand actionCommand: ClientActionCommand.values()) {
 				if (actionCommand.isValidForPhaseAndVariant(phase, variant)) {
-					actionCommand.printHelp();
+					boolean canPurchaseCard = playerStateView.getPurchasedCharacterCard() == null;
+					if (actionCommand == ClientActionCommand.PurchaseCharacterCard && canPurchaseCard) {
+						actionCommand.printHelp();
+					} else if (actionCommand == ClientActionCommand.PlayCharacterCard && !canPurchaseCard) {
+						actionCommand.printHelp();
+					} else if (actionCommand != ClientActionCommand.PlayCharacterCard && actionCommand != ClientActionCommand.PurchaseCharacterCard) {
+						actionCommand.printHelp();
+					}
 				}
 			}
 			printCaret();

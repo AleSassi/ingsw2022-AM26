@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server.model.characters;
 
+import it.polimi.ingsw.server.controller.network.messages.CharacterCardNetworkParamSet;
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.server.model.student.StudentHost;
 

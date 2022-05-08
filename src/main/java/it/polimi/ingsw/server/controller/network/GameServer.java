@@ -64,7 +64,7 @@ public class GameServer {
 		return pingIntervalMS;
 	}
 	
-	private void startPingTimer() {
+	private synchronized void startPingTimer() {
 		Timer pingTimer = new Timer("PingTimer");
 		pingTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override

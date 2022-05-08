@@ -91,10 +91,21 @@ public class GameController {
 				} else {
 					// Perform the action
 					String errorMessage = null;
-					if (actionMessage.getPlayerActionType() == PlayerActionMessage.ActionType.DidPlayCharacterCard) {
+					String additionalMessage = "";
+					if (actionMessage.getPlayerActionType() == PlayerActionMessage.ActionType.DidPurchaseCharacterCard) {
 						boolean success = activeMatchManager.purchaseCharacterCards(actionMessage.getChosenCharacterIndex());
 						if (!success) {
 							errorMessage = "Not enough Coins to purchase the Card";
+						}
+					} else if (actionMessage.getPlayerActionType() == PlayerActionMessage.ActionType.DidPlayCharacterCard) {
+						try {
+							additionalMessage += activeMatchManager.useCharacterCard(actionMessage.getCharacterCardParameters());
+						} catch (CharacterCardIncorrectParametersException e) {
+							errorMessage = "Invalid move: the Character Card parameters are not valid";
+						} catch (CharacterCardNoMoreUsesAvailableException e) {
+							errorMessage = "Invalid move: the Character Card cannot be used anymore (reached max use limit)";
+						} catch (CharacterCardNotPurchasedException e) {
+							errorMessage = "Invalid move: you have not purchased the Character card";
 						}
 					} else {
 						// A normal action
@@ -110,7 +121,7 @@ public class GameController {
 					}
 					if (errorMessage == null) {
 						// If nothing failed we send a "Success" message
-						server.sendMessage(new PlayerActionResponse(actionMessage.getNickname(), actionMessage.getPlayerActionType(), true, ""), actionMessage.getNickname());
+						server.sendMessage(new PlayerActionResponse(actionMessage.getNickname(), actionMessage.getPlayerActionType(), true, additionalMessage), actionMessage.getNickname());
 						// and then the updated states
 						sendMatchDataToClients();
 					} else {

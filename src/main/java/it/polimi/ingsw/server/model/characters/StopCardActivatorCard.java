@@ -66,8 +66,12 @@ public class StopCardActivatorCard extends CharacterCard {
     }
     
     @Override
+    public void deactivate() {
+    }
+    
+    @Override
     public CharacterCardBean beanify() {
-        return new CharacterCardBean(getCharacter(), getPrice() + getPriceIncrement(), null, -1, availableStopCards, null);
+        return new CharacterCardBean(getCharacter(), getPrice(), null, -1, availableStopCards, null);
     }
 
     @Override

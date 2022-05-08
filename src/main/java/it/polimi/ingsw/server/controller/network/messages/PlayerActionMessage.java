@@ -146,6 +146,7 @@ public class PlayerActionMessage extends NetworkMessage {
 		DidMoveStudent,
 		DidMoveMNBySteps,
 		DidChooseCloudIsland,
+		DidPurchaseCharacterCard,
 		DidPlayCharacterCard;
 		
 		public boolean isValidForMatchPhase(MatchPhase matchPhase) {
@@ -159,7 +160,7 @@ public class PlayerActionMessage extends NetworkMessage {
 				}
 				case ActionPhaseStepOne -> {
 					//TODO: Should we restrict character card usage only in this phase?
-					return this == DidMoveStudent || this == DidPlayCharacterCard;
+					return this == DidMoveStudent || this == DidPurchaseCharacterCard || this == DidPlayCharacterCard;
 				}
 				case ActionPhaseStepTwo -> {
 					return this == DidMoveMNBySteps;

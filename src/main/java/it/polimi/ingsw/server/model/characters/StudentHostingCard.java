@@ -199,8 +199,12 @@ public class StudentHostingCard extends CharacterCard {
     }
     
     @Override
+    public void deactivate() {
+    }
+    
+    @Override
     public CharacterCardBean beanify() {
-        return new CharacterCardBean(getCharacter(), getPrice() + getPriceIncrement(), null, -1, -1, hostedStudents);
+        return new CharacterCardBean(getCharacter(), getPrice(), null, -1, -1, hostedStudents);
     }
 
     @Override

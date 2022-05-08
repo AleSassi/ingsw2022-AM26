@@ -47,15 +47,23 @@ public class GenericModifierCard extends CharacterCard {
     
                 if (excludedStudent == null) {
                     excludedStudent = userInfo.getSrcStudentColor();
+                    return -1;
+                } else {
+                    int islandIdx = userInfo.getTargetIslandIndex();
+                    if (islandIdx < 0 || islandIdx >= t.getNumberOfIslands()) throw new CharacterCardIncorrectParametersException("GenericModifierCard ERROR: Island index out of range");
+                    return getModifier(t, currentPlayer, islandIdx, false, false, true, false, false, false);
                 }
-                int islandIdx = userInfo.getTargetIslandIndex();
-                if (islandIdx < 0 || islandIdx >= t.getNumberOfIslands()) throw new CharacterCardIncorrectParametersException("GenericModifierCard ERROR: Island index out of range");
-                return getModifier(t, currentPlayer, islandIdx, false, false, true, false, false, false);
             };
             default -> executor = null;
         }
     }
-
+    
+    @Override
+    public void deactivate() {
+        excludedStudent = null;
+        savedModifier = 0;
+    }
+    
     @Override
     protected void copyTo(CharacterCard dstCard) {
         super.copyTo(dstCard);
@@ -97,7 +105,7 @@ public class GenericModifierCard extends CharacterCard {
     
     @Override
     public CharacterCardBean beanify() {
-        return new CharacterCardBean(getCharacter(), getPrice() + getPriceIncrement(), excludedStudent, savedModifier, -1, null);
+        return new CharacterCardBean(getCharacter(), getPrice(), excludedStudent, savedModifier, -1, null);
     }
     
     @Override

@@ -12,7 +12,8 @@ public enum ClientActionCommand {
 	MoveStudentToRoom("studToTable", "Picks a Student from your Entrance space and moves it to the Dining Room. Must be followed by the COLOR of the Student to move"),
 	MoveMotherNature("moveMN", "Moves Mother Nature. Followed by the number of steps"),
 	PickCloud("pickCloud", "Picks all Students from a Cloud card. Followed by the Cloud card index"),
-	PlayCharacterCard("playChar", "Plays a Character card. Followed by the Index of the Character card to play");
+	PurchaseCharacterCard("purchaseCard", "Purchases a Character card. Followed by the Index of the Character card to purchase"),
+	PlayCharacterCard("playChar", "Plays the purchased character card");
 	
 	private final String rawValue;
 	private final String description;
@@ -44,7 +45,7 @@ public enum ClientActionCommand {
 			case PickCloud -> {
 				return phase == MatchPhase.ActionPhaseStepThree;
 			}
-			case PlayCharacterCard -> {
+			case PlayCharacterCard, PurchaseCharacterCard -> {
 				return variant == MatchVariant.ExpertRuleSet && (phase == MatchPhase.ActionPhaseStepOne);
 			}
 		}
