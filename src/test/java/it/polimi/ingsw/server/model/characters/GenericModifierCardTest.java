@@ -189,7 +189,7 @@ class GenericModifierCardTest {
         tableManager.copyTo(copyTableManager);
 
         assertDoesNotThrow(() -> {
-            assertEquals(-1 * tableManager.getIslandAtIndex(0).getNumberOfSameStudents(Student.BlueUnicorn), card.useCard(tableManager, null, player, new CharacterCardParamSet(Student.BlueUnicorn, Student.BlueUnicorn, null, null, false, 0, 0, 0, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
+            assertEquals(-1, card.useCard(tableManager, null, player, new CharacterCardParamSet(Student.BlueUnicorn, Student.BlueUnicorn, null, null, false, 0, 0, 0, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
             //If we use it again it should report the same modifier
             assertEquals(-1 * tableManager.getIslandAtIndex(0).getNumberOfSameStudents(Student.BlueUnicorn), card.useCard(tableManager, null, player, new CharacterCardParamSet(Student.BlueUnicorn, Student.BlueUnicorn, null, null, false, 0, 0, 0, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
             //The table must not be modified
@@ -207,6 +207,7 @@ class GenericModifierCardTest {
         TableManager copyTableManager = new TableManager(2, false);
         tableManager.copyTo(copyTableManager);
         
+        assertDoesNotThrow(() -> card.useCard(tableManager, null, player, new CharacterCardParamSet(Student.BlueUnicorn, Student.BlueUnicorn, null, null, false, 0, -1, -1, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
         assertThrows(CharacterCardIncorrectParametersException.class, () -> card.useCard(tableManager, null, player, new CharacterCardParamSet(Student.BlueUnicorn, Student.BlueUnicorn, null, null, false, 0, -1, -1, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
         assertEquals(tableManager, copyTableManager);
     }
@@ -300,6 +301,9 @@ class GenericModifierCardTest {
         Character[] characters = {Character.Ambassador, Character.Magician, Character.Centaurus, Character.Mushroom};
         for (Character character: characters) {
             fakePlayerSetup(character);
+            if (character == Character.Mushroom) {
+                assertDoesNotThrow(() -> card.useCard(tableManager, null, player, new CharacterCardParamSet(Student.BlueUnicorn, null, null, null, false, -1, -1 , -1, CharacterCardParamSet.StopCardMovementMode.ToCard)));
+            }
             card.purchase();
             assertThrows(CharacterCardIncorrectParametersException.class, () -> card.useCard(tableManager, null, null, null));
             card.purchase();

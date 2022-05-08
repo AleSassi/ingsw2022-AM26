@@ -24,15 +24,8 @@ class PlayerStateMessageTest {
 	}
 	
 	@Test
-	void testEncode() {
+	void testEncodeDecode() {
 		String encoded = message.serialize();
-		String expected = "{\"nickname\":\"Ale\",\"availableCardsDeck\":[\"TURTLE\",\"ELEPHANT\",\"DOG\",\"OCTOPUS\",\"SNAKE\",\"FOX\",\"EAGLE\",\"CAT\",\"PEAFOWL\",\"LION\"],\"board\":{\"maxTowerCount\":8,\"availableTowerCount\":8,\"towerType\":\"Black\",\"diningRoom\":{\"hostedStudents\":{\"students\":[0,0,0,0,0]}},\"entrance\":{\"hostedStudents\":{\"students\":[0,0,0,0,0]}},\"controlledProfessors\":[false,false,false,false,false]},\"availableCoins\":0,\"wizard\":\"Wizard1\"}";
-		assertEquals(expected, encoded);
-	}
-	
-	@Test
-	void testDecode() {
-		String encoded = "{\"nickname\":\"Ale\",\"availableCardsDeck\":[\"TURTLE\",\"ELEPHANT\",\"DOG\",\"OCTOPUS\",\"SNAKE\",\"FOX\",\"EAGLE\",\"CAT\",\"PEAFOWL\",\"LION\"],\"board\":{\"maxTowerCount\":8,\"availableTowerCount\":8,\"towerType\":\"Black\",\"diningRoom\":{\"hostedStudents\":{\"students\":[0,0,0,0,0]}},\"entrance\":{\"hostedStudents\":{\"students\":[0,0,0,0,0]}},\"controlledProfessors\":[false,false,false,false,false]},\"availableCoins\":0,\"wizard\":\"Wizard1\"}";
 		assertDoesNotThrow(() -> {
 			PlayerStateMessage messageDecoded = new PlayerStateMessage(encoded);
 			assertEquals(message, messageDecoded);

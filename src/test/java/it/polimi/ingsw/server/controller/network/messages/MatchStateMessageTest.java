@@ -18,15 +18,8 @@ class MatchStateMessageTest {
 	}
 	
 	@Test
-	void testEncode() {
+	void testEncodeDecode() {
 		String encoded = message.serialize();
-		String expected = "{\"currentMatchPhase\":\"ActionPhaseStepOne\"}";
-		assertEquals(expected, encoded);
-	}
-	
-	@Test
-	void testDecode() {
-		String encoded = "{\"currentMatchPhase\":\"ActionPhaseStepOne\"}";
 		assertDoesNotThrow(() -> {
 			MatchStateMessage messageDecoded = new MatchStateMessage(encoded);
 			assertEquals(message, messageDecoded);

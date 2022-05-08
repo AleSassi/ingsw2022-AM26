@@ -17,15 +17,8 @@ class MatchTerminationMessageTest {
 	}
 	
 	@Test
-	void testEncode() {
+	void testEncodeDecode() {
 		String encoded = message.serialize();
-		String expected = "{\"terminationReason\":\"A random termination reason, visible to the user\"}";
-		assertEquals(expected, encoded);
-	}
-	
-	@Test
-	void testDecode() {
-		String encoded = "{\"terminationReason\":\"A random termination reason, visible to the user\"}";
 		assertDoesNotThrow(() -> {
 			MatchTerminationMessage messageDecoded = new MatchTerminationMessage(encoded);
 			assertEquals(message, messageDecoded);

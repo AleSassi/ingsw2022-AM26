@@ -17,15 +17,8 @@ class VictoryMessageTest {
 	}
 	
 	@Test
-	void testEncode() {
+	void testEncodeDecode() {
 		String encoded = message.serialize();
-		String expected = "{\"winners\":[\"Ale\"]}";
-		assertEquals(expected, encoded);
-	}
-	
-	@Test
-	void testDecode() {
-		String encoded = "{\"winners\":[\"Ale\"]}";
 		assertDoesNotThrow(() -> {
 			VictoryMessage messageDecoded = new VictoryMessage(encoded);
 			assertEquals(message, messageDecoded);

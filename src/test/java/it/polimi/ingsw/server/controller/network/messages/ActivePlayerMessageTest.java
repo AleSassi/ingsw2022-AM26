@@ -23,15 +23,8 @@ class ActivePlayerMessageTest {
 	}
 	
 	@Test
-	void testEncode() {
+	void testEncodeDecode() {
 		String encoded = message.serialize();
-		String expected = "{\"activeNickname\":\"Ale\"}";
-		assertEquals(expected, encoded);
-	}
-	
-	@Test
-	void testDecode() {
-		String encoded = "{\"activeNickname\":\"Ale\"}";
 		assertDoesNotThrow(() -> {
 			ActivePlayerMessage messageDecoded = new ActivePlayerMessage(encoded);
 			assertEquals(message, messageDecoded);

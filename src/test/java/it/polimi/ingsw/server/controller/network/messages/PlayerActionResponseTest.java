@@ -18,15 +18,8 @@ class PlayerActionResponseTest {
 	}
 	
 	@Test
-	void testEncode() {
+	void testEncodeDecode() {
 		String encoded = message.serialize();
-		String expected = "{\"nickname\":\"Ale\",\"actionType\":\"DidPlayAssistantCard\",\"actionSuccess\":false,\"descriptiveErrorMessage\":\"A random error message\"}";
-		assertEquals(expected, encoded);
-	}
-	
-	@Test
-	void testDecode() {
-		String encoded = "{\"nickname\":\"Ale\",\"actionType\":\"DidPlayAssistantCard\",\"actionSuccess\":false,\"descriptiveErrorMessage\":\"A random error message\"}";
 		assertDoesNotThrow(() -> {
 			PlayerActionResponse messageDecoded = new PlayerActionResponse(encoded);
 			assertEquals(message, messageDecoded);

@@ -17,15 +17,8 @@ class PlayerActionMessageTest {
 	}
 	
 	@Test
-	void testEncode() {
+	void testEncodeDecode() {
 		String encoded = message.serialize();
-		String expected = "{\"nickname\":\"Ale\",\"playerActionType\":\"DidPlayAssistantCard\",\"assistantIndex\":0,\"movesToIsland\":false,\"destinationIslandIndex\":0,\"chosenMNBaseSteps\":0,\"chosenCloudTileIndex\":0,\"chosenCharacterIndex\":0}";
-		assertEquals(expected, encoded);
-	}
-	
-	@Test
-	void testDecode() {
-		String encoded = "{\"nickname\":\"Ale\",\"playerActionType\":\"DidPlayAssistantCard\",\"assistantIndex\":0,\"movesToIsland\":false,\"destinationIslandIndex\":0,\"chosenMNBaseSteps\":0,\"chosenCloudTileIndex\":0,\"chosenCharacterIndex\":0}";
 		assertDoesNotThrow(() -> {
 			PlayerActionMessage messageDecoded = new PlayerActionMessage(encoded);
 			assertEquals(message, messageDecoded);

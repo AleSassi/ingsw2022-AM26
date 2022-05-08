@@ -17,15 +17,8 @@ class PingPongMessageTest {
 	}
 	
 	@Test
-	void testEncode() {
+	void testEncodeDecode() {
 		String encoded = message.serialize();
-		String expected = "{\"isPing\":true}";
-		assertEquals(expected, encoded);
-	}
-	
-	@Test
-	void testDecode() {
-		String encoded = "{\"isPing\":true}";
 		assertDoesNotThrow(() -> {
 			PingPongMessage messageDecoded = new PingPongMessage(encoded);
 			assertEquals(message, messageDecoded);

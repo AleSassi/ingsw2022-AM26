@@ -17,15 +17,8 @@ class LoginResponseTest {
 	}
 	
 	@Test
-	void testEncode() {
+	void testEncodeDecode() {
 		String encoded = message.serialize();
-		String expected = "{\"nickname\":\"Ale\",\"loginAccepted\":true,\"numberOfPlayersRemainingToFillLobby\":2}";
-		assertEquals(expected, encoded);
-	}
-	
-	@Test
-	void testDecode() {
-		String encoded = "{\"nickname\":\"Ale\",\"loginAccepted\":true,\"numberOfPlayersRemainingToFillLobby\":2}";
 		assertDoesNotThrow(() -> {
 			LoginResponse messageDecoded = new LoginResponse(encoded);
 			assertEquals(message, messageDecoded);
