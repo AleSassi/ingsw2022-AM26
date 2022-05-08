@@ -178,14 +178,6 @@ public class PlayerStateView extends TerminalView {
 		}
 	}
 	
-	private StringBuilder getAvailableProfessorsString(PlayerStateMessage playerStateMessage) {
-		StringBuilder formattedString = new StringBuilder("Controlled Professors: ");
-		for (Professor professor : playerStateMessage.getBoard().getControlledProfessors()) {
-			formattedString.append(StringFormatter.formatWithColor(professor.toString(), professor.getProfessorColor())).append(playerStateMessage.getBoard().getControlledProfessors().indexOf(professor) < playerStateMessage.getBoard().getControlledProfessors().size() - 1 ? " | " : "");
-		}
-		return formattedString;
-	}
-	
 	private StringBuilder buildStringForAssistantCards(PlayerStateMessage playerStateMessage) {
 		StringBuilder formattedString = new StringBuilder("Assistant Cards available: ");
 		int index = 0;
