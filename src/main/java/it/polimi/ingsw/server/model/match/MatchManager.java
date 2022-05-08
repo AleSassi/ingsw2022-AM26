@@ -231,7 +231,7 @@ public abstract class MatchManager {
 	/**
 	 * return the list of all player in order of addition
 	 */
-	protected abstract List<Player> getAllPlayers();
+	public abstract List<Player> getAllPlayers();
 	
 	/**
 	 * @return The list of players with towers

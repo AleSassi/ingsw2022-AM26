@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.cli.view;
 
+import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
@@ -12,6 +13,7 @@ import it.polimi.ingsw.server.model.characters.CharacterCardBean;
 import it.polimi.ingsw.server.model.student.Cloud;
 import it.polimi.ingsw.server.model.student.Island;
 import it.polimi.ingsw.server.model.student.StudentHost;
+import it.polimi.ingsw.utils.cli.ANSIColors;
 import it.polimi.ingsw.utils.cli.StringFormatter;
 
 import java.util.List;
@@ -50,17 +52,26 @@ public class PlayerStateView extends TerminalView {
 	
 	private void didReceivePlayerState(Notification notification) {
 		PlayerStateMessage playerStateMessage = (PlayerStateMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
+		boolean isForCLIPlayer = playerStateMessage.getNickname().equals(Client.getNickname());
+		if (isForCLIPlayer) {
+			System.out.println(StringFormatter.formatWithColor("Your Board:", ANSIColors.Green));
+			numberOfCards = playerStateMessage.getAvailableCardsDeck().length;
+			if (playerStateMessage.getLastPlayedAssistantCard() != null) {
+				maxMNSteps = playerStateMessage.getLastPlayedAssistantCard().getMotherNatureSteps();
+			}
+			purchasedCharacterCard = playerStateMessage.getActiveCharacterCardIdx();
+			entrance = playerStateMessage.getBoard().getEntrance();
+			table = playerStateMessage.getBoard().getDiningRoom();
+		} else {
+			// Show the redux version for tactical purposes
+			System.out.println(StringFormatter.formatWithColor(playerStateMessage.getNickname() + "'s Board:", ANSIColors.Yellow));
+		}
 		//TODO: Complete with ASCII Art Table Representation
 		System.out.println(buildStringForSchoolBoard(playerStateMessage));
-		System.out.println(buildStringForAssistantCards(playerStateMessage));
-		System.out.println(getControlledCardString(playerStateMessage));
-		numberOfCards = playerStateMessage.getAvailableCardsDeck().length;
-		if (playerStateMessage.getLastPlayedAssistantCard() != null) {
-			maxMNSteps = playerStateMessage.getLastPlayedAssistantCard().getMotherNatureSteps();
+		if (isForCLIPlayer) {
+			System.out.println(buildStringForAssistantCards(playerStateMessage));
 		}
-		purchasedCharacterCard = playerStateMessage.getActiveCharacterCardIdx();
-		entrance = playerStateMessage.getBoard().getEntrance();
-		table = playerStateMessage.getBoard().getDiningRoom();
+		System.out.println(getControlledCardString(playerStateMessage));
 	}
 	
 	private StringBuilder getControlledCardString(PlayerStateMessage playerStateMessage) {

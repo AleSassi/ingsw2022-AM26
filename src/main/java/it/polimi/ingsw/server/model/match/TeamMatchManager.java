@@ -44,7 +44,7 @@ public class TeamMatchManager extends MatchManager {
 	}
 
 	@Override
-	protected List<Player> getAllPlayers() {
+	public List<Player> getAllPlayers() {
 		List<Player> result = new ArrayList<>();
 		for (PlayerTeam team : teams) {
 			result.addAll(team.getAllPlayers());

@@ -5,6 +5,7 @@ import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
+import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.match.GameLobby;
 import it.polimi.ingsw.server.model.match.GameLobbyState;
 import it.polimi.ingsw.server.model.match.MatchManager;
@@ -160,6 +161,12 @@ public class GameController {
 		for (String nickname: lobby.getPlayerNicknames()) {
 			// First we send the Table description
 			server.sendMessage(activeMatchManager.generateTableStateMessage(), nickname);
+			// Then we send the Player description of each other player, so that the Client can display their board
+			for (Player player: activeMatchManager.getAllPlayers()) {
+				if (!player.getNickname().equals(nickname)) {
+					server.sendMessage(activeMatchManager.generatePlayerStateMessage(player.getNickname()), nickname);
+				}
+			}
 			// Then we get the Player description
 			server.sendMessage(activeMatchManager.generatePlayerStateMessage(nickname), nickname);
 			// Then we send the active Player nickname

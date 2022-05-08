@@ -31,7 +31,7 @@ public class IndependentPlayerMatchManager extends MatchManager {
     }
 
     @Override
-    protected List<Player> getAllPlayers() {
+    public List<Player> getAllPlayers() {
         // We should copy the Players list to avoid object modifications
         return new ArrayList<>(players);
     }
