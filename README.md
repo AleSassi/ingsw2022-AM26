@@ -16,16 +16,16 @@ The final version will include:
 * The source code of Unit Tests, developed using JUnit 5.
 
 ### Implemented Features
-| Feature          |                                                                                      Implementation Status                                                                                      |
-|:-----------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| Basic ruleset    |               [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/model)               |
-| Complete ruleset |               [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/model)               |
-| Socket & Network |                                                             [![IMPLEMENTING](https://img.shields.io/badge/-Implementing-yellow)]()                                                              |
-| CLI              |                                                        [![To be implemented](https://img.shields.io/badge/-To%20be%20implemented-red)]()                                                        |
-| GUI              |                                                        [![To be implemented](https://img.shields.io/badge/-To%20be%20implemented-red)]()                                                        |
-| Persistence      |                                                        [![To be implemented](https://img.shields.io/badge/-To%20be%20implemented-red)]()                                                        |
-| All Characters   |         [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/model/characters)          |
-| Team Matches     | [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/blob/master/src/main/java/it/polimi/ingsw/model/match/TeamMatchManager.java) |
+| Feature          |                                                                                         Implementation Status                                                                                          |
+|:-----------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| Basic ruleset    |               [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/server/model)               |
+| Complete ruleset |               [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/server/model)               |
+| Socket & Network |        [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/server/controller/network)         |
+| CLI              |                                                                 [![IMPLEMENTING](https://img.shields.io/badge/-Implementing-yellow)]()                                                                 |
+| GUI              |                                                                 [![IMPLEMENTING](https://img.shields.io/badge/-Implementing-yellow)]()                                                                 |
+| Persistence      |                                                           [![To be implemented](https://img.shields.io/badge/-To%20be%20implemented-red)]()                                                            |
+| All Characters   |         [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/server/model/characters)          |
+| Team Matches     | [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/blob/master/src/main/java/it/polimi/ingsw/server/model/match/TeamMatchManager.java) |
 
 ### Test cases report
 Test cases are currently being implemented progressively as new classes are created. The following table will provide a report of the coverage, as shown by Maven in IntelliJ IDEA.
