@@ -1,61 +1,81 @@
 package it.polimi.ingsw.server.controller.network.messages;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
+import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
 
 public class NetworkMessageDecoder {
 	
-	public NetworkMessage decodeMessage(String serializedString) throws MessageDecodeException {
-		try {
-			return new PingPongMessage(serializedString);
-		} catch (MessageDecodeException e0) {
-			//Try another message
+	private static class DummyMessage extends NetworkMessage {
+		
+		public DummyMessage(String serializedString) throws MessageDecodeException {
+			super(serializedString);
+		}
+		
+		public DummyMessage() {
+			super();
+		}
+		
+		@Override
+		public String serialize() {
+			return null;
+		}
+		
+		@Override
+		protected void deserialize(String serializedString) throws MessageDecodeException {
+			Gson gson = new Gson();
 			try {
-				return new LoginMessage(serializedString);
-			} catch (MessageDecodeException e1) {
-				//Try another message
-				try {
-					return new LoginResponse(serializedString);
-				} catch (MessageDecodeException e2) {
-					//Try another message
-					try {
-						return new TableStateMessage(serializedString);
-					} catch (MessageDecodeException e3) {
-						//Try another message
-						try {
-							return new PlayerStateMessage(serializedString);
-						} catch (MessageDecodeException e4) {
-							//Try another message
-							try {
-								return new ActivePlayerMessage(serializedString);
-							} catch (MessageDecodeException e5) {
-								//Try another message
-								try {
-									return new MatchStateMessage(serializedString);
-								} catch (MessageDecodeException e6) {
-									//Try another message
-									try {
-										return new PlayerActionMessage(serializedString);
-									} catch (MessageDecodeException e7) {
-										//Try another message
-										try {
-											return new PlayerActionResponse(serializedString);
-										} catch (MessageDecodeException e8) {
-											//Try another message
-											try {
-												return new VictoryMessage(serializedString);
-											} catch (MessageDecodeException e9) {
-												//Try another message, throw with error
-												return new MatchTerminationMessage(serializedString);
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
+				DummyMessage decoded = gson.fromJson(serializedString, DummyMessage.class);
+				setClassType(decoded.getClassType());
+			} catch (JsonParseException e) {
+				throw new MessageDecodeException();
 			}
+		}
+		
+		@Override
+		public NotificationName clientReceivedMessageNotification() {
+			return null;
 		}
 	}
 	
+	public NetworkMessage decodeMessage(String serializedString) throws MessageDecodeException {
+		DummyMessage dummyMessage = new DummyMessage(serializedString);
+		switch (dummyMessage.getClassType()) {
+			case "ActivePlayerMessage" -> {
+				return new ActivePlayerMessage(serializedString);
+			}
+			case "LoginMessage" -> {
+				return new LoginMessage(serializedString);
+			}
+			case "LoginResponse" -> {
+				return new LoginResponse(serializedString);
+			}
+			case "MatchStateMessage" -> {
+				return new MatchStateMessage(serializedString);
+			}
+			case "MatchTerminationMessage" -> {
+				return new MatchTerminationMessage(serializedString);
+			}
+			case "PingPongMessage" -> {
+				return new PingPongMessage(serializedString);
+			}
+			case "PlayerActionMessage" -> {
+				return new PlayerActionMessage(serializedString);
+			}
+			case "PlayerActionResponse" -> {
+				return new PlayerActionResponse(serializedString);
+			}
+			case "PlayerStateMessage" -> {
+				return new PlayerStateMessage(serializedString);
+			}
+			case "TableStateMessage" -> {
+				return new TableStateMessage(serializedString);
+			}
+			case "VictoryMessage" -> {
+				return new VictoryMessage(serializedString);
+			}
+			default -> throw new MessageDecodeException();
+		}
+	}
 }
