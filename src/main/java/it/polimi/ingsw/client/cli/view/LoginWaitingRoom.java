@@ -55,6 +55,8 @@ public class LoginWaitingRoom extends TerminalView {
 			System.out.println(StringFormatter.formatWithColor("The lobby is full. You are now ready to start the game", ANSIColors.Green));
 			ActionView actionView = new ActionView(chosenVariant);
 			actionView.run();
+		} else {
+			GameClient.shared().terminate();
 		}
 	}
 	

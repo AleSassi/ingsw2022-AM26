@@ -14,6 +14,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
 public class VirtualClient {
@@ -22,6 +23,7 @@ public class VirtualClient {
 	private final Socket socket;
 	private final NetworkMessageDecoder decoder;
 	private final GameServer parentServer;
+	private boolean isPingable = false;
 	
 	private BufferedReader bufferedReader;
 	private OutputStreamWriter outputStreamWriter;
@@ -39,7 +41,6 @@ public class VirtualClient {
 					String json = bufferedReader.readLine();
 					
 					if (json != null && !json.isEmpty() && !json.isBlank()) {
-						System.out.println("Server received " + json);
 						// Decode the JSON to NetworkMessage
 						try {
 							NetworkMessage message = decoder.decodeMessage(json);
@@ -81,18 +82,29 @@ public class VirtualClient {
 		return socket.getRemoteSocketAddress() + ":" + socket.getPort();
 	}
 	
+	public boolean isPingable() {
+		return isPingable;
+	}
+	
+	public void setPingable(boolean pingable) {
+		isPingable = pingable;
+	}
+	
 	public synchronized void sendMessage(NetworkMessage message) {
-		try {
-			if (outputStreamWriter == null) {
-				outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
+		if (socket != null && !socket.isClosed()) {
+			try {
+				if (outputStreamWriter == null) {
+					outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
+				}
+				outputStreamWriter.write(message.serialize() + "\n");
+				outputStreamWriter.flush();
+			} catch (SocketException e) {
+				// Broken pipe - client disconnected
+				parentServer.didReceiveMessageFromClient(new MatchTerminationMessage("Client disconnected", false), this);
+				terminateConnection();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			outputStreamWriter.write(message.serialize() + "\n");
-			outputStreamWriter.flush();
-		} catch (SocketException e) {
-			// Broken pipe - client disconnected
-			parentServer.didReceiveMessageFromClient(new MatchTerminationMessage("Client disconnected", false), this);
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 	
@@ -125,4 +137,30 @@ public class VirtualClient {
 		}
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		
+		VirtualClient that = (VirtualClient) o;
+		
+		if (!Objects.equals(nickname, that.nickname)) return false;
+		if (!Objects.equals(socket, that.socket)) return false;
+		if (!Objects.equals(decoder, that.decoder)) return false;
+		if (!Objects.equals(parentServer, that.parentServer)) return false;
+		if (!Objects.equals(bufferedReader, that.bufferedReader))
+			return false;
+		return Objects.equals(outputStreamWriter, that.outputStreamWriter);
+	}
+	
+	@Override
+	public int hashCode() {
+		int result = nickname != null ? nickname.hashCode() : 0;
+		result = 31 * result + (socket != null ? socket.hashCode() : 0);
+		result = 31 * result + (decoder != null ? decoder.hashCode() : 0);
+		result = 31 * result + (parentServer != null ? parentServer.hashCode() : 0);
+		result = 31 * result + (bufferedReader != null ? bufferedReader.hashCode() : 0);
+		result = 31 * result + (outputStreamWriter != null ? outputStreamWriter.hashCode() : 0);
+		return result;
+	}
 }

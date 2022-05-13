@@ -40,7 +40,11 @@ public class GameLobby {
     public GameLobbyState getCurrentState() {
         return state;
     }
-
+    
+    public MatchVariant getVariant() {
+        return variant;
+    }
+    
     public void addPlayer(String nickname, Wizard wiz) throws LobbyFullException, NicknameNotUniqueException, WizardAlreadyChosenException {
         if (state == GameLobbyState.Full || state == GameLobbyState.MatchRunning || playersInLobby.size() + 1 > maxPlayerCount) throw new LobbyFullException();
         if (!nicknameIsUnique(nickname)) throw new NicknameNotUniqueException();

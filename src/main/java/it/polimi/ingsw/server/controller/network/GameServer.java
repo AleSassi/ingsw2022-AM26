@@ -20,7 +20,7 @@ public class GameServer {
 
 	private final int serverPort;
 	private final List<VirtualClient> connectedClients;
-	private final GameController activeController; //TODO: In case of multiple matches, this can become a list of controllers, then use a getter to get the controller hosting the match for a nickname
+	private final List<GameController> activeControllers; //TODO: In case of multiple matches, this can become a list of controllers, then use a getter to get the controller hosting the match for a nickname
 	
 	// For Ping-Pong round trips
 	private boolean isPinging = false;
@@ -30,7 +30,7 @@ public class GameServer {
 	public GameServer(int desiredPort) {
 		this.serverPort = desiredPort;
 		this.connectedClients = new ArrayList<>();
-		this.activeController = new GameController(this);
+		this.activeControllers = new ArrayList<>();
 		this.receivedPingsInCurrentTrip = new ArrayList<>();
 		this.sentPingsInCurrentTrip = new ArrayList<>();
 	}
@@ -85,25 +85,23 @@ public class GameServer {
 	private synchronized void pingClients() {
 		// Signal disconnection if at least one client did not send the PONG response in time
 		if (!isFirstPing) {
-			System.out.println(connectedClients.stream().map(VirtualClient::getNickname).toList());
-			System.out.println(receivedPingsInCurrentTrip);
-			System.out.println(sentPingsInCurrentTrip);
 			List<VirtualClient> disconnectedClients = connectedClients.stream().filter((client) -> !receivedPingsInCurrentTrip.contains(client.getNickname()) && sentPingsInCurrentTrip.contains(client.getNickname())).toList();
 			List<VirtualClient> associatedDisconnectedClients = new ArrayList<>();
 			for (VirtualClient disconnectedClient: disconnectedClients) {
 				// Signal the termination
 				//TODO: With multiple concurrent matches we need to find the match to which the Player belongs to. In this case it is not needed, since we only have one match
-				if (activeController.containsPlayerWithNickname(disconnectedClient.getNickname())) {
+				Optional<GameController> activeController = activeControllers.stream().filter((controller) -> controller.containsPlayerWithNickname(disconnectedClient.getNickname())).findFirst();
+				if (activeController.isPresent()) {
 					System.out.println("Client disconnected, terminating message for " + disconnectedClient.getNickname());
 					for (VirtualClient associatedClient: connectedClients) {
-						if (activeController.containsPlayerWithNickname(associatedClient.getNickname())) {
+						if (activeController.get().containsPlayerWithNickname(associatedClient.getNickname())) {
 							associatedClient.notifyPlayerDisconnection();
 							associatedClient.terminateConnection();
 							associatedDisconnectedClients.add(associatedClient);
 							connectedClients.remove(associatedClient);
 						}
 					}
-					NotificationCenter.shared().post(NotificationName.ServerDidTerminateMatch, activeController, null);
+					NotificationCenter.shared().post(NotificationName.ServerDidTerminateMatch, activeController.get(), null);
 				} else {
 					System.out.println("Client disconnected, but not logged in");
 					disconnectedClient.terminateConnection();
@@ -114,9 +112,8 @@ public class GameServer {
 			receivedPingsInCurrentTrip = new ArrayList<>();
 		}
 		isFirstPing = false;
-		System.out.println("Pinging...");
 		PingPongMessage pingMessage = new PingPongMessage(true);
-		sentPingsInCurrentTrip = connectedClients.stream().map(VirtualClient::getNickname).filter(Objects::nonNull).toList();
+		sentPingsInCurrentTrip = connectedClients.stream().filter(VirtualClient::isPingable).map(VirtualClient::getNickname).filter(Objects::nonNull).toList();
 		broadcastMessage(pingMessage);
 	}
 	
@@ -125,16 +122,38 @@ public class GameServer {
 		userInfo.put(NotificationKeys.IncomingNetworkMessage.getRawValue(), message);
 		if (message instanceof LoginMessage login) {
 			System.out.println("Received login message: nickname " + login.getNickname());
-			NotificationCenter.shared().post(NotificationName.ServerDidReceiveLoginMessage, activeController, userInfo);
+			Optional<GameController> matchingController = activeControllers.stream().filter((controller) -> controller.getMatchVariant() == login.getMatchVariant() && controller.getMaxPlayerCount() == login.getDesiredNumberOfPlayers() && controller.acceptsPlayers()).findFirst();
+			if (getControllerWithNickname(login.getNickname()).isEmpty()) {
+				GameController availableController = matchingController.orElse(new GameController(this));
+				NotificationCenter.shared().post(NotificationName.ServerDidReceiveLoginMessage, availableController, userInfo);
+				if (matchingController.isEmpty()) {
+					activeControllers.add(availableController);
+				}
+				client.setPingable(true);
+			} else {
+				System.out.println("Sending nickname error");
+				NetworkMessage errorMessage = new LoginResponse(login.getNickname(), false, Integer.MAX_VALUE, "The nickname you entered is not unique. Please choose another nickname");
+				client.sendMessage(errorMessage);
+				// Disconnect immediately
+				//TODO: Can we avoid disconnecting the Client?
+				client.sendMessage(new MatchTerminationMessage("The nickname you entered is not unique. Please choose another nickname", false));
+				client.terminateConnection();
+				connectedClients.remove(client);
+			}
 		} else if (message instanceof PlayerActionMessage) {
-			NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, activeController, userInfo);
+			getControllerWithNickname(client.getNickname()).ifPresent((controller) -> NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, controller, userInfo));
 		} else if (message instanceof MatchTerminationMessage) {
-			NotificationCenter.shared().post(NotificationName.ServerDidTerminateMatch, activeController, userInfo);
+			if (client.isPingable()) {
+				getControllerWithNickname(client.getNickname()).ifPresent((controller) -> NotificationCenter.shared().post(NotificationName.ServerDidTerminateMatch, controller, userInfo));
+			}
 		} else if (message instanceof PingPongMessage) {
 			receivedPingsInCurrentTrip.add(client.getNickname());
-			System.out.println("Received pong by " + client.getNickname());
 		}
 		// For any other wrong message types we do nothing
+	}
+	
+	private Optional<GameController> getControllerWithNickname(String nickname) {
+		return activeControllers.stream().filter((controller) -> controller.containsPlayerWithNickname(nickname)).findFirst();
 	}
 	
 	public synchronized void sendMessage(NetworkMessage message, String playerNickname) {

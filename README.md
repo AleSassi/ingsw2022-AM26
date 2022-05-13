@@ -24,6 +24,7 @@ The final version will include:
 | CLI              |                                                                 [![IMPLEMENTING](https://img.shields.io/badge/-Implementing-yellow)]()                                                                 |
 | GUI              |                                                                 [![IMPLEMENTING](https://img.shields.io/badge/-Implementing-yellow)]()                                                                 |
 | Persistence      |                                                           [![To be implemented](https://img.shields.io/badge/-To%20be%20implemented-red)]()                                                            |
+| Multiple Matches |            [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/server/controller)             |
 | All Characters   |         [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/server/model/characters)          |
 | Team Matches     | [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/blob/master/src/main/java/it/polimi/ingsw/server/model/match/TeamMatchManager.java) |
 

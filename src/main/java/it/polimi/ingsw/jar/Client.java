@@ -7,7 +7,9 @@ import it.polimi.ingsw.utils.cli.StringFormatter;
 import it.polimi.ingsw.utils.cli.client.ClientCommandTag;
 import it.polimi.ingsw.server.exceptions.server.UnrecognizedCommandException;
 
+import java.io.IOException;
 import java.net.ConnectException;
+import java.net.SocketException;
 import java.util.regex.Pattern;
 
 public class Client {
@@ -88,7 +90,7 @@ public class Client {
 						// Start the CLI
 						CLIManager.shared().startGameLoop();
 					}
-				} catch (ConnectException e) {
+				} catch (IOException e) {
 					System.out.println(StringFormatter.formatWithColor("ERROR: Could not connect to the server. Please connect to the Internet, ensure that the IP and Port values are correct and try again", ANSIColors.Red));
 				}
 			}

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -58,56 +59,50 @@ public class GameClient {
     /**
      * This method opens the socket
      */
-    public void connectToServer() throws ConnectException {
-        try {
-            this.socket = new Socket(serverIP, serverPort);
-            this.outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
-            // Decode the JSON to NetworkMessage
-            // The message is wrong - we do nothing
-            //TODO: Send an error message (malformed response)
-            Thread readThread = new Thread(() -> {
-                try {
-                    bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    while (true) {
-                        String json = bufferedReader.readLine();
+    public void connectToServer() throws IOException {
+        this.socket = new Socket(serverIP, serverPort);
+        this.outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
+        // Decode the JSON to NetworkMessage
+        // The message is wrong - we do nothing
+        //TODO: Send an error message (malformed response)
+        Thread readThread = new Thread(() -> {
+            try {
+                bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                while (true) {
+                    String json = bufferedReader.readLine();
                 
-                        if (json != null && !json.isEmpty() && !json.isBlank()) {
-                            // Decode the JSON to NetworkMessage
-                            try {
-                                NetworkMessage message = decoder.decodeMessage(json);
-                                didReceiveMessage(message);
-                                if (isTerminationMessage(message)) {
-                                    break;
-                                }
-                            } catch (MessageDecodeException e) {
-                                // The message is wrong - we do nothing
-                                //TODO: Send an error message (malformed response)
-                                e.printStackTrace();
+                    if (json != null && !json.isEmpty() && !json.isBlank()) {
+                        // Decode the JSON to NetworkMessage
+                        try {
+                            NetworkMessage message = decoder.decodeMessage(json);
+                            didReceiveMessage(message);
+                            if (isTerminationMessage(message)) {
+                                break;
                             }
+                        } catch (MessageDecodeException e) {
+                            // The message is wrong - we do nothing
+                            //TODO: Send an error message (malformed response)
+                            e.printStackTrace();
                         }
-                    }
-                } catch (IOException e) {
-                    try {
-                        bufferedReader.close();
-                        if (outputStreamWriter != null) {
-                            outputStreamWriter.close();
-                        }
-                        if (!socket.isClosed()) {
-                            socket.close();
-                        }
-                        bufferedReader = null;
-                        outputStreamWriter = null;
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
                     }
                 }
-            });
-            readThread.start();
-        } catch (ConnectException e) {
-            throw new ConnectException();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            } catch (IOException e) {
+                try {
+                    bufferedReader.close();
+                    if (outputStreamWriter != null) {
+                        outputStreamWriter.close();
+                    }
+                    if (!socket.isClosed()) {
+                        socket.close();
+                    }
+                    bufferedReader = null;
+                    outputStreamWriter = null;
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        readThread.start();
     }
     
     public void startPongTimeoutTimer() {
@@ -169,6 +164,9 @@ public class GameClient {
                 socket.shutdownInput();
                 socket.close();
             }
+            if (pongTimer != null) {
+                pongTimerTask.cancel();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -176,5 +174,6 @@ public class GameClient {
 
     public void terminate() {
         teardown();
+        System.exit(0);
     }
 }

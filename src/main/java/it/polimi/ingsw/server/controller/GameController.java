@@ -6,10 +6,7 @@ import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.model.Player;
-import it.polimi.ingsw.server.model.match.GameLobby;
-import it.polimi.ingsw.server.model.match.GameLobbyState;
-import it.polimi.ingsw.server.model.match.MatchManager;
-import it.polimi.ingsw.server.model.match.MatchPhase;
+import it.polimi.ingsw.server.model.match.*;
 import it.polimi.ingsw.server.exceptions.model.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,6 +26,19 @@ public class GameController {
 		NotificationCenter.shared().addObserver(this::didReceiveTerminationMessage, NotificationName.ServerDidTerminateMatch, this);
 	}
 	
+	public int getMaxPlayerCount() {
+		return lobby.getMaxPlayerCount();
+	}
+	
+	public MatchVariant getMatchVariant() {
+		System.out.println(lobby);
+		return lobby.getVariant();
+	}
+	
+	public boolean acceptsPlayers() {
+		return lobby.getCurrentState() == GameLobbyState.FillableWithPlayers;
+	}
+	
 	public boolean containsPlayerWithNickname(String nickname) {
 		if (lobby == null) return false;
 		return Arrays.stream(lobby.getPlayerNicknames()).toList().contains(nickname);
@@ -43,6 +53,7 @@ public class GameController {
 			if (lobby == null) {
 				lobby = new GameLobby(loginMessage.getDesiredNumberOfPlayers(), loginMessage.getMatchVariant());
 			}
+			System.out.println("Added player " + loginMessage.getNickname() + ". Lobby: " + lobby);
 			// Add the Player to the lobby
 			LoginResponse responseMessage;
 			boolean success = false;
@@ -78,7 +89,8 @@ public class GameController {
 		// Before continuing, check that the notification contains the desired message (LoginMessage)
 		if (notification.getUserInfo() != null &&
 				notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) != null &&
-				notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof PlayerActionMessage actionMessage) {
+				notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof PlayerActionMessage actionMessage &&
+				containsPlayerWithNickname(actionMessage.getNickname())) {
 			// Check that the Action is valid for the current Phase
 			if (lobby == null || activeMatchManager == null) {
 				server.sendMessage(new PlayerActionResponse(actionMessage.getNickname(), actionMessage.getPlayerActionType(), false, "You are trying to run an Action without logging in first, or without waiting for the Match to start"), actionMessage.getNickname());
