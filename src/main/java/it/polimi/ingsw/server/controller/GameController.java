@@ -33,7 +33,6 @@ public class GameController {
 	}
 	
 	public MatchVariant getMatchVariant() {
-		System.out.println(lobby);
 		return lobby.getVariant();
 	}
 	
