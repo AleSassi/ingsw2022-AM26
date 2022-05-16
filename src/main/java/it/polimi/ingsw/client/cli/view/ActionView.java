@@ -45,7 +45,7 @@ public class ActionView extends TerminalView {
 		
 		tableView = new TableView();
 		tableView.run();
-		playerStateView = new PlayerStateView();
+		playerStateView = new PlayerStateView(this.variant);
 		playerStateView.run();
 		parseInputCommands();
 	}

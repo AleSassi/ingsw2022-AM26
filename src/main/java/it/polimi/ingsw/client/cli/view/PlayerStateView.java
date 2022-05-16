@@ -11,6 +11,7 @@ import it.polimi.ingsw.server.exceptions.model.CollectionUnderflowError;
 import it.polimi.ingsw.server.model.Professor;
 import it.polimi.ingsw.server.model.assistants.AssistantCard;
 import it.polimi.ingsw.server.model.characters.CharacterCardBean;
+import it.polimi.ingsw.server.model.match.MatchVariant;
 import it.polimi.ingsw.server.model.student.Cloud;
 import it.polimi.ingsw.server.model.student.Island;
 import it.polimi.ingsw.server.model.student.Student;
@@ -27,6 +28,12 @@ public class PlayerStateView extends TerminalView {
 	private int maxMNSteps = 0;
 	private Integer purchasedCharacterCard;
 	private StudentHost entrance, table;
+	private final MatchVariant variant;
+	
+	public PlayerStateView(MatchVariant variant) {
+		super();
+		this.variant = variant;
+	}
 	
 	public int getNumberOfCards() {
 		return numberOfCards;
@@ -57,7 +64,7 @@ public class PlayerStateView extends TerminalView {
 		PlayerStateMessage playerStateMessage = (PlayerStateMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
 		boolean isForCLIPlayer = playerStateMessage.getNickname().equals(Client.getNickname());
 		if (isForCLIPlayer) {
-			System.out.println(StringFormatter.formatWithColor("Your Board:", ANSIColors.Green));
+			System.out.println(StringFormatter.formatWithColor("Your Board (Tower Color: " + playerStateMessage.getBoard().getTowerType() + "):", ANSIColors.Green));
 			numberOfCards = playerStateMessage.getAvailableCardsDeck().length;
 			if (playerStateMessage.getLastPlayedAssistantCard() != null) {
 				maxMNSteps = playerStateMessage.getLastPlayedAssistantCard().getMotherNatureSteps();
@@ -67,9 +74,8 @@ public class PlayerStateView extends TerminalView {
 			table = playerStateMessage.getBoard().getDiningRoom();
 		} else {
 			// Show the redux version for tactical purposes
-			System.out.println(StringFormatter.formatWithColor(playerStateMessage.getNickname() + "'s Board:", ANSIColors.Yellow));
+			System.out.println(StringFormatter.formatWithColor(playerStateMessage.getNickname() + "'s Board (Tower Color: " + playerStateMessage.getBoard().getTowerType() + "):", ANSIColors.Yellow));
 		}
-		//TODO: Complete with ASCII Art Table Representation
 		System.out.println(buildStringForSchoolBoard(playerStateMessage));
 		if (isForCLIPlayer) {
 			System.out.println(buildStringForAssistantCards(playerStateMessage));
@@ -88,7 +94,9 @@ public class PlayerStateView extends TerminalView {
 	private StringBuilder buildStringForSchoolBoard(PlayerStateMessage playerStateMessage) {
 		StringBuilder formattedString = new StringBuilder();
 		formattedString.append(getSchoolBoardASCIIArt(playerStateMessage));
-		formattedString.append("\nCoins: ").append(playerStateMessage.getAvailableCoins());
+		if (variant == MatchVariant.ExpertRuleSet) {
+			formattedString.append("\nCoins: ").append(playerStateMessage.getAvailableCoins());
+		}
 		if (playerStateMessage.getLastPlayedAssistantCard() != null) {
 			formattedString.append("\nLast Played Assistant: ").append(playerStateMessage.getLastPlayedAssistantCard().toString());
 		}
