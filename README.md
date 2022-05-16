@@ -32,9 +32,11 @@ The final version will include:
 Test cases are currently being implemented progressively as new classes are created. The following table will provide a report of the coverage, as shown by Maven in IntelliJ IDEA.
 Test cases aim for 100% coverage.
 
-| Package | Tested Class   | Line Coverage | Method Coverage |
-|:--------|:---------------|:-------------:|:---------------:|
-| Model   | Global Package | 95% (605/631) |  95% (172/180)  |
+| Package    | Tested Class     |  Line Coverage  | Method Coverage |
+|:-----------|:-----------------|:---------------:|:---------------:|
+| Model      | Global Package   | 83% (1092/1305) |  91% (285/310)  |
+| Controller | network/messages |  87% (338/386)  |  85% (108/126)  |
+| Controller | GameController   |  81% (134/165)  |   91% (11/12)   |
 
 ### The Developers
 - **Alessandro Sassi** (email: alessandro5.sassi@mail.polimi.it)
