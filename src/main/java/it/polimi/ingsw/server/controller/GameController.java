@@ -6,11 +6,13 @@ import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.model.Player;
+import it.polimi.ingsw.server.model.Tower;
 import it.polimi.ingsw.server.model.match.*;
 import it.polimi.ingsw.server.exceptions.model.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class GameController {
 	
@@ -81,6 +83,8 @@ public class GameController {
 			}
 			if (success && lobby.getCurrentState() == GameLobbyState.Full) {
 				startMatch();
+				// Register for the Victory notification
+				NotificationCenter.shared().addObserver(this::didReceivePlayerVictoryNotification, NotificationName.PlayerVictory, activeMatchManager);
 			}
 		}
 	}
@@ -147,10 +151,20 @@ public class GameController {
 	}
 	
 	private void didReceiveTerminationMessage(Notification notification) {
-		// Terminate the game due to disconnections
 		//TODO: Find a way to archive the Match here for future reconnections
-		lobby = null;
-		activeMatchManager = null;
+		terminateMatch();
+	}
+	
+	private void didReceivePlayerVictoryNotification(Notification notification) {
+		// Terminate the match and notify the players
+		if (notification.getUserInfo() != null && notification.getUserInfo().containsKey(NotificationKeys.WinnerNickname.getRawValue())) {
+			System.out.println("Sending victory message to clients");
+			List<String> winnerNicknames = (List<String>) notification.getUserInfo().get(NotificationKeys.WinnerNickname.getRawValue());
+			NetworkMessage victoryMessage = new VictoryMessage(winnerNicknames.toArray(new String[0]));
+			for (String nickname: lobby.getPlayerNicknames()) {
+				server.sendMessage(victoryMessage, nickname);
+			}
+		}
 	}
 	
 	private void startMatch() {
@@ -163,9 +177,7 @@ public class GameController {
 			for (String nickname: lobby.getPlayerNicknames()) {
 				server.sendMessage(terminationMessage, nickname);
 			}
-			// Terminate the match by destroying the lobby
-			lobby = null;
-			activeMatchManager = null;
+			terminateMatch();
 		}
 	}
 	
@@ -186,6 +198,12 @@ public class GameController {
 			// Finally, send the current Match phase
 			server.sendMessage(new MatchStateMessage(activeMatchManager.getMatchPhase()), nickname);
 		}
+	}
+	
+	private void terminateMatch() {
+		// Terminate the match by destroying the lobby
+		lobby = null;
+		activeMatchManager = null;
 	}
 	
 }

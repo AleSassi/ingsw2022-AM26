@@ -19,6 +19,8 @@ import it.polimi.ingsw.server.model.student.Cloud;
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.server.model.student.StudentCollection;
 import it.polimi.ingsw.server.model.student.StudentHost;
+import it.polimi.ingsw.utils.cli.ANSIColors;
+import it.polimi.ingsw.utils.cli.StringFormatter;
 
 import java.util.*;
 
@@ -57,7 +59,8 @@ public abstract class MatchManager {
 			PP_FillCloudCards();
 		} catch (CollectionUnderflowError e) {
 			// It will never happen, but if it does we print its stack trace
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("MatchManager WARNING: Insufficient students in the Bag, at least a Cloud will have no students on it");
 		}
 		matchPhase = MatchPhase.PlanPhaseStepTwo;
 		
@@ -99,7 +102,7 @@ public abstract class MatchManager {
 				}
 			}
 		}
-		if (moveToNextPlayer() && matchPhase == MatchPhase.ActionPhaseStepThree) {
+		if (moveToNextPlayer() && matchPhase == MatchPhase.PlanPhaseStepTwo) { // The match phase will be set by moveToNextPlayer() to the next one, so we need to check for that
 			roundCheckMatchEnd();
 		}
 	}
@@ -125,7 +128,13 @@ public abstract class MatchManager {
 					matchPhase = matchPhase.nextPhase();
 				}
 			}
-			case ActionPhaseStepTwo -> matchPhase = matchPhase.nextPhase();
+			case ActionPhaseStepTwo -> {
+				matchPhase = matchPhase.nextPhase();
+				// If we don't have enough students in the bag we need to skip the Clouds
+				if (managedTable.isBagEmpty()) {
+					return moveToNextPlayer();
+				}
+			}
 			case ActionPhaseStepThree -> {
 				numberOfStudentsPickedByCurrentPlayer_AP1 = 0;
 				boolean startsNewRound = false;
