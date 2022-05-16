@@ -313,7 +313,7 @@ class GameControllerTest {
 		assertEquals(new PlayerActionResponse("Fra", PlayerActionMessage.ActionType.DidPurchaseCharacterCard, false, "Invalid action: the Character Card index you sent was incorrect"), sentMessages.get(35));
 	}
 	
-	@Test
+	@RepeatedTest(10)
 	void testReceivePurchaseCharacterCardAlreadyInUse() {
 		testRound();
 		//Simulate Fra's turn
@@ -398,20 +398,30 @@ class GameControllerTest {
 			i += 1;
 			
 			// Test for Ale
-			userInfo.put(NotificationKeys.IncomingNetworkMessage.getRawValue(), new PlayerActionMessage("Ale", PlayerActionMessage.ActionType.DidPurchaseCharacterCard, 0, null, true, 0, 0, 0, cardIndex, null));
-			NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, controller, userInfo);
-			System.out.println(sentMessages.get(35 + 11 * i).serialize());
-			assertTrue(sentMessages.get(35 + 11 * i).equals(new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPurchaseCharacterCard, true, "-1")) || sentMessages.get(35 + 11 * i).equals(new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPurchaseCharacterCard, true, "")));
-			assertTrue(sentMessages.get(36 + 11 * i) instanceof TableStateMessage);
-			assertTrue(sentMessages.get(37 + 11 * i) instanceof PlayerStateMessage message && message.getNickname().equals("Fra") && message.getWizard() == Wizard.Wizard2);
-			assertTrue(sentMessages.get(38 + 11 * i) instanceof PlayerStateMessage message && message.getNickname().equals("Ale") && message.getWizard() == Wizard.Wizard1 && message.getBoard().getAvailableTowerCount() == 8);
-			assertTrue(sentMessages.get(39 + 11 * i) instanceof ActivePlayerMessage message && message.getActiveNickname().equals("Ale"));
-			assertTrue(sentMessages.get(40 + 11 * i) instanceof MatchStateMessage message && message.getCurrentMatchPhase() == MatchPhase.ActionPhaseStepOne);
-			assertTrue(sentMessages.get(41 + 11 * i) instanceof TableStateMessage);
-			assertTrue(sentMessages.get(42 + 11 * i) instanceof PlayerStateMessage message && message.getNickname().equals("Ale") && message.getWizard() == Wizard.Wizard1 && message.getBoard().getAvailableTowerCount() == 8);
-			assertTrue(sentMessages.get(43 + 11 * i) instanceof PlayerStateMessage message && message.getNickname().equals("Fra") && message.getWizard() == Wizard.Wizard2);
-			assertTrue(sentMessages.get(44 + 11 * i) instanceof ActivePlayerMessage message && message.getActiveNickname().equals("Ale"));
-			assertTrue(sentMessages.get(45 + 11 * i) instanceof MatchStateMessage message && message.getCurrentMatchPhase() == MatchPhase.ActionPhaseStepOne);
+			tableStateMessage = (TableStateMessage) sentMessages.get(36 + 11 * (i - 1));
+			cardIndex = -1;
+			for (int j = 0; j < 3; j++) {
+				if (tableStateMessage.getPlayableCharacterCards().get(j).getTotalPrice() == 1) {
+					cardIndex = j;
+					break;
+				}
+			}
+			if (cardIndex >= 0) {
+				userInfo.put(NotificationKeys.IncomingNetworkMessage.getRawValue(), new PlayerActionMessage("Ale", PlayerActionMessage.ActionType.DidPurchaseCharacterCard, 0, null, true, 0, 0, 0, cardIndex, null));
+				NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, controller, userInfo);
+				System.out.println(sentMessages.get(35 + 11 * i).serialize());
+				assertTrue(sentMessages.get(35 + 11 * i).equals(new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPurchaseCharacterCard, true, "-1")) || sentMessages.get(35 + 11 * i).equals(new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPurchaseCharacterCard, true, "")));
+				assertTrue(sentMessages.get(36 + 11 * i) instanceof TableStateMessage);
+				assertTrue(sentMessages.get(37 + 11 * i) instanceof PlayerStateMessage message && message.getNickname().equals("Fra") && message.getWizard() == Wizard.Wizard2);
+				assertTrue(sentMessages.get(38 + 11 * i) instanceof PlayerStateMessage message && message.getNickname().equals("Ale") && message.getWizard() == Wizard.Wizard1 && message.getBoard().getAvailableTowerCount() == 8);
+				assertTrue(sentMessages.get(39 + 11 * i) instanceof ActivePlayerMessage message && message.getActiveNickname().equals("Ale"));
+				assertTrue(sentMessages.get(40 + 11 * i) instanceof MatchStateMessage message && message.getCurrentMatchPhase() == MatchPhase.ActionPhaseStepOne);
+				assertTrue(sentMessages.get(41 + 11 * i) instanceof TableStateMessage);
+				assertTrue(sentMessages.get(42 + 11 * i) instanceof PlayerStateMessage message && message.getNickname().equals("Ale") && message.getWizard() == Wizard.Wizard1 && message.getBoard().getAvailableTowerCount() == 8);
+				assertTrue(sentMessages.get(43 + 11 * i) instanceof PlayerStateMessage message && message.getNickname().equals("Fra") && message.getWizard() == Wizard.Wizard2);
+				assertTrue(sentMessages.get(44 + 11 * i) instanceof ActivePlayerMessage message && message.getActiveNickname().equals("Ale"));
+				assertTrue(sentMessages.get(45 + 11 * i) instanceof MatchStateMessage message && message.getCurrentMatchPhase() == MatchPhase.ActionPhaseStepOne);
+			}
 		}
 	}
 	
