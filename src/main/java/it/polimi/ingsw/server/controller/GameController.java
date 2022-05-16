@@ -32,6 +32,10 @@ public class GameController {
 		return lobby.getMaxPlayerCount();
 	}
 	
+	public boolean isTerminated() {
+		return lobby == null && activeMatchManager == null;
+	}
+	
 	public MatchVariant getMatchVariant() {
 		return lobby.getVariant();
 	}
@@ -109,9 +113,15 @@ public class GameController {
 					String errorMessage = null;
 					String additionalMessage = "";
 					if (actionMessage.getPlayerActionType() == PlayerActionMessage.ActionType.DidPurchaseCharacterCard) {
-						boolean success = activeMatchManager.purchaseCharacterCards(actionMessage.getChosenCharacterIndex());
-						if (!success) {
-							errorMessage = "Not enough Coins to purchase the Card";
+						try {
+							boolean success = activeMatchManager.purchaseCharacterCards(actionMessage.getChosenCharacterIndex());
+							if (!success) {
+								errorMessage = "Not enough Coins to purchase the Card";
+							}
+						} catch (CharacterCardIncorrectParametersException e) {
+							errorMessage = "Invalid action: the Character Card index you sent was incorrect";
+						} catch (CharacterCardAlreadyInUseException e) {
+							errorMessage = "Invalid action: the Character Card you chose is already active for another player";
 						}
 					} else if (actionMessage.getPlayerActionType() == PlayerActionMessage.ActionType.DidPlayCharacterCard) {
 						try {
@@ -130,7 +140,7 @@ public class GameController {
 						} catch (StudentMovementInvalidException e) {
 							errorMessage = "Invalid move: the movement of the selected Student is not valid";
 						} catch (AssistantCardNotPlayableException e) {
-							errorMessage = "Invalid move: the Assistant Card you chose cannot be played, because other opponents have already played it before you";
+							errorMessage = "Invalid move: the Assistant Card you chose cannot be played, because other opponents have already played it before you or the index is not valid";
 						} catch (CloudPickInvalidException e) {
 							errorMessage = "Invalid move: the Cloud you chose is empty. This is not allowed, unless the Bag is also empty";
 						}
