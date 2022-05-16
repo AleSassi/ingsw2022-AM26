@@ -137,6 +137,8 @@ public abstract class MatchManager {
 			}
 			case ActionPhaseStepThree -> {
 				numberOfStudentsPickedByCurrentPlayer_AP1 = 0;
+				//Reset the active character card
+				getCurrentPlayer().deactivateCard();
 				boolean startsNewRound = false;
 				if (currentLeadPlayer == playersSortedByCurrentTurnOrder.size() - 1) {
 					currentLeadPlayer = 0;
@@ -185,6 +187,10 @@ public abstract class MatchManager {
 	 * Checks if the assistant card is playable by checking the card that has been played by the lst player is the same as the one he wants to play
 	 */
 	public boolean isAssistantCardPlayable(int cardIdxForCurrentPlayer) {
+		// Check for out-of-bounds
+		if (cardIdxForCurrentPlayer < 0 || cardIdxForCurrentPlayer >= getCurrentPlayer().getAvailableAssistantCards().size()) {
+			return false;
+		}
 		boolean result = true;
 		for (Player p : getAllPlayers()) {
 			if (p.getLastPlayedAssistantCard() == getCurrentPlayer().getAvailableAssistantCards().get(cardIdxForCurrentPlayer)) {
@@ -201,9 +207,18 @@ public abstract class MatchManager {
 	/**
 	 * Purchase the character card
 	 */
-	public boolean purchaseCharacterCards(int cardIndex) {
-		CharacterCard card = managedTable.getCardAtIndex(cardIndex);
-		return getCurrentPlayer().playCharacterCard(card);
+	public boolean purchaseCharacterCards(int cardIndex) throws CharacterCardAlreadyInUseException, CharacterCardIncorrectParametersException {
+		try {
+			CharacterCard card = managedTable.getCardAtIndex(cardIndex);
+			if (getAllPlayers().stream().filter((player) -> player.getActiveCharacterCard() != null && player.getActiveCharacterCard().getCharacter() == card.getCharacter()).toList().isEmpty()) {
+				// Purchase the card
+				return getCurrentPlayer().playCharacterCard(card);
+			} else {
+				throw new CharacterCardAlreadyInUseException();
+			}
+		} catch (IndexOutOfBoundsException e) {
+			throw new CharacterCardIncorrectParametersException();
+		}
 	}
 	
 	/**
@@ -215,19 +230,9 @@ public abstract class MatchManager {
 			StudentHost destinationStudentHost = managedTable.getIslandAtIndex(userInfo.getTargetIslandIndex());
 			CharacterCardParamSet localUserInfo = new CharacterCardParamSet(userInfo.getSrcStudentColor(), userInfo.getDstStudentColor(), null, null, userInfo.isStudentDestinationIsSelf(), userInfo.getChosenMotherNatureAdditionalSteps(), userInfo.getSourceIslandIndex(), userInfo.getTargetIslandIndex(), userInfo.getStopCardMovementMode());
 			return getCurrentPlayer().getActiveCharacterCard().useCard(managedTable, getAllPlayers(), getCurrentPlayer(), localUserInfo);
+		} else {
+			throw new CharacterCardNotPurchasedException();
 		}
-		return -1;
-	}
-	
-	/**
-	 * Executes the relative effect of the card that the player played
-	 */
-	private int useCharacterCard(CharacterCardParamSet userInfo) throws CharacterCardIncorrectParametersException, CharacterCardNoMoreUsesAvailableException, CharacterCardNotPurchasedException {
-		if (getCurrentPlayer().getActiveCharacterCard() != null) {
-
-			return getCurrentPlayer().getActiveCharacterCard().useCard(managedTable, getAllPlayers(), getCurrentPlayer(), userInfo);
-		}
-		return -1;
 	}
 	//endregion
 	
