@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TeamMatchManagerTest {
 
-    TeamMatchManager matchManager ;
+    private TeamMatchManager matchManager ;
 
     @BeforeEach
     void initIndependentPlayerMatchManager() {

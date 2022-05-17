@@ -141,6 +141,7 @@ public abstract class MatchManager {
 				getCurrentPlayer().deactivateCard();
 				boolean startsNewRound = false;
 				if (currentLeadPlayer == playersSortedByCurrentTurnOrder.size() - 1) {
+					playersSortedByCurrentTurnOrder = getPlayersSortedByClockwiseOrder();
 					currentLeadPlayer = 0;
 					// Perform planPhaseStepOne automatically
 					try {
@@ -168,7 +169,35 @@ public abstract class MatchManager {
 	public List<Player> getPlayersSortedByRoundTurnOrder() {
 		//TODO: Need to alter the sorting lambda to account for when the Player has the same priority number
 		List<Player> result = getAllPlayers();
-		result.sort((playerA, playerB) -> (playerB.getLastPlayedAssistantCard().getPriorityNumber() - playerB.getAssistantCardOrderModifier()) - (playerA.getLastPlayedAssistantCard().getPriorityNumber() - playerA.getAssistantCardOrderModifier()));
+		result.sort(Comparator.comparingInt(playerA -> (playerA.getLastPlayedAssistantCard().getPriorityNumber() - playerA.getAssistantCardOrderModifier())));
+		return result;
+	}
+	
+	private List<Player> getPlayersSortedByClockwiseOrder() {
+		List<Player> result = new ArrayList<>();
+		//Rearrange moving to the end all players until you find the one with the lowest card
+		Player playerWithLowestCard = getAllPlayers().get(0);
+		for (Player player: getAllPlayers()) {
+			if ((player.getLastPlayedAssistantCard().getPriorityNumber() - player.getAssistantCardOrderModifier()) < (playerWithLowestCard.getLastPlayedAssistantCard().getPriorityNumber() - playerWithLowestCard.getAssistantCardOrderModifier())) {
+				playerWithLowestCard = player;
+			}
+		}
+		//Rearrange
+		boolean isPlayerAnchorReached = false;
+		for (Player player: getAllPlayers()) {
+			if (player.equals(playerWithLowestCard)) {
+				isPlayerAnchorReached = true;
+			}
+			if (isPlayerAnchorReached) {
+				result.add(player);
+			}
+		}
+		for (Player player: getAllPlayers()) {
+			if (player.equals(playerWithLowestCard)) {
+				break;
+			}
+			result.add(player);
+		}
 		return result;
 	}
 	

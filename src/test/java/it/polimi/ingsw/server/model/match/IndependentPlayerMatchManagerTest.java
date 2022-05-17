@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class IndependentPlayerMatchManagerTest {
 
-    IndependentPlayerMatchManager matchManager;
+    private IndependentPlayerMatchManager matchManager;
 
     @BeforeEach
     void initIndependentPlayerMatchManager() {
@@ -41,18 +41,15 @@ class IndependentPlayerMatchManagerTest {
         wiz.add(Wizard.Wizard2);
         wiz.add(Wizard.Wizard3);
         assertDoesNotThrow(() -> matchManager.startMatch(matchVariant, playerNicknames, wiz));
-
-    }
-
-    @Test
-    void initEntranceTest() {
-        assertEquals(9, matchManager.getAllPlayers().get(0).getStudentsInEntrance());
-    }
-
-    @Test
-    void addPlayerTest() {
+        //Check the Entrance space & tower count
+        for (Player player: matchManager.getAllPlayers()) {
+            assertEquals(9, player.getStudentsInEntrance());
+            assertEquals(6, player.getAvailableTowerCount());
+        }
+        //Check the nicknames of the players
         assertEquals("Fede", matchManager.getAllPlayers().get(0).getNickname());
-        assertEquals(6, matchManager.getAllPlayers().get(0).getAvailableTowerCount());
+        assertEquals("Ale", matchManager.getAllPlayers().get(1).getNickname());
+        assertEquals("Leo", matchManager.getAllPlayers().get(2).getNickname());
     }
 
     /**
@@ -238,9 +235,9 @@ class IndependentPlayerMatchManagerTest {
             players.add(matchManager.getCurrentPlayer());
             matchManager.moveToNextPlayer();
         });
-        assertEquals(players.get(0).getNickname(), matchManager.getPlayersSortedByRoundTurnOrder().get(0).getNickname());
+        assertEquals(players.get(2).getNickname(), matchManager.getPlayersSortedByRoundTurnOrder().get(0).getNickname());
         assertEquals(players.get(1).getNickname(), matchManager.getPlayersSortedByRoundTurnOrder().get(1).getNickname());
-        assertEquals(players.get(2).getNickname(), matchManager.getPlayersSortedByRoundTurnOrder().get(2).getNickname());
+        assertEquals(players.get(0).getNickname(), matchManager.getPlayersSortedByRoundTurnOrder().get(2).getNickname());
     }
 
     @Test
