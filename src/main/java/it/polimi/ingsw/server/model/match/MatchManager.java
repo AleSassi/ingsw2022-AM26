@@ -333,9 +333,9 @@ public abstract class MatchManager {
 		try {
 			playersSortedByCurrentTurnOrder.get(currentLeadPlayer).playAssistantCardAtIndex(cardIndex);
 			//If the Assistant card has already been played, the current Player must play after the other
-			if (getCurrentPlayer().getLastPlayedAssistantCard() == null) {
-				int numberOfSameCardsOnTable = (int) getAllPlayers().stream().filter((player) -> !player.equals(getCurrentPlayer())).map(Player::getLastPlayedAssistantCard).filter((card) -> card.equals(getCurrentPlayer().getLastPlayedAssistantCard())).count();
-				boolean isAlreadyPlayed = numberOfSameCardsOnTable > 1;
+			if (getCurrentPlayer().getLastPlayedAssistantCard() != null) {
+				int numberOfSameCardsOnTable = (int) getAllPlayers().stream().filter((player) -> !player.equals(getCurrentPlayer())).map(Player::getLastPlayedAssistantCard).filter((card) -> getCurrentPlayer().getLastPlayedAssistantCard().equals(card)).count();
+				boolean isAlreadyPlayed = numberOfSameCardsOnTable > 0;
 				if (isAlreadyPlayed) {
 					getCurrentPlayer().setAssistantCardOrderModifier(numberOfSameCardsOnTable);
 				}
@@ -394,9 +394,8 @@ public abstract class MatchManager {
 			try {
 				stepsWithCardModifier += getCurrentPlayer().getActiveCharacterCard().useCard(managedTable, null, getCurrentPlayer(), null);
 				System.out.println(stepsWithCardModifier - steps);
-			} catch (CharacterCardIncorrectParametersException | CharacterCardNoMoreUsesAvailableException e) {
+			} catch (CharacterCardIncorrectParametersException | CharacterCardNoMoreUsesAvailableException ignored) {
 				// Do nothing, the Steps will remain the default
-				System.out.println("Exception");
 			}
 		}
 		managedTable.moveMotherNature(stepsWithCardModifier);

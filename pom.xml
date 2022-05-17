@@ -16,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
-        <sonar.coverage.exclusions>**/view/**/*,**/constants/**/*,**/exceptions/**/*, **/server/**/*,**/App.java
+        <sonar.coverage.exclusions>**/cli/**/*,**/ui/**/*,**/jar/**/*,**/constants/**/*,**/exceptions/**/*,**/GameServer.java,**/VirtualClient.java,**/App.java,**/utils/**/*
         </sonar.coverage.exclusions>
     </properties>
 

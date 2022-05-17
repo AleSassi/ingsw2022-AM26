@@ -34,7 +34,7 @@ Test cases aim for 100% coverage.
 
 | Package    | Tested Class     |  Line Coverage  | Method Coverage |
 |:-----------|:-----------------|:---------------:|:---------------:|
-| Model      | Global Package   | 83% (1092/1305) |  91% (285/310)  |
+| Model      | Global Package   | 87% (1091/1243) |  92% (288/311)  |
 | Controller | network/messages |  87% (338/386)  |  85% (108/126)  |
 | Controller | GameController   |  93% (98/105)   |  100% (13/13)   |
 
