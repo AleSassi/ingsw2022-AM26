@@ -52,6 +52,8 @@ class GameControllerTest {
 		assertEquals(new LoginResponse("Ale", true, 1, null), sentMessages.get(0));
 		assertTrue(controller.containsPlayerWithNickname("Ale"));
 		assertTrue(controller.acceptsPlayers());
+		assertEquals(2, controller.getMaxPlayerCount());
+		assertEquals(MatchVariant.ExpertRuleSet, controller.getMatchVariant());
 	}
 	
 	@Test
@@ -67,6 +69,8 @@ class GameControllerTest {
 		assertTrue(controller.containsPlayerWithNickname("Ale"));
 		assertTrue(controller.containsPlayerWithNickname("Fra"));
 		assertFalse(controller.acceptsPlayers());
+		assertEquals(2, controller.getMaxPlayerCount());
+		assertEquals(MatchVariant.ExpertRuleSet, controller.getMatchVariant());
 	}
 	
 	@Test
@@ -95,6 +99,8 @@ class GameControllerTest {
 		assertTrue(controller.containsPlayerWithNickname("Ale"));
 		assertTrue(controller.containsPlayerWithNickname("Fra"));
 		assertTrue(controller.acceptsPlayers());
+		assertEquals(3, controller.getMaxPlayerCount());
+		assertEquals(MatchVariant.ExpertRuleSet, controller.getMatchVariant());
 	}
 	
 	@Test

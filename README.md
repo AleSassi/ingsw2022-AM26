@@ -36,7 +36,7 @@ Test cases aim for 100% coverage.
 |:-----------|:-----------------|:---------------:|:---------------:|
 | Model      | Global Package   | 83% (1092/1305) |  91% (285/310)  |
 | Controller | network/messages |  87% (338/386)  |  85% (108/126)  |
-| Controller | GameController   |  81% (134/165)  |   91% (11/12)   |
+| Controller | GameController   |  93% (98/105)   |  100% (13/13)   |
 
 ### The Developers
 - **Alessandro Sassi** (email: alessandro5.sassi@mail.polimi.it)
