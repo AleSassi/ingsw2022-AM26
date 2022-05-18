@@ -110,7 +110,7 @@ public abstract class MatchManager {
 	/**
 	 * Change the currentPlayer to the next player in the playerSortedByCurrentOrder and change the phase according to the rules
 	 */
-	public boolean moveToNextPlayer() {
+	protected boolean moveToNextPlayer() {
 		switch (matchPhase) {
 			case PlanPhaseStepTwo -> {
 				if (currentLeadPlayer == playersSortedByCurrentTurnOrder.size() - 1) {
@@ -169,7 +169,7 @@ public abstract class MatchManager {
 	public List<Player> getPlayersSortedByRoundTurnOrder() {
 		//TODO: Need to alter the sorting lambda to account for when the Player has the same priority number
 		List<Player> result = getAllPlayers();
-		result.sort(Comparator.comparingInt(playerA -> (playerA.getLastPlayedAssistantCard().getPriorityNumber() - playerA.getAssistantCardOrderModifier())));
+		result.sort(Comparator.comparingInt(playerA -> (playerA.getLastPlayedAssistantCard().getPriorityNumber() + playerA.getAssistantCardOrderModifier())));
 		return result;
 	}
 	
@@ -280,21 +280,6 @@ public abstract class MatchManager {
 	 * @return The list of players with towers
 	 */
 	protected abstract List<Player> getPlayersWithTowers();
-	//endregion
-
-	//TODO: Can we remove these and create a test case where we properly simulate a Match?
-	//region Methods used to simplify testing of match phases
-	protected void setMatchPhase(MatchPhase matchPhase) {
-		this.matchPhase = matchPhase;
-	}
-
-	protected TableManager getManagedTable() {
-		return managedTable;
-	}
-
-	protected void setCurrentLeadPlayer(int currentLeadPlayer) {
-		this.currentLeadPlayer = currentLeadPlayer;
-	}
 	//endregion
 
 	//region Private methods & Game Phase methods

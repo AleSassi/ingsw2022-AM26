@@ -297,7 +297,7 @@ public class TableManager {
      * @param right: The upper bound maximum range number, or the 'denominator'
      * @return The adjusted value according to the denominator
      */
-    public int circularWrap(int left, int right) {
+    public static int circularWrap(int left, int right) {
         return ((left % right) + right) % right;
     }
 

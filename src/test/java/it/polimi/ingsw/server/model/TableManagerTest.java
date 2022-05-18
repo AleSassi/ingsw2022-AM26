@@ -3,10 +3,6 @@ package it.polimi.ingsw.server.model;
 import it.polimi.ingsw.server.exceptions.model.CollectionUnderflowError;
 import it.polimi.ingsw.server.exceptions.model.IslandSkippedControlAssignmentForStopCardException;
 import it.polimi.ingsw.server.exceptions.model.IslandSkippedInfluenceForStopCardException;
-import it.polimi.ingsw.server.model.Player;
-import it.polimi.ingsw.server.model.Professor;
-import it.polimi.ingsw.server.model.TableManager;
-import it.polimi.ingsw.server.model.Tower;
 import it.polimi.ingsw.server.model.assistants.Wizard;
 import it.polimi.ingsw.server.model.characters.CharacterCard;
 import it.polimi.ingsw.server.model.characters.CharacterCardParamSet;
@@ -69,7 +65,7 @@ class TableManagerTest {
                     }
                 }
                 if (placedStudent == null) {
-                    assertTrue(tableManager.getIslandAtIndex(tableManager.circularWrap(islandIdx + 6, 12)).isMotherNaturePresent());
+                    assertTrue(tableManager.getIslandAtIndex(TableManager.circularWrap(islandIdx + 6, 12)).isMotherNaturePresent());
                 }
             }
             assertEquals(0, tableManager.getIslandAtIndex(islandIdx).getTowerCount());
@@ -111,7 +107,7 @@ class TableManagerTest {
             }
             newIndex += 1;
         }
-        assertEquals(tableManager.circularWrap(prevIndex + 3, 12), newIndex);
+        assertEquals(TableManager.circularWrap(prevIndex + 3, 12), newIndex);
         int numberOfIslandsWithMN = 0;
         for (int islandIdx = 0; islandIdx < 12; islandIdx++) {
             if (tableManager.getIslandAtIndex(islandIdx).isMotherNaturePresent()) {
@@ -134,7 +130,7 @@ class TableManagerTest {
             }
             prevIndex += 1;
         }
-        tableManager.getIslandAtIndex(tableManager.circularWrap(prevIndex + 3, 12)).setStopCard(true);
+        tableManager.getIslandAtIndex(TableManager.circularWrap(prevIndex + 3, 12)).setStopCard(true);
         tableManager.moveMotherNature(3);
         assertTrue(tableManager.getCurrentIsland().isMotherNaturePresent());
         for (int islandIdx = 0; islandIdx < 12; islandIdx++) {
@@ -143,7 +139,7 @@ class TableManagerTest {
             }
             newIndex += 1;
         }
-        assertEquals(tableManager.circularWrap(prevIndex + 3, 12), newIndex);
+        assertEquals(TableManager.circularWrap(prevIndex + 3, 12), newIndex);
         int numberOfIslandsWithMN = 0;
         for (int islandIdx = 0; islandIdx < 12; islandIdx++) {
             if (tableManager.getIslandAtIndex(islandIdx).isMotherNaturePresent()) {
@@ -343,7 +339,7 @@ class TableManagerTest {
             Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 8);
     
             assertDoesNotThrow(() -> tableManager.getCurrentIsland().setTower(testPlayer.pickAndRemoveTower()));
-            tableManager.getIslandAtIndex(tableManager.circularWrap(tableManager.getCurrentIslandIndex() + 1, 12)).setTower(Tower.White);
+            tableManager.getIslandAtIndex(TableManager.circularWrap(tableManager.getCurrentIslandIndex() + 1, 12)).setTower(Tower.White);
             assertDoesNotThrow(() -> tableManager.changeControlOfCurrentIsland(testPlayer, testPlayer2));
             assertEquals(Tower.White, tableManager.getCurrentIsland().getActiveTowerType());
             assertEquals(2, tableManager.getCurrentIsland().getTowerCount());
