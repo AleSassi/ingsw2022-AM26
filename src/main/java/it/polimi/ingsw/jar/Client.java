@@ -2,6 +2,7 @@ package it.polimi.ingsw.jar;
 
 import it.polimi.ingsw.client.cli.CLIManager;
 import it.polimi.ingsw.client.controller.network.GameClient;
+import it.polimi.ingsw.client.ui.GUI;
 import it.polimi.ingsw.utils.cli.ANSIColors;
 import it.polimi.ingsw.utils.cli.StringFormatter;
 import it.polimi.ingsw.utils.cli.client.ClientCommandTag;
@@ -85,7 +86,7 @@ public class Client {
 					GameClient.shared().connectToServer();
 					System.out.println(StringFormatter.formatWithColor("Connected to " + serverIP + ":" + serverPort, ANSIColors.Green));
 					if (clientMode.equals("gui")) {
-						//TODO: Start the GUI from here
+						GUI.main(args);
 					} else {
 						// Start the CLI
 						CLIManager.shared().startGameLoop();
