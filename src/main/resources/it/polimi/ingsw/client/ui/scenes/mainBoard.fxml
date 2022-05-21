@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="916.0" prefWidth="1299.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.MainBoardController">
+   <cursor>
+      <Cursor fx:constant="DEFAULT" />
+   </cursor>
+   <children>
+      <ImageView fx:id="school4" disable="true" fitHeight="154.0" fitWidth="282.0" layoutX="14.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/SchoolBoard.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="school3" disable="true" fitHeight="201.0" fitWidth="282.0" layoutX="14.0" layoutY="179.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/SchoolBoard.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="school2" disable="true" fitHeight="167.0" fitWidth="282.0" layoutX="14.0" layoutY="344.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/SchoolBoard.png" />
+         </image>
+      </ImageView>
+      <AnchorPane fx:id="islandPane" disable="true" layoutX="312.0" layoutY="18.0" prefHeight="475.0" prefWidth="973.0">
+         <children>
+            <VBox prefHeight="475.0" prefWidth="122.0">
+               <children>
+                  <ImageView fx:id="cloud1" fitHeight="118.0" fitWidth="262.0" onMouseClicked="#island1" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/cloud_card_1.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="cloud2" fitHeight="118.0" fitWidth="240.0" onMouseClicked="#island2" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/cloud_card_2.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="cloud3" fitHeight="118.0" fitWidth="240.0" onMouseClicked="#island3" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/cloud_card_3.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="cloud4" fitHeight="118.0" fitWidth="243.0" onMouseClicked="#island4" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/cloud_card_4.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </VBox>
+         </children></AnchorPane>
+      <AnchorPane id="Command Pane" fx:id="commandPane" layoutX="1085.0" layoutY="514.0" prefHeight="388.0" prefWidth="200.0" />
+      <AnchorPane fx:id="selfPane" layoutX="14.0" layoutY="514.0" prefHeight="388.0" prefWidth="708.0">
+         <children>
+            <ImageView id="Self SchoolBoard" fx:id="selfSchoolBoard" fitHeight="435.0" fitWidth="708.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/SchoolBoard.png" />
+               </image>
+            </ImageView>
+            <GridPane fx:id="selfGrid" layoutX="15.0" layoutY="36.0" prefHeight="319.0" prefWidth="591.0">
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="53.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="10.0" prefWidth="60.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="186.0" minWidth="10.0" prefWidth="31.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="10.0" prefWidth="49.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="294.0" minWidth="10.0" prefWidth="44.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="350.0" minWidth="10.0" prefWidth="44.80002441406248" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="409.0" minWidth="0.0" prefWidth="43.19997558593752" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="465.0" minWidth="0.0" prefWidth="45.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="517.0" minWidth="0.0" prefWidth="46.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="578.0" minWidth="0.0" prefWidth="43.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="630.0" minWidth="0.0" prefWidth="42.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="690.0" minWidth="10.0" prefWidth="43.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="743.0" minWidth="10.0" prefWidth="51.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+            </GridPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="assistantPane" layoutX="158.0" layoutY="227.0" prefHeight="661.0" prefWidth="983.0" visible="false">
+         <children>
+            <GridPane fx:id="assistantGrid" alignment="BOTTOM_CENTER" hgap="10.0" prefHeight="574.0" prefWidth="983.0" vgap="10.0">
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="282.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/Turtle.png" />
+                           </image>
+                        </ImageView>
+                        <Button fx:id="turtleButton" layoutY="2.0" mnemonicParsing="false" opacity="0.0" prefHeight="282.0" prefWidth="193.0" text="Button" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+                     <children>
+                        <ImageView fitHeight="282.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/Elephant.png" />
+                           </image>
+                        </ImageView>
+                        <Button fx:id="elephantButton" layoutY="2.0" mnemonicParsing="false" opacity="0.0" prefHeight="282.0" prefWidth="193.0" text="Button" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
+                     <children>
+                        <ImageView fitHeight="282.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/Dog.png" />
+                           </image>
+                        </ImageView>
+                        <Button fx:id="dogButton" layoutY="2.0" mnemonicParsing="false" opacity="0.0" prefHeight="284.0" prefWidth="193.0" text="Button" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3">
+                     <children>
+                        <ImageView fitHeight="284.0" fitWidth="192.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/Octopus.png" />
+                           </image>
+                        </ImageView>
+                        <Button fx:id="octopusButton" layoutY="2.0" mnemonicParsing="false" opacity="0.0" prefHeight="282.0" prefWidth="193.0" text="Button" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4">
+                     <children>
+                        <ImageView fitHeight="282.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/Snake.png" />
+                           </image>
+                        </ImageView>
+                        <Button fx:id="snakeButton" layoutY="6.0" mnemonicParsing="false" opacity="0.0" prefHeight="282.0" prefWidth="192.0" text="Button" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                     <children>
+                        <ImageView fitHeight="282.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/Fox.png" />
+                           </image>
+                        </ImageView>
+                        <Button fx:id="foxButton" layoutY="5.0" mnemonicParsing="false" opacity="0.0" prefHeight="282.0" prefWidth="192.0" text="Button" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <children>
+                        <ImageView fitHeight="282.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/Eagle.png" />
+                           </image>
+                        </ImageView>
+                        <Button fx:id="eagleButton" mnemonicParsing="false" opacity="0.0" prefHeight="282.0" prefWidth="192.0" text="Button" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                     <children>
+                        <ImageView fitHeight="282.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/Cat.png" />
+                           </image>
+                        </ImageView>
+                        <Button fx:id="catButton" mnemonicParsing="false" opacity="0.0" prefHeight="282.0" prefWidth="192.0" text="Button" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                     <children>
+                        <ImageView fitHeight="282.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/Peafowl.png" />
+                           </image>
+                        </ImageView>
+                        <Button fx:id="peafowlButton" mnemonicParsing="false" opacity="0.0" prefHeight="282.0" prefWidth="192.0" text="Button" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                     <children>
+                        <ImageView fitHeight="282.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/Lion.png" />
+                           </image>
+                        </ImageView>
+                        <Button fx:id="lionButton" mnemonicParsing="false" opacity="0.0" prefHeight="282.0" prefWidth="192.0" text="Button" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </GridPane>
+            <Label fx:id="assistantLabel" layoutX="366.0" layoutY="570.0" prefHeight="84.0" prefWidth="251.0" text="Select an Assistant" textAlignment="CENTER">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane disable="true" prefHeight="200.0" prefWidth="200.0" visible="false" />
+   </children>
+</AnchorPane>

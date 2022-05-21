@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="644.0" prefWidth="792.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.LobbyController">
+   <children>
+      <ImageView id="EriantysTitle" fitHeight="89.0" fitWidth="308.0" layoutX="218.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/Title_Eriantys.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="98.0" fitWidth="81.0" layoutX="698.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/Title_Cranio_Creation.png" />
+         </image>
+      </ImageView>
+      <Label id="GRAPHICSstatusLabel" fx:id="statusLabel" layoutX="113.0" layoutY="389.0" prefHeight="35.0" prefWidth="566.0" text="Waiting for ">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
+      <Label fx:id="matchVariantLabel" layoutX="113.0" layoutY="315.0" prefHeight="17.0" prefWidth="369.0" text="Match Variant:">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>
