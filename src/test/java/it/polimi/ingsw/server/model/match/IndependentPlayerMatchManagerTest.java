@@ -52,6 +52,30 @@ class IndependentPlayerMatchManagerTest {
         assertEquals("Fede", matchManager.getAllPlayers().get(0).getNickname());
         assertEquals("Ale", matchManager.getAllPlayers().get(1).getNickname());
     }
+    
+    @Test
+    void testAddThreePlayers() {
+        MatchManager matchManager = new IndependentPlayerMatchManager();
+        MatchVariant matchVariant = MatchVariant.ExpertRuleSet;
+        List<String> playerNicknames = new ArrayList<>();
+        List<Wizard> wiz = new ArrayList<>();
+        playerNicknames.add("Fede");
+        playerNicknames.add("Ale");
+        playerNicknames.add("Leo");
+        wiz.add(Wizard.Wizard1);
+        wiz.add(Wizard.Wizard2);
+        wiz.add(Wizard.Wizard3);
+        assertDoesNotThrow(() -> matchManager.startMatch(matchVariant, playerNicknames, wiz));
+        //Check the Entrance space & tower count
+        for (Player player: matchManager.getAllPlayers()) {
+            assertEquals(9, player.getStudentsInEntrance());
+            assertEquals(6, player.getAvailableTowerCount());
+        }
+        //Check the nicknames of the players
+        assertEquals("Fede", matchManager.getAllPlayers().get(0).getNickname());
+        assertEquals("Ale", matchManager.getAllPlayers().get(1).getNickname());
+        assertEquals("Leo", matchManager.getAllPlayers().get(2).getNickname());
+    }
 
     /**
      * This method test that the card that the player wants to be played will be the last played card

@@ -133,9 +133,9 @@ public class PlayerStateView extends TerminalView {
 				//Print the Professors
 				Professor rowProfessor = rowStudent.getAssociatedProfessor();
 				if (playerStateMessage.getBoard().getControlledProfessors().contains(rowProfessor)) {
-					stringBuilder.append(StringFormatter.formatWithColor("PP", rowProfessor.getProfessorColor()));
+					stringBuilder.append(StringFormatter.formatWithColor("PP", ModelFormatter.getProfessorColor(rowProfessor)));
 				} else {
-					stringBuilder.append(StringFormatter.formatWithColor("__", rowProfessor.getProfessorColor()));
+					stringBuilder.append(StringFormatter.formatWithColor("__", ModelFormatter.getProfessorColor(rowProfessor)));
 				}
 				stringBuilder.append(".|.");
 				//Print the Tower space
@@ -166,7 +166,7 @@ public class PlayerStateView extends TerminalView {
 			try {
 				entrance.removeStudents(lockedStudent, 1);
 				// If it succeeded we print the student
-				stringBuilder.append(StringFormatter.formatWithColor("SS", lockedStudent.getAssociatedProfessor().getProfessorColor()));
+				stringBuilder.append(StringFormatter.formatWithColor("SS", ModelFormatter.getProfessorColor(lockedStudent.getAssociatedProfessor())));
 				hasPrintedStudent = true;
 			} catch (CollectionUnderflowError ignored) {
 			}
@@ -175,7 +175,7 @@ public class PlayerStateView extends TerminalView {
 				try {
 					entrance.removeStudents(student, 1);
 					// If it succeeded we print the student
-					stringBuilder.append(StringFormatter.formatWithColor("SS", student.getAssociatedProfessor().getProfessorColor()));
+					stringBuilder.append(StringFormatter.formatWithColor("SS", ModelFormatter.getProfessorColor(student.getAssociatedProfessor())));
 					hasPrintedStudent = true;
 					break;
 				} catch (CollectionUnderflowError ignored) {

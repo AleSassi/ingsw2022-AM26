@@ -1,5 +1,6 @@
 package it.polimi.ingsw.utils.cli;
 
+import it.polimi.ingsw.server.model.Professor;
 import it.polimi.ingsw.server.model.assistants.AssistantCard;
 import it.polimi.ingsw.server.model.characters.CharacterCardBean;
 import it.polimi.ingsw.server.model.student.Student;
@@ -7,6 +8,27 @@ import it.polimi.ingsw.server.model.student.StudentCollection;
 import it.polimi.ingsw.server.model.student.StudentHost;
 
 public class ModelFormatter {
+	
+	public static ANSIColors getProfessorColor(Professor professor) {
+		switch (professor) {
+			case YellowElf -> {
+				return ANSIColors.Yellow;
+			}
+			case BlueUnicorn -> {
+				return ANSIColors.Blue;
+			}
+			case GreenFrog -> {
+				return ANSIColors.Green;
+			}
+			case RedDragon -> {
+				return ANSIColors.Red;
+			}
+			case PinkFair -> {
+				return ANSIColors.Pink;
+			}
+		}
+		return ANSIColors.Red;
+	}
 	
 	public static String formatStringForAssistantCard(AssistantCard card) {
 		return StringFormatter.formatWithColor(card.toString(), ANSIColors.Unknown) +
@@ -43,7 +65,7 @@ public class ModelFormatter {
 				if (!isFirst) {
 					formattedString.append(", ");
 				}
-				formattedString.append(StringFormatter.formatWithColor(student.toString(), student.getAssociatedProfessor().getProfessorColor())).append(": ").append(collection.getCount(student));
+				formattedString.append(StringFormatter.formatWithColor(student.toString(), ModelFormatter.getProfessorColor(student.getAssociatedProfessor()))).append(": ").append(collection.getCount(student));
 				isFirst = false;
 			}
 		}
@@ -59,7 +81,7 @@ public class ModelFormatter {
 				if (!isFirst) {
 					formattedString.append(", ");
 				}
-				formattedString.append(StringFormatter.formatWithColor(student.toString(), student.getAssociatedProfessor().getProfessorColor())).append(": ").append(collection.getCount(student));
+				formattedString.append(StringFormatter.formatWithColor(student.toString(), ModelFormatter.getProfessorColor(student.getAssociatedProfessor()))).append(": ").append(collection.getCount(student));
 				isFirst = false;
 			}
 		}

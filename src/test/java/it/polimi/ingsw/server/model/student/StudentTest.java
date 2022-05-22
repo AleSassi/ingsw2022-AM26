@@ -59,4 +59,13 @@ class StudentTest {
             case BlueUnicorn -> assertEquals(Student.BlueUnicorn, s);
         }
     }
+    
+    @Test
+    void testGetColor() {
+        assertEquals("red", Student.RedDragon.getColor());
+        assertEquals("green", Student.GreenFrog.getColor());
+        assertEquals("blue", Student.BlueUnicorn.getColor());
+        assertEquals("yellow", Student.YellowElf.getColor());
+        assertEquals("pink", Student.PinkFair.getColor());
+    }
 }

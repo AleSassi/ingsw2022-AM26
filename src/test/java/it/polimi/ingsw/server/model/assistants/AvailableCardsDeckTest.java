@@ -34,4 +34,22 @@ class AvailableCardsDeckTest {
         }
         assertThrows(CollectionUnderflowError.class, () -> deck.removeCard(0));
     }
+	
+	@Test
+	void testEquals() {
+		AvailableCardsDeck deckA = new AvailableCardsDeck();
+		assertDoesNotThrow(() -> {
+			deckA.removeCard(0);
+			deckA.removeCard(0);
+			deckA.removeCard(0);
+		});
+		AvailableCardsDeck deckB = new AvailableCardsDeck();
+		assertDoesNotThrow(() -> {
+			deckB.removeCard(0);
+			deckB.removeCard(0);
+			deckB.removeCard(0);
+		});
+		assertEquals(deckA, deckB);
+		assertEquals(deckA.hashCode(), deckB.hashCode());
+	}
 }

@@ -127,7 +127,7 @@ public class TableView extends TerminalView {
 	private StringBuilder getAvailableProfessorsString(TableStateMessage tableStateMessage) {
 		StringBuilder formattedString = new StringBuilder("Available Professors: ");
 		for (Professor professor : tableStateMessage.getAvailableProfessors()) {
-			formattedString.append(StringFormatter.formatWithColor(professor.toString(), professor.getProfessorColor())).append(tableStateMessage.getAvailableProfessors().indexOf(professor) < tableStateMessage.getAvailableProfessors().size() - 1 ? " | " : "");
+			formattedString.append(StringFormatter.formatWithColor(professor.toString(), ModelFormatter.getProfessorColor(professor))).append(tableStateMessage.getAvailableProfessors().indexOf(professor) < tableStateMessage.getAvailableProfessors().size() - 1 ? " | " : "");
 		}
 		return formattedString;
 	}
