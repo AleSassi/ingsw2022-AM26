@@ -11,6 +11,7 @@ import it.polimi.ingsw.server.model.assistants.PlayedCardDeck;
 import it.polimi.ingsw.server.model.assistants.Wizard;
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.server.model.student.StudentCollection;
+import javafx.scene.control.Tab;
 
 import java.util.*;
 
@@ -127,13 +128,13 @@ public class Player {
 	/**
 	 * add a student to dining room e give a coin if it is the third student added
 	 */
-	public void placeStudentAtTableAndGetCoin(Student s) throws TableFullException {
+	public void placeStudentAtTableAndGetCoin(Student s, TableManager tableManager) throws TableFullException {
 		if (s == null) return;
 		if (board.getCountAtTable(s) == 10) throw new TableFullException();
 		
 		board.addStudentToTable(s);
 		if (board.getCountAtTable(s) % 3 == 0) {
-			this.availableCoins += 1;
+			this.availableCoins += tableManager.getCoinFromReserve();
 		}
 	}
 	

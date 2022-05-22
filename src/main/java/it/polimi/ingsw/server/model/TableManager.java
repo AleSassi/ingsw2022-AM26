@@ -19,10 +19,13 @@ public class TableManager {
     private StudentHost studentBag;
     private List<Cloud> managedClouds;
     private List<CharacterCard> playableCharacterCards;
+    private int coinReserve = 20;
 
     private int islandIndexWithJustRemovedStopCard = -1;
 
     public TableManager(int cloudTileCount, boolean allowsCharacterCards) {
+        //ASSUMPTION: CloudTileCount === PlayerCount
+        coinReserve = 20 - cloudTileCount;
         playableCharacterCards = new ArrayList<>();
         if (allowsCharacterCards) {
             CharacterCardExtractor cardExtractor = new CharacterCardExtractor();
@@ -114,6 +117,12 @@ public class TableManager {
     
     public void removeProfessor(Professor professor) {
         availableProfessors.remove(professor);
+    }
+    
+    public int getCoinFromReserve() {
+        int result = coinReserve > 0 ? 1 : 0;
+        coinReserve -= 1;
+        return result;
     }
 
     public StudentCollection pickStudentsFromBag(int count) throws CollectionUnderflowError {

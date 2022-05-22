@@ -457,7 +457,7 @@ class TableManagerTest {
                 CharacterCard pickedCard = tableManager.getCardAtIndex(activatedCardIndex);
                 assertDoesNotThrow(() -> {
                     for (int i = 0; i < pickedCard.getPrice() * 3; i++) {
-                        testPlayer.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+                        testPlayer.placeStudentAtTableAndGetCoin(Student.BlueUnicorn, tableManager);
                     }
                 });
                 testPlayer.playCharacterCard(tableManager.getCardAtIndex(activatedCardIndex));

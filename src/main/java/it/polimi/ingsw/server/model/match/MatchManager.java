@@ -348,7 +348,7 @@ public abstract class MatchManager {
 	private void AP_MoveStudentToDiningRoom(Student s) throws StudentMovementInvalidException {
 		try {
 			getCurrentPlayer().removeStudentFromEntrance(s);
-			getCurrentPlayer().placeStudentAtTableAndGetCoin(s);
+			getCurrentPlayer().placeStudentAtTableAndGetCoin(s, managedTable);
 			AP_CheckAndAssignProfessorTo(s);
 		} catch (CollectionUnderflowError e) {
 			throw new StudentMovementInvalidException(getCurrentPlayer().getNickname() + " " + s + "cannot be moved to its table in the Dining Room since the Player does not have such Student in its Entrance space");
