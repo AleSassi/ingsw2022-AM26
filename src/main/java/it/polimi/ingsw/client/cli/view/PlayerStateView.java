@@ -17,6 +17,7 @@ import it.polimi.ingsw.server.model.student.Island;
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.server.model.student.StudentHost;
 import it.polimi.ingsw.utils.cli.ANSIColors;
+import it.polimi.ingsw.utils.cli.ModelFormatter;
 import it.polimi.ingsw.utils.cli.StringFormatter;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,7 +99,7 @@ public class PlayerStateView extends TerminalView {
 			formattedString.append("\nCoins: ").append(playerStateMessage.getAvailableCoins());
 		}
 		if (playerStateMessage.getLastPlayedAssistantCard() != null) {
-			formattedString.append("\nLast Played Assistant: ").append(playerStateMessage.getLastPlayedAssistantCard().toString());
+			formattedString.append("\nLast Played Assistant: ").append(ModelFormatter.formatStringForAssistantCard(playerStateMessage.getLastPlayedAssistantCard()));
 		}
 		return formattedString;
 	}
@@ -190,7 +191,7 @@ public class PlayerStateView extends TerminalView {
 		StringBuilder formattedString = new StringBuilder("Assistant Cards available: ");
 		int index = 0;
 		for (AssistantCard assistantCard : playerStateMessage.getAvailableCardsDeck()) {
-			formattedString.append("\n\t[").append(index).append("]: ").append(assistantCard);
+			formattedString.append("\n\t[").append(index).append("]: ").append(ModelFormatter.formatStringForAssistantCard(assistantCard));
 			index += 1;
 		}
 		

@@ -88,22 +88,6 @@ public class StudentCollection {
         result.mergeWithCollection(this);
         return result;
     }
-    
-    public StringBuilder toFormattedString() {
-        StringBuilder formattedString = new StringBuilder("[");
-        boolean isFirst = true;
-        for (Student student: Student.values()) {
-            if (getCount(student) > 0) {
-                if (!isFirst) {
-                    formattedString.append(", ");
-                }
-                formattedString.append(StringFormatter.formatWithColor(student.toString(), student.getAssociatedProfessor().getProfessorColor())).append(": ").append(this.getCount(student));
-                isFirst = false;
-            }
-        }
-        formattedString.append("]");
-        return formattedString;
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,5 +1,9 @@
 package it.polimi.ingsw.server.model.match;
 
+import it.polimi.ingsw.notifications.NotificationCenter;
+import it.polimi.ingsw.notifications.NotificationKeys;
+import it.polimi.ingsw.notifications.NotificationName;
+import it.polimi.ingsw.server.controller.network.messages.CharacterCardNetworkParamSet;
 import it.polimi.ingsw.server.exceptions.model.*;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Professor;
@@ -9,6 +13,7 @@ import it.polimi.ingsw.server.model.assistants.AssistantCard;
 import it.polimi.ingsw.server.model.assistants.Wizard;
 import it.polimi.ingsw.server.model.characters.Character;
 import it.polimi.ingsw.server.model.characters.CharacterCard;
+import it.polimi.ingsw.server.model.characters.CharacterCardBean;
 import it.polimi.ingsw.server.model.characters.CharacterCardParamSet;
 import it.polimi.ingsw.server.model.match.IndependentPlayerMatchManager;
 import it.polimi.ingsw.server.model.match.MatchPhase;
@@ -19,9 +24,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,6 +71,9 @@ class IndependentPlayerMatchManagerTest {
         planPhaseTwoTest();
         assertThrows(AssistantCardNotPlayableException.class, () -> {
             runPhase(MatchPhase.PlanPhaseStepTwo, 0, 0, false, 0, 0);
+        });
+        assertThrows(AssistantCardNotPlayableException.class, () -> {
+            runPhase(MatchPhase.PlanPhaseStepTwo, 999, 0, false, 0, 0);
         });
     }
     
@@ -126,6 +132,30 @@ class IndependentPlayerMatchManagerTest {
         assertEquals(1, matchManager.getCurrentPlayer().getCountAtTable(finalRemovedStudent));
         assertEquals(MatchPhase.ActionPhaseStepOne, matchManager.getMatchPhase());
         assertEquals("Fede", matchManager.getCurrentPlayer().getNickname());
+    }
+    
+    @RepeatedTest(20)
+    void testUnmovableStudent() {
+        assertDoesNotThrow(() -> {
+            runPhase(MatchPhase.PlanPhaseStepTwo, 0, 0, false, 0, 0);
+            runPhase(MatchPhase.PlanPhaseStepTwo, 1, 0, false, 0, 0);
+        });
+        Student removedStudent = null;
+        for (Student s: Student.values()) {
+            if (matchManager.getCurrentPlayer().getBoard().getEntrance().getCount(s) == 0) {
+                removedStudent = s;
+                break;
+            }
+        }
+        if (removedStudent != null) {
+            Student finalRemovedStudent = removedStudent;
+            assertThrows(StudentMovementInvalidException.class, () -> matchManager.runAction(0, finalRemovedStudent, 0, false, 0 , 0 ));
+            assertThrows(StudentMovementInvalidException.class, () -> matchManager.runAction(0, finalRemovedStudent, 0, true, 0 , 0 ));
+            assertEquals(7, matchManager.getCurrentPlayer().getStudentsInEntrance());
+            assertEquals(0, matchManager.getCurrentPlayer().getCountAtTable(finalRemovedStudent));
+            assertEquals(MatchPhase.ActionPhaseStepOne, matchManager.getMatchPhase());
+            assertEquals("Fede", matchManager.getCurrentPlayer().getNickname());
+        }
     }
     
     @RepeatedTest(10)
@@ -385,6 +415,297 @@ class IndependentPlayerMatchManagerTest {
         assertDoesNotThrow(() -> matchManager.runAction(0, null, 0, false, 1, 0));
         assertEquals(MatchPhase.ActionPhaseStepThree, matchManager.getMatchPhase());
         assertEquals("Ale", matchManager.getCurrentPlayer().getNickname());
+        //Pick the Cloud
+        assertDoesNotThrow(() -> matchManager.runAction(0, null, 0, false, 0, 1));
+        assertEquals(MatchPhase.PlanPhaseStepTwo, matchManager.getMatchPhase());
+        assertEquals("Fede", matchManager.getCurrentPlayer().getNickname());
+    }
+    
+    @Test
+    void testPickFromEmptyCloud() {
+        testSimpleTurn();
+        //Move 3 Students to the Table
+        int[] removedStudents = new int[Student.values().length];
+        for (int i = 0; i < 3; i++) {
+            Student removedStudent = Student.RedDragon;
+            for (Student s: Student.values()) {
+                try {
+                    matchManager.getCurrentPlayer().removeStudentFromEntrance(s);
+                    removedStudent = s;
+                    matchManager.getCurrentPlayer().addStudentToEntrance(s);
+                    break;
+                } catch (CollectionUnderflowError ignored) {}
+            }
+            removedStudents[Student.getRawValueOf(removedStudent)] += 1;
+            Student finalRemovedStudent = removedStudent;
+            assertDoesNotThrow(() -> matchManager.runAction(0, finalRemovedStudent, 0, false, 0 , 0 ));
+            assertEquals(6 - i, matchManager.getCurrentPlayer().getStudentsInEntrance());
+            assertEquals(removedStudents[Student.getRawValueOf(removedStudent)], matchManager.getCurrentPlayer().getCountAtTable(finalRemovedStudent));
+            assertEquals(i == 2 ? MatchPhase.ActionPhaseStepTwo : MatchPhase.ActionPhaseStepOne, matchManager.getMatchPhase());
+            assertEquals("Ale", matchManager.getCurrentPlayer().getNickname());
+        }
+        //Move MN
+        assertDoesNotThrow(() -> matchManager.runAction(0, null, 0, false, 1, 0));
+        assertEquals(MatchPhase.ActionPhaseStepThree, matchManager.getMatchPhase());
+        assertEquals("Ale", matchManager.getCurrentPlayer().getNickname());
+        //Pick the Cloud
+        assertThrows(CloudPickInvalidException.class, () -> matchManager.runAction(0, null, 0, false, 0, 0));
+        assertEquals(MatchPhase.ActionPhaseStepThree, matchManager.getMatchPhase());
+        assertEquals("Ale", matchManager.getCurrentPlayer().getNickname());
+    }
+    
+    @RepeatedTest(10)
+    void testCharacterCardPurchase() {
+        planPhaseTwoTest();
+        assertDoesNotThrow(() -> matchManager.runAction(1, null, 0, false, 0, 0));
+        
+        int cardIndex = -1;
+        int index = 0;
+        for (CharacterCardBean card: matchManager.generateTableStateMessage().getPlayableCharacterCards()) {
+            if (card.getTotalPrice() == 1) {
+                cardIndex = index;
+                break;
+            }
+            index += 1;
+        }
+        if (cardIndex >= 0) {
+            int finalCardIndex = cardIndex;
+            assertDoesNotThrow(() -> matchManager.purchaseCharacterCards(finalCardIndex));
+        }
+    }
+    
+    @RepeatedTest(20)
+    void testCharacterCardUse() {
+        testCharacterCardPurchase();
+        
+        Student removedStudent0 = Student.RedDragon;
+        for (Student s: Student.values()) {
+            try {
+                matchManager.getCurrentPlayer().removeStudentFromEntrance(s);
+                removedStudent0 = s;
+                matchManager.getCurrentPlayer().addStudentToEntrance(s);
+                break;
+            } catch (CollectionUnderflowError ignored) {}
+        }
+        Student finalRemovedStudent = removedStudent0;
+        assertDoesNotThrow(() -> matchManager.runAction(0, finalRemovedStudent, 0, false, 0 , 0 ));
+        
+        if (matchManager.getCurrentPlayer().getActiveCharacterCard() != null) {
+            if (matchManager.getCurrentPlayer().getActiveCharacterCard().getCharacter().getMaxNumberOfUsesInTurn() > 0) {
+                Student removedStudent = null;
+                Student targetStudent = null;
+                for (Student s: Student.values()) {
+                    if (matchManager.getCurrentPlayer().getActiveCharacterCard().getCharacter().getHostedStudentsCount() > 0) {
+                        if (matchManager.getCurrentPlayer().getActiveCharacterCard().getHostedStudents().getCount(s) > 0) {
+                            removedStudent = s;
+                            break;
+                        }
+                    } else if (matchManager.getCurrentPlayer().getBoard().getEntrance().getCount(s) > 0) {
+                        removedStudent = s;
+                        break;
+                    }
+                }
+                for (Student s: Student.values()) {
+                    if (matchManager.getCurrentPlayer().getBoard().getEntrance().getCount(s) > 0) {
+                        targetStudent = s;
+                        break;
+                    }
+                }
+                if (matchManager.getCurrentPlayer().getActiveCharacterCard().getCharacter() == Character.Musician) {
+                    for (Student s: Student.values()) {
+                        if (matchManager.getCurrentPlayer().getBoard().getDiningRoom().getCount(s) > 0) {
+                            targetStudent = s;
+                            break;
+                        }
+                    }
+                    for (Student s: Student.values()) {
+                        if (matchManager.getCurrentPlayer().getBoard().getEntrance().getCount(s) > 0) {
+                            removedStudent = s;
+                            break;
+                        }
+                    }
+                }
+                if (removedStudent != null && targetStudent != null) {
+                    CharacterCardNetworkParamSet paramSet = new CharacterCardNetworkParamSet(removedStudent, targetStudent, true, 2, 0, 1, CharacterCardParamSet.StopCardMovementMode.ToIsland);
+                    assertDoesNotThrow(() -> matchManager.useCharacterCard(paramSet));
+                }
+            }
+        }
+    }
+    
+    @Test
+    void testWrongCardPurchase() {
+        planPhaseTwoTest();
+        assertDoesNotThrow(() -> matchManager.runAction(1, null, 0, false, 0, 0));
+        
+        assertThrows(CharacterCardIncorrectParametersException.class, () -> matchManager.purchaseCharacterCards(33));
+    }
+    
+    @RepeatedTest(10)
+    void testWithoutCardPurchase() {
+        planPhaseTwoTest();
+        assertDoesNotThrow(() -> matchManager.runAction(1, null, 0, false, 0, 0));
+    
+        assertThrows(CharacterCardNotPurchasedException.class, () -> matchManager.useCharacterCard(new CharacterCardNetworkParamSet(Student.BlueUnicorn, Student.RedDragon, true, 0, 0, 0, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
+    }
+    
+    @RepeatedTest(20)
+    void testRoundWithCharacter() {
+        testCharacterCardUse();
+        //Finish the round
+        //Move 3 Students to the Table
+        int[] removedStudents = new int[Student.values().length];
+        for (int i = 0; i < 2; i++) {
+            Student removedStudent = Student.RedDragon;
+            for (Student s: Student.values()) {
+                try {
+                    matchManager.getCurrentPlayer().removeStudentFromEntrance(s);
+                    removedStudent = s;
+                    matchManager.getCurrentPlayer().addStudentToEntrance(s);
+                    break;
+                } catch (CollectionUnderflowError ignored) {}
+            }
+            removedStudents[Student.getRawValueOf(removedStudent)] += 1;
+            Student finalRemovedStudent = removedStudent;
+            assertDoesNotThrow(() -> matchManager.runAction(0, finalRemovedStudent, 0, false, 0 , 0 ));
+            assertEquals(i == 1 ? MatchPhase.ActionPhaseStepTwo : MatchPhase.ActionPhaseStepOne, matchManager.getMatchPhase());
+            assertEquals("Fede", matchManager.getCurrentPlayer().getNickname());
+        }
+        int islandIndex = 0;
+        for (Island island: matchManager.generateTableStateMessage().getIslands()) {
+            if (island.isMotherNaturePresent()) {
+                break;
+            }
+            islandIndex += 1;
+        }
+        //Move MN
+        assertDoesNotThrow(() -> matchManager.runAction(0, null, 0, false, 1, 0));
+        int newIslandIndex = 0;
+        for (Island island: matchManager.generateTableStateMessage().getIslands()) {
+            if (island.isMotherNaturePresent()) {
+                break;
+            }
+            newIslandIndex += 1;
+        }
+        assertEquals(TableManager.circularWrap(islandIndex + 1 + (matchManager.getCurrentPlayer().getActiveCharacterCard() != null && matchManager.getCurrentPlayer().getActiveCharacterCard().getCharacter().getChangesMNSteps() ? 2 : 0), 12), newIslandIndex);
+        assertEquals(MatchPhase.ActionPhaseStepThree, matchManager.getMatchPhase());
+        assertEquals("Fede", matchManager.getCurrentPlayer().getNickname());
+        //Pick the Cloud
+        assertDoesNotThrow(() -> matchManager.runAction(0, null, 0, false, 0, 0));
+        assertEquals(MatchPhase.ActionPhaseStepOne, matchManager.getMatchPhase());
+        assertEquals("Ale", matchManager.getCurrentPlayer().getNickname());
+    }
+    
+    @Test
+    void testReactVictoryNotification() {
+        testCharacterCardUse();
+        //Finish the round
+        //Move 3 Students to the Table
+        int[] removedStudents = new int[Student.values().length];
+        for (int i = 0; i < 2; i++) {
+            Student removedStudent = Student.RedDragon;
+            for (Student s: Student.values()) {
+                try {
+                    matchManager.getCurrentPlayer().removeStudentFromEntrance(s);
+                    removedStudent = s;
+                    matchManager.getCurrentPlayer().addStudentToEntrance(s);
+                    break;
+                } catch (CollectionUnderflowError ignored) {}
+            }
+            removedStudents[Student.getRawValueOf(removedStudent)] += 1;
+            Student finalRemovedStudent = removedStudent;
+            assertDoesNotThrow(() -> matchManager.runAction(0, finalRemovedStudent, 0, false, 0 , 0 ));
+            assertEquals(i == 1 ? MatchPhase.ActionPhaseStepTwo : MatchPhase.ActionPhaseStepOne, matchManager.getMatchPhase());
+            assertEquals("Fede", matchManager.getCurrentPlayer().getNickname());
+        }
+        int islandIndex = 0;
+        for (Island island: matchManager.generateTableStateMessage().getIslands()) {
+            if (island.isMotherNaturePresent()) {
+                break;
+            }
+            islandIndex += 1;
+        }
+        //Move MN
+        assertDoesNotThrow(() -> matchManager.runAction(0, null, 0, false, 1, 0));
+        int newIslandIndex = 0;
+        for (Island island: matchManager.generateTableStateMessage().getIslands()) {
+            if (island.isMotherNaturePresent()) {
+                break;
+            }
+            newIslandIndex += 1;
+        }
+        assertEquals(TableManager.circularWrap(islandIndex + 1 + (matchManager.getCurrentPlayer().getActiveCharacterCard() != null && matchManager.getCurrentPlayer().getActiveCharacterCard().getCharacter().getChangesMNSteps() ? 2 : 0), 12), newIslandIndex);
+        assertEquals(MatchPhase.ActionPhaseStepThree, matchManager.getMatchPhase());
+        assertEquals("Fede", matchManager.getCurrentPlayer().getNickname());
+        //Send a victory notification
+        NotificationCenter.shared().addObserver((notification) -> {
+            List<String> winners = ((List<String>) notification.getUserInfo().get(NotificationKeys.WinnerNickname.getRawValue()));
+            System.out.println(winners);
+            assertEquals(1, winners.size());
+            assertEquals("Fede", winners.get(0));
+        }, NotificationName.PlayerVictory, matchManager);
+        matchManager.getCurrentPlayer().notifyVictory();
+    }
+    
+    @RepeatedTest(20)
+    void testVictoryNotificationNoMoreAssistants() {
+        testSimpleTurn();
+        //Move 3 Students to the Table
+        int[] removedStudents = new int[Student.values().length];
+        for (int i = 0; i < 3; i++) {
+            Student removedStudent = Student.RedDragon;
+            for (Student s: Student.values()) {
+                try {
+                    matchManager.getCurrentPlayer().removeStudentFromEntrance(s);
+                    removedStudent = s;
+                    matchManager.getCurrentPlayer().addStudentToEntrance(s);
+                    break;
+                } catch (CollectionUnderflowError ignored) {}
+            }
+            removedStudents[Student.getRawValueOf(removedStudent)] += 1;
+            Student finalRemovedStudent = removedStudent;
+            assertDoesNotThrow(() -> matchManager.runAction(0, finalRemovedStudent, 0, false, 0 , 0 ));
+            assertEquals(6 - i, matchManager.getCurrentPlayer().getStudentsInEntrance());
+            assertEquals(removedStudents[Student.getRawValueOf(removedStudent)], matchManager.getCurrentPlayer().getCountAtTable(finalRemovedStudent));
+            assertEquals(i == 2 ? MatchPhase.ActionPhaseStepTwo : MatchPhase.ActionPhaseStepOne, matchManager.getMatchPhase());
+            assertEquals("Ale", matchManager.getCurrentPlayer().getNickname());
+        }
+        //Move MN
+        assertDoesNotThrow(() -> matchManager.runAction(0, null, 0, false, 1, 0));
+        assertEquals(MatchPhase.ActionPhaseStepThree, matchManager.getMatchPhase());
+        assertEquals("Ale", matchManager.getCurrentPlayer().getNickname());
+        //Remove all assistants to force Ale to win the game
+        assertDoesNotThrow(() -> {
+            for (int i = 0; i < 9; i++) {
+                matchManager.getCurrentPlayer().playAssistantCardAtIndex(0);
+            }
+        });
+        NotificationCenter.shared().addObserver((notification) -> {
+            List<String> winners = ((List<String>) notification.getUserInfo().get(NotificationKeys.WinnerNickname.getRawValue()));
+            List<Player> players = matchManager.getAllPlayers();
+            if (players.get(0).getAvailableTowerCount() < players.get(1).getAvailableTowerCount()) {
+                // 0 wins
+                assertEquals(1, winners.size());
+                assertEquals(players.get(0).getNickname(), winners.get(0));
+            } else if (players.get(0).getAvailableTowerCount() > players.get(1).getAvailableTowerCount() || players.get(0).getControlledProfessors().size() < players.get(1).getControlledProfessors().size()) {
+                // 1 wins
+                assertEquals(1, winners.size());
+                assertEquals(players.get(1).getNickname(), winners.get(0));
+            } else if (players.get(0).getControlledProfessors().size() > players.get(1).getControlledProfessors().size()) {
+                // 0 wins
+                assertEquals(1, winners.size());
+                assertEquals(players.get(0).getNickname(), winners.get(0));
+            } else if (players.get(0).getControlledProfessors().size() < players.get(1).getControlledProfessors().size()) {
+                // 1 wins
+                assertEquals(1, winners.size());
+                assertEquals(players.get(1).getNickname(), winners.get(0));
+            } else {
+                // Parity
+                assertEquals(2, winners.size());
+                assertEquals("Fede", winners.get(0));
+                assertEquals("Ale", winners.get(1));
+            }
+        }, NotificationName.PlayerVictory, matchManager);
         //Pick the Cloud
         assertDoesNotThrow(() -> matchManager.runAction(0, null, 0, false, 0, 1));
         assertEquals(MatchPhase.PlanPhaseStepTwo, matchManager.getMatchPhase());

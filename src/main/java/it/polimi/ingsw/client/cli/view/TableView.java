@@ -12,6 +12,7 @@ import it.polimi.ingsw.server.model.student.Cloud;
 import it.polimi.ingsw.server.model.student.Island;
 import it.polimi.ingsw.server.model.student.StudentCollection;
 import it.polimi.ingsw.server.model.student.StudentHost;
+import it.polimi.ingsw.utils.cli.ModelFormatter;
 import it.polimi.ingsw.utils.cli.StringFormatter;
 
 import java.util.List;
@@ -66,7 +67,7 @@ public class TableView extends TerminalView {
 			int cardIndex = 0;
 			for (CharacterCardBean card : tableStateMessage.getPlayableCharacterCards()) {
 				formattedString.append("\n\t[").append(cardIndex).append("]:\n");
-				formattedString.append(card.toFormattedString());
+				formattedString.append(ModelFormatter.formatStringForCharacterCardBean(card));
 				cardIndex += 1;
 			}
 		}
@@ -119,7 +120,7 @@ public class TableView extends TerminalView {
 		formattedString.append("\n");
 		formattedString.append("\t[").append(hostIndex).append("]:");
 		formattedString.append("\n\t\t");
-		formattedString.append(host.toFormattedString());
+		formattedString.append(ModelFormatter.formatStringForStudentHost(host));
 		return formattedString;
 	}
 	

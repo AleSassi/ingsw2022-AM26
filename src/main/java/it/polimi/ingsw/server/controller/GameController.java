@@ -121,6 +121,7 @@ public class GameController {
 						} catch (CharacterCardIncorrectParametersException e) {
 							errorMessage = "Invalid action: the Character Card index you sent was incorrect";
 						} catch (CharacterCardAlreadyInUseException e) {
+							// Will never happen, as the MatchManager invalidates the Card after the Turn has finished
 							errorMessage = "Invalid action: the Character Card you chose is already active for another player";
 						}
 					} else if (actionMessage.getPlayerActionType() == PlayerActionMessage.ActionType.DidPlayCharacterCard) {

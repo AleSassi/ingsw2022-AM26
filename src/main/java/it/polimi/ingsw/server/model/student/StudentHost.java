@@ -33,10 +33,6 @@ public class StudentHost {
         return result;
     }
     
-    public StringBuilder toFormattedString() {
-        return hostedStudents.toFormattedString();
-    }
-    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

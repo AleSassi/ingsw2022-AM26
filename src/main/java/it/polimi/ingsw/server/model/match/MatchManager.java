@@ -377,8 +377,7 @@ public abstract class MatchManager {
 		int stepsWithCardModifier = steps;
 		if (getCurrentPlayer().getActiveCharacterCard() != null && getCurrentPlayer().getActiveCharacterCard().getCharacter().getChangesMNSteps()) {
 			try {
-				stepsWithCardModifier += getCurrentPlayer().getActiveCharacterCard().useCard(managedTable, null, getCurrentPlayer(), null);
-				System.out.println(stepsWithCardModifier - steps);
+				stepsWithCardModifier += getCurrentPlayer().getActiveCharacterCard().useCard(managedTable, getAllPlayers(), getCurrentPlayer(), new CharacterCardParamSet(null, null, null, null, false, 0, 0, 0, CharacterCardParamSet.StopCardMovementMode.ToIsland));
 			} catch (CharacterCardIncorrectParametersException | CharacterCardNoMoreUsesAvailableException ignored) {
 				// Do nothing, the Steps will remain the default
 			}
@@ -471,28 +470,34 @@ public abstract class MatchManager {
 	
 	private void resolveParityAndNotifyWinnerNicknames(List<Tower> winningTowers) {
 		List<Player> activePlayers = getAllPlayers();
-		int currentMax = 0;
 		List<String> winnerNicknames = new ArrayList<>();
 		if (winningTowers.size() == 1) {
 			winnerNicknames.addAll(activePlayers.stream().filter((player) -> player.getTowerType() == winningTowers.get(0)).map(Player::getNickname).toList());
 		} else {
-			for (Tower winningTower: winningTowers) {
-				winnerNicknames = getWinnerNicknames(activePlayers, currentMax, winnerNicknames, winningTower);
+			//Need to resolve parity by checking the number of professors
+			int[] professorCounts = new int[Tower.values().length];
+			for (Player player: getAllPlayers()) {
+				professorCounts[player.getTowerType().index()] += player.getControlledProfessors().size();
 			}
+			//Find the max indices - if more than 1 then we have a parity that we need to keep
+			List<Integer> maxIndices = new ArrayList<>();
+			int max = 0;
+			for (int professorCount : professorCounts) {
+				if (professorCount > max) {
+					max = professorCount;
+				}
+			}
+			for (int i = 0; i < professorCounts.length; i++) {
+				if (professorCounts[i] == max) {
+					maxIndices.add(i);
+				}
+			}
+			List<Tower> trueWinningTowers = maxIndices.stream().map((index) -> Tower.values()[index]).toList();
+			winnerNicknames.addAll(activePlayers.stream().filter((player) -> trueWinningTowers.contains(player.getTowerType())).map(Player::getNickname).toList());
 		}
 		HashMap<String, Object> userInfo = new HashMap<>();
 		userInfo.put(NotificationKeys.WinnerNickname.getRawValue(), winnerNicknames);
 		NotificationCenter.shared().post(NotificationName.PlayerVictory, this, userInfo);
-	}
-	
-	private List<String> getWinnerNicknames(List<Player> activePlayers, int currentMax, List<String> winnerNicknames, Tower winningTower) {
-		int controlledProfCountWithTower = activePlayers.stream().filter((player) -> player.getTowerType() == winningTower).mapToInt((player) -> player.getControlledProfessors().size()).sum();
-		if (controlledProfCountWithTower > currentMax) {
-			winnerNicknames = activePlayers.stream().filter((player) -> player.getTowerType() == winningTower).map(Player::getNickname).toList();
-		} else if (controlledProfCountWithTower == currentMax) {
-			winnerNicknames.addAll(activePlayers.stream().filter((player) -> player.getTowerType() == winningTower).map(Player::getNickname).toList());
-		}
-		return winnerNicknames;
 	}
 	//endregion
 	

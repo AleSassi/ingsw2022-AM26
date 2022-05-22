@@ -60,10 +60,6 @@ class PawnCounts {
 		}
 	}
 	
-	public int getPlayerCount() {
-		return playerCount;
-	}
-	
 	public int getCloudTileCount() {
 		return cloudTileCount;
 	}
