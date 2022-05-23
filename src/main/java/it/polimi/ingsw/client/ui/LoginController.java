@@ -81,6 +81,7 @@ public class LoginController {
             LobbyController lobbyController = GUI.setRoot("scenes/lobby").getController();
             lobbyController.run(type, message.getNumberOfPlayersRemainingToFillLobby());
 
+
         } else if(message.getNickname().equals(Client.getNickname()) && !message.isLoginAccepted()){
             Platform.runLater(() -> {
                 Alert alert= new Alert(Alert.AlertType.ERROR);
