@@ -153,7 +153,7 @@ class GameControllerTest {
 		assertTrue(controller.isTerminated());
 	}
 	
-	@Test
+	@RepeatedTest(100)
 	void testVictoryNotificationForwarding() {
 		testLoginAndMatchStart();
 		List<String> winnerNicknames = Arrays.stream((new String[]{"Ale", "Fra"})).toList();
@@ -293,7 +293,7 @@ class GameControllerTest {
 		assertTrue(sentMessages.get(45) instanceof MatchStateMessage message && message.getCurrentMatchPhase() == MatchPhase.ActionPhaseStepOne);
 	}
 	
-	@Test
+	@RepeatedTest(10)
 	void testReceivePurchaseCharacterCardWithoutCoins() {
 		testRound();
 		HashMap<String, Object> userInfo = new HashMap<>();
@@ -305,9 +305,11 @@ class GameControllerTest {
 				break;
 			}
 		}
-		userInfo.put(NotificationKeys.IncomingNetworkMessage.getRawValue(), new PlayerActionMessage("Ale", PlayerActionMessage.ActionType.DidPurchaseCharacterCard, 0, null, true, 0, 0, 0, cardIndex, null));
-		NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, controller, userInfo);
-		assertEquals(new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPurchaseCharacterCard, false, "Not enough Coins to purchase the Card"), sentMessages.get(35));
+		if (cardIndex >= 0) {
+			userInfo.put(NotificationKeys.IncomingNetworkMessage.getRawValue(), new PlayerActionMessage("Ale", PlayerActionMessage.ActionType.DidPurchaseCharacterCard, 0, null, true, 0, 0, 0, cardIndex, null));
+			NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, controller, userInfo);
+			assertEquals(new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPurchaseCharacterCard, false, "Not enough Coins to purchase the Card"), sentMessages.get(35));
+		}
 	}
 	
 	@Test
