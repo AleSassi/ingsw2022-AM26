@@ -146,4 +146,14 @@ class StudentCollectionTest {
         collection.mergeWithCollection(null);
         collection.getCount(null);
     }
+    
+    @Test
+    void copyTest() {
+        collection.addStudents(Student.BlueUnicorn, 10);
+        collection.addStudents(Student.RedDragon, 5);
+        collection.addStudents(Student.GreenFrog, 3);
+        collection.addStudents(Student.PinkFair, 2);
+        collection.addStudents(Student.YellowElf, 7);
+        assertEquals(collection, collection.copy());
+    }
 }

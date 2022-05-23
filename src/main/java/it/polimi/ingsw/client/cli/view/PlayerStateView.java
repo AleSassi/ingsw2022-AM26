@@ -17,6 +17,7 @@ import it.polimi.ingsw.server.model.student.Island;
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.server.model.student.StudentHost;
 import it.polimi.ingsw.utils.cli.ANSIColors;
+import it.polimi.ingsw.utils.cli.ModelFormatter;
 import it.polimi.ingsw.utils.cli.StringFormatter;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,7 +99,7 @@ public class PlayerStateView extends TerminalView {
 			formattedString.append("\nCoins: ").append(playerStateMessage.getAvailableCoins());
 		}
 		if (playerStateMessage.getLastPlayedAssistantCard() != null) {
-			formattedString.append("\nLast Played Assistant: ").append(playerStateMessage.getLastPlayedAssistantCard().toString());
+			formattedString.append("\nLast Played Assistant: ").append(ModelFormatter.formatStringForAssistantCard(playerStateMessage.getLastPlayedAssistantCard()));
 		}
 		return formattedString;
 	}
@@ -132,9 +133,9 @@ public class PlayerStateView extends TerminalView {
 				//Print the Professors
 				Professor rowProfessor = rowStudent.getAssociatedProfessor();
 				if (playerStateMessage.getBoard().getControlledProfessors().contains(rowProfessor)) {
-					stringBuilder.append(StringFormatter.formatWithColor("PP", rowProfessor.getProfessorColor()));
+					stringBuilder.append(StringFormatter.formatWithColor("PP", ModelFormatter.getProfessorColor(rowProfessor)));
 				} else {
-					stringBuilder.append(StringFormatter.formatWithColor("__", rowProfessor.getProfessorColor()));
+					stringBuilder.append(StringFormatter.formatWithColor("__", ModelFormatter.getProfessorColor(rowProfessor)));
 				}
 				stringBuilder.append(".|.");
 				//Print the Tower space
@@ -165,7 +166,7 @@ public class PlayerStateView extends TerminalView {
 			try {
 				entrance.removeStudents(lockedStudent, 1);
 				// If it succeeded we print the student
-				stringBuilder.append(StringFormatter.formatWithColor("SS", lockedStudent.getAssociatedProfessor().getProfessorColor()));
+				stringBuilder.append(StringFormatter.formatWithColor("SS", ModelFormatter.getProfessorColor(lockedStudent.getAssociatedProfessor())));
 				hasPrintedStudent = true;
 			} catch (CollectionUnderflowError ignored) {
 			}
@@ -174,7 +175,7 @@ public class PlayerStateView extends TerminalView {
 				try {
 					entrance.removeStudents(student, 1);
 					// If it succeeded we print the student
-					stringBuilder.append(StringFormatter.formatWithColor("SS", student.getAssociatedProfessor().getProfessorColor()));
+					stringBuilder.append(StringFormatter.formatWithColor("SS", ModelFormatter.getProfessorColor(student.getAssociatedProfessor())));
 					hasPrintedStudent = true;
 					break;
 				} catch (CollectionUnderflowError ignored) {
@@ -190,7 +191,7 @@ public class PlayerStateView extends TerminalView {
 		StringBuilder formattedString = new StringBuilder("Assistant Cards available: ");
 		int index = 0;
 		for (AssistantCard assistantCard : playerStateMessage.getAvailableCardsDeck()) {
-			formattedString.append("\n\t[").append(index).append("]: ").append(assistantCard);
+			formattedString.append("\n\t[").append(index).append("]: ").append(ModelFormatter.formatStringForAssistantCard(assistantCard));
 			index += 1;
 		}
 		

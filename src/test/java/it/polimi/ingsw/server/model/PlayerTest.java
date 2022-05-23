@@ -73,12 +73,13 @@ class PlayerTest {
 
     @Test
     void getCountAtTableAndPlaceStudent() {
+        TableManager tableManager = new TableManager(2, false);
         assertDoesNotThrow(() -> {
-            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn, tableManager);
+            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn, tableManager);
+            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn, tableManager);
             assertEquals(test.getCountAtTable(Student.BlueUnicorn), 3);
-            test.placeStudentAtTableAndGetCoin(Student.GreenFrog);
+            test.placeStudentAtTableAndGetCoin(Student.GreenFrog, tableManager);
             assertEquals(test.getCountAtTable(Student.GreenFrog), 1);
             assertEquals(test.getCountAtTable(Student.BlueUnicorn), 3);
         });
@@ -86,13 +87,14 @@ class PlayerTest {
 
     @Test
     void testCharacterCard() {
+        TableManager tableManager = new TableManager(2, false);
         assertDoesNotThrow(() -> {
-            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
-            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn, tableManager);
+            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn, tableManager);
+            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn, tableManager);
+            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn, tableManager);
+            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn, tableManager);
+            test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn, tableManager);
         });
         CharacterCard testcard = new StopCardActivatorCard(Character.Herbalist);
         test.playCharacterCard(testcard);
@@ -155,12 +157,13 @@ class PlayerTest {
     
     @Test
     void testMoreThan10StudentsAtTable() {
+        TableManager tableManager = new TableManager(2, false);
         assertDoesNotThrow(() -> {
             for (int i = 0; i < 10; i++) {
-                test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn);
+                test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn, tableManager);
             }
         });
-        assertThrows(TableFullException.class, () -> test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn));
+        assertThrows(TableFullException.class, () -> test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn, tableManager));
     }
     
     @Test
@@ -171,6 +174,59 @@ class PlayerTest {
             }
         });
         assertThrows(CollectionUnderflowError.class, () -> test.playAssistantCardAtIndex(0));
+    }
+    
+    @Test
+    void testReachedMaxCollectableCoins() {
+        TableManager tableManager = new TableManager(2, false);
+        for (int i = 0; i < 10; i++) {
+            assertDoesNotThrow(() -> {
+                test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn, tableManager);
+            });
+        }
+        assertEquals(4, test.getAvailableCoins());
+        for (int i = 0; i < 10; i++) {
+            assertDoesNotThrow(() -> {
+                test.placeStudentAtTableAndGetCoin(Student.GreenFrog, tableManager);
+            });
+        }
+        assertEquals(7, test.getAvailableCoins());
+        for (int i = 0; i < 10; i++) {
+            assertDoesNotThrow(() -> {
+                test.placeStudentAtTableAndGetCoin(Student.RedDragon, tableManager);
+            });
+        }
+        assertEquals(10, test.getAvailableCoins());
+        for (int i = 0; i < 10; i++) {
+            assertDoesNotThrow(() -> {
+                test.placeStudentAtTableAndGetCoin(Student.PinkFair, tableManager);
+            });
+        }
+        assertEquals(13, test.getAvailableCoins());
+        for (int i = 0; i < 10; i++) {
+            assertDoesNotThrow(() -> {
+                test.placeStudentAtTableAndGetCoin(Student.YellowElf, tableManager);
+            });
+        }
+        assertEquals(16, test.getAvailableCoins());
+        assertDoesNotThrow(() -> {
+            Player test2 = new Player("Test2", Wizard.Wizard2, Tower.White, 8);
+            for (int i = 0; i < 10; i++) {
+                assertDoesNotThrow(() -> {
+                    test2.placeStudentAtTableAndGetCoin(Student.GreenFrog, tableManager);
+                });
+            }
+            assertEquals(16, test.getAvailableCoins());
+            assertEquals(4, test2.getAvailableCoins());
+            for (int i = 0; i < 10; i++) {
+                assertDoesNotThrow(() -> {
+                    test2.placeStudentAtTableAndGetCoin(Student.BlueUnicorn, tableManager);
+                });
+            }
+            //No new coins will be given
+            assertEquals(16, test.getAvailableCoins());
+            assertEquals(4, test2.getAvailableCoins());
+        });
     }
     
     @Test

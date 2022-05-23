@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model.characters;
 
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.server.model.student.StudentCollection;
+import it.polimi.ingsw.utils.cli.ModelFormatter;
 
 import java.util.Objects;
 
@@ -45,25 +46,6 @@ public class CharacterCardBean {
 	
 	public StudentCollection getHostedStudents() {
 		return hostedStudents;
-	}
-	
-	public StringBuilder toFormattedString() {
-		StringBuilder formattedString = new StringBuilder();
-		formattedString.append("\t\tCharacter: ").append(getCharacter().toString());
-		formattedString.append("\n\t\tPrice: ").append(totalPrice);
-		if (excludedStudent != null) {
-			formattedString.append("\n\t\tExcluded Student: ").append(excludedStudent);
-		}
-		if (memorizedModifier != -1) {
-			formattedString.append("\n\t\tModifier: ").append(memorizedModifier);
-		}
-		if (availableStopCards != -1) {
-			formattedString.append("\n\t\tAvailable Stop Cards: ").append(availableStopCards);
-		}
-		if (hostedStudents != null) {
-			formattedString.append("\n\t\tHosted Students: ").append(hostedStudents.toFormattedString());
-		}
-		return formattedString;
 	}
 	
 	@Override

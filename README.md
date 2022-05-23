@@ -21,7 +21,7 @@ The final version will include:
 | Basic ruleset    |               [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/server/model)               |
 | Complete ruleset |               [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/server/model)               |
 | Socket & Network |        [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/server/controller/network)         |
-| CLI              |                                                                 [![IMPLEMENTING](https://img.shields.io/badge/-Implementing-yellow)]()                                                                 |
+| CLI              |            [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/client/cli/network)            |
 | GUI              |                                                                 [![IMPLEMENTING](https://img.shields.io/badge/-Implementing-yellow)]()                                                                 |
 | Persistence      |                                                           [![To be implemented](https://img.shields.io/badge/-To%20be%20implemented-red)]()                                                            |
 | Multiple Matches |            [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/server/controller)             |
@@ -34,8 +34,8 @@ Test cases aim for 100% coverage.
 
 | Package    | Tested Class     |  Line Coverage  | Method Coverage |
 |:-----------|:-----------------|:---------------:|:---------------:|
-| Model      | Global Package   | 87% (1091/1243) |  92% (288/311)  |
-| Controller | network/messages |  87% (338/386)  |  85% (108/126)  |
+| Model      | Global Package   | 94% (1145/1215) |  99% (299/302)  |
+| Controller | network/messages |  88% (340/386)  |  87% (110/126)  |
 | Controller | GameController   |  93% (98/105)   |  100% (13/13)   |
 
 ### The Developers

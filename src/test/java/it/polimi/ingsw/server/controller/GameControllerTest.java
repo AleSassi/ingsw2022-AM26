@@ -153,7 +153,7 @@ class GameControllerTest {
 		assertTrue(controller.isTerminated());
 	}
 	
-	@Test
+	@RepeatedTest(100)
 	void testVictoryNotificationForwarding() {
 		testLoginAndMatchStart();
 		List<String> winnerNicknames = Arrays.stream((new String[]{"Ale", "Fra"})).toList();
@@ -293,7 +293,7 @@ class GameControllerTest {
 		assertTrue(sentMessages.get(45) instanceof MatchStateMessage message && message.getCurrentMatchPhase() == MatchPhase.ActionPhaseStepOne);
 	}
 	
-	@Test
+	@RepeatedTest(10)
 	void testReceivePurchaseCharacterCardWithoutCoins() {
 		testRound();
 		HashMap<String, Object> userInfo = new HashMap<>();
@@ -305,9 +305,11 @@ class GameControllerTest {
 				break;
 			}
 		}
-		userInfo.put(NotificationKeys.IncomingNetworkMessage.getRawValue(), new PlayerActionMessage("Ale", PlayerActionMessage.ActionType.DidPurchaseCharacterCard, 0, null, true, 0, 0, 0, cardIndex, null));
-		NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, controller, userInfo);
-		assertEquals(new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPurchaseCharacterCard, false, "Not enough Coins to purchase the Card"), sentMessages.get(35));
+		if (cardIndex >= 0) {
+			userInfo.put(NotificationKeys.IncomingNetworkMessage.getRawValue(), new PlayerActionMessage("Ale", PlayerActionMessage.ActionType.DidPurchaseCharacterCard, 0, null, true, 0, 0, 0, cardIndex, null));
+			NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, controller, userInfo);
+			assertEquals(new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPurchaseCharacterCard, false, "Not enough Coins to purchase the Card"), sentMessages.get(35));
+		}
 	}
 	
 	@Test
@@ -671,7 +673,7 @@ class GameControllerTest {
 		assertEquals(new PlayerActionResponse("Fra", PlayerActionMessage.ActionType.DidChooseCloudIsland, false, "Invalid move: the Cloud you chose is empty. This is not allowed, unless the Bag is also empty"), sentMessages.get(35 + 11 * i));
 	}
 	
-	@Test
+	@RepeatedTest(10)
 	void testSecondPlanPhase() {
 		testRound();
 		//Simulate Ale's turn
@@ -781,13 +783,13 @@ class GameControllerTest {
 		NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, controller, userInfo);
 		assertEquals(sentMessages.get(35 + 11 * i), new PlayerActionResponse("Fra", PlayerActionMessage.ActionType.DidChooseCloudIsland, true, ""));
 		assertTrue(sentMessages.get(36 + 11 * i) instanceof TableStateMessage);
-		assertTrue(sentMessages.get(37 + 11 * i) instanceof PlayerStateMessage message && message.getNickname().equals("Fra") && message.getWizard() == Wizard.Wizard2 && message.getBoard().getAvailableTowerCount() == 8);
+		assertTrue(sentMessages.get(37 + 11 * i) instanceof PlayerStateMessage message && message.getNickname().equals("Fra") && message.getWizard() == Wizard.Wizard2);
 		assertTrue(sentMessages.get(38 + 11 * i) instanceof PlayerStateMessage message && message.getNickname().equals("Ale") && message.getWizard() == Wizard.Wizard1);
 		assertTrue(sentMessages.get(39 + 11 * i) instanceof ActivePlayerMessage message && message.getActiveNickname().equals("Ale"));
 		assertTrue(sentMessages.get(40 + 11 * i) instanceof MatchStateMessage message && message.getCurrentMatchPhase() == MatchPhase.PlanPhaseStepTwo);
 		assertTrue(sentMessages.get(41 + 11 * i) instanceof TableStateMessage);
 		assertTrue(sentMessages.get(42 + 11 * i) instanceof PlayerStateMessage message && message.getNickname().equals("Ale") && message.getWizard() == Wizard.Wizard1);
-		assertTrue(sentMessages.get(43 + 11 * i) instanceof PlayerStateMessage message && message.getNickname().equals("Fra") && message.getWizard() == Wizard.Wizard2 && message.getBoard().getAvailableTowerCount() == 8);
+		assertTrue(sentMessages.get(43 + 11 * i) instanceof PlayerStateMessage message && message.getNickname().equals("Fra") && message.getWizard() == Wizard.Wizard2);
 		assertTrue(sentMessages.get(44 + 11 * i) instanceof ActivePlayerMessage message && message.getActiveNickname().equals("Ale"));
 		assertTrue(sentMessages.get(45 + 11 * i) instanceof MatchStateMessage message && message.getCurrentMatchPhase() == MatchPhase.PlanPhaseStepTwo);
 	}

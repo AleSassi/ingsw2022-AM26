@@ -157,7 +157,7 @@ public class StudentHostingCard extends CharacterCard {
                 }
                 case PlayerTable -> {
                     for (int repetition = 0; repetition < numberOfStudentsToMove; repetition++) {
-                        pDest.placeStudentAtTableAndGetCoin(s);
+                        pDest.placeStudentAtTableAndGetCoin(s, tableManager);
                     }
                 }
                 case Self -> hostedStudents.addStudents(s, numberOfStudentsToMove);

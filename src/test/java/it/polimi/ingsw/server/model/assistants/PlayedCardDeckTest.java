@@ -15,4 +15,16 @@ class PlayedCardDeckTest {
 		testDeck.addCardOnTop(test);
 		assertEquals(testDeck.topCard(), test);
 	}
+	
+	@Test
+	void testEquals() {
+		PlayedCardDeck deckA = new PlayedCardDeck();
+		deckA.addCardOnTop(AssistantCard.EAGLE);
+		deckA.addCardOnTop(AssistantCard.ELEPHANT);
+		PlayedCardDeck deckB = new PlayedCardDeck();
+		deckB.addCardOnTop(AssistantCard.EAGLE);
+		deckB.addCardOnTop(AssistantCard.ELEPHANT);
+		assertEquals(deckA, deckB);
+		assertEquals(deckA.hashCode(), deckB.hashCode());
+	}
 }

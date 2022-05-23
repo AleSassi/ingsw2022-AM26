@@ -31,12 +31,4 @@ public enum AssistantCard {
 	public int getMotherNatureSteps() {
 		return motherNatureSteps;
 	}
-	
-	@Override
-	public String toString() {
-		return StringFormatter.formatWithColor(super.toString(), ANSIColors.Unknown) +
-				" (priority: " + priorityNumber +
-				", motherNatureSteps: " + motherNatureSteps +
-				')';
-	}
 }
