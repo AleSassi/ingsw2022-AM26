@@ -12,27 +12,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="916.0" prefWidth="1299.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.MainBoardController">
+<AnchorPane fx:id="mainPane" style="-fx-background-color: #42adf5;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.MainBoardController">
    <cursor>
       <Cursor fx:constant="DEFAULT" />
    </cursor>
    <children>
-      <ImageView fx:id="school4" disable="true" fitHeight="154.0" fitWidth="282.0" layoutX="14.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/SchoolBoard.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="school3" disable="true" fitHeight="201.0" fitWidth="282.0" layoutX="14.0" layoutY="179.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/SchoolBoard.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="school2" disable="true" fitHeight="167.0" fitWidth="282.0" layoutX="14.0" layoutY="344.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/SchoolBoard.png" />
-         </image>
-      </ImageView>
-      <AnchorPane fx:id="islandPane" disable="true" layoutX="312.0" layoutY="18.0" prefHeight="475.0" prefWidth="973.0">
+      <AnchorPane fx:id="islandPane" disable="true" layoutX="296.0" layoutY="15.0" prefHeight="486.0" prefWidth="833.0" AnchorPane.bottomAnchor="399.0" AnchorPane.leftAnchor="296.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="15.0">
          <children>
             <VBox prefHeight="475.0" prefWidth="122.0">
                <children>
@@ -59,8 +44,7 @@
                </children>
             </VBox>
          </children></AnchorPane>
-      <AnchorPane id="Command Pane" fx:id="commandPane" layoutX="1085.0" layoutY="514.0" prefHeight="388.0" prefWidth="200.0" />
-      <AnchorPane fx:id="selfPane" layoutX="14.0" layoutY="514.0" prefHeight="388.0" prefWidth="708.0">
+      <AnchorPane fx:id="selfPane" layoutX="14.0" layoutY="514.0" prefHeight="388.0" prefWidth="708.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="428.0" AnchorPane.topAnchor="507.0">
          <children>
             <ImageView id="Self SchoolBoard" fx:id="selfSchoolBoard" fitHeight="435.0" fitWidth="708.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -217,6 +201,36 @@
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane disable="true" prefHeight="200.0" prefWidth="200.0" visible="false" />
+      <VBox layoutX="5.0" layoutY="5.0" spacing="10.0" AnchorPane.bottomAnchor="409.4" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="853.8000000000001" AnchorPane.topAnchor="5.0">
+         <children>
+            <AnchorPane prefHeight="146.0" prefWidth="282.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <ImageView fx:id="school4" disable="true" fitHeight="154.0" fitWidth="282.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/SchoolBoard.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="146.0" prefWidth="282.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <ImageView fx:id="school3" disable="true" fitHeight="201.0" fitWidth="282.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/SchoolBoard.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="146.0" prefWidth="282.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <ImageView fx:id="school2" disable="true" fitHeight="167.0" fitWidth="282.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/SchoolBoard.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
    </children>
 </AnchorPane>
