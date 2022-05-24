@@ -17,6 +17,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -80,9 +81,12 @@ public class LoginController {
             LobbyController lobbyController = GUI.setRoot("scenes/lobby").getController();
             lobbyController.run(type, message.getNumberOfPlayersRemainingToFillLobby());
 
+
         } else if(message.getNickname().equals(Client.getNickname()) && !message.isLoginAccepted()){
             Platform.runLater(() -> {
-                statuslabel.setText(message.getRejectionReason());
+                Alert alert= new Alert(Alert.AlertType.ERROR);
+                alert.setContentText(message.getRejectionReason());
+                alert.show();
             });
 
         }
