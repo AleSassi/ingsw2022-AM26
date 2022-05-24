@@ -93,13 +93,12 @@ public class GameServer {
 				//TODO: With multiple concurrent matches we need to find the match to which the Player belongs to. In this case it is not needed, since we only have one match
 				Optional<GameController> activeController = activeControllers.stream().filter((controller) -> controller.containsPlayerWithNickname(disconnectedClient.getNickname())).findFirst();
 				if (activeController.isPresent()) {
-					System.out.println("Client disconnected, terminating message for " + disconnectedClient.getNickname());
+					String[] controllerNicknames = activeController.get().getConnectedPlayerNicknames();
 					for (VirtualClient associatedClient: connectedClients) {
-						if (activeController.get().containsPlayerWithNickname(associatedClient.getNickname())) {
+						if (Arrays.stream(controllerNicknames).toList().contains(associatedClient.getNickname())) {
 							associatedClient.notifyPlayerDisconnection();
 							associatedClient.terminateConnection();
 							associatedDisconnectedClients.add(associatedClient);
-							connectedClients.remove(associatedClient);
 						}
 					}
 					NotificationCenter.shared().post(NotificationName.ServerDidTerminateMatch, activeController.get(), null);

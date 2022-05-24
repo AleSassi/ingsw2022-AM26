@@ -6,7 +6,6 @@ import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.model.Player;
-import it.polimi.ingsw.server.model.Tower;
 import it.polimi.ingsw.server.model.match.*;
 import it.polimi.ingsw.server.exceptions.model.*;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +28,7 @@ public class GameController {
 	}
 	
 	public int getMaxPlayerCount() {
+		if (lobby == null) return 0;
 		return lobby.getMaxPlayerCount();
 	}
 	
@@ -41,12 +41,18 @@ public class GameController {
 	}
 	
 	public boolean acceptsPlayers() {
+		if (lobby == null) return true;
 		return lobby.getCurrentState() == GameLobbyState.FillableWithPlayers;
 	}
 	
 	public boolean containsPlayerWithNickname(String nickname) {
 		if (lobby == null) return false;
 		return Arrays.stream(lobby.getPlayerNicknames()).toList().contains(nickname);
+	}
+	
+	public String[] getConnectedPlayerNicknames() {
+		if (lobby == null) return new String[0];
+		return lobby.getPlayerNicknames();
 	}
 	
 	private void didReceiveLoginMessage(Notification notification) {
