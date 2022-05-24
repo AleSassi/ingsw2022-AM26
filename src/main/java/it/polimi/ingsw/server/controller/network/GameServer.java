@@ -87,6 +87,7 @@ public class GameServer {
 		if (!isFirstPing) {
 			List<VirtualClient> disconnectedClients = connectedClients.stream().filter((client) -> !receivedPingsInCurrentTrip.contains(client.getNickname()) && sentPingsInCurrentTrip.contains(client.getNickname())).toList();
 			List<VirtualClient> associatedDisconnectedClients = new ArrayList<>();
+			Set<GameController> disconnectedControllers = new HashSet<>();
 			for (VirtualClient disconnectedClient: disconnectedClients) {
 				// Signal the termination
 				//TODO: With multiple concurrent matches we need to find the match to which the Player belongs to. In this case it is not needed, since we only have one match
@@ -102,6 +103,7 @@ public class GameServer {
 						}
 					}
 					NotificationCenter.shared().post(NotificationName.ServerDidTerminateMatch, activeController.get(), null);
+					disconnectedControllers.add(activeController.get());
 				} else {
 					System.out.println("Client disconnected, but not logged in");
 					disconnectedClient.terminateConnection();
@@ -109,6 +111,7 @@ public class GameServer {
 			}
 			connectedClients.removeAll(disconnectedClients);
 			connectedClients.removeAll(associatedDisconnectedClients);
+			activeControllers.removeAll(disconnectedControllers);
 			receivedPingsInCurrentTrip = new ArrayList<>();
 		}
 		isFirstPing = false;
@@ -122,7 +125,13 @@ public class GameServer {
 		userInfo.put(NotificationKeys.IncomingNetworkMessage.getRawValue(), message);
 		if (message instanceof LoginMessage login) {
 			System.out.println("Received login message: nickname " + login.getNickname());
-			Optional<GameController> matchingController = activeControllers.stream().filter((controller) -> controller.getMatchVariant() == login.getMatchVariant() && controller.getMaxPlayerCount() == login.getDesiredNumberOfPlayers() && controller.acceptsPlayers()).findFirst();
+			Optional<GameController> matchingController = Optional.empty();
+			for (GameController controller: activeControllers) {
+				if (controller.getMatchVariant() == login.getMatchVariant() && controller.getMaxPlayerCount() == login.getDesiredNumberOfPlayers() && controller.acceptsPlayers()) {
+					matchingController = Optional.of(controller);
+					break;
+				}
+			}
 			if (getControllerWithNickname(login.getNickname()).isEmpty()) {
 				GameController availableController = matchingController.orElse(new GameController(this));
 				NotificationCenter.shared().post(NotificationName.ServerDidReceiveLoginMessage, availableController, userInfo);
