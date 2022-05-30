@@ -14,14 +14,15 @@ import it.polimi.ingsw.utils.ui.StudentDropTarget;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextInputDialog;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 
@@ -36,7 +37,9 @@ public class MainBoardController implements JavaFXRescalable {
     
     private List<SchoolBoardContainer> schoolBoardContainers;
     private Student movingStudentColor;
-    private boolean isActive = false;
+    private String currentlyActivePlayerNickname;
+    private Pane faderPane;
+    private Label waitTurnLabel;
     
     public void load() {
         schoolBoardContainers = new ArrayList<>();
@@ -88,13 +91,44 @@ public class MainBoardController implements JavaFXRescalable {
     
     protected void didReceiveActivePlayerMessage(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof ActivePlayerMessage message) {
-            isActive = message.getActiveNickname().equals(Client.getNickname());
-            schoolBoardContainers.get(schoolBoardContainers.size() - 1).setActive(isActive);
+            currentlyActivePlayerNickname = message.getActiveNickname();
+            schoolBoardContainers.get(schoolBoardContainers.size() - 1).setActive(currentlyActivePlayerNickname.equals(Client.getNickname()));
+            setDisplaysWaitForTurnFader(!currentlyActivePlayerNickname.equals(Client.getNickname()));
         }
     }
     
+    private void setDisplaysWaitForTurnFader(boolean displaysWaitForTurnFader) {
+        Platform.runLater(() -> {
+            if (displaysWaitForTurnFader) {
+                faderPane = new AnchorPane();
+                faderPane.setStyle("-fx-background-color: rgba(0,0,0,0.6)");
+                AnchorPane.setTopAnchor(faderPane, 0.0);
+                AnchorPane.setBottomAnchor(faderPane, 0.0);
+                AnchorPane.setLeftAnchor(faderPane, 0.0);
+                AnchorPane.setRightAnchor(faderPane, 0.0);
+                mainPane.getChildren().add(faderPane);
+                waitTurnLabel = new Label(currentlyActivePlayerNickname + " is currently playing their turn. Please wait until it is your turn to play.");
+                waitTurnLabel.setFont(new Font("Avenir", 30));
+                waitTurnLabel.setTextFill(new Color(1, 1, 1, 1));
+                waitTurnLabel.setContentDisplay(ContentDisplay.CENTER);
+                waitTurnLabel.setAlignment(Pos.CENTER);
+                waitTurnLabel.setWrapText(true);
+                AnchorPane.setTopAnchor(waitTurnLabel, 20.0);
+                AnchorPane.setBottomAnchor(waitTurnLabel, 20.0);
+                AnchorPane.setLeftAnchor(waitTurnLabel, 20.0);
+                AnchorPane.setRightAnchor(waitTurnLabel, 20.0);
+                mainPane.getChildren().add(waitTurnLabel);
+            } else {
+                mainPane.getChildren().remove(faderPane);
+                mainPane.getChildren().remove(waitTurnLabel);
+                faderPane = null;
+                waitTurnLabel = null;
+            }
+        });
+    }
+    
     protected void didReceiveMatchStateMessage(Notification notification) {
-        if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof MatchStateMessage message && isActive) {
+        if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof MatchStateMessage message && currentlyActivePlayerNickname.equals(Client.getNickname())) {
             // Update the list of allowed moves
             switch (message.getCurrentMatchPhase()) {
                 case PlanPhaseStepTwo -> {

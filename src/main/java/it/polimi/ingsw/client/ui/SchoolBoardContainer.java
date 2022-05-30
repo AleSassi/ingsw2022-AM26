@@ -6,6 +6,7 @@ import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.utils.ui.StudentDropTarget;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 
 public class SchoolBoardContainer extends AnchorPane implements JavaFXRescalable {
@@ -63,7 +64,8 @@ public class SchoolBoardContainer extends AnchorPane implements JavaFXRescalable
 	}
 	
 	public void setActive(boolean active) {
-	
+		setDisabled(!active);
+		this.boardPane.setDisable(!active);
 	}
 	
 	public void setAllowedStudentMovements(StudentDropTarget[] validStudentDestinations) {
