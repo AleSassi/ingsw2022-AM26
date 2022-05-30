@@ -34,7 +34,7 @@ public class NotificationCenter {
 	public synchronized void post(NotificationName name, Object observedObject, HashMap<String, Object> userInfo) {
 		if (notificationToObserversMap.containsKey(name)) {
 			Notification notification = new Notification(name, userInfo);
-			List<NotificationObserver> observers = notificationToObserversMap.get(name);
+			List<NotificationObserver> observers = new ArrayList<>(notificationToObserversMap.get(name));
 			for (NotificationObserver observer: observers) {
 				if (observedObject == null || observedObject.equals(observer.getObservedObject())) {
 					//Call the callback

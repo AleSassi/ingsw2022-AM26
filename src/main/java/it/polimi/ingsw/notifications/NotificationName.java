@@ -14,5 +14,7 @@ public enum NotificationName {
 	ClientDidReceivePlayerStateMessage,
 	ClientDidReceiveTableStateMessage,
 	ClientDidReceiveVictoryMessage,
-	ClientDidTimeoutNetwork
+	ClientDidTimeoutNetwork,
+	JavaFXDidClickOnStudent,
+	JavaFXWindowDidResize;
 }

@@ -11,21 +11,21 @@
 
 <Pane fx:id="pane" cacheShape="false" centerShape="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="644.0" prefWidth="792.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.LoginController">
     <children>
-        <TextField id="NicknameField" fx:id="nicknamebox" layoutX="175.0" layoutY="174.0" prefHeight="26.0" prefWidth="429.0" />
-        <Button id="LoginButton" fx:id="loginbutton" layoutX="345.0" layoutY="565.0" mnemonicParsing="false" onAction="#SendNickname" prefHeight="35.0" prefWidth="103.0" text="start" />
+        <TextField id="NicknameField" fx:id="nicknameBox" layoutX="175.0" layoutY="174.0" prefHeight="26.0" prefWidth="429.0" />
+        <Button id="LoginButton" fx:id="loginbutton" layoutX="345.0" layoutY="565.0" mnemonicParsing="false" onAction="#sendFormValuesToServer" prefHeight="35.0" prefWidth="103.0" text="start" />
         <Label layoutX="296.0" layoutY="80.0" prefHeight="35.0" prefWidth="201.0" textOverrun="WORD_ELLIPSIS">
             <font>
                 <Font size="23.0" />
             </font>
         </Label>
         <Label layoutX="175.0" layoutY="157.0" prefHeight="17.0" prefWidth="261.0" text="insert your Nickname" />
-        <Label id="GRAPHICStatus_Label" fx:id="statuslabel" layoutX="122.0" layoutY="498.0" prefHeight="44.0" prefWidth="586.0" text="ready " />
-        <ChoiceBox fx:id="gamebox" layoutX="175.0" layoutY="423.0" prefHeight="26.0" prefWidth="429.0" />
+        <Label id="GRAPHICStatus_Label" fx:id="statusLabel" layoutX="122.0" layoutY="498.0" prefHeight="44.0" prefWidth="586.0" text="ready " />
+        <ChoiceBox fx:id="gameBox" layoutX="175.0" layoutY="423.0" prefHeight="26.0" prefWidth="429.0" />
         <Label layoutX="175.0" layoutY="239.0" prefHeight="17.0" prefWidth="183.0" text="insert number of player" />
         <Label layoutX="175.0" layoutY="322.0" text="choose wizard " />
         <Label layoutX="175.0" layoutY="406.0" prefHeight="17.0" prefWidth="131.0" text="choose type of game" />
-        <ChoiceBox fx:id="wizardbox" layoutX="175.0" layoutY="339.0" prefHeight="26.0" prefWidth="429.0" />
-        <ChoiceBox fx:id="numberofplayer" layoutX="175.0" layoutY="256.0" prefHeight="25.0" prefWidth="429.0" />
+        <ChoiceBox fx:id="wizardBox" layoutX="175.0" layoutY="339.0" prefHeight="26.0" prefWidth="429.0" />
+        <ChoiceBox fx:id="chosenPlayerCount" layoutX="175.0" layoutY="256.0" prefHeight="25.0" prefWidth="429.0" />
         <ImageView fitHeight="98.0" fitWidth="81.0" layoutX="698.0" layoutY="12.0">
             <image>
                 <Image url="@../images/Title_Cranio_Creation.png" />

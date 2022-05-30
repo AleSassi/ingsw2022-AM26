@@ -17,6 +17,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -24,103 +25,93 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 
-public class LoginController {
-    ObservableList<String> wizardChoices = FXCollections.observableArrayList("wizard1", "wizard2", "wizard3", "wizard4");
-    ObservableList<String> gameChoices = FXCollections.observableArrayList("simple", "expert");
-    ObservableList<String> numofplayerchoice = FXCollections.observableArrayList("2", "3", "4");
-
-    int i = 0;
-
-
-    private String username;
-    private MatchVariant type;
-
-
-        public void run () {
-            NotificationCenter.shared().addObserver((notification) -> (new Thread(() -> {
-                try {
-                    otherPlayerLoggedInReceived(notification);
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            })).start(), NotificationName.ClientDidReceiveLoginResponse, GameClient.shared());
-        }
-
-
-
-    @FXML ChoiceBox<String> gamebox;
-    @FXML ChoiceBox<String> wizardbox;
-    @FXML ChoiceBox<String> numberofplayer;
-    @FXML TextField nicknamebox;
-    @FXML TextField playerbox;
-    @FXML Label statuslabel;
-    @FXML Pane pane;
-
-
-
-
-    @FXML
-    private void initialize() {
-        gamebox.setValue("simple");
-        gamebox.setItems(gameChoices);
-        wizardbox.setValue("wizard1");
-        wizardbox.setItems(wizardChoices);
-        numberofplayer.setValue("2");
-        numberofplayer.setItems(numofplayerchoice);
-
-    }
-
-    private synchronized void otherPlayerLoggedInReceived(Notification notification) throws IOException, InterruptedException {
-        LoginResponse message = (LoginResponse) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
-        boolean messageIsForPlayer = message.getNickname().equals(Client.getNickname());
-
-        if (message.getNickname().equals(Client.getNickname()) && message.isLoginAccepted()) {
-            //if the message is for the player and the login Accepted go to lobby
-            LobbyController lobbyController = GUI.setRoot("scenes/lobby").getController();
-            lobbyController.run(type, message.getNumberOfPlayersRemainingToFillLobby());
-
-
-        } else if(message.getNickname().equals(Client.getNickname()) && !message.isLoginAccepted()){
-            Platform.runLater(() -> {
-                Alert alert= new Alert(Alert.AlertType.ERROR);
-                alert.setContentText(message.getRejectionReason());
-                alert.show();
-            });
-
-        }
-    }
-
-
-    public void SendNickname(ActionEvent actionEvent) {
-        username = nicknamebox.getText();
-        String number = numberofplayer.getSelectionModel().getSelectedItem();
-        int Number = Integer.parseInt(number);
-        String selectedgame = gamebox.getSelectionModel().getSelectedItem();
-        String selectedwizard = wizardbox.getSelectionModel().getSelectedItem();
-        Wizard wiz;
-
-
-        if (selectedgame.equals("simple")) {
-            type = MatchVariant.BasicRuleSet;
-        } else {
-            type = MatchVariant.ExpertRuleSet;
-        }
-
-        if (selectedwizard.equals("wizard1")) {
-            wiz = Wizard.Wizard1;
-        } else if (selectedwizard.equals("wizard2")) {
-            wiz = Wizard.Wizard2;
-        } else if (selectedwizard.equals("wizard3")) {
-            wiz = Wizard.Wizard3;
-        } else {
-            wiz = Wizard.Wizard4;
-        }
-        Client.setNickname(username);
-        NetworkMessage loginMessage = new LoginMessage(username, Number, type, wiz);
-        //this.run();
-        loginMessage.serialize();
-        GameClient.shared().sendMessage(loginMessage);
-    }
+public class LoginController implements Initializable {
+	
+	@FXML
+	ChoiceBox<String> gameBox;
+	@FXML
+	ChoiceBox<String> wizardBox;
+	@FXML
+	ChoiceBox<String> chosenPlayerCount;
+	@FXML
+	TextField nicknameBox;
+	@FXML
+	Label statusLabel;
+	@FXML
+	Pane pane;
+	
+	ObservableList<String> wizardChoices = FXCollections.observableArrayList("wizard1", "wizard2", "wizard3", "wizard4");
+	ObservableList<String> gameChoices = FXCollections.observableArrayList("simple", "expert");
+	ObservableList<String> chosenNumberOfPlayers = FXCollections.observableArrayList("2", "3", "4");
+	
+	private String chosenUsername;
+	private MatchVariant selectedMatchType;
+	private int chosenLobbySize;
+	
+	@Override
+	public void initialize(URL url, ResourceBundle resourceBundle) {
+		gameBox.setValue("simple");
+		gameBox.setItems(gameChoices);
+		wizardBox.setValue("wizard1");
+		wizardBox.setItems(wizardChoices);
+		chosenPlayerCount.setValue("2");
+		chosenPlayerCount.setItems(chosenNumberOfPlayers);
+	}
+	
+	public void sendFormValuesToServer(ActionEvent actionEvent) {
+		chosenUsername = nicknameBox.getText();
+		chosenLobbySize = Integer.parseInt(chosenPlayerCount.getSelectionModel().getSelectedItem());
+  
+		if (gameBox.getSelectionModel().getSelectedItem().equals("simple")) {
+			selectedMatchType = MatchVariant.BasicRuleSet;
+		} else {
+			selectedMatchType = MatchVariant.ExpertRuleSet;
+		}
+		
+		Wizard wiz = switch (wizardBox.getSelectionModel().getSelectedItem()) {
+			case "wizard1" -> Wizard.Wizard1;
+			case "wizard2" -> Wizard.Wizard2;
+			case "wizard3" -> Wizard.Wizard3;
+			default -> Wizard.Wizard4;
+		};
+		NetworkMessage loginMessage = new LoginMessage(chosenUsername, chosenLobbySize, selectedMatchType, wiz);
+		NotificationCenter.shared().addObserver(this::didReceiveLoginResponse, NotificationName.ClientDidReceiveLoginResponse, GameClient.shared());
+		
+		GameClient.shared().sendMessage(loginMessage);
+	}
+	
+	private void didReceiveLoginResponse(Notification notification) {
+		LoginResponse message = (LoginResponse) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
+		boolean messageIsForPlayer = message.getNickname().equals(chosenUsername);
+		
+		if (messageIsForPlayer) {
+			if (message.isLoginAccepted()) {
+				// Go to the Lobby
+				Client.setNickname(chosenUsername);
+				try {
+					// Present the lobby controller
+					LobbyController lobbyController = GUI.setRoot("scenes/lobby").getController();
+					lobbyController.setInitialData(selectedMatchType, message.getNumberOfPlayersRemainingToFillLobby());
+				} catch (IOException e) {
+					// Present an alert
+					Platform.runLater(() -> {
+						Alert alert = new Alert(Alert.AlertType.ERROR);
+						alert.setContentText(e.getLocalizedMessage());
+						alert.show();
+					});
+				}
+			} else {
+				// Present an alert
+				Platform.runLater(() -> {
+					Alert alert = new Alert(Alert.AlertType.ERROR);
+					alert.setContentText(message.getRejectionReason());
+					alert.show();
+				});
+			}
+		}
+	}
 }
