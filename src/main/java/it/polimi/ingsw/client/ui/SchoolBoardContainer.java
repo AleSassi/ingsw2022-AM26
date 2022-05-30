@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.ui;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationName;
+import it.polimi.ingsw.utils.ui.StudentDropTarget;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
@@ -59,6 +60,14 @@ public class SchoolBoardContainer extends AnchorPane implements JavaFXRescalable
 		}
 		this.boardPane.setLayoutX(0);
 		this.setPrefSize(this.boardPane.getPrefWidth(), this.boardPane.getPrefHeight() + this.boardPane.getLayoutY());
+	}
+	
+	public void setActive(boolean active) {
+	
+	}
+	
+	public void setAllowedStudentMovements(StudentDropTarget[] validStudentDestinations) {
+		boardPane.setAllowedStudentDestinationsForPhase(validStudentDestinations);
 	}
 	
 }

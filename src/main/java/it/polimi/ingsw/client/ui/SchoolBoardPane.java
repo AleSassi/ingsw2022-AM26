@@ -6,23 +6,23 @@ import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.ActivePlayerMessage;
 import it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage;
-import it.polimi.ingsw.server.model.Professor;
-import it.polimi.ingsw.server.model.Tower;
 import it.polimi.ingsw.server.model.student.Student;
+import it.polimi.ingsw.utils.ui.GUIUtils;
+import it.polimi.ingsw.utils.ui.StudentDropTarget;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
-import java.net.URISyntaxException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Objects;
+import java.util.List;
 
 public class SchoolBoardPane extends AnchorPane implements JavaFXRescalable {
 	
 	private final String ownerNickname;
 	private final boolean isPrimary;
+	private StudentDropTarget[] allowedDropDestinationsForDrag, allowedStudentDestinationsForPhase;
 	
 	private final GridPane entranceGrid;
 	private final GridPane diningGrid;
@@ -30,15 +30,18 @@ public class SchoolBoardPane extends AnchorPane implements JavaFXRescalable {
 	private final GridPane towersGrid;
 	
 	public SchoolBoardPane(boolean isPrimary, String ownerNickname) {
+		this.allowedStudentDestinationsForPhase = new StudentDropTarget[0];
 		this.ownerNickname = ownerNickname;
 		this.isPrimary = isPrimary;
 		//Set the Background Image
-		setStyle("-fx-background-image: url(" + getURI("images/Plancia_DEF2.png") + ");\n-fx-background-size: 100% 100%");
+		setStyle("-fx-background-image: url(" + GUIUtils.getURI("images/Plancia_DEF2.png") + ");\n-fx-background-size: 100% 100%");
 		//Create the grid that handles the Students
 		entranceGrid = new GridPane();
+		setupMouseClickAfterStudentStartMoving(entranceGrid, StudentDropTarget.ToEntrance);
 		setDisabled(!isPrimary);
 		//Create the grid for the dining room
 		diningGrid = new GridPane();
+		setupMouseClickAfterStudentStartMoving(diningGrid, StudentDropTarget.ToDiningRoom);
 		//Create the V-Stack for the Professors
 		professors = new GridPane();
 		//Create the grid for the Towers
@@ -49,6 +52,7 @@ public class SchoolBoardPane extends AnchorPane implements JavaFXRescalable {
 		//Register for auto-update notifications
 		NotificationCenter.shared().addObserver(this::didReceivePlayerStatusNotification, NotificationName.ClientDidReceivePlayerStateMessage, null);
 		NotificationCenter.shared().addObserver(this::didReceiveActivePlayerNotification, NotificationName.ClientDidReceiveActivePlayerMessage, null);
+		NotificationCenter.shared().addObserver(this::didReceiveStartStudentMoveNotification, NotificationName.JavaFXDidStartMovingStudent, null);
 	}
 	
 	public void rescale(double scale) {
@@ -124,6 +128,10 @@ public class SchoolBoardPane extends AnchorPane implements JavaFXRescalable {
 		return ownerNickname;
 	}
 	
+	public void setAllowedStudentDestinationsForPhase(StudentDropTarget[] allowedStudentDestinationsForPhase) {
+		this.allowedStudentDestinationsForPhase = allowedStudentDestinationsForPhase;
+	}
+	
 	private void didReceiveActivePlayerNotification(Notification notification) {
 		if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof ActivePlayerMessage message) {
 			if (isPrimary) {
@@ -147,7 +155,7 @@ public class SchoolBoardPane extends AnchorPane implements JavaFXRescalable {
 		for (Student student: Student.values()) {
 			for (int i = 0; i < message.getBoard().getEntrance().getCount(student); i++) {
 				//Place a Pawn at (row, col)
-				AnchorPane studentButton = createStudentButton(student);
+				AnchorPane studentButton = GUIUtils.createStudentButton(student, new StudentDropTarget[]{StudentDropTarget.ToDiningRoom, StudentDropTarget.ToIsland, StudentDropTarget.ToCharacterCard});
 				int finalRow = row;
 				int finalCol = col;
 				//System.out.println("Adding student at (" + finalRow + ", " + finalCol + ")");
@@ -167,7 +175,7 @@ public class SchoolBoardPane extends AnchorPane implements JavaFXRescalable {
 		for (Student student: Student.values()) {
 			for (int i = 0; i < message.getBoard().getDiningRoom().getCount(student); i++) {
 				//Place a Pawn at (row, col)
-				AnchorPane studentButton = createStudentButton(student);
+				AnchorPane studentButton = GUIUtils.createStudentButton(student, new StudentDropTarget[0]);
 				int finalRow = row;
 				int finalCol = col;
 				Platform.runLater(() -> {
@@ -186,7 +194,7 @@ public class SchoolBoardPane extends AnchorPane implements JavaFXRescalable {
 		int row = 0;
 		for (Student professor: Student.values()) {
 			if (message.getBoard().getControlledProfessors().contains(professor.getAssociatedProfessor())) {
-				AnchorPane professorView = createProfessorButton(professor);
+				AnchorPane professorView = GUIUtils.createProfessorButton(professor);
 				int finalRow = row;
 				Platform.runLater(() -> {
 					GridPane.setRowIndex(professorView, finalRow);
@@ -202,7 +210,7 @@ public class SchoolBoardPane extends AnchorPane implements JavaFXRescalable {
 		for (int i = 0; i < message.getBoard().getAvailableTowerCount(); i++) {
 			int row = i / 2;
 			int col = i % 2;
-			AnchorPane towerView = createTowerButton(message.getBoard().getTowerType());
+			AnchorPane towerView = GUIUtils.createTowerButton(message.getBoard().getTowerType());
 			Platform.runLater(() -> {
 				GridPane.setRowIndex(towerView, row);
 				GridPane.setColumnIndex(towerView, col);
@@ -211,38 +219,42 @@ public class SchoolBoardPane extends AnchorPane implements JavaFXRescalable {
 		}
 	}
 	
-	private AnchorPane createStudentButton(Student student) {
-		AnchorPane studentButton = createImageViewWithImageNamed("images/students/" + student.getColor() + ".png");
-		studentButton.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, event -> {
-			HashMap<String, Object> userInfo = new HashMap<>();
-			userInfo.put(NotificationKeys.ClickedStudentColor.getRawValue(), student);
-			// We forward a notification so that the controller class can get the Student from the PlayerMessage
-			NotificationCenter.shared().post(NotificationName.JavaFXDidClickOnStudent, this, userInfo);
-		});
-		studentButton.setStyle(studentButton.getStyle() + ";\n-fx-background-color: white");
-		return studentButton;
+	private void setupMouseClickAfterStudentStartMoving(Pane targetPane, StudentDropTarget dropTarget) {
+		if (isPrimary) {
+			targetPane.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+				for (StudentDropTarget allowedDropTarget: allowedDropDestinationsForDrag) {
+					if (allowedDropTarget == dropTarget) {
+						//Action registered successfully - post notification
+						HashMap<String, Object> userInfo = new HashMap<>();
+						userInfo.put("dropTarget", dropTarget);
+						NotificationCenter.shared().post(NotificationName.JavaFXDidEndMovingStudent, null, userInfo);
+						//End the operation
+						entranceGrid.setStyle("");
+						diningGrid.setStyle("");
+						break;
+					}
+				}
+				event.consume();
+			});
+		}
 	}
 	
-	private AnchorPane createProfessorButton(Student student) {
-		return createImageViewWithImageNamed("images/professors/" + student.getColor() + ".png");
-	}
-	
-	private AnchorPane createTowerButton(Tower tower) {
-		return createImageViewWithImageNamed("images/towers/" + tower + ".png");
-	}
-	
-	private AnchorPane createImageViewWithImageNamed(String imageName) {
-		AnchorPane img = new AnchorPane();
-		img.setStyle("-fx-background-image: url(" + getURI(imageName) + ");\n-fx-background-size: 100% 100%");
-		return img;
-	}
-	
-	private String getURI(String resource) {
-		try {
-			return Objects.requireNonNull(getClass().getResource(resource)).toURI().toString();
-		} catch (URISyntaxException e) {
-			System.out.println("ERROR WHEN BUILDING URI");
-			return resource;
+	private void didReceiveStartStudentMoveNotification(Notification notification) {
+		if (isPrimary) {
+			List<StudentDropTarget> allowableDefaultMovements = Arrays.stream(allowedStudentDestinationsForPhase).toList();
+			List<StudentDropTarget> dropDestinationsForDrag = Arrays.stream(((StudentDropTarget[]) notification.getUserInfo().get(NotificationKeys.StudentDropTargets.getRawValue()))).toList();
+			this.allowedDropDestinationsForDrag = dropDestinationsForDrag.stream().filter(allowableDefaultMovements::contains).toList().toArray(new StudentDropTarget[0]);
+			//Highlight areas that can be a target for the operation
+			for (StudentDropTarget dropTarget: allowedDropDestinationsForDrag) {
+				switch (dropTarget) {
+					case ToEntrance -> {
+						entranceGrid.setStyle(entranceGrid.getStyle() + ";\n-fx-background-color: rgba(80,255,80,0.4)");
+					}
+					case ToDiningRoom -> {
+						diningGrid.setStyle(diningGrid.getStyle() + ";\n-fx-background-color: rgba(80,255,80,0.4)");
+					}
+				}
+			}
 		}
 	}
 }

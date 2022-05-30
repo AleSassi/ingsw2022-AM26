@@ -5,7 +5,8 @@ public enum NotificationKeys {
 	WinnerNickname("WinnerNickname"),
 	WinnerTowerType("WinnerTowerType"),
 	IncomingNetworkMessage("IncomingNetworkMessage"),
-	ClickedStudentColor("ClickedStudentColor");
+	ClickedStudentColor("ClickedStudentColor"),
+	StudentDropTargets("ValidStudentDropTargets");
 	
 	private final String rawValue;
 	
