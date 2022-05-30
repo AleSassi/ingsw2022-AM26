@@ -27,16 +27,20 @@ public class GUIUtils {
 			NotificationCenter.shared().post(NotificationName.JavaFXDidStartMovingStudent, null, userInfo);
 			event.consume();
 		});
-		studentButton.setStyle(studentButton.getStyle() + ";\n-fx-background-color: white");
+		studentButton.setStyle(studentButton.getStyle() + ";\n-fx-background-color: white;\n-fx-border-radius: 100px;\n-fx-background-radius: 100px");
 		return studentButton;
 	}
 	
 	public static AnchorPane createProfessorButton(Student student) {
-		return createImageViewWithImageNamed("images/professors/" + student.getColor() + ".png");
+		AnchorPane professorPane = createImageViewWithImageNamed("images/professors/" + student.getColor() + ".png");
+		professorPane.setStyle(professorPane.getStyle() + ";\n-fx-background-color: white;\n-fx-border-radius: 100px;\n-fx-background-radius: 100px");
+		return professorPane;
 	}
 	
 	public static AnchorPane createTowerButton(Tower tower) {
-		return createImageViewWithImageNamed("images/towers/" + tower + ".png");
+		AnchorPane towerPane = createImageViewWithImageNamed("images/towers/" + tower + ".png");
+		towerPane.setStyle(towerPane.getStyle() + ";\n-fx-background-color: #b7b7b7;\n-fx-border-radius: 100px;\n-fx-background-radius: 100px");
+		return towerPane;
 	}
 	
 	public static AnchorPane createImageViewWithImageNamed(String imageName) {
