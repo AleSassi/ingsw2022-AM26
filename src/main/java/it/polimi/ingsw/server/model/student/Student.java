@@ -5,11 +5,11 @@ import it.polimi.ingsw.server.model.Professor;
 import java.util.*;
 
 public enum Student {
-    YellowElf(Professor.YellowElf),
-    BlueUnicorn(Professor.BlueUnicorn),
     GreenFrog(Professor.GreenFrog),
     RedDragon(Professor.RedDragon),
-    PinkFair(Professor.PinkFair);
+    YellowElf(Professor.YellowElf),
+    PinkFair(Professor.PinkFair),
+    BlueUnicorn(Professor.BlueUnicorn);
 
     private final Professor associatedProfessor;
 
