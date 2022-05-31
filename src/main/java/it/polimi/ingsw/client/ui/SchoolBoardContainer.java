@@ -9,7 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 
-public class SchoolBoardContainer extends AnchorPane implements JavaFXRescalable {
+public class SchoolBoardContainer extends RescalableAnchorPane {
 	
 	private Label playerLabel;
 	private SchoolBoardPane boardPane;
@@ -21,8 +21,6 @@ public class SchoolBoardContainer extends AnchorPane implements JavaFXRescalable
 		this.playerLabel = new Label(isPrimary ? "Your School Board" : ownerNickname + "'s School Board");
 		rescale(1);
 		getChildren().addAll(this.playerLabel, this.boardPane);
-		
-		NotificationCenter.shared().addObserver(this::didReceiveWindowDidResizeNotification, NotificationName.JavaFXWindowDidResize, null);
 	}
 	
 	protected String getOwnerNickname() {
@@ -33,23 +31,7 @@ public class SchoolBoardContainer extends AnchorPane implements JavaFXRescalable
 		boardPane.didReceivePlayerStatusNotification(notification);
 	}
 	
-	private void didReceiveWindowDidResizeNotification(Notification notification) {
-		if (notification.getUserInfo() != null) {
-			if (notification.getUserInfo().containsKey("newWidth")) {
-				// When we resize the width dimension, the container should not change (stays anchored to the left side of the window)
-			} else if (notification.getUserInfo().containsKey("newHeight")) {
-				// When we resize the height dimension, the container should rescale to fit into the container
-				double newHeight = ((Number) notification.getUserInfo().get("newHeight")).doubleValue();
-				double heightScale = newHeight / GUI.referenceHeight;
-				double widthScale = GUI.getWindowWidth() / GUI.referenceWidth;
-				double scale = Math.min(widthScale, heightScale);
-				rescale(scale);
-			}
-		}
-	}
-	
 	public void rescale(double scale) {
-		this.boardPane.rescale(scale);
 		this.playerLabel.setLayoutX(5 * scale);
 		this.playerLabel.setLayoutY(0);
 		if (isPrimary) {

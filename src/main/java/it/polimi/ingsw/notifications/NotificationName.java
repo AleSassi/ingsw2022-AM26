@@ -17,5 +17,6 @@ public enum NotificationName {
 	ClientDidTimeoutNetwork,
 	JavaFXDidStartMovingStudent,
 	JavaFXWindowDidResize,
-	JavaFXDidEndMovingStudent;
+	JavaFXDidEndMovingStudent,
+	JavaFXDidClickOnAssistantCard;
 }

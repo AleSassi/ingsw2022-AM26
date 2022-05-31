@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class SchoolBoardPane extends AnchorPane implements JavaFXRescalable {
+public class SchoolBoardPane extends RescalableAnchorPane {
 	
 	private final String ownerNickname;
 	private final boolean isPrimary;
@@ -30,6 +30,7 @@ public class SchoolBoardPane extends AnchorPane implements JavaFXRescalable {
 	private final GridPane towersGrid;
 	
 	public SchoolBoardPane(boolean isPrimary, String ownerNickname) {
+		super();
 		this.allowedStudentDestinationsForPhase = new StudentDropTarget[0];
 		this.ownerNickname = ownerNickname;
 		this.isPrimary = isPrimary;

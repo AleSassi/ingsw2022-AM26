@@ -7,6 +7,7 @@ import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.*;
+import it.polimi.ingsw.server.model.assistants.AssistantCard;
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.utils.cli.ANSIColors;
 import it.polimi.ingsw.utils.cli.StringFormatter;
@@ -40,6 +41,7 @@ public class MainBoardController implements JavaFXRescalable {
     private String currentlyActivePlayerNickname;
     private Pane faderPane;
     private Label waitTurnLabel;
+    private PlayerStateMessage stateMessage;
     
     public void load() {
         schoolBoardContainers = new ArrayList<>();
@@ -54,6 +56,9 @@ public class MainBoardController implements JavaFXRescalable {
     
     protected void didReceivePlayerStatusNotification(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof PlayerStateMessage message) {
+            if (message.getNickname().equals(Client.getNickname())) {
+                stateMessage = message;
+            }
             if (!schoolBoardContainers.stream().map(SchoolBoardContainer::getOwnerNickname).toList().contains(message.getNickname())) {
                 //Create the new container
                 SchoolBoardContainer newContainer = new SchoolBoardContainer(message.getNickname().equals(Client.getNickname()), message.getNickname());
@@ -100,13 +105,7 @@ public class MainBoardController implements JavaFXRescalable {
     private void setDisplaysWaitForTurnFader(boolean displaysWaitForTurnFader) {
         Platform.runLater(() -> {
             if (displaysWaitForTurnFader) {
-                faderPane = new AnchorPane();
-                faderPane.setStyle("-fx-background-color: rgba(0,0,0,0.6)");
-                AnchorPane.setTopAnchor(faderPane, 0.0);
-                AnchorPane.setBottomAnchor(faderPane, 0.0);
-                AnchorPane.setLeftAnchor(faderPane, 0.0);
-                AnchorPane.setRightAnchor(faderPane, 0.0);
-                mainPane.getChildren().add(faderPane);
+                showFaderPane();
                 waitTurnLabel = new Label(currentlyActivePlayerNickname + " is currently playing their turn. Please wait until it is your turn to play.");
                 waitTurnLabel.setFont(new Font("Avenir", 30));
                 waitTurnLabel.setTextFill(new Color(1, 1, 1, 1));
@@ -153,20 +152,42 @@ public class MainBoardController implements JavaFXRescalable {
     }
     
     private void showAssistantCardModalWindow() {
+        AssistantCardPickerView cardPickerView = new AssistantCardPickerView(stateMessage.getAvailableCardsDeck());
         Platform.runLater(() -> {
-            TextInputDialog td = new TextInputDialog("Assistant card index...");
-            td.setHeaderText("Enter the assistant card index");
-            td.showAndWait().ifPresentOrElse((text) -> {
-                try {
-                    int number = Integer.parseInt(text);
-                    //Send the player action
-                    PlayerActionMessage actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidPlayAssistantCard, number, null, false, -1, -1, -1, -1, null);
-                    GameClient.shared().sendMessage(actionMessage);
-                } catch (NumberFormatException e) {
-                    this.showAssistantCardModalWindow();
-                }
-            }, this::showAssistantCardModalWindow);
+            showFaderPane();
+            AnchorPane.setTopAnchor(cardPickerView, (GUI.getWindowHeight() - 400) * 0.5);
+            AnchorPane.setBottomAnchor(cardPickerView, (GUI.getWindowHeight() - 400) * 0.5);
+            AnchorPane.setLeftAnchor(cardPickerView, (GUI.getWindowWidth() - 520) * 0.5);
+            AnchorPane.setRightAnchor(cardPickerView, (GUI.getWindowWidth() - 520) * 0.5);
+            mainPane.getChildren().add(cardPickerView);
         });
+        NotificationCenter.shared().addObserver((notification) -> {
+            AssistantCard pickedAssistant = (AssistantCard) notification.getUserInfo().get("clickedAssistant");
+            int index = 0;
+            for (AssistantCard assistantCard: stateMessage.getAvailableCardsDeck()) {
+                if (assistantCard == pickedAssistant) {
+                    break;
+                }
+                index += 1;
+            }
+            PlayerActionMessage actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidPlayAssistantCard, index, null, false, -1, -1, -1, -1, null);
+            GameClient.shared().sendMessage(actionMessage);
+            Platform.runLater(() -> {
+                mainPane.getChildren().remove(cardPickerView);
+                mainPane.getChildren().remove(faderPane);
+                faderPane = null;
+            });
+        }, NotificationName.JavaFXDidClickOnAssistantCard, null);
+    }
+    
+    private void showFaderPane() {
+        faderPane = new AnchorPane();
+        faderPane.setStyle("-fx-background-color: rgba(0,0,0,0.6)");
+        AnchorPane.setTopAnchor(faderPane, 0.0);
+        AnchorPane.setBottomAnchor(faderPane, 0.0);
+        AnchorPane.setLeftAnchor(faderPane, 0.0);
+        AnchorPane.setRightAnchor(faderPane, 0.0);
+        mainPane.getChildren().add(faderPane);
     }
     
     private void didReceiveStudentMovementStart(Notification notification) {
