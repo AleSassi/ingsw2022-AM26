@@ -42,6 +42,7 @@ public class MainBoardController implements JavaFXRescalable {
     private Pane faderPane;
     private Label waitTurnLabel;
     private PlayerStateMessage stateMessage;
+    private boolean isLoaded = false;
     
     public void load() {
         schoolBoardContainers = new ArrayList<>();
@@ -52,6 +53,11 @@ public class MainBoardController implements JavaFXRescalable {
         NotificationCenter.shared().addObserver(this::didReceivePlayerActionResponse, NotificationName.ClientDidReceivePlayerActionResponse, null);
         NotificationCenter.shared().addObserver(this::didReceiveStudentMovementStart, NotificationName.JavaFXDidStartMovingStudent, null);
         NotificationCenter.shared().addObserver(this::didReceiveStudentMovementEnd, NotificationName.JavaFXDidEndMovingStudent, null);
+        isLoaded = true;
+    }
+    
+    public boolean isLoaded() {
+        return isLoaded;
     }
     
     protected void didReceivePlayerStatusNotification(Notification notification) {
@@ -148,10 +154,6 @@ public class MainBoardController implements JavaFXRescalable {
         AssistantCardPickerView cardPickerView = new AssistantCardPickerView(stateMessage.getAvailableCardsDeck());
         Platform.runLater(() -> {
             showFaderPane();
-            AnchorPane.setTopAnchor(cardPickerView, (GUI.getWindowHeight() - 400) * 0.5);
-            AnchorPane.setBottomAnchor(cardPickerView, (GUI.getWindowHeight() - 400) * 0.5);
-            AnchorPane.setLeftAnchor(cardPickerView, (GUI.getWindowWidth() - 520) * 0.5);
-            AnchorPane.setRightAnchor(cardPickerView, (GUI.getWindowWidth() - 520) * 0.5);
             mainPane.getChildren().add(cardPickerView);
         });
         NotificationCenter.shared().addObserver((notification) -> {
@@ -236,9 +238,11 @@ public class MainBoardController implements JavaFXRescalable {
         PlayerActionResponse response = (PlayerActionResponse) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
         if (!response.isActionSuccess()) {
             //Alert the user that the action was cancelled
-            Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Invalid move", ButtonType.CLOSE);
-            errorAlert.setContentText(response.getDescriptiveErrorMessage());
-            Platform.runLater(errorAlert::show);
+            Platform.runLater(() -> {
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Invalid move", ButtonType.CLOSE);
+                errorAlert.setContentText(response.getDescriptiveErrorMessage());
+                Platform.runLater(errorAlert::show);
+            });
         }
     }
     

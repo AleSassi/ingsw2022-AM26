@@ -22,20 +22,22 @@ public class AssistantCardPickerView extends RescalableAnchorPane {
 		title.setContentDisplay(ContentDisplay.CENTER);
 		title.setAlignment(Pos.CENTER);
 		title.setWrapText(true);
-		AnchorPane.setTopAnchor(title, 10.0);
-		AnchorPane.setLeftAnchor(title, 20.0);
-		AnchorPane.setRightAnchor(title, 20.0);
 		getChildren().add(title);
 		getChildren().add(assistantPickerPane);
 		rescale(1);
-		setStyle("-fx-background-color: #fafafa;\n-fx-background-radius: 20");
 	}
 	
 	@Override
 	public void rescale(double scale) {
-		//setPrefSize(520 * scale, 750 * scale);
+		setPrefSize(400 * scale, 480 * scale);
+		setLayoutX((GUI.getWindowWidth() - (400 * scale * 1.2)) * 0.5);
+		setLayoutY((GUI.getWindowHeight() - (480 * scale * 1.2)) * 0.5);
 		assistantPickerPane.setLayoutX(10 * scale);
 		assistantPickerPane.setLayoutY(50 * scale);
 		title.setFont(new Font("Avenir", 30 * scale));
+		title.setLayoutX(70 * scale);
+		title.setLayoutY(10 * scale);
+		title.setPrefSize(360 * scale, 35 * scale);
+		setStyle("-fx-background-color: #fafafa;\n-fx-background-radius: " + 20 * scale);
 	}
 }

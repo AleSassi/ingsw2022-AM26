@@ -10,7 +10,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
-public class AssistantPickerPane extends GridPane implements JavaFXRescalable {
+public class AssistantPickerPane extends GridPane {
 	
 	public AssistantPickerPane(AssistantCard[] availableAssistants) {
 		super();
@@ -29,27 +29,5 @@ public class AssistantPickerPane extends GridPane implements JavaFXRescalable {
 			i = count / 5;
 			j = count % 5;
 		}
-		NotificationCenter.shared().addObserver(this::didReceiveWindowResizeNotification, NotificationName.JavaFXWindowDidResize, null);
-	}
-	
-	private void didReceiveWindowResizeNotification(Notification notification) {
-		Double scaleValue = RescaleUtils.rescaleAfterNotification(notification);
-		if (scaleValue != null) {
-			rescale(scaleValue);
-		}
-	}
-	
-	@Override
-	public void rescale(double scale) {
-		for (int i = 0; i < 2; i++) {
-			RowConstraints row = new RowConstraints(147 * scale);
-			getRowConstraints().add(row);
-		}
-		for (int i = 0; i < 5; i++) {
-			ColumnConstraints col = new ColumnConstraints(100 * scale);
-			getColumnConstraints().add(col);
-		}
-		setVgap(20 * scale);
-		setHgap(20 * scale);
 	}
 }

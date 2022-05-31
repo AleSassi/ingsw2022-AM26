@@ -15,6 +15,7 @@ public class GUI extends Application {
 	
 	private static Scene scene;
 	private static Stage mainStage;
+	private static double stageWidth, stageHeight;
 	
 	protected static final double referenceWidth = 1300;
 	protected static final double referenceHeight = 810;
@@ -31,34 +32,42 @@ public class GUI extends Application {
 		LoginController loginController = GUI.setRoot("scenes/LoginPage").getController();
 		stage.show();
 		mainStage = stage;
+		stageWidth = stage.getWidth();
+		stageHeight = stage.getHeight();
 		
 		//Setup resize listeners
 		stage.widthProperty().addListener((observable, oldValue, newValue) -> {
 			HashMap<String, Object> userInfo = new HashMap<>();
 			userInfo.put("oldWidth", oldValue);
 			userInfo.put("newWidth", newValue);
+			stageWidth = newValue.doubleValue();
 			NotificationCenter.shared().post(NotificationName.JavaFXWindowDidResize, null, userInfo);
 		});
 		stage.heightProperty().addListener((observable, oldValue, newValue) -> {
 			HashMap<String, Object> userInfo = new HashMap<>();
 			userInfo.put("oldHeight", oldValue);
 			userInfo.put("newHeight", newValue);
+			stageHeight = newValue.doubleValue();
 			NotificationCenter.shared().post(NotificationName.JavaFXWindowDidResize, null, userInfo);
 		});
 	}
 	
 	public static double getWindowWidth() {
-		return mainStage.getWidth();
+		return stageWidth;
 	}
 	
 	public static double getWindowHeight() {
-		return mainStage.getHeight();
+		return stageHeight;
 	}
 	
 	static FXMLLoader setRoot(String fxml) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(GUI.class.getResource(fxml + ".fxml"));
 		scene.setRoot(fxmlLoader.load());
 		return fxmlLoader;
+	}
+	
+	static Parent getRoot() {
+		return scene.getRoot();
 	}
 	
 	private static Parent loadFXML(String fxml) throws IOException {

@@ -29,6 +29,7 @@ public class LobbyController implements Initializable {
 	private int numberOfPlayersToFill = 4;
 	private List<Notification> playerStateMessagesQueue; //Used to forward them to the main controller, since it might happen that the main controller is initialized and presented after the notification arrives
 	private Notification tableMessage, activePlayerMessage, matchStateMessage;
+	private MainBoardController mainBoardController;
 	
 	@FXML
 	Label statusLabel;
@@ -107,9 +108,9 @@ public class LobbyController implements Initializable {
 		matchStateMessage = notification;
 	}
 	
-	private void moveToGameScene() {
+	private synchronized void moveToGameScene() {
 		try {
-			MainBoardController mainBoardController = GUI.setRoot("scenes/mainBoard").getController();
+			mainBoardController = GUI.setRoot("scenes/mainBoard").getController();
 			mainBoardController.load();
 			//Resend the received player state messages, so that the controller can receive them
 			for (Notification notification: playerStateMessagesQueue) {
