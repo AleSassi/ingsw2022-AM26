@@ -12,9 +12,18 @@
             <Font size="120.0" />
          </font>
       </Label>
-      <Button layoutX="364.0" layoutY="651.0" mnemonicParsing="false" onAction="#quit" prefHeight="128.0" prefWidth="542.0" text="QUIT" AnchorPane.leftAnchor="364.0" AnchorPane.rightAnchor="316.0" />
-      <Button fx:id="newgamebutton" layoutX="363.0" layoutY="469.0" mnemonicParsing="false" onAction="#newgame" prefHeight="128.0" prefWidth="542.0" text="NEW GAME" AnchorPane.leftAnchor="363.0" AnchorPane.rightAnchor="317.0" />
-      <Label fx:id="winnerlabel" layoutX="597.0" layoutY="457.0" />
-      <AnchorPane layoutX="534.0" layoutY="37.0" prefHeight="200.0" prefWidth="200.0" />
+      <Button fx:id="quitbutton" layoutX="364.0" layoutY="651.0" mnemonicParsing="false" onAction="#quit" prefHeight="128.0" prefWidth="542.0" text="QUIT">
+         <font>
+            <Font size="15.0" />
+         </font></Button>
+      <Button fx:id="newgamebutton" layoutX="363.0" layoutY="469.0" mnemonicParsing="false" onAction="#newgame" prefHeight="128.0" prefWidth="542.0" text="NEW GAME">
+         <font>
+            <Font size="15.0" />
+         </font></Button>
+      <Label fx:id="winnerlabel" layoutX="610.0" layoutY="427.0" prefHeight="17.0" prefWidth="0.0">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <AnchorPane layoutX="489.0" layoutY="37.0" prefHeight="218.0" prefWidth="297.0" />
    </children>
 </AnchorPane>
