@@ -12,7 +12,7 @@
 <Pane fx:id="pane" cacheShape="false" centerShape="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="644.0" prefWidth="792.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.LoginController">
     <children>
         <TextField id="NicknameField" fx:id="nicknameBox" layoutX="175.0" layoutY="174.0" prefHeight="26.0" prefWidth="429.0" />
-        <Button id="LoginButton" fx:id="loginbutton" layoutX="345.0" layoutY="565.0" mnemonicParsing="false" onAction="#sendFormValuesToServer" prefHeight="35.0" prefWidth="103.0" text="start" />
+        <Button id="LoginButton" fx:id="loginButton" layoutX="345.0" layoutY="565.0" mnemonicParsing="false" onAction="#sendFormValuesToServer" prefHeight="35.0" prefWidth="103.0" text="start" />
         <Label layoutX="296.0" layoutY="80.0" prefHeight="35.0" prefWidth="201.0" textOverrun="WORD_ELLIPSIS">
             <font>
                 <Font size="23.0" />

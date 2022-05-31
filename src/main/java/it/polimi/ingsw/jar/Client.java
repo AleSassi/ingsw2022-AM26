@@ -18,6 +18,8 @@ public class Client {
 	private static final Pattern ipPattern = Pattern.compile(
 			"^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
 	private static String nickname;
+	private static String serverIP;
+	private static int serverPort;
 	
 	public static void main(String[] args) {
 		
@@ -26,8 +28,8 @@ public class Client {
 			printHelpMenu();
 		} else {
 			ClientCommandTag activeTag = null;
-			String serverIP = null, clientMode = "cli";
-			Integer serverPort = null;
+			String serverIP_fromCLI = null, clientMode = "cli";
+			Integer serverPort_fromCLI = null;
 			for (String arg: args) {
 				if (activeTag == null) {
 					try {
@@ -45,16 +47,16 @@ public class Client {
 					// Decode the contents
 					switch (activeTag) {
 						case ServerIP -> {
-							serverIP = arg;
-							if (!validate(serverIP)) {
+							serverIP_fromCLI = arg;
+							if (!validate(serverIP_fromCLI)) {
 								System.out.println(StringFormatter.formatWithColor("Invalid IP address", ANSIColors.Red));
 								return;
 							}
 						}
 						case ServerPort -> {
 							try {
-								serverPort = Integer.parseInt(arg);
-								if (serverPort < Server.getMinPort() || serverPort > Server.getMaxPort()) {
+								serverPort_fromCLI = Integer.parseInt(arg);
+								if (serverPort_fromCLI < Server.getMinPort() || serverPort_fromCLI > Server.getMaxPort()) {
 									System.out.println(StringFormatter.formatWithColor("Allowed port values are between " + Server.getMinPort() + " and " + Server.getMaxPort(), ANSIColors.Red));
 									return;
 								}
@@ -75,24 +77,26 @@ public class Client {
 				}
 			}
 			// Start the Client
-			if (serverIP == null || serverPort == null) {
+			if (serverIP_fromCLI == null || serverPort_fromCLI == null) {
 				System.out.println(StringFormatter.formatWithColor("Missing some parameters required to start the client. See below for the list of parameters", ANSIColors.Red));
 				printHelpMenu();
 			} else {
-				// Connect to the Server
-				System.out.println(StringFormatter.formatWithColor("Connecting to " + serverIP + ":" + serverPort + "...", ANSIColors.Green));
-				GameClient.createClient(serverIP, serverPort);
-				try {
-					GameClient.shared().connectToServer();
-					System.out.println(StringFormatter.formatWithColor("Connected to " + serverIP + ":" + serverPort, ANSIColors.Green));
-					if (clientMode.equals("gui")) {
-						GUI.main(args);
-					} else {
+				serverIP = serverIP_fromCLI;
+				serverPort = serverPort_fromCLI;
+				if (clientMode.equals("gui")) {
+					GUI.main(args);
+				} else {
+					// Connect to the Server
+					System.out.println(StringFormatter.formatWithColor("Connecting to " + serverIP_fromCLI + ":" + serverPort_fromCLI + "...", ANSIColors.Green));
+					GameClient.createClient(serverIP_fromCLI, serverPort_fromCLI);
+					try {
+						GameClient.shared().connectToServer();
+						System.out.println(StringFormatter.formatWithColor("Connected to " + serverIP_fromCLI + ":" + serverPort_fromCLI, ANSIColors.Green));
 						// Start the CLI
 						CLIManager.shared().startGameLoop();
+					} catch (IOException e) {
+						System.out.println(StringFormatter.formatWithColor("ERROR: Could not connect to the server. Please connect to the Internet, ensure that the IP and Port values are correct and try again", ANSIColors.Red));
 					}
-				} catch (IOException e) {
-					System.out.println(StringFormatter.formatWithColor("ERROR: Could not connect to the server. Please connect to the Internet, ensure that the IP and Port values are correct and try again", ANSIColors.Red));
 				}
 			}
 		}
@@ -115,6 +119,14 @@ public class Client {
 	
 	public static String getNickname() {
 		return nickname;
+	}
+	
+	public static String getServerIP() {
+		return serverIP;
+	}
+	
+	public static int getServerPort() {
+		return serverPort;
 	}
 	
 	public static void setNickname(String nickname) {

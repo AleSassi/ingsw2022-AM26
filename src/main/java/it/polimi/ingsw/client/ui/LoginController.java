@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.ui;
 
 
+import it.polimi.ingsw.client.cli.CLIManager;
 import it.polimi.ingsw.client.controller.network.GameClient;
 import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
@@ -12,16 +13,15 @@ import it.polimi.ingsw.server.controller.network.messages.LoginResponse;
 import it.polimi.ingsw.server.controller.network.messages.NetworkMessage;
 import it.polimi.ingsw.server.model.assistants.Wizard;
 import it.polimi.ingsw.server.model.match.MatchVariant;
+import it.polimi.ingsw.utils.cli.ANSIColors;
+import it.polimi.ingsw.utils.cli.StringFormatter;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
@@ -43,6 +43,8 @@ public class LoginController implements Initializable {
 	Label statusLabel;
 	@FXML
 	Pane pane;
+	@FXML
+	Button loginButton;
 	
 	ObservableList<String> wizardChoices = FXCollections.observableArrayList("wizard1", "wizard2", "wizard3", "wizard4");
 	ObservableList<String> gameChoices = FXCollections.observableArrayList("simple", "expert");
@@ -81,7 +83,24 @@ public class LoginController implements Initializable {
 		NetworkMessage loginMessage = new LoginMessage(chosenUsername, chosenLobbySize, selectedMatchType, wiz);
 		NotificationCenter.shared().addObserver(this::didReceiveLoginResponse, NotificationName.ClientDidReceiveLoginResponse, GameClient.shared());
 		
-		GameClient.shared().sendMessage(loginMessage);
+		//Connect to the server
+		String buttonText = loginButton.getText();
+		loginButton.setText("Connecting to the server...");
+		GameClient.createClient(Client.getServerIP(), Client.getServerPort());
+		try {
+			GameClient.shared().connectToServer();
+			GameClient.shared().sendMessage(loginMessage);
+		} catch (IOException e) {
+			// Present an alert
+			Platform.runLater(() -> {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setHeaderText("Server Unreachable");
+				alert.setContentText("Could not connect to the server. Please make sure that the server is active and reachable on the specified port.");
+				alert.show();
+			});
+		} finally {
+			loginButton.setText(buttonText);
+		}
 	}
 	
 	private void didReceiveLoginResponse(Notification notification) {
