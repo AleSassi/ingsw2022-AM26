@@ -76,17 +76,9 @@ public class MainBoardController implements JavaFXRescalable {
     }
     
     private void didReceiveWindowDidResizeNotification(Notification notification) {
-        if (notification.getUserInfo() != null) {
-            if (notification.getUserInfo().containsKey("newWidth")) {
-                // When we resize the width dimension, the container should not change (stays anchored to the left side of the window)
-            } else if (notification.getUserInfo().containsKey("newHeight")) {
-                // When we resize the height dimension, the container should rescale to fit into the container
-                double newHeight = ((Number) notification.getUserInfo().get("newHeight")).doubleValue();
-                double heightScale = newHeight / GUI.referenceHeight;
-                double widthScale = GUI.getWindowWidth() / GUI.referenceWidth;
-                double scale = Math.min(widthScale, heightScale);
-                rescale(scale);
-            }
+        Double scaleValue = RescaleUtils.rescaleAfterNotification(notification);
+        if (scaleValue != null) {
+            rescale(scaleValue);
         }
     }
     

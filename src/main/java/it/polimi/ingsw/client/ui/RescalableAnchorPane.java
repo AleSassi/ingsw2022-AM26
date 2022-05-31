@@ -13,17 +13,33 @@ public abstract class RescalableAnchorPane extends AnchorPane implements JavaFXR
 	}
 	
 	private void didReceiveWindowResizeNotification(Notification notification) {
+		Double scaleValue = RescaleUtils.rescaleAfterNotification(notification);
+		if (scaleValue != null) {
+			rescale(scaleValue);
+		}
+	}
+}
+
+class RescaleUtils {
+	protected static Double rescaleAfterNotification(Notification notification) {
 		if (notification.getUserInfo() != null) {
 			if (notification.getUserInfo().containsKey("newWidth")) {
-				// When we resize the width dimension, the container should not change (stays anchored to the left side of the window)
+				// When we resize the width dimension, the container should rescale to fit into the container
+				double newWidth = ((Number) notification.getUserInfo().get("newWidth")).doubleValue();
+				return getScaleValue(newWidth, true);
 			} else if (notification.getUserInfo().containsKey("newHeight")) {
 				// When we resize the height dimension, the container should rescale to fit into the container
 				double newHeight = ((Number) notification.getUserInfo().get("newHeight")).doubleValue();
-				double heightScale = newHeight / GUI.referenceHeight;
-				double widthScale = GUI.getWindowWidth() / GUI.referenceWidth;
-				double scale = Math.min(widthScale, heightScale);
-				rescale(scale);
+				return getScaleValue(newHeight, false);
 			}
 		}
+		return null;
+	}
+	
+	protected static double getScaleValue(double newDimensionSize, boolean isWidth) {
+		double newScale = newDimensionSize / (isWidth ? GUI.referenceWidth : GUI.referenceHeight);
+		double heightScale = GUI.getWindowHeight() / GUI.referenceHeight;
+		double widthScale = GUI.getWindowWidth() / GUI.referenceWidth;
+		return Math.min(newScale, isWidth ? heightScale : widthScale);
 	}
 }

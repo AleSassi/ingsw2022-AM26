@@ -33,17 +33,9 @@ public class AssistantPickerPane extends GridPane implements JavaFXRescalable {
 	}
 	
 	private void didReceiveWindowResizeNotification(Notification notification) {
-		if (notification.getUserInfo() != null) {
-			if (notification.getUserInfo().containsKey("newWidth")) {
-				// When we resize the width dimension, the container should not change (stays anchored to the left side of the window)
-			} else if (notification.getUserInfo().containsKey("newHeight")) {
-				// When we resize the height dimension, the container should rescale to fit into the container
-				double newHeight = ((Number) notification.getUserInfo().get("newHeight")).doubleValue();
-				double heightScale = newHeight / GUI.referenceHeight;
-				double widthScale = GUI.getWindowWidth() / GUI.referenceWidth;
-				double scale = Math.min(widthScale, heightScale);
-				rescale(scale);
-			}
+		Double scaleValue = RescaleUtils.rescaleAfterNotification(notification);
+		if (scaleValue != null) {
+			rescale(scaleValue);
 		}
 	}
 	
@@ -57,7 +49,7 @@ public class AssistantPickerPane extends GridPane implements JavaFXRescalable {
 			ColumnConstraints col = new ColumnConstraints(100 * scale);
 			getColumnConstraints().add(col);
 		}
-		setVgap(20);
-		setHgap(20);
+		setVgap(20 * scale);
+		setHgap(20 * scale);
 	}
 }
