@@ -152,6 +152,7 @@ public class SchoolBoardPane extends RescalableAnchorPane {
 	}
 	
 	private void displayEntranceFromMessage(PlayerStateMessage message) {
+		Platform.runLater(() -> entranceGrid.getChildren().removeAll(entranceGrid.getChildren()));
 		int row = 0, col = 1;
 		for (Student student: Student.values()) {
 			for (int i = 0; i < message.getBoard().getEntrance().getCount(student); i++) {
@@ -172,6 +173,7 @@ public class SchoolBoardPane extends RescalableAnchorPane {
 	}
 	
 	private void displayDiningRoomFromMessage(PlayerStateMessage message) {
+		Platform.runLater(() -> diningGrid.getChildren().removeAll(diningGrid.getChildren()));
 		int row = 0, col = 0;
 		for (Student student: Student.values()) {
 			for (int i = 0; i < message.getBoard().getDiningRoom().getCount(student); i++) {
@@ -192,6 +194,7 @@ public class SchoolBoardPane extends RescalableAnchorPane {
 	}
 	
 	private void displayProfessorsFromMessage(PlayerStateMessage message) {
+		Platform.runLater(() -> professors.getChildren().removeAll(professors.getChildren()));
 		int row = 0;
 		for (Student professor: Student.values()) {
 			if (message.getBoard().getControlledProfessors().contains(professor.getAssociatedProfessor())) {
@@ -208,6 +211,7 @@ public class SchoolBoardPane extends RescalableAnchorPane {
 	}
 	
 	private void displayTowersFromMessage(PlayerStateMessage message) {
+		Platform.runLater(() -> towersGrid.getChildren().removeAll(towersGrid.getChildren()));
 		for (int i = 0; i < message.getBoard().getAvailableTowerCount(); i++) {
 			int row = i / 2;
 			int col = i % 2;
