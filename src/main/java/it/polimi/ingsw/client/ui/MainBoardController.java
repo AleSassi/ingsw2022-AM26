@@ -142,6 +142,7 @@ public class MainBoardController implements JavaFXRescalable {
                 case ActionPhaseStepTwo -> {
                     // Disable everything, present a popup to choose the number of steps MN must move by
                     schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(new StudentDropTarget[0]);
+                    showMotherNatureMovementAlert();
                 }
                 case ActionPhaseStepThree -> {
                     // Disable everything except the Cloud tiles, when clicking on a Cloud tile send the event
@@ -188,6 +189,28 @@ public class MainBoardController implements JavaFXRescalable {
         AnchorPane.setLeftAnchor(faderPane, 0.0);
         AnchorPane.setRightAnchor(faderPane, 0.0);
         mainPane.getChildren().add(faderPane);
+    }
+    
+    private void showMotherNatureMovementAlert() {
+        Platform.runLater(() -> {
+            TextInputDialog td = new TextInputDialog("Mother Nature Steps");
+            td.setHeaderText("Enter the number of steps Mother Nature must move by (between 0 and 2)");
+            td.showAndWait().ifPresentOrElse((text) -> {
+                try {
+                    int number = Integer.parseInt(text);
+                    if (number < 0) {
+                        number = 0;
+                    } else if (number > 2) {
+                        number = 2;
+                    }
+                    //Send the player action
+                    PlayerActionMessage actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidMoveMNBySteps, -1, null, false, -1, number, -1, -1, null);
+                    GameClient.shared().sendMessage(actionMessage);
+                } catch (NumberFormatException e) {
+                    this.showAssistantCardModalWindow();
+                }
+            }, this::showAssistantCardModalWindow);
+        });
     }
     
     private void didReceiveStudentMovementStart(Notification notification) {

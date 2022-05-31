@@ -6,9 +6,7 @@ import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.model.Tower;
 import it.polimi.ingsw.server.model.student.Student;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 
 import java.net.URISyntaxException;
