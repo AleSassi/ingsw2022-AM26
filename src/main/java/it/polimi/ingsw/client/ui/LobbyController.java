@@ -29,7 +29,6 @@ public class LobbyController implements Initializable {
 	private int numberOfPlayersToFill = 4;
 	private List<Notification> playerStateMessagesQueue; //Used to forward them to the main controller, since it might happen that the main controller is initialized and presented after the notification arrives
 	private Notification tableMessage, activePlayerMessage, matchStateMessage;
-	private MainBoardController mainBoardController;
 	
 	@FXML
 	Label statusLabel;
@@ -39,7 +38,7 @@ public class LobbyController implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		playerStateMessagesQueue = new ArrayList<>();
-		NotificationCenter.shared().addObserver(this::didReceiveNetworkTimeoutNotification, NotificationName.ClientDidTimeoutNetwork, null);
+		GUI.registerForDisconnectionEvents();
 		NotificationCenter.shared().addObserver(this::otherPlayerLoggedInReceived, NotificationName.ClientDidReceiveLoginResponse, null);
 		NotificationCenter.shared().addObserver((notification) -> {
 			if (numberOfPlayersToFill > 0) {
@@ -70,10 +69,10 @@ public class LobbyController implements Initializable {
 		Platform.runLater(() -> {
 			matchVariantLabel.setText("Match Variant: " + matchVariant);
 			statusLabel.setText("Waiting for " + remainingNumberOfPlayers + " more players");
-			if (numberOfPlayersToFill == 0) {
-				moveToGameScene();
-			}
 		});
+		if (numberOfPlayersToFill == 0) {
+			moveToGameScene();
+		}
 	}
 	
 	private void otherPlayerLoggedInReceived(Notification notification) {
@@ -84,11 +83,13 @@ public class LobbyController implements Initializable {
 			Platform.runLater(() -> {
 				if (numberOfPlayersToFill == 0) {
 					statusLabel.setText("The lobby is full. You are now ready to start the game");
-					moveToGameScene();
 				} else {
 					statusLabel.setText("Waiting for " + numberOfPlayersToFill + " more players");
 				}
 			});
+			if (numberOfPlayersToFill == 0) {
+				moveToGameScene();
+			}
 		}
 	}
 	
@@ -108,9 +109,9 @@ public class LobbyController implements Initializable {
 		matchStateMessage = notification;
 	}
 	
-	private synchronized void moveToGameScene() {
+	private void moveToGameScene() {
 		try {
-			mainBoardController = GUI.setRoot("scenes/mainBoard").getController();
+			MainBoardController mainBoardController = GUI.setRoot("scenes/mainBoard").getController();
 			mainBoardController.load();
 			//Resend the received player state messages, so that the controller can receive them
 			for (Notification notification: playerStateMessagesQueue) {
@@ -133,21 +134,5 @@ public class LobbyController implements Initializable {
 				alert.show();
 			});
 		}
-	}
-	
-	protected void didReceiveNetworkTimeoutNotification(Notification notification) {
-		// Present an alert
-		Platform.runLater(() -> {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			// Go back to the login screen
-			try {
-				GUI.setRoot("scenes/login");
-				alert.setContentText("The Client encountered an error. Reason: Timeout. The network connection with the Server might have been interrupted, or the Server might be too busy to respond");
-				alert.show();
-			} catch (IOException e) {
-				alert.setContentText(e.getLocalizedMessage());
-				alert.show();
-			}
-		});
 	}
 }

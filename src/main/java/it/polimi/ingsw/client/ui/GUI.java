@@ -1,11 +1,16 @@
 package it.polimi.ingsw.client.ui;
 
+import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
+import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
+import it.polimi.ingsw.server.controller.network.messages.MatchTerminationMessage;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -60,6 +65,11 @@ public class GUI extends Application {
 		return stageHeight;
 	}
 	
+	public static  void registerForDisconnectionEvents() {
+		NotificationCenter.shared().addObserver(GUI::didReceiveNetworkTimeoutNotification, NotificationName.ClientDidTimeoutNetwork, null);
+		NotificationCenter.shared().addObserver(GUI::didReceiveNetworkTimeoutNotification, NotificationName.ClientDidReceiveMatchTerminationMessage, null);
+	}
+	
 	static FXMLLoader setRoot(String fxml) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(GUI.class.getResource(fxml + ".fxml"));
 		scene.setRoot(fxmlLoader.load());
@@ -73,6 +83,32 @@ public class GUI extends Application {
 	private static Parent loadFXML(String fxml) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(GUI.class.getResource(fxml + ".fxml"));
 		return fxmlLoader.load();
+	}
+	
+	private static void didReceiveNetworkTimeoutNotification(Notification notification) {
+		// Present an alert
+		Platform.runLater(() -> {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			// Go back to the login screen
+			if (notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof MatchTerminationMessage message) {
+				alert.setContentText("The Match was terminated by the server. Reason: " + message.getTerminationReason());
+			} else {
+				alert.setContentText("The Client encountered an error. Reason: Timeout. The network connection with the Server might have been interrupted, or the Server might be too busy to respond");
+			}
+			alert.showAndWait().ifPresentOrElse(button -> {
+				try {
+					GUI.setRoot("scenes/LoginPage");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}, () -> {
+				try {
+					GUI.setRoot("scenes/LoginPage");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			});
+		});
 	}
 	
 	public static void main(String[] args) {
