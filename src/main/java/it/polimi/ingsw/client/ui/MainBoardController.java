@@ -27,6 +27,7 @@ import javafx.scene.text.Font;
 import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,7 @@ public class MainBoardController implements JavaFXRescalable {
         NotificationCenter.shared().addObserver(this::didReceiveActivePlayerMessage, NotificationName.ClientDidReceiveActivePlayerMessage, null);
         NotificationCenter.shared().addObserver(this::didReceiveMatchStateMessage, NotificationName.ClientDidReceiveMatchStateMessage, null);
         NotificationCenter.shared().addObserver(this::didReceivePlayerActionResponse, NotificationName.ClientDidReceivePlayerActionResponse, null);
+        NotificationCenter.shared().addObserver(this::didReceiveVictoryNotification, NotificationName.ClientDidReceiveVictoryMessage, null);
         NotificationCenter.shared().addObserver(this::didReceiveStudentMovementStart, NotificationName.JavaFXDidStartMovingStudent, null);
         NotificationCenter.shared().addObserver(this::didReceiveStudentMovementEnd, NotificationName.JavaFXDidEndMovingStudent, null);
         isLoaded = true;
@@ -243,6 +245,17 @@ public class MainBoardController implements JavaFXRescalable {
                 errorAlert.setContentText(response.getDescriptiveErrorMessage());
                 Platform.runLater(errorAlert::show);
             });
+        }
+    }
+    
+    private void didReceiveVictoryNotification(Notification notification) {
+        if (notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof VictoryMessage message) {
+            try {
+                EndgameController endgameController = GUI.setRoot("scenes/win").getController();
+                endgameController.endGame(message.getWinners());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
     

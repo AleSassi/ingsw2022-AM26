@@ -7,20 +7,20 @@
 
 <AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="931.0" prefWidth="1222.0" style="-fx-background-color: lightblue;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.EndgameController">
    <children>
-      <Label fx:id="winlabel" layoutX="364.0" layoutY="248.0" prefHeight="147.0" prefWidth="533.0" text="VICTORY!">
+      <Label fx:id="victoryLabel" layoutX="364.0" layoutY="248.0" prefHeight="147.0" prefWidth="533.0" text="VICTORY!">
          <font>
             <Font size="120.0" />
          </font>
       </Label>
-      <Button fx:id="quitbutton" layoutX="364.0" layoutY="651.0" mnemonicParsing="false" onAction="#quit" prefHeight="128.0" prefWidth="542.0" text="QUIT">
+      <Button fx:id="quitButton" layoutX="364.0" layoutY="651.0" mnemonicParsing="false" onAction="#quit" prefHeight="128.0" prefWidth="542.0" text="QUIT">
          <font>
             <Font size="15.0" />
          </font></Button>
-      <Button fx:id="newgamebutton" layoutX="363.0" layoutY="469.0" mnemonicParsing="false" onAction="#newgame" prefHeight="128.0" prefWidth="542.0" text="NEW GAME">
+      <Button fx:id="newGameButton" layoutX="363.0" layoutY="469.0" mnemonicParsing="false" onAction="#newGame" prefHeight="128.0" prefWidth="542.0" text="NEW GAME">
          <font>
             <Font size="15.0" />
          </font></Button>
-      <Label fx:id="winnerlabel" layoutX="610.0" layoutY="427.0" prefHeight="17.0" prefWidth="0.0">
+      <Label fx:id="winnerLabel" layoutX="610.0" layoutY="427.0" prefHeight="17.0" prefWidth="0.0">
          <font>
             <Font size="18.0" />
          </font></Label>
