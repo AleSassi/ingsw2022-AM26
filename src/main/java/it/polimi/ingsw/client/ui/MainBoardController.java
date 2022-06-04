@@ -30,6 +30,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -43,7 +44,6 @@ public class MainBoardController implements JavaFXRescalable {
     private Pane faderPane;
     private Label waitTurnLabel;
     private PlayerStateMessage stateMessage;
-    private boolean isLoaded = false;
     
     public void load() {
         schoolBoardContainers = new ArrayList<>();
@@ -55,11 +55,6 @@ public class MainBoardController implements JavaFXRescalable {
         NotificationCenter.shared().addObserver(this::didReceiveVictoryNotification, NotificationName.ClientDidReceiveVictoryMessage, null);
         NotificationCenter.shared().addObserver(this::didReceiveStudentMovementStart, NotificationName.JavaFXDidStartMovingStudent, null);
         NotificationCenter.shared().addObserver(this::didReceiveStudentMovementEnd, NotificationName.JavaFXDidEndMovingStudent, null);
-        isLoaded = true;
-    }
-    
-    public boolean isLoaded() {
-        return isLoaded;
     }
     
     protected void didReceivePlayerStatusNotification(Notification notification) {
@@ -250,12 +245,14 @@ public class MainBoardController implements JavaFXRescalable {
     
     private void didReceiveVictoryNotification(Notification notification) {
         if (notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof VictoryMessage message) {
-            try {
-                EndgameController endgameController = GUI.setRoot("scenes/win").getController();
-                endgameController.endGame(message.getWinners());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Platform.runLater(() -> {
+                try {
+                    EndgameController endgameController = GUI.setRoot("scenes/win").getController();
+                    endgameController.endGame(message.getWinners());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         }
     }
     
