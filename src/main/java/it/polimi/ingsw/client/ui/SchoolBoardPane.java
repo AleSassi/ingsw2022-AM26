@@ -31,6 +31,7 @@ public class SchoolBoardPane extends RescalableAnchorPane {
 	
 	public SchoolBoardPane(boolean isPrimary, String ownerNickname) {
 		super();
+		this.allowedDropDestinationsForDrag = new StudentDropTarget[0];
 		this.allowedStudentDestinationsForPhase = new StudentDropTarget[0];
 		this.ownerNickname = ownerNickname;
 		this.isPrimary = isPrimary;
@@ -54,6 +55,7 @@ public class SchoolBoardPane extends RescalableAnchorPane {
 		NotificationCenter.shared().addObserver(this::didReceivePlayerStatusNotification, NotificationName.ClientDidReceivePlayerStateMessage, null);
 		NotificationCenter.shared().addObserver(this::didReceiveActivePlayerNotification, NotificationName.ClientDidReceiveActivePlayerMessage, null);
 		NotificationCenter.shared().addObserver(this::didReceiveStartStudentMoveNotification, NotificationName.JavaFXDidStartMovingStudent, null);
+		NotificationCenter.shared().addObserver(this::didReceiveEndStudentMoveNotification, NotificationName.JavaFXDidEndMovingStudent, null);
 	}
 	
 	public void rescale(double scale) {
@@ -261,5 +263,9 @@ public class SchoolBoardPane extends RescalableAnchorPane {
 				}
 			}
 		}
+	}
+	
+	private void didReceiveEndStudentMoveNotification(Notification notification) {
+		this.allowedDropDestinationsForDrag = new StudentDropTarget[0]; //To reset to the initial default state
 	}
 }
