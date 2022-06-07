@@ -44,12 +44,15 @@ public class MainBoardController implements JavaFXRescalable {
     private Pane faderPane;
     private Label waitTurnLabel;
     private PlayerStateMessage stateMessage;
+    private IslandContainer islandContainer;
+    private CloudsContainer cloudsContainer;
     
     public void load() {
         schoolBoardContainers = new ArrayList<>();
         NotificationCenter.shared().addObserver(this::didReceiveWindowDidResizeNotification, NotificationName.JavaFXWindowDidResize, null);
         NotificationCenter.shared().addObserver(this::didReceivePlayerStatusNotification, NotificationName.ClientDidReceivePlayerStateMessage, null);
         NotificationCenter.shared().addObserver(this::didReceiveActivePlayerMessage, NotificationName.ClientDidReceiveActivePlayerMessage, null);
+        NotificationCenter.shared().addObserver(this::didReceiveTableStateMessage, NotificationName.ClientDidReceiveTableStateMessage, null);
         NotificationCenter.shared().addObserver(this::didReceiveMatchStateMessage, NotificationName.ClientDidReceiveMatchStateMessage, null);
         NotificationCenter.shared().addObserver(this::didReceivePlayerActionResponse, NotificationName.ClientDidReceivePlayerActionResponse, null);
         NotificationCenter.shared().addObserver(this::didReceiveVictoryNotification, NotificationName.ClientDidReceiveVictoryMessage, null);
@@ -86,7 +89,14 @@ public class MainBoardController implements JavaFXRescalable {
     }
     
     protected void didReceiveTableStateMessage(Notification notification) {
-        //TODO: Forward to islands and Clouds
+        if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof TableStateMessage message) {
+            if(islandContainer == null) {
+                islandContainer = new IslandContainer(notification);
+                Platform.runLater(() -> {
+                    mainPane.getChildren().add(islandContainer);
+                });
+            }
+        }
     }
     
     protected void didReceiveActivePlayerMessage(Notification notification) {
@@ -128,20 +138,24 @@ public class MainBoardController implements JavaFXRescalable {
                 case PlanPhaseStepTwo -> {
                     // Allow only assistant card choice
                     schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(new StudentDropTarget[0]);
+                    islandContainer.setAllowedStudentMovements(new StudentDropTarget[0]);
                     showAssistantCardModalWindow();
                 }
                 case ActionPhaseStepOne -> {
                     // Allow student movement from entrance to everywhere, and allow character card purchase and play (if applicable)
                     schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(StudentDropTarget.all());
+                    islandContainer.setAllowedStudentMovements(StudentDropTarget.all());
                 }
                 case ActionPhaseStepTwo -> {
                     // Disable everything, present a popup to choose the number of steps MN must move by
                     schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(new StudentDropTarget[0]);
+                    islandContainer.setAllowedStudentMovements(new StudentDropTarget[0]);
                     showMotherNatureMovementAlert();
                 }
                 case ActionPhaseStepThree -> {
                     // Disable everything except the Cloud tiles, when clicking on a Cloud tile send the event
                     schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(new StudentDropTarget[0]);
+                    islandContainer.setAllowedStudentMovements(new StudentDropTarget[0]);
                 }
             }
         }
