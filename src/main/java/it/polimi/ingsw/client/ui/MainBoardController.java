@@ -37,7 +37,7 @@ import java.util.ResourceBundle;
 public class MainBoardController implements JavaFXRescalable {
 
     @FXML private AnchorPane mainPane;
-    
+
     private List<SchoolBoardContainer> schoolBoardContainers;
     private Student movingStudentColor;
     private String currentlyActivePlayerNickname;
@@ -90,11 +90,13 @@ public class MainBoardController implements JavaFXRescalable {
     
     protected void didReceiveTableStateMessage(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof TableStateMessage message) {
-            if(islandContainer == null) {
+            if(islandContainer == null && cloudsContainer == null) {
                 islandContainer = new IslandContainer(notification);
-                Platform.runLater(() -> {
-                    mainPane.getChildren().add(islandContainer);
-                });
+                cloudsContainer = new CloudsContainer(notification);
+                Platform.runLater(() -> mainPane.getChildren().addAll(islandContainer, cloudsContainer));
+
+                AnchorPane.setRightAnchor(islandContainer, 0.0 );
+                AnchorPane.setTopAnchor(islandContainer, 0.0);
             }
         }
     }
@@ -139,23 +141,28 @@ public class MainBoardController implements JavaFXRescalable {
                     // Allow only assistant card choice
                     schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(new StudentDropTarget[0]);
                     islandContainer.setAllowedStudentMovements(new StudentDropTarget[0]);
+                    cloudsContainer.setActivateCloudPick(false);
                     showAssistantCardModalWindow();
                 }
                 case ActionPhaseStepOne -> {
                     // Allow student movement from entrance to everywhere, and allow character card purchase and play (if applicable)
                     schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(StudentDropTarget.all());
                     islandContainer.setAllowedStudentMovements(StudentDropTarget.all());
+                    cloudsContainer.setActivateCloudPick(false);
                 }
                 case ActionPhaseStepTwo -> {
                     // Disable everything, present a popup to choose the number of steps MN must move by
                     schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(new StudentDropTarget[0]);
                     islandContainer.setAllowedStudentMovements(new StudentDropTarget[0]);
+                    cloudsContainer.setActivateCloudPick(false);
                     showMotherNatureMovementAlert();
                 }
                 case ActionPhaseStepThree -> {
                     // Disable everything except the Cloud tiles, when clicking on a Cloud tile send the event
                     schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(new StudentDropTarget[0]);
                     islandContainer.setAllowedStudentMovements(new StudentDropTarget[0]);
+                    cloudsContainer.setActivateCloudPick(true);
+
                 }
             }
         }
