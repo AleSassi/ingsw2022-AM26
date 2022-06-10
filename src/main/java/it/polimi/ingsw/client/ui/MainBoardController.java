@@ -111,7 +111,7 @@ public class MainBoardController implements JavaFXRescalable {
     
     private void setDisplaysWaitForTurnFader(boolean displaysWaitForTurnFader) {
         Platform.runLater(() -> {
-            if (displaysWaitForTurnFader) {
+            if (displaysWaitForTurnFader && faderPane == null) {
                 showFaderPane();
                 waitTurnLabel = new Label(currentlyActivePlayerNickname + " is currently playing their turn. Please wait until it is your turn to play.");
                 waitTurnLabel.setFont(new Font("Avenir", 30));
@@ -124,7 +124,7 @@ public class MainBoardController implements JavaFXRescalable {
                 AnchorPane.setLeftAnchor(waitTurnLabel, 20.0);
                 AnchorPane.setRightAnchor(waitTurnLabel, 20.0);
                 mainPane.getChildren().add(waitTurnLabel);
-            } else {
+            } else if (faderPane != null) {
                 mainPane.getChildren().remove(faderPane);
                 mainPane.getChildren().remove(waitTurnLabel);
                 faderPane = null;
