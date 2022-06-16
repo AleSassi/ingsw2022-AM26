@@ -65,9 +65,9 @@ public class GUI extends Application {
 		return stageHeight;
 	}
 	
-	public static  void registerForDisconnectionEvents() {
-		NotificationCenter.shared().addObserver(GUI::didReceiveNetworkTimeoutNotification, NotificationName.ClientDidTimeoutNetwork, null);
-		NotificationCenter.shared().addObserver(GUI::didReceiveNetworkTimeoutNotification, NotificationName.ClientDidReceiveMatchTerminationMessage, null);
+	public static void registerForDisconnectionEvents() {
+		NotificationCenter.shared().addObserver(GUI.class, GUI::didReceiveNetworkTimeoutNotification, NotificationName.ClientDidTimeoutNetwork, null);
+		NotificationCenter.shared().addObserver(GUI.class, GUI::didReceiveNetworkTimeoutNotification, NotificationName.ClientDidReceiveMatchTerminationMessage, null);
 	}
 	
 	static FXMLLoader setRoot(String fxml) throws IOException {

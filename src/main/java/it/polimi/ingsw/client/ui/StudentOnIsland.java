@@ -31,7 +31,7 @@ public class StudentOnIsland extends RescalableAnchorPane  {
 
         rescale(1);
 
-        NotificationCenter.shared().addObserver(this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
+        NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
     }
 
 

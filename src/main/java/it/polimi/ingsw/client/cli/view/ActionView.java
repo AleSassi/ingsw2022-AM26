@@ -33,15 +33,15 @@ public class ActionView extends TerminalView {
 	
 	@Override
 	public void run() {
-		NotificationCenter.shared().addObserver(this::didReceiveActionResponse, NotificationName.ClientDidReceivePlayerActionResponse, null);
-		NotificationCenter.shared().addObserver(this::didReceiveActivePlayer, NotificationName.ClientDidReceiveActivePlayerMessage, null);
-		NotificationCenter.shared().addObserver(this::didReceiveMatchPhase, NotificationName.ClientDidReceiveMatchStateMessage, null);
-		NotificationCenter.shared().addObserver((notification) -> {
+		NotificationCenter.shared().addObserver(this, this::didReceiveActionResponse, NotificationName.ClientDidReceivePlayerActionResponse, null);
+		NotificationCenter.shared().addObserver(this, this::didReceiveActivePlayer, NotificationName.ClientDidReceiveActivePlayerMessage, null);
+		NotificationCenter.shared().addObserver(this, this::didReceiveMatchPhase, NotificationName.ClientDidReceiveMatchStateMessage, null);
+		NotificationCenter.shared().addObserver(this, (notification) -> {
 			MatchTerminationMessage message = (MatchTerminationMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
 			System.out.println(StringFormatter.formatWithColor("The server ended the match. Reason: \"" + message.getTerminationReason() + "\"", ANSIColors.Red));
 			endMatch();
 		}, NotificationName.ClientDidReceiveMatchTerminationMessage, null);
-		NotificationCenter.shared().addObserver(this::didReceiveVictory, NotificationName.ClientDidReceiveVictoryMessage, null);
+		NotificationCenter.shared().addObserver(this, this::didReceiveVictory, NotificationName.ClientDidReceiveVictoryMessage, null);
 		
 		tableView = new TableView();
 		tableView.run();

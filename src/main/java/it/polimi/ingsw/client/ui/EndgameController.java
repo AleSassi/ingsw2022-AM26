@@ -37,7 +37,7 @@ public class EndgameController implements JavaFXRescalable {
 	
 	
 	public void endGame(String[] winnerNicknames) throws IOException {
-		NotificationCenter.shared().addObserver(this::didReceiveWindowDidResizeNotification, NotificationName.JavaFXWindowDidResize, null);
+		NotificationCenter.shared().addObserver(this, this::didReceiveWindowDidResizeNotification, NotificationName.JavaFXWindowDidResize, null);
 		boolean won = false;
 		for (String winnerNickname: winnerNicknames) {
 			if (winnerNickname.equals(Client.getNickname())) {

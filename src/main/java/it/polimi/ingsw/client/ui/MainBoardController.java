@@ -9,30 +9,19 @@ import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.*;
 import it.polimi.ingsw.server.model.assistants.AssistantCard;
 import it.polimi.ingsw.server.model.student.Student;
-import it.polimi.ingsw.utils.cli.ANSIColors;
-import it.polimi.ingsw.utils.cli.StringFormatter;
 import it.polimi.ingsw.utils.ui.StudentDropTarget;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.PopupWindow;
-import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.ResourceBundle;
 
 public class MainBoardController implements JavaFXRescalable {
 
@@ -49,15 +38,15 @@ public class MainBoardController implements JavaFXRescalable {
     
     public void load() {
         schoolBoardContainers = new ArrayList<>();
-        NotificationCenter.shared().addObserver(this::didReceiveWindowDidResizeNotification, NotificationName.JavaFXWindowDidResize, null);
-        NotificationCenter.shared().addObserver(this::didReceivePlayerStatusNotification, NotificationName.ClientDidReceivePlayerStateMessage, null);
-        NotificationCenter.shared().addObserver(this::didReceiveActivePlayerMessage, NotificationName.ClientDidReceiveActivePlayerMessage, null);
-        NotificationCenter.shared().addObserver(this::didReceiveTableStateMessage, NotificationName.ClientDidReceiveTableStateMessage, null);
-        NotificationCenter.shared().addObserver(this::didReceiveMatchStateMessage, NotificationName.ClientDidReceiveMatchStateMessage, null);
-        NotificationCenter.shared().addObserver(this::didReceivePlayerActionResponse, NotificationName.ClientDidReceivePlayerActionResponse, null);
-        NotificationCenter.shared().addObserver(this::didReceiveVictoryNotification, NotificationName.ClientDidReceiveVictoryMessage, null);
-        NotificationCenter.shared().addObserver(this::didReceiveStudentMovementStart, NotificationName.JavaFXDidStartMovingStudent, null);
-        NotificationCenter.shared().addObserver(this::didReceiveStudentMovementEnd, NotificationName.JavaFXDidEndMovingStudent, null);
+        NotificationCenter.shared().addObserver(this, this::didReceiveWindowDidResizeNotification, NotificationName.JavaFXWindowDidResize, null);
+        NotificationCenter.shared().addObserver(this, this::didReceivePlayerStatusNotification, NotificationName.ClientDidReceivePlayerStateMessage, null);
+        NotificationCenter.shared().addObserver(this, this::didReceiveActivePlayerMessage, NotificationName.ClientDidReceiveActivePlayerMessage, null);
+        NotificationCenter.shared().addObserver(this, this::didReceiveTableStateMessage, NotificationName.ClientDidReceiveTableStateMessage, null);
+        NotificationCenter.shared().addObserver(this, this::didReceiveMatchStateMessage, NotificationName.ClientDidReceiveMatchStateMessage, null);
+        NotificationCenter.shared().addObserver(this, this::didReceivePlayerActionResponse, NotificationName.ClientDidReceivePlayerActionResponse, null);
+        NotificationCenter.shared().addObserver(this, this::didReceiveVictoryNotification, NotificationName.ClientDidReceiveVictoryMessage, null);
+        NotificationCenter.shared().addObserver(this, this::didReceiveStudentMovementStart, NotificationName.JavaFXDidStartMovingStudent, null);
+        NotificationCenter.shared().addObserver(this, this::didReceiveStudentMovementEnd, NotificationName.JavaFXDidEndMovingStudent, null);
     }
     
     protected void didReceivePlayerStatusNotification(Notification notification) {
@@ -174,7 +163,7 @@ public class MainBoardController implements JavaFXRescalable {
             showFaderPane();
             mainPane.getChildren().add(cardPickerView);
         });
-        NotificationCenter.shared().addObserver((notification) -> {
+        NotificationCenter.shared().addObserver(this, (notification) -> {
             AssistantCard pickedAssistant = (AssistantCard) notification.getUserInfo().get("clickedAssistant");
             int index = 0;
             for (AssistantCard assistantCard: stateMessage.getAvailableCardsDeck()) {

@@ -6,22 +6,16 @@ import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage;
-import it.polimi.ingsw.server.controller.network.messages.TableStateMessage;
 import it.polimi.ingsw.server.exceptions.model.CollectionUnderflowError;
 import it.polimi.ingsw.server.model.Professor;
 import it.polimi.ingsw.server.model.assistants.AssistantCard;
-import it.polimi.ingsw.server.model.characters.CharacterCardBean;
 import it.polimi.ingsw.server.model.match.MatchVariant;
-import it.polimi.ingsw.server.model.student.Cloud;
-import it.polimi.ingsw.server.model.student.Island;
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.server.model.student.StudentHost;
 import it.polimi.ingsw.utils.cli.ANSIColors;
 import it.polimi.ingsw.utils.cli.ModelFormatter;
 import it.polimi.ingsw.utils.cli.StringFormatter;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class PlayerStateView extends TerminalView {
 	
@@ -58,7 +52,7 @@ public class PlayerStateView extends TerminalView {
 	
 	@Override
 	public void run() {
-		NotificationCenter.shared().addObserver(this::didReceivePlayerState, NotificationName.ClientDidReceivePlayerStateMessage, null);
+		NotificationCenter.shared().addObserver(this, this::didReceivePlayerState, NotificationName.ClientDidReceivePlayerStateMessage, null);
 	}
 	
 	private void didReceivePlayerState(Notification notification) {

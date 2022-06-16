@@ -13,7 +13,6 @@ import javafx.application.Platform;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -52,10 +51,10 @@ public class SchoolBoardPane extends RescalableAnchorPane {
         rescale(1);
         getChildren().addAll(entranceGrid, diningGrid, professors, towersGrid);
         //Register for auto-update notifications
-        NotificationCenter.shared().addObserver(this::didReceivePlayerStatusNotification, NotificationName.ClientDidReceivePlayerStateMessage, null);
-        NotificationCenter.shared().addObserver(this::didReceiveActivePlayerNotification, NotificationName.ClientDidReceiveActivePlayerMessage, null);
-        NotificationCenter.shared().addObserver(this::didReceiveStartStudentMoveNotification, NotificationName.JavaFXDidStartMovingStudent, null);
-        NotificationCenter.shared().addObserver(this::didReceiveEndStudentMoveNotification, NotificationName.JavaFXDidEndMovingStudent, null);
+        NotificationCenter.shared().addObserver(this, this::didReceivePlayerStatusNotification, NotificationName.ClientDidReceivePlayerStateMessage, null);
+        NotificationCenter.shared().addObserver(this, this::didReceiveActivePlayerNotification, NotificationName.ClientDidReceiveActivePlayerMessage, null);
+        NotificationCenter.shared().addObserver(this, this::didReceiveStartStudentMoveNotification, NotificationName.JavaFXDidStartMovingStudent, null);
+        NotificationCenter.shared().addObserver(this, this::didReceiveEndStudentMoveNotification, NotificationName.JavaFXDidEndMovingStudent, null);
     }
 
     public void rescale(double scale) {

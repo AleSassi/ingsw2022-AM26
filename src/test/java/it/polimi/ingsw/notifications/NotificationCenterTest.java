@@ -1,7 +1,5 @@
 package it.polimi.ingsw.notifications;
 
-import it.polimi.ingsw.notifications.NotificationCenter;
-import it.polimi.ingsw.notifications.NotificationName;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,10 +16,10 @@ class NotificationCenterTest {
 	void init() {
 		callbacksCalled = new ArrayList<>();
 		String observedObject = "Ale";
-		NotificationCenter.shared().addObserver((notification) -> callbacksCalled.add(true), NotificationName.PlayerVictory, null);
-		NotificationCenter.shared().addObserver((notification) -> callbacksCalled.add(true), NotificationName.PlayerVictory, null);
-		NotificationCenter.shared().addObserver((notification) -> callbacksCalled.add(true), NotificationName.PlayerVictory, observedObject);
-		NotificationCenter.shared().addObserver((notification) -> callbacksCalled.add(true), NotificationName.PlayerVictory, observedObject);
+		NotificationCenter.shared().addObserver(this, (notification) -> callbacksCalled.add(true), NotificationName.PlayerVictory, null);
+		NotificationCenter.shared().addObserver(this, (notification) -> callbacksCalled.add(true), NotificationName.PlayerVictory, null);
+		NotificationCenter.shared().addObserver(this, (notification) -> callbacksCalled.add(true), NotificationName.PlayerVictory, observedObject);
+		NotificationCenter.shared().addObserver(this, (notification) -> callbacksCalled.add(true), NotificationName.PlayerVictory, observedObject);
 	}
 	
 	//@Test
@@ -45,6 +43,13 @@ class NotificationCenterTest {
 	@Test
 	void testNoCallbacksCalled() {
 		NotificationCenter.shared().post(NotificationName.PlayerVictory, "Fede", null);
+		assertTrue(callbacksCalled.isEmpty());
+	}
+	
+	@Test
+	void testRemoveObservers() {
+		NotificationCenter.shared().removeObserver(this);
+		NotificationCenter.shared().post(NotificationName.PlayerVictory, null, null);
 		assertTrue(callbacksCalled.isEmpty());
 	}
 

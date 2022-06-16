@@ -22,9 +22,9 @@ public class GameController {
 	public GameController(@NotNull GameServer server) {
 		this.server = server;
 		
-		NotificationCenter.shared().addObserver(this::didReceiveLoginMessage, NotificationName.ServerDidReceiveLoginMessage, this);
-		NotificationCenter.shared().addObserver(this::didReceivePlayerActionMessage, NotificationName.ServerDidReceivePlayerActionMessage, this);
-		NotificationCenter.shared().addObserver(this::didReceiveTerminationMessage, NotificationName.ServerDidTerminateMatch, this);
+		NotificationCenter.shared().addObserver(this, this::didReceiveLoginMessage, NotificationName.ServerDidReceiveLoginMessage, this);
+		NotificationCenter.shared().addObserver(this, this::didReceivePlayerActionMessage, NotificationName.ServerDidReceivePlayerActionMessage, this);
+		NotificationCenter.shared().addObserver(this, this::didReceiveTerminationMessage, NotificationName.ServerDidTerminateMatch, this);
 	}
 	
 	public int getMaxPlayerCount() {
@@ -93,7 +93,7 @@ public class GameController {
 			if (success && lobby.getCurrentState() == GameLobbyState.Full) {
 				startMatch();
 				// Register for the Victory notification
-				NotificationCenter.shared().addObserver(this::didReceivePlayerVictoryNotification, NotificationName.PlayerVictory, activeMatchManager);
+				NotificationCenter.shared().addObserver(this, this::didReceivePlayerVictoryNotification, NotificationName.PlayerVictory, activeMatchManager);
 			}
 		}
 	}

@@ -11,9 +11,7 @@ import it.polimi.ingsw.server.controller.network.messages.*;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.net.ConnectException;
 import java.net.Socket;
-import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -41,7 +39,7 @@ public class GameClient {
         this.serverIP = serverIP;
         this.decoder = new NetworkMessageDecoder();
         
-        NotificationCenter.shared().addObserver((notification) -> teardown(), NotificationName.ClientDidReceiveMatchTerminationMessage, null);
+        NotificationCenter.shared().addObserver(this, (notification) -> teardown(), NotificationName.ClientDidReceiveMatchTerminationMessage, null);
     }
     
     public static void createClient(String serverIP, int serverPort) {

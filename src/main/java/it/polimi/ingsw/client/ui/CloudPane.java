@@ -38,7 +38,7 @@ public class CloudPane extends RescalableAnchorPane{
 
         clickOnCloud();
         Platform.runLater(() -> getChildren().add(gridPane));
-        NotificationCenter.shared().addObserver(this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
+        NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
 
     }
 

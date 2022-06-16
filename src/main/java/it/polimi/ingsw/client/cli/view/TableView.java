@@ -45,7 +45,7 @@ public class TableView extends TerminalView {
 	
 	@Override
 	public void run() {
-		NotificationCenter.shared().addObserver(this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
+		NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
 	}
 	
 	private void didReceiveTableState(Notification notification) {

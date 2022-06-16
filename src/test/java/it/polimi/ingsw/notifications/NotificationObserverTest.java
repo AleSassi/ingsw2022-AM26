@@ -17,7 +17,7 @@ class NotificationObserverTest {
 	void initObserver() {
 		assertDoesNotThrow(() -> {
 			Player observedPlayer = new Player("Ale", Wizard.Wizard1, Tower.White, 8);
-			observer = new NotificationObserver(observedPlayer, (notification) -> System.out.println("Hello"));
+			observer = new NotificationObserver(this, observedPlayer, (notification) -> System.out.println("Hello"));
 		});
 	}
 	

@@ -19,15 +19,23 @@ public class NotificationCenter {
 		return shared;
 	}
 	
-	public synchronized void addObserver(NotificationCallback callback, NotificationName name, Object observedObject) {
+	public synchronized void addObserver(Object observer, NotificationCallback callback, NotificationName name, Object observedObject) {
 		// If the map already contains at least 1 observer for the same notification, we append the observer to the list. Otherwise, we create a new one
-		NotificationObserver newObserver = new NotificationObserver(observedObject, callback);
+		NotificationObserver newObserver = new NotificationObserver(observer, observedObject, callback);
 		if (notificationToObserversMap.containsKey(name)) {
 			notificationToObserversMap.get(name).add(newObserver);
 		} else {
 			List<NotificationObserver> notificationObservers = new ArrayList<>();
 			notificationObservers.add(newObserver);
 			notificationToObserversMap.put(name, notificationObservers);
+		}
+	}
+	
+	public synchronized void removeObserver(Object observer) {
+		for (NotificationName notificationName: NotificationName.values()) {
+			if (notificationToObserversMap.containsKey(notificationName)) {
+				notificationToObserversMap.get(notificationName).removeIf((subscribedObserver) -> subscribedObserver.getObserver().equals(observer));
+			}
 		}
 	}
 	

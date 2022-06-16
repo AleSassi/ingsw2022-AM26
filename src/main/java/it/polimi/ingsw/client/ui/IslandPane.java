@@ -4,7 +4,6 @@ import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
-import it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage;
 import it.polimi.ingsw.server.controller.network.messages.TableStateMessage;
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.utils.ui.GUIUtils;
@@ -73,9 +72,9 @@ public class IslandPane extends RescalableAnchorPane {
             studentOnIsland.didReceiveTableState(notification);
         }
         rescale(1);
-        NotificationCenter.shared().addObserver(this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
-        NotificationCenter.shared().addObserver(this::didReceiveStartStudentMoveNotification, NotificationName.JavaFXDidStartMovingStudent, null);
-        NotificationCenter.shared().addObserver(this::didReceiveEndStudentMoveNotification, NotificationName.JavaFXDidEndMovingStudent, null);
+        NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
+        NotificationCenter.shared().addObserver(this, this::didReceiveStartStudentMoveNotification, NotificationName.JavaFXDidStartMovingStudent, null);
+        NotificationCenter.shared().addObserver(this, this::didReceiveEndStudentMoveNotification, NotificationName.JavaFXDidEndMovingStudent, null);
 
     }
 

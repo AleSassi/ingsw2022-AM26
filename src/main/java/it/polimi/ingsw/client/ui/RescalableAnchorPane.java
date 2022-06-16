@@ -9,7 +9,7 @@ public abstract class RescalableAnchorPane extends AnchorPane implements JavaFXR
 	
 	public RescalableAnchorPane() {
 		super();
-		NotificationCenter.shared().addObserver(this::didReceiveWindowResizeNotification, NotificationName.JavaFXWindowDidResize, null);
+		NotificationCenter.shared().addObserver(this, this::didReceiveWindowResizeNotification, NotificationName.JavaFXWindowDidResize, null);
 	}
 	
 	private void didReceiveWindowResizeNotification(Notification notification) {

@@ -15,12 +15,9 @@ import it.polimi.ingsw.server.model.Tower;
 import it.polimi.ingsw.server.model.assistants.Wizard;
 import it.polimi.ingsw.server.model.characters.CharacterCard;
 import it.polimi.ingsw.server.model.characters.CharacterCardParamSet;
-import it.polimi.ingsw.server.model.student.Cloud;
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.server.model.student.StudentCollection;
 import it.polimi.ingsw.server.model.student.StudentHost;
-import it.polimi.ingsw.utils.cli.ANSIColors;
-import it.polimi.ingsw.utils.cli.StringFormatter;
 
 import java.util.*;
 
@@ -65,9 +62,9 @@ public abstract class MatchManager {
 		matchPhase = MatchPhase.PlanPhaseStepTwo;
 		
 		// Register for notification listening
-		NotificationCenter.shared().addObserver(this::didReceiveMatchVictoryNotification, NotificationName.PlayerVictory, managedTable);
+		NotificationCenter.shared().addObserver(this, this::didReceiveMatchVictoryNotification, NotificationName.PlayerVictory, managedTable);
 		for (Player player: getAllPlayers()) {
-			NotificationCenter.shared().addObserver(this::didReceiveMatchVictoryNotification, NotificationName.PlayerVictory, player);
+			NotificationCenter.shared().addObserver(this, this::didReceiveMatchVictoryNotification, NotificationName.PlayerVictory, player);
 		}
 	}
 	

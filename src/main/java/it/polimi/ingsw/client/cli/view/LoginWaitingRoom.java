@@ -6,10 +6,8 @@ import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
-import it.polimi.ingsw.server.controller.network.messages.LoginMessage;
 import it.polimi.ingsw.server.controller.network.messages.LoginResponse;
 import it.polimi.ingsw.server.controller.network.messages.MatchTerminationMessage;
-import it.polimi.ingsw.server.controller.network.messages.NetworkMessage;
 import it.polimi.ingsw.server.model.match.MatchVariant;
 import it.polimi.ingsw.utils.cli.ANSIColors;
 import it.polimi.ingsw.utils.cli.StringFormatter;
@@ -26,8 +24,8 @@ public class LoginWaitingRoom extends TerminalView {
 	
 	@Override
 	public void run() {
-		NotificationCenter.shared().addObserver((notification) -> (new Thread(() -> otherPlayerLoggedInReceived(notification))).start(), NotificationName.ClientDidReceiveLoginResponse, null);
-		NotificationCenter.shared().addObserver((notification) -> {
+		NotificationCenter.shared().addObserver(this, (notification) -> (new Thread(() -> otherPlayerLoggedInReceived(notification))).start(), NotificationName.ClientDidReceiveLoginResponse, null);
+		NotificationCenter.shared().addObserver(this, (notification) -> {
 			shouldQuit = true;
 			if (numberOfPlayersToFill > 0) {
 				MatchTerminationMessage message = (MatchTerminationMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());

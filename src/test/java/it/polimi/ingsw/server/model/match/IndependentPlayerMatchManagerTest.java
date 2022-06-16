@@ -6,18 +6,12 @@ import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.CharacterCardNetworkParamSet;
 import it.polimi.ingsw.server.exceptions.model.*;
 import it.polimi.ingsw.server.model.Player;
-import it.polimi.ingsw.server.model.Professor;
 import it.polimi.ingsw.server.model.TableManager;
-import it.polimi.ingsw.server.model.Tower;
 import it.polimi.ingsw.server.model.assistants.AssistantCard;
 import it.polimi.ingsw.server.model.assistants.Wizard;
 import it.polimi.ingsw.server.model.characters.Character;
-import it.polimi.ingsw.server.model.characters.CharacterCard;
 import it.polimi.ingsw.server.model.characters.CharacterCardBean;
 import it.polimi.ingsw.server.model.characters.CharacterCardParamSet;
-import it.polimi.ingsw.server.model.match.IndependentPlayerMatchManager;
-import it.polimi.ingsw.server.model.match.MatchPhase;
-import it.polimi.ingsw.server.model.match.MatchVariant;
 import it.polimi.ingsw.server.model.student.Island;
 import it.polimi.ingsw.server.model.student.Student;
 import org.junit.jupiter.api.BeforeEach;
@@ -662,7 +656,7 @@ class IndependentPlayerMatchManagerTest {
         assertEquals(MatchPhase.ActionPhaseStepThree, matchManager.getMatchPhase());
         assertEquals("Fede", matchManager.getCurrentPlayer().getNickname());
         //Send a victory notification
-        NotificationCenter.shared().addObserver((notification) -> {
+        NotificationCenter.shared().addObserver(this, (notification) -> {
             List<String> winners = ((List<String>) notification.getUserInfo().get(NotificationKeys.WinnerNickname.getRawValue()));
             System.out.println(winners);
             assertEquals(1, winners.size());
@@ -704,7 +698,7 @@ class IndependentPlayerMatchManagerTest {
                 matchManager.getCurrentPlayer().playAssistantCardAtIndex(0);
             }
         });
-        NotificationCenter.shared().addObserver((notification) -> {
+        NotificationCenter.shared().addObserver(this, (notification) -> {
             List<String> winners = ((List<String>) notification.getUserInfo().get(NotificationKeys.WinnerNickname.getRawValue()));
             List<Player> players = matchManager.getAllPlayers();
             if (players.get(0).getAvailableTowerCount() < players.get(1).getAvailableTowerCount()) {

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client.ui;
 
-import it.polimi.ingsw.client.controller.network.GameClient;
 import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
@@ -9,8 +8,6 @@ import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.LoginResponse;
 import it.polimi.ingsw.server.controller.network.messages.MatchTerminationMessage;
 import it.polimi.ingsw.server.model.match.MatchVariant;
-import it.polimi.ingsw.utils.cli.ANSIColors;
-import it.polimi.ingsw.utils.cli.StringFormatter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -39,8 +36,8 @@ public class LobbyController implements Initializable {
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		playerStateMessagesQueue = new ArrayList<>();
 		GUI.registerForDisconnectionEvents();
-		NotificationCenter.shared().addObserver(this::otherPlayerLoggedInReceived, NotificationName.ClientDidReceiveLoginResponse, null);
-		NotificationCenter.shared().addObserver((notification) -> {
+		NotificationCenter.shared().addObserver(this, this::otherPlayerLoggedInReceived, NotificationName.ClientDidReceiveLoginResponse, null);
+		NotificationCenter.shared().addObserver(this, (notification) -> {
 			if (numberOfPlayersToFill > 0) {
 				MatchTerminationMessage message = (MatchTerminationMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
 				// Present an alert
@@ -58,10 +55,10 @@ public class LobbyController implements Initializable {
 				});
 			}
 		}, NotificationName.ClientDidReceiveMatchTerminationMessage, null);
-		NotificationCenter.shared().addObserver(this::didReceivePlayerStateMessage, NotificationName.ClientDidReceivePlayerStateMessage, null);
-		NotificationCenter.shared().addObserver(this::didReceiveTableStateMessage, NotificationName.ClientDidReceiveTableStateMessage, null);
-		NotificationCenter.shared().addObserver(this::didReceiveActivePlayerMessage, NotificationName.ClientDidReceiveActivePlayerMessage, null);
-		NotificationCenter.shared().addObserver(this::didReceiveMatchPhaseMessage, NotificationName.ClientDidReceiveMatchStateMessage, null);
+		NotificationCenter.shared().addObserver(this, this::didReceivePlayerStateMessage, NotificationName.ClientDidReceivePlayerStateMessage, null);
+		NotificationCenter.shared().addObserver(this, this::didReceiveTableStateMessage, NotificationName.ClientDidReceiveTableStateMessage, null);
+		NotificationCenter.shared().addObserver(this, this::didReceiveActivePlayerMessage, NotificationName.ClientDidReceiveActivePlayerMessage, null);
+		NotificationCenter.shared().addObserver(this, this::didReceiveMatchPhaseMessage, NotificationName.ClientDidReceiveMatchStateMessage, null);
 	}
 	
 	public void setInitialData(MatchVariant matchVariant, int remainingNumberOfPlayers) {

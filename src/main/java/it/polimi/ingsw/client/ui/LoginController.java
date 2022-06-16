@@ -1,7 +1,6 @@
 package it.polimi.ingsw.client.ui;
 
 
-import it.polimi.ingsw.client.cli.CLIManager;
 import it.polimi.ingsw.client.controller.network.GameClient;
 import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
@@ -13,8 +12,6 @@ import it.polimi.ingsw.server.controller.network.messages.LoginResponse;
 import it.polimi.ingsw.server.controller.network.messages.NetworkMessage;
 import it.polimi.ingsw.server.model.assistants.Wizard;
 import it.polimi.ingsw.server.model.match.MatchVariant;
-import it.polimi.ingsw.utils.cli.ANSIColors;
-import it.polimi.ingsw.utils.cli.StringFormatter;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -81,7 +78,7 @@ public class LoginController implements Initializable {
 			default -> Wizard.Wizard4;
 		};
 		NetworkMessage loginMessage = new LoginMessage(chosenUsername, chosenLobbySize, selectedMatchType, wiz);
-		NotificationCenter.shared().addObserver(this::didReceiveLoginResponse, NotificationName.ClientDidReceiveLoginResponse, GameClient.shared());
+		NotificationCenter.shared().addObserver(this, this::didReceiveLoginResponse, NotificationName.ClientDidReceiveLoginResponse, GameClient.shared());
 		
 		//Connect to the server
 		String buttonText = loginButton.getText();
