@@ -20,7 +20,7 @@ import javafx.scene.layout.RowConstraints;
 import java.util.Objects;
 
 public class CloudPane extends RescalableAnchorPane{
-    private  int idx;
+    private int idx;
     private String address = null;
     private boolean selectable = false;
     private GridPane gridPane = new GridPane();
@@ -35,14 +35,12 @@ public class CloudPane extends RescalableAnchorPane{
         }
 
         setStyle("-fx-background-image: url(" + address + ");\n-fx-background-size: 100% 100%");
-
+        
+        rescale(1);
         clickOnCloud();
         Platform.runLater(() -> getChildren().add(gridPane));
         NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
-
     }
-
-
 
     private void didReceiveTableState(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof TableStateMessage message) {
@@ -94,8 +92,7 @@ public class CloudPane extends RescalableAnchorPane{
         gridPane.getRowConstraints().removeAll(gridPane.getRowConstraints());
         gridPane.getColumnConstraints().removeAll(gridPane.getColumnConstraints());
         gridPane.setPrefSize(33 * scale, 33 * scale);
-
-
+        
         for (int i = 0; i < 2; i++) {
             ColumnConstraints col = new ColumnConstraints(33 * scale);
             gridPane.getColumnConstraints().add(col);

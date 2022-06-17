@@ -28,13 +28,11 @@ public class StudentOnIsland extends RescalableAnchorPane  {
             studentLabel.setVisible(false);
             studentPane.setVisible(false);
         });
-
+        
         rescale(1);
 
         NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
     }
-
-
 
     public void didReceiveTableState(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof TableStateMessage message) {
@@ -51,12 +49,10 @@ public class StudentOnIsland extends RescalableAnchorPane  {
 
 
     public void rescale(double scale) {
-        Platform.runLater(() ->{
-            studentPane.setLayoutX(0);
-            studentLabel.setLayoutX(0);
-            studentPane.setPrefSize(30 * scale , 30 * scale);
-            studentLabel.setPrefSize(30 * scale , 30 * scale);
-            studentLabel.setFont(new Font(20.0 * scale));
-        });
+        studentPane.setLayoutX(0);
+        studentLabel.setLayoutX(0);
+        studentPane.setPrefSize(30 * scale , 30 * scale);
+        studentLabel.setPrefSize(30 * scale , 30 * scale);
+        studentLabel.setFont(new Font("Avenir", 20 * scale));
     }
 }

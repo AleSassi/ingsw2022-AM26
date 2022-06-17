@@ -275,5 +275,8 @@ public class MainBoardController implements JavaFXRescalable {
                 schoolBoardContainers.get(i).relocate(0, schoolBoardContainers.get(i - 1).getLayoutY() + schoolBoardContainers.get(i - 1).getPrefHeight() + 10);
             }
         }
+        
+        cloudsContainer.setLayoutX(GUI.getWindowWidth() - 500 * scale + 70 * scale);
+        cloudsContainer.setLayoutY(250 * scale - 70 * scale * 0.5);
     }
 }

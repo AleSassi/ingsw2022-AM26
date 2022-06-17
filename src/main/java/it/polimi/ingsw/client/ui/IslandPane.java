@@ -166,39 +166,36 @@ public class IslandPane extends RescalableAnchorPane {
     }
 
     public void rescale(double scale) {
-
-        Platform.runLater(() -> {
-            //rescale IslandPane
-            setPrefSize(50 * scale, 50 * scale);
-
-            //rescale MN
-            motherNature.setPrefSize(30 * scale, 30 * scale);
-
-            //rescale Tower
-            if (tower != null) {
-                tower.setPrefSize(60 * scale, 60 * scale);
-                towerLabel.setFont(new Font(20 * scale));
-                towerLabel.setLayoutX(80 * scale);
-                towerLabel.setLayoutY(70 * scale);
-                tower.setLayoutX(80 * scale);
-                tower.setLayoutY(70 * scale);
-            }
-
-            //rescale Grid && Columns and Rows
-            gridPane.getRowConstraints().removeAll(gridPane.getRowConstraints());
-            gridPane.getColumnConstraints().removeAll(gridPane.getColumnConstraints());
-            gridPane.setPrefSize(85 * scale, 60 * scale);
-            gridPane.setLayoutX(30 * scale);
-            gridPane.setLayoutY(30 * scale);
-            for (int i = 0; i < 3; i++) {
-                ColumnConstraints col = new ColumnConstraints(85.0 / 3 * scale);
-                gridPane.getColumnConstraints().add(col);
-            }
-            for (int i = 0; i < 3; i++) {
-                RowConstraints row = new RowConstraints(85.0 / 3 * scale);
-                gridPane.getRowConstraints().add(row);
-            }
-        });
+        //rescale IslandPane
+        setPrefSize(50 * scale, 50 * scale);
+    
+        //rescale MN
+        motherNature.setPrefSize(30 * scale, 30 * scale);
+    
+        //rescale Tower
+        if (tower != null) {
+            tower.setPrefSize(60 * scale, 60 * scale);
+            towerLabel.setFont(new Font(20 * scale));
+            towerLabel.setLayoutX(80 * scale);
+            towerLabel.setLayoutY(70 * scale);
+            tower.setLayoutX(80 * scale);
+            tower.setLayoutY(70 * scale);
+        }
+    
+        //rescale Grid && Columns and Rows
+        gridPane.getRowConstraints().removeAll(gridPane.getRowConstraints());
+        gridPane.getColumnConstraints().removeAll(gridPane.getColumnConstraints());
+        gridPane.setPrefSize(85 * scale, 60 * scale);
+        gridPane.setLayoutX(30 * scale);
+        gridPane.setLayoutY(30 * scale);
+        for (int i = 0; i < 3; i++) {
+            ColumnConstraints col = new ColumnConstraints(85.0 / 3 * scale);
+            gridPane.getColumnConstraints().add(col);
+        }
+        for (int i = 0; i < 3; i++) {
+            RowConstraints row = new RowConstraints(85.0 / 3 * scale);
+            gridPane.getRowConstraints().add(row);
+        }
     }
 
 

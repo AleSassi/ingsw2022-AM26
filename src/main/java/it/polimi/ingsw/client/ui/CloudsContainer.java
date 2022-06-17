@@ -25,7 +25,6 @@ public class CloudsContainer extends RescalableAnchorPane{
             getChildren().add(cloud);
         }
         rescale(1);
-
     }
     protected void layoutChildrenInCircle() {
         if(getChildren().size() == 0) {
@@ -53,10 +52,20 @@ public class CloudsContainer extends RescalableAnchorPane{
     }
 
     public void rescale(double scale) {
-        setPrefSize( 500 * scale, 500 * scale);
-        setLayoutX(GUI.getWindowWidth() - getWidth());
-        setLayoutY(0);
+        setPrefSize(70 * scale, 70 * scale);
         radius = 70 * scale;
-        layoutChildrenInCircle();
+    
+        if (clouds.size() == 0) {
+            return;
+        }
+        double dtheta = 2 * Math.PI / clouds.size();
+        double radians = 0;
+        for (CloudPane cloud: clouds) {
+            double x = radius * Math.cos(radians) + radius;
+            double y = radius * Math.sin(radians) + radius;
+            cloud.setLayoutX(x);
+            cloud.setLayoutY(y);
+            radians += dtheta;
+        }
     }
 }
