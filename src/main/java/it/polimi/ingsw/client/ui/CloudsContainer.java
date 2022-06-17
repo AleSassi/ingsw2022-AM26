@@ -26,20 +26,6 @@ public class CloudsContainer extends RescalableAnchorPane{
         }
         rescale(1);
     }
-    protected void layoutChildrenInCircle() {
-        if(getChildren().size() == 0) {
-            return;
-        }
-        final  double increment = 360.0 / getChildren().size();
-        double degreese = -90;
-        for (Node node : getChildren()) {
-            double x = radius * Math.cos(Math.toRadians(degreese)) + getWidth() / 2;
-            double y = radius * Math.sin(Math.toRadians(degreese)) + getHeight() / 2;
-            layoutInArea(node, x - node.getBoundsInLocal().getWidth() / 2, y - node.getBoundsInLocal().getHeight() / 2, getWidth(), getHeight(), 0.0, HPos.LEFT, VPos.TOP);
-            degreese += increment;
-        }
-
-    }
 
     public void setActivateCloudPick(boolean activate) {
         setDisable(false);
