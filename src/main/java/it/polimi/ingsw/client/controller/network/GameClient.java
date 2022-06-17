@@ -58,6 +58,7 @@ public class GameClient {
      * This method opens the socket
      */
     public void connectToServer() throws IOException {
+        if (this.socket != null && this.socket.isConnected()) return;
         this.socket = new Socket(serverIP, serverPort);
         this.outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
         // Decode the JSON to NetworkMessage
