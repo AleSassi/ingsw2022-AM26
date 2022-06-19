@@ -36,17 +36,27 @@ public class StudentOnIsland extends RescalableAnchorPane  {
 
     public void didReceiveTableState(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof TableStateMessage message) {
-            int count = message.getIslands().get(idx).getNumberOfSameStudents(color);
-            Platform.runLater(() -> {
-                studentLabel.setText("" + count);
-                if (count > 0) {
-                    studentLabel.setVisible(true);
-                    studentPane.setVisible(true);
-                }
-            });
+            if(message.getIslands().size() - 1 >= idx) {
+                int count = message.getIslands().get(idx).getNumberOfSameStudents(color);
+                Platform.runLater(() -> {
+                    studentLabel.setText("" + count);
+                    if (count > 0) {
+                        studentLabel.setVisible(true);
+                        studentPane.setVisible(true);
+                    }
+                    else {
+                        studentLabel.setVisible(false);
+                        studentPane.setVisible(false);
+                    }
+                });
+            }
+
         }
     }
 
+    public void deleteStudent() {
+        new Thread(() -> NotificationCenter.shared().removeObserver(this)).start();
+    }
 
     public void rescale(double scale) {
         studentPane.setLayoutX(0);
