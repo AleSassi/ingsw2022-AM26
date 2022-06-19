@@ -22,7 +22,7 @@ import java.util.Objects;
 public class CloudPane extends RescalableAnchorPane{
     private int idx;
     private String address = null;
-    private boolean selectable = false;
+    private boolean selectable = true;
     private GridPane gridPane = new GridPane();
 
     public CloudPane(int idx, Notification notification) {
@@ -40,27 +40,30 @@ public class CloudPane extends RescalableAnchorPane{
         clickOnCloud();
         Platform.runLater(() -> getChildren().add(gridPane));
         NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
+        NotificationCenter.shared().addObserver(this, this:: didReceiveClickOnCloud, NotificationName.JavaFXDidClickOnCloud, null);
+    }
+
+    private void didReceiveClickOnCloud(Notification notification) {
+        setStyle("-fx-background-image: url(" + address + ");\n-fx-background-size: 100% 100%");
     }
 
     private void didReceiveTableState(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof TableStateMessage message) {
+            Platform.runLater(() -> gridPane.getChildren().clear());
             setStudentOnCloud(message);
         }
     }
 
-    public void showSelection(boolean selectable) {
-        this.selectable = selectable;
-        if(selectable && gridPane.getChildren().size() == 0) {
+    public void showSelection() {
+        if(gridPane.getChildren().size() != 0) {
             setStyle(getStyle() + ";\n-fx-background-color: rgba(80,255,80,0.4)");
-        } else {
-            setStyle("-fx-background-image: url(" + address + ");\n-fx-background-size: 100% 100%");
         }
     }
 
     private void setStudentOnCloud(TableStateMessage message) {
         int c = 0;
         int r = 0;
-       Platform.runLater(() -> gridPane.getChildren().removeAll());
+
         for(Student s : Student.values()) {
             for (int i = 0; i < message.getManagedClouds().get(idx).getCount(s); i++) {
                 AnchorPane student = GUIUtils.createImageViewWithImageNamed("images/students/" + s.getColor() +".png");
@@ -83,6 +86,7 @@ public class CloudPane extends RescalableAnchorPane{
                 PlayerActionMessage actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidChooseCloudIsland, -1, null, true, -1, -1, idx, -1, null);
                 GameClient.shared().sendMessage(actionMessage);
             }
+            NotificationCenter.shared().post(NotificationName.JavaFXDidClickOnCloud, null, null);
             event.consume();
         });
     }

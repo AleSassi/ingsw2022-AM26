@@ -28,11 +28,13 @@ public class CloudsContainer extends RescalableAnchorPane{
     }
 
     public void setActivateCloudPick(boolean activate) {
-        setDisable(false);
-        for (CloudPane cloud : clouds) {
-                cloud.showSelection(activate);
+        if(activate) {
+            setDisable(false);
+            for (CloudPane c: clouds) {
+                c.showSelection();
+            }
         }
-        if(!activate) {
+        else if(!activate) {
             setDisable(true);
         }
     }
