@@ -12,6 +12,7 @@ import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.util.*;
@@ -22,7 +23,7 @@ public class IslandPane extends RescalableAnchorPane {
     private final AnchorPane stop;
     private final AnchorPane motherNature;
     private AnchorPane tower = new AnchorPane();
-
+    private List<StudentOnIsland> students;
     private final GridPane gridPane = new GridPane();
     private Label towerLabel = new Label("0");
     private String address = null;
@@ -32,6 +33,7 @@ public class IslandPane extends RescalableAnchorPane {
     public IslandPane(int idx, Notification notification) {
         this.allowedDropDestinationsForDrag = new StudentDropTarget[0];
         this.allowedStudentDestinationsForPhase = new StudentDropTarget[0];
+        students = new ArrayList<>();
         setupMouseClickAfterStudentStartMoving(this, StudentDropTarget.ToIsland);
 
         this.idx = idx;
@@ -62,6 +64,7 @@ public class IslandPane extends RescalableAnchorPane {
 
         for (Student s : Student.values()) {
             StudentOnIsland studentOnIsland = new StudentOnIsland(s, idx);
+            students.add(studentOnIsland);
             switch (s) {
                 case BlueUnicorn -> Platform.runLater(() -> gridPane.add(studentOnIsland, 0, 0));
                 case RedDragon -> Platform.runLater(() -> gridPane.add(studentOnIsland, 1, 0));
@@ -99,6 +102,14 @@ public class IslandPane extends RescalableAnchorPane {
 
     }
 
+    protected void deleteIsland() {
+        new Thread(() -> NotificationCenter.shared().removeObserver(this)).start();
+        for (StudentOnIsland s :
+                students) {
+            s.deleteStudent();
+        }
+    }
+
     private void didReceiveStartStudentMoveNotification(Notification notification) {
         List<StudentDropTarget> allowableDefaultMovements = Arrays.stream(allowedStudentDestinationsForPhase).toList();
         List<StudentDropTarget> dropDestinationsForDrag = Arrays.stream(((StudentDropTarget[]) notification.getUserInfo().get(NotificationKeys.StudentDropTargets.getRawValue()))).toList();
@@ -117,9 +128,11 @@ public class IslandPane extends RescalableAnchorPane {
 
     public void didReceiveTableState(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof TableStateMessage message) {
-            setTowerOnIsland(message);
-            setMotherNature(message);
-            setStop(message);
+            if (message.getIslands().size() - 1 >= idx) {
+                setTowerOnIsland(message);
+                setMotherNature(message);
+                setStop(message);
+            }
         }
     }
 
@@ -141,14 +154,17 @@ public class IslandPane extends RescalableAnchorPane {
             switch (tableStateMessage.getIslands().get(idx).getActiveTowerType()) {
                 case Gray -> {
                     tower.setVisible(true);
+                    towerLabel.setTextFill(Color.color(0, 0, 0));
                     tower.setStyle("-fx-background-image: url(" + GUIUtils.getURI("images/towers/Grey.png") + ");\n-fx-background-size: 100% 100%");
                 }
                 case Black -> {
                     tower.setVisible(true);
+                    towerLabel.setTextFill(Color.color(1, 1, 1));
                     tower.setStyle("-fx-background-image: url(" + GUIUtils.getURI("images/towers/Black.png") + ");\n-fx-background-size: 100% 100%");
                 }
                 case White -> {
                     tower.setVisible(true);
+                    towerLabel.setTextFill(Color.color(0, 0, 0));
                     tower.setStyle("-fx-background-image: url(" + GUIUtils.getURI("images/towers/White.png") + ");\n-fx-background-size: 100% 100%");
                 }
                 default -> {
@@ -176,8 +192,8 @@ public class IslandPane extends RescalableAnchorPane {
         if (tower != null) {
             tower.setPrefSize(60 * scale, 60 * scale);
             towerLabel.setFont(new Font(20 * scale));
-            towerLabel.setLayoutX(80 * scale);
-            towerLabel.setLayoutY(70 * scale);
+            towerLabel.setLayoutX(105 * scale);
+            towerLabel.setLayoutY(80 * scale);
             tower.setLayoutX(80 * scale);
             tower.setLayoutY(70 * scale);
         }

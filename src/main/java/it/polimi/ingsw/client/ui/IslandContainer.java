@@ -6,7 +6,6 @@ import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.TableStateMessage;
 
-import it.polimi.ingsw.server.model.student.Island;
 import it.polimi.ingsw.utils.ui.StudentDropTarget;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
@@ -17,36 +16,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IslandContainer extends RescalableAnchorPane{
-    
     private List<IslandPane> islandsPane = new ArrayList<>();
     private double radius = 250;
 
+    /**
+     * Initialize the IslandContainer with the islands
+     * @param notification
+     */
     public IslandContainer(Notification notification) {
         for(int i = 0; i < 12; i++) {
             IslandPane island = new IslandPane(i, notification);
             islandsPane.add(island);
+            Platform.runLater(() -> getChildren().add(island));
         }
-        
-        Platform.runLater(() -> {
-            for (IslandPane islandPane: islandsPane) {
-                getChildren().add(islandPane);
-            }
-            rescale(1);
-        });
+
+        rescale(1);
+
         NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
-        NotificationCenter.shared().addObserver(this, this::didReceiveEndStudentMoveNotification, NotificationName.JavaFXDidEndMovingStudent, null);
+
     }
 
-    private void didReceiveEndStudentMoveNotification(Notification notification) {
-    }
 
+    /**
+     * TableState notification callback, updates the number of island from the TableState notification
+     * @param notification
+     */
     private void didReceiveTableState(Notification notification) {
         TableStateMessage tableStateMessage = (TableStateMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
         Platform.runLater(() ->  {
             while(getChildren().size() > tableStateMessage.getIslands().size()) {
+                islandsPane.get(islandsPane.size() - 1).deleteIsland();
                 getChildren().remove(getChildren().size() - 1);
+                islandsPane.remove(islandsPane.size() - 1);
             }
-
+            rescale(1);
         });
     }
 
@@ -61,7 +64,7 @@ public class IslandContainer extends RescalableAnchorPane{
         setLayoutX(GUI.getWindowWidth() - (500 * scale));
         setLayoutY(0);
         radius = 250 * scale;
-    
+
         if (islandsPane.size() == 0) {
             return;
         }
