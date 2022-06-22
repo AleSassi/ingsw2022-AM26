@@ -18,7 +18,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
+import it.polimi.ingsw.server.model.characters.Character;
+import it.polimi.ingsw.server.model.characters.CharacterCardParamSet;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,9 @@ public class MainBoardController implements JavaFXRescalable {
     private PlayerStateMessage stateMessage;
     private IslandContainer islandContainer;
     private CloudsContainer cloudsContainer;
+    private chooseMNS ChooseMNS;
+    private ColorPicker colorPicker;
+    private CharactercardContainer charactercardContainer;
     
     public void load() {
         schoolBoardContainers = new ArrayList<>();
@@ -47,13 +51,123 @@ public class MainBoardController implements JavaFXRescalable {
         NotificationCenter.shared().addObserver(this, this::didReceiveVictoryNotification, NotificationName.ClientDidReceiveVictoryMessage, null);
         NotificationCenter.shared().addObserver(this, this::didReceiveStudentMovementStart, NotificationName.JavaFXDidStartMovingStudent, null);
         NotificationCenter.shared().addObserver(this, this::didReceiveStudentMovementEnd, NotificationName.JavaFXDidEndMovingStudent, null);
+        NotificationCenter.shared().addObserver(this, this::didReceivePlayedCard, NotificationName.JavaFXPlayedCharacterCard, null);
     }
-    
+    private void didReceivePlayedCard(Notification notification) {
+        Character PlayedCharacter = (Character) notification.getUserInfo().get("card");
+        switch(PlayedCharacter) {
+            case Abbot:
+                takeacolor(true);
+                break;
+            case Ambassador:
+                takeindex(null, false);
+                break;
+            case Magician:
+                choosestep();
+            case Herbalist:
+                takeindex(null,true );
+                break;
+            case Mushroom:
+                takeacolor(false);
+                break;
+            case Circus:
+                schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(new StudentDropTarget[]{StudentDropTarget.ToCharacterCard});
+            case Musician:
+                schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(new StudentDropTarget[]{StudentDropTarget.ToDiningRoom, StudentDropTarget.ToEntrance});
+            case Queen:
+                takeacolor(false);
+            case Thief:
+                takeacolor(false);
+        }
+
+
+    }
+    private void takeacolor(boolean i){
+        colorPicker=new ColorPicker();
+        Platform.runLater(() -> {
+            showFaderPane();
+            mainPane.getChildren().add(colorPicker);
+        });
+        NotificationCenter.shared().addObserver(this, (notification) ->  {
+            CharacterCardNetworkParamSet paramSet = null;
+            Student pickedstudent = (Student) notification.getUserInfo().get("student");
+            if(i) {
+                paramSet = new CharacterCardNetworkParamSet(pickedstudent, null, false, -1, -1, -1, null);
+                PlayerActionMessage actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidPlayCharacterCard, -1, null, false, -1, -1, -1, -1, paramSet);
+                GameClient.shared().sendMessage(actionMessage);
+            }
+            else{
+                takeindex(pickedstudent, true);
+            }Platform.runLater(() -> {
+                mainPane.getChildren().remove(colorPicker);
+                mainPane.getChildren().remove(faderPane);
+                faderPane = null;
+            });
+        }, NotificationName.JavaFXcolor, null);
+
+    }
+    private void takeindex(Student student, boolean cond){
+
+        colorPicker=new ColorPicker();
+        Platform.runLater(() -> {
+            showFaderPane();
+            mainPane.getChildren().add(colorPicker);
+        });
+        NotificationCenter.shared().addObserver(this, (notification) -> {
+            CharacterCardNetworkParamSet paramSet = null;
+            int index = (int) notification.getUserInfo().get("targetIslandIndex");
+            if (student.equals(null)){
+                paramSet = new CharacterCardNetworkParamSet(student, null, false, -1, -1, index, null);
+                PlayerActionMessage actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidPlayCharacterCard, -1, null, false, -1, -1, -1, -1, paramSet);
+                GameClient.shared().sendMessage(actionMessage);
+            }else{
+                if(!cond) {
+                    paramSet = new CharacterCardNetworkParamSet(null, null, false, -1, index, index, null);
+                    PlayerActionMessage actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidPlayCharacterCard, -1, null, false, -1, -1, -1, -1, paramSet);
+                    GameClient.shared().sendMessage(actionMessage);
+                }else {
+                    paramSet = new CharacterCardNetworkParamSet(null, null, false, -1, index, index, CharacterCardParamSet.StopCardMovementMode.ToIsland);
+                    PlayerActionMessage actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidPlayCharacterCard, -1, null, false, -1, -1, -1, -1, paramSet);
+                    GameClient.shared().sendMessage(actionMessage);
+                }
+            }
+            Platform.runLater(() -> {
+                mainPane.getChildren().remove(colorPicker);
+                mainPane.getChildren().remove(faderPane);
+                faderPane = null;
+            });
+        }, NotificationName.JavaFXCickOnIsland, null);
+
+    }
+
+    private void choosestep(){
+        ChooseMNS=new chooseMNS();
+        Platform.runLater(() -> {
+            showFaderPane();
+            mainPane.getChildren().add(ChooseMNS);
+        });
+        NotificationCenter.shared().addObserver(this, (notification) ->{
+                CharacterCardNetworkParamSet paramSet = null;
+            int step = (int) notification.getUserInfo().get("MNStep");
+            paramSet = new CharacterCardNetworkParamSet(null, null, false, step, -1, step, null);
+            PlayerActionMessage actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidPlayCharacterCard, -1, null, false, -1, -1, -1, -1, paramSet);
+            GameClient.shared().sendMessage(actionMessage);
+            Platform.runLater(() -> {
+                mainPane.getChildren().remove(ChooseMNS);
+                mainPane.getChildren().remove(faderPane);
+                faderPane = null;
+            });
+
+        }, NotificationName.JavaFXMNS, null);
+
+    }
+
     protected void didReceivePlayerStatusNotification(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof PlayerStateMessage message) {
             if (message.getNickname().equals(Client.getNickname())) {
                 stateMessage = message;
             }
+            charactercardContainer.setplayer(message);
             if (!schoolBoardContainers.stream().map(SchoolBoardContainer::getOwnerNickname).toList().contains(message.getNickname())) {
                 //Create the new container
                 SchoolBoardContainer newContainer = new SchoolBoardContainer(message.getNickname().equals(Client.getNickname()), message.getNickname());
@@ -79,6 +193,13 @@ public class MainBoardController implements JavaFXRescalable {
     
     protected void didReceiveTableStateMessage(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof TableStateMessage message) {
+            if(charactercardContainer==null){
+                charactercardContainer = new CharactercardContainer();
+                Platform.runLater(() -> {
+                    mainPane.getChildren().add(charactercardContainer);
+                });
+            }
+            charactercardContainer.settable(message);
             if(islandContainer == null && cloudsContainer == null) {
                 islandContainer = new IslandContainer(notification);
                 cloudsContainer = new CloudsContainer(notification);
@@ -217,6 +338,7 @@ public class MainBoardController implements JavaFXRescalable {
     private void didReceiveStudentMovementStart(Notification notification) {
         //Cache the parameters so that at the student movement end we can validate it and send a message to the server
         movingStudentColor = (Student) notification.getUserInfo().get(NotificationKeys.ClickedStudentColor.getRawValue());
+        charactercardContainer.didReceiveStudentMovementStart(notification);
     }
     
     private void didReceiveStudentMovementEnd(Notification notification) {
@@ -275,7 +397,7 @@ public class MainBoardController implements JavaFXRescalable {
                 schoolBoardContainers.get(i).relocate(0, schoolBoardContainers.get(i - 1).getLayoutY() + schoolBoardContainers.get(i - 1).getPrefHeight() + 10);
             }
         }
-        
+        charactercardContainer.rescale(scale);
         cloudsContainer.setLayoutX(GUI.getWindowWidth() - 500 * scale + 70 * scale);
         cloudsContainer.setLayoutY(250 * scale - 70 * scale * 0.5);
     }
