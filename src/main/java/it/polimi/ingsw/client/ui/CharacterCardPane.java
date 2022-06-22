@@ -171,6 +171,7 @@ public class CharacterCardPane extends RescalableAnchorPane{
                 });
             }else{
             HashMap<String, Object> UserInfo = new HashMap<>();
+
             switch (character.getCharacter()) {
                 case Abbot:
                     UserInfo.put("card", Character.Abbot);
