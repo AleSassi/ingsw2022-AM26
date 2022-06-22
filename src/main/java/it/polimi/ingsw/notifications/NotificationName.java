@@ -19,5 +19,10 @@ public enum NotificationName {
 	JavaFXWindowDidResize,
 	JavaFXDidEndMovingStudent,
 	JavaFXDidClickOnAssistantCard,
+	JavaFXcolor,
+	JavaFXMNS,
+	JavaFXCickOnIsland,
+	JavaFXPlayedAssistantCard,
+	JavaFXPlayedCharacterCard,
 	JavaFXDidClickOnCloud;
 }
