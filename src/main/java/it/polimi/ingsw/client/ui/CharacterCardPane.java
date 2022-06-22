@@ -174,7 +174,7 @@ public class CharacterCardPane extends RescalableAnchorPane{
             switch (character.getCharacter()) {
                 case Abbot:
                     UserInfo.put("card", Character.Abbot);
-                    NotificationCenter.shared().post(NotificationName.JavaFXCickOnIsland, null, UserInfo);
+                    NotificationCenter.shared().post(NotificationName.JavaFXPlayedCharacterCard, null, UserInfo);
                     StudentGrid1.setDisable(false);
                     break;
                 case CheeseMan:
@@ -183,15 +183,15 @@ public class CharacterCardPane extends RescalableAnchorPane{
                     break;
                 case Ambassador:
                     UserInfo.put("card", Character.Ambassador);
-                    NotificationCenter.shared().post(NotificationName.JavaFXPlayedAssistantCard, null, UserInfo);
+                    NotificationCenter.shared().post(NotificationName.JavaFXPlayedCharacterCard, null, UserInfo);
                     break;
                 case Magician:
                     UserInfo.put("card", Character.Magician);
-                    NotificationCenter.shared().post(NotificationName.JavaFXPlayedAssistantCard, null, UserInfo);
+                    NotificationCenter.shared().post(NotificationName.JavaFXPlayedCharacterCard, null, UserInfo);
                     break;
                 case Herbalist:
                     UserInfo.put("card", Character.Herbalist);
-                    NotificationCenter.shared().post(NotificationName.JavaFXPlayedAssistantCard, null, UserInfo);
+                    NotificationCenter.shared().post(NotificationName.JavaFXPlayedCharacterCard, null, UserInfo);
                     break;
                 case Centaurus:
                     commanderror.setContentText("The Centaurus card cannot be played, since its effect is passive");
@@ -203,27 +203,27 @@ public class CharacterCardPane extends RescalableAnchorPane{
                     break;
                 case Mushroom:
                     UserInfo.put("card", Character.Mushroom);
-                    NotificationCenter.shared().post(NotificationName.JavaFXPlayedAssistantCard, null, UserInfo);
+                    NotificationCenter.shared().post(NotificationName.JavaFXPlayedCharacterCard, null, UserInfo);
                     break;
                 case Circus:
                     UserInfo.put("card", Character.Circus);
-                    NotificationCenter.shared().post(NotificationName.JavaFXPlayedAssistantCard, null, UserInfo);
+                    NotificationCenter.shared().post(NotificationName.JavaFXPlayedCharacterCard, null, UserInfo);
                     StudentGrid1.setDisable(false);
                     effectactive = 2;
                     break;
                 case Musician:
                     UserInfo.put("card", Character.Musician);
-                    NotificationCenter.shared().post(NotificationName.JavaFXPlayedAssistantCard, null, UserInfo);
+                    NotificationCenter.shared().post(NotificationName.JavaFXPlayedCharacterCard, null, UserInfo);
                     StudentGrid1.setDisable(false);
                     effectactive = 2;
                     break;
                 case Queen:
                     UserInfo.put("card", Character.Queen);
-                    NotificationCenter.shared().post(NotificationName.JavaFXPlayedAssistantCard, null, UserInfo);
+                    NotificationCenter.shared().post(NotificationName.JavaFXPlayedCharacterCard, null, UserInfo);
                     break;
                 case Thief:
                     UserInfo.put("card", Character.Thief);
-                    NotificationCenter.shared().post(NotificationName.JavaFXPlayedAssistantCard, null, UserInfo);
+                    NotificationCenter.shared().post(NotificationName.JavaFXPlayedCharacterCard, null, UserInfo);
                     break;
 
 
