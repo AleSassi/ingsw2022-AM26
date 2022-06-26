@@ -24,5 +24,6 @@ public enum NotificationName {
 	JavaFXCickOnIsland,
 	JavaFXPlayedAssistantCard,
 	JavaFXPlayedCharacterCard,
-	JavaFXDidClickOnCloud;
+	JavaFXDidClickOnCloud,
+	TestNotification
 }
