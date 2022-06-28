@@ -90,7 +90,7 @@ public class GUI extends Application {
 		Platform.runLater(() -> {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			// Go back to the login screen
-			if (notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof MatchTerminationMessage message) {
+			if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof MatchTerminationMessage message) {
 				alert.setContentText("The Match was terminated by the server. Reason: " + message.getTerminationReason());
 			} else {
 				alert.setContentText("The Client encountered an error. Reason: Timeout. The network connection with the Server might have been interrupted, or the Server might be too busy to respond");
