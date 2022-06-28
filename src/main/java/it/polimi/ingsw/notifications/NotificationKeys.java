@@ -6,7 +6,11 @@ public enum NotificationKeys {
 	WinnerTowerType("WinnerTowerType"),
 	IncomingNetworkMessage("IncomingNetworkMessage"),
 	ClickedStudentColor("ClickedStudentColor"),
-	StudentDropTargets("ValidStudentDropTargets");
+	StudentDropTargets("ValidStudentDropTargets"),
+	JavaFXPlayedCharacter("playedCharacter"),
+	CharacterCardTargetIslandIndex("targetIslandIdx"),
+	CharacterCardSourceStudent("srcStudentColor"),
+	CharacterCardDestinationStudent("dstStudentColor");
 	
 	private final String rawValue;
 	

@@ -6,19 +6,17 @@ import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.TableStateMessage;
 
+import it.polimi.ingsw.server.model.characters.Character;
 import it.polimi.ingsw.utils.ui.StudentDropTarget;
 import javafx.application.Platform;
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
-import javafx.scene.Node;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class IslandContainer extends RescalableAnchorPane{
-    private List<IslandPane> islandsPane = new ArrayList<>();
-    private double radius = 250;
-
+public class IslandContainer extends RescalableAnchorPane {
+    
+    private final List<IslandPane> islands = new ArrayList<>();
+    
     /**
      * Initialize the IslandContainer with the islands
      * @param notification
@@ -26,14 +24,15 @@ public class IslandContainer extends RescalableAnchorPane{
     public IslandContainer(Notification notification) {
         for(int i = 0; i < 12; i++) {
             IslandPane island = new IslandPane(i, notification);
-            islandsPane.add(island);
+            islands.add(island);
             Platform.runLater(() -> getChildren().add(island));
         }
 
         rescale(1);
 
         NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
-
+        NotificationCenter.shared().addObserver(this, this::didReceiveCharacterCardPlayedNotification, NotificationName.JavaFXDidPlayCharacterCard, null);
+        NotificationCenter.shared().addObserver(this, this::cleanupAfterCardControlLoopEnds, NotificationName.JavaFXDidEndCharacterCardLoop, null);
     }
 
 
@@ -45,16 +44,34 @@ public class IslandContainer extends RescalableAnchorPane{
         TableStateMessage tableStateMessage = (TableStateMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
         Platform.runLater(() ->  {
             while(getChildren().size() > tableStateMessage.getIslands().size()) {
-                islandsPane.get(islandsPane.size() - 1).deleteIsland();
+                islands.get(islands.size() - 1).deleteIsland();
                 getChildren().remove(getChildren().size() - 1);
-                islandsPane.remove(islandsPane.size() - 1);
+                islands.remove(islands.size() - 1);
             }
             rescale(1);
         });
     }
+    
+    private void didReceiveCharacterCardPlayedNotification(Notification notification) {
+        if (notification.getUserInfo() != null) {
+            Character playedCharacter = (Character) notification.getUserInfo().get(NotificationKeys.JavaFXPlayedCharacter.getRawValue());
+            if (playedCharacter == Character.Abbot || playedCharacter == Character.Ambassador || playedCharacter == Character.Herbalist) {
+                //Highlight islands which enter "Destination mode" -> every click on them will send the CloseControlLoop message
+                for (IslandPane islandPane: islands) {
+                    islandPane.setCardDestinationMode(true, notification.getUserInfo());
+                }
+            }
+        }
+    }
+    
+    private void cleanupAfterCardControlLoopEnds(Notification notification) {
+        for (IslandPane islandPane: islands) {
+            islandPane.setCardDestinationMode(false, notification.getUserInfo());
+        }
+    }
 
     public void setAllowedStudentMovements(StudentDropTarget[] validStudentDestinations) {
-        for (IslandPane island : islandsPane) {
+        for (IslandPane island : islands) {
             island.setAllowedStudentDestinationsForPhase(validStudentDestinations);
         }
     }
@@ -63,14 +80,14 @@ public class IslandContainer extends RescalableAnchorPane{
         setPrefSize(500 * scale, 500 * scale);
         setLayoutX(GUI.getWindowWidth() - (500 * scale));
         setLayoutY(0);
-        radius = 250 * scale;
+        double radius = 250 * scale;
 
-        if (islandsPane.size() == 0) {
+        if (islands.size() == 0) {
             return;
         }
-        double dtheta = 2 * Math.PI / islandsPane.size();
+        double dtheta = 2 * Math.PI / islands.size();
         double radians = 0;
-        for (IslandPane islandPane: islandsPane) {
+        for (IslandPane islandPane: islands) {
             double x = radius * Math.cos(radians) + radius;
             double y = radius * Math.sin(radians) + radius;
             islandPane.setLayoutX(x);

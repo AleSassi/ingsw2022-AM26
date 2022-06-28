@@ -6,6 +6,7 @@ import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.ActivePlayerMessage;
 import it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage;
+import it.polimi.ingsw.server.model.characters.Character;
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.utils.ui.GUIUtils;
 import it.polimi.ingsw.utils.ui.StudentDropTarget;
@@ -13,6 +14,7 @@ import javafx.application.Platform;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -22,11 +24,17 @@ public class SchoolBoardPane extends RescalableAnchorPane {
     private final String ownerNickname;
     private final boolean isPrimary;
     private StudentDropTarget[] allowedDropDestinationsForDrag, allowedStudentDestinationsForPhase;
+    private CardParameterMode parameterMode = CardParameterMode.Disabled;
+    private Character activeCharacter;
+    private Student pickedSrcStudentForSwap;
 
     private final GridPane entranceGrid;
     private final GridPane diningGrid;
     private final GridPane professors;
     private final GridPane towersGrid;
+    
+    private final StudentDropTarget[] defaultDropDestinationsForEntranceStudents = new StudentDropTarget[]{StudentDropTarget.ToDiningRoom, StudentDropTarget.ToIsland, StudentDropTarget.ToCharacterCard};
+    private final StudentDropTarget[] defaultDropDestinationsForDiningStudents = null;
 
     public SchoolBoardPane(boolean isPrimary, String ownerNickname) {
         super();
@@ -55,6 +63,7 @@ public class SchoolBoardPane extends RescalableAnchorPane {
         NotificationCenter.shared().addObserver(this, this::didReceiveActivePlayerNotification, NotificationName.ClientDidReceiveActivePlayerMessage, null);
         NotificationCenter.shared().addObserver(this, this::didReceiveStartStudentMoveNotification, NotificationName.JavaFXDidStartMovingStudent, null);
         NotificationCenter.shared().addObserver(this, this::didReceiveEndStudentMoveNotification, NotificationName.JavaFXDidEndMovingStudent, null);
+        NotificationCenter.shared().addObserver(this, this::didReceiveCharacterCardPlayedNotification, NotificationName.JavaFXDidPlayCharacterCard, null);
     }
 
     public void rescale(double scale) {
@@ -158,15 +167,7 @@ public class SchoolBoardPane extends RescalableAnchorPane {
         for (Student student : Student.values()) {
             for (int i = 0; i < message.getBoard().getEntrance().getCount(student); i++) {
                 //Place a Pawn at (row, col)
-                AnchorPane studentButton = GUIUtils.createStudentButton(student, new StudentDropTarget[]{StudentDropTarget.ToDiningRoom, StudentDropTarget.ToIsland, StudentDropTarget.ToCharacterCard});
-                int finalRow = row;
-                int finalCol = col;
-                //System.out.println("Adding student at (" + finalRow + ", " + finalCol + ")");
-                Platform.runLater(() -> {
-                    GridPane.setRowIndex(studentButton, finalRow);
-                    GridPane.setColumnIndex(studentButton, finalCol);
-                    entranceGrid.getChildren().add(studentButton);
-                });
+                setupStudentInGrid(row, col, student, defaultDropDestinationsForEntranceStudents, entranceGrid);
                 col = (col + 1) % 2;
                 row = col == 1 ? row + 1 : row;
             }
@@ -179,21 +180,23 @@ public class SchoolBoardPane extends RescalableAnchorPane {
         for (Student student : Student.values()) {
             for (int i = 0; i < message.getBoard().getDiningRoom().getCount(student); i++) {
                 //Place a Pawn at (row, col)
-                AnchorPane studentButton = GUIUtils.createStudentButton(student, new StudentDropTarget[0]);
-                int finalRow = row;
-                int finalCol = col;
-                Platform.runLater(() -> {
-                    GridPane.setRowIndex(studentButton, finalRow);
-                    GridPane.setColumnIndex(studentButton, finalCol);
-                    diningGrid.getChildren().add(studentButton);
-                });
+                setupStudentInGrid(row, col, student, defaultDropDestinationsForDiningStudents, diningGrid);
                 col += 1;
             }
             col = 0;
             row += 1;
         }
     }
-
+    
+    private void setupStudentInGrid(int row, int col, Student student, StudentDropTarget[] defaultDropDestinationsForDiningStudents, GridPane diningGrid) {
+        AnchorPane studentButton = GUIUtils.createStudentButton(student, defaultDropDestinationsForDiningStudents);
+        Platform.runLater(() -> {
+            GridPane.setRowIndex(studentButton, row);
+            GridPane.setColumnIndex(studentButton, col);
+            diningGrid.getChildren().add(studentButton);
+        });
+    }
+    
     private void displayProfessorsFromMessage(PlayerStateMessage message) {
         Platform.runLater(() -> professors.getChildren().removeAll(professors.getChildren()));
         int row = 0;
@@ -245,26 +248,150 @@ public class SchoolBoardPane extends RescalableAnchorPane {
 
     private void didReceiveStartStudentMoveNotification(Notification notification) {
         if (isPrimary) {
-            List<StudentDropTarget> allowableDefaultMovements = Arrays.stream(allowedStudentDestinationsForPhase).toList();
-            List<StudentDropTarget> dropDestinationsForDrag = Arrays.stream(((StudentDropTarget[]) notification.getUserInfo().get(NotificationKeys.StudentDropTargets.getRawValue()))).toList();
-            this.allowedDropDestinationsForDrag = dropDestinationsForDrag.stream().filter(allowableDefaultMovements::contains).toList().toArray(new StudentDropTarget[0]);
-            //Highlight areas that can be a target for the operation
-            for (StudentDropTarget dropTarget : allowedDropDestinationsForDrag) {
-                switch (dropTarget) {
-                    case ToEntrance -> {
-                        entranceGrid.setStyle(entranceGrid.getStyle() + ";\n-fx-background-color: rgba(80,255,80,0.4)");
+            switch (parameterMode) {
+                case Disabled -> {
+                    //Normal board behavior
+                    List<StudentDropTarget> allowableDefaultMovements = Arrays.stream(allowedStudentDestinationsForPhase).toList();
+                    List<StudentDropTarget> dropDestinationsForDrag = Arrays.stream(((StudentDropTarget[]) notification.getUserInfo().get(NotificationKeys.StudentDropTargets.getRawValue()))).toList();
+                    this.allowedDropDestinationsForDrag = dropDestinationsForDrag.stream().filter(allowableDefaultMovements::contains).toList().toArray(new StudentDropTarget[0]);
+                    //Highlight areas that can be a target for the operation
+                    for (StudentDropTarget dropTarget : allowedDropDestinationsForDrag) {
+                        setEnabledWithDropTarget(dropTarget, true);
                     }
-                    case ToDiningRoom -> {
-                        diningGrid.setStyle(diningGrid.getStyle() + ";\n-fx-background-color: rgba(80,255,80,0.4)");
+                }
+                case StudentPicker -> {
+                    this.allowedDropDestinationsForDrag = new StudentDropTarget[0];
+                    //Immediately send the closed loop notification & cleanup
+                    cleanupStyles();
+                    setDisabled(true);
+                    setDisable(true); //We wait fo the response before enabling
+                    HashMap<String, Object> userInfo = new HashMap<>();
+                    userInfo.put(NotificationKeys.JavaFXPlayedCharacter.getRawValue(), activeCharacter);
+                    userInfo.put(NotificationKeys.CharacterCardDestinationStudent.getRawValue(), notification.getUserInfo().get(NotificationKeys.ClickedStudentColor.getRawValue()));
+                    new Thread(() -> NotificationCenter.shared().post(NotificationName.JavaFXDidEndCharacterCardLoop, null, userInfo)).start();
+                }
+                case StudentSwap -> {
+                    this.allowedDropDestinationsForDrag = new StudentDropTarget[0];
+                    if (pickedSrcStudentForSwap == null) {
+                        pickedSrcStudentForSwap = (Student) notification.getUserInfo().get(NotificationKeys.ClickedStudentColor.getRawValue());
+                    } else {
+                        //Immediately send the closed loop notification & cleanup
+                        cleanupStyles();
+                        setDisabled(true);
+                        setDisable(true); //We wait fo the response before enabling
+                        HashMap<String, Object> userInfo = new HashMap<>();
+                        userInfo.put(NotificationKeys.JavaFXPlayedCharacter.getRawValue(), activeCharacter);
+                        userInfo.put(NotificationKeys.CharacterCardSourceStudent.getRawValue(), pickedSrcStudentForSwap);
+                        userInfo.put(NotificationKeys.CharacterCardDestinationStudent.getRawValue(), notification.getUserInfo().get(NotificationKeys.ClickedStudentColor.getRawValue()));
+                        new Thread(() -> NotificationCenter.shared().post(NotificationName.JavaFXDidEndCharacterCardLoop, null, userInfo)).start();
                     }
                 }
             }
         }
     }
+    
+    private void setEnabledWithDropTarget(StudentDropTarget dropTarget, boolean mutuallyDisablingOtherAreas) {
+        switch (dropTarget) {
+            case ToEntrance -> {
+                entranceGrid.setDisable(false);
+                if (mutuallyDisablingOtherAreas) {
+                    diningGrid.setDisable(true);
+                }
+                entranceGrid.setStyle(entranceGrid.getStyle() + ";\n-fx-background-color: rgba(80,255,80,0.4)");
+            }
+            case ToDiningRoom -> {
+                if (mutuallyDisablingOtherAreas) {
+                    entranceGrid.setDisable(true);
+                }
+                diningGrid.setDisable(false);
+                diningGrid.setStyle(diningGrid.getStyle() + ";\n-fx-background-color: rgba(80,255,80,0.4)");
+            }
+        }
+    }
+    
+    private void didReceiveCharacterCardPlayedNotification(Notification notification) {
+        if (notification.getUserInfo() != null && isPrimary) {
+            this.allowedDropDestinationsForDrag = new StudentDropTarget[0];
+            setAllowedStudentDestinationsForPhase(StudentDropTarget.all());
+            activeCharacter = (Character) notification.getUserInfo().get(NotificationKeys.JavaFXPlayedCharacter.getRawValue());
+            CardParameterMode parameterMode = CardParameterMode.Disabled;
+            StudentDropTarget dropTarget = null;
+            if (activeCharacter == Character.Circus) {
+                parameterMode = CardParameterMode.StudentPicker;
+                dropTarget = StudentDropTarget.ToEntrance;
+            } else if (activeCharacter == Character.Musician) {
+                parameterMode = CardParameterMode.StudentSwap;
+                pickedSrcStudentForSwap = null;
+            }
+            setCardParameterMode(parameterMode, dropTarget);
+        }
+    }
+    
+    private void setCardParameterMode(CardParameterMode newParameterMode, StudentDropTarget studentSource) {
+        this.parameterMode = newParameterMode;
+        switch (newParameterMode) {
+            case Disabled -> {
+                cleanupStyles();
+                entranceGrid.getChildren().forEach((node) -> {
+                    StudentPane studentPane = (StudentPane) node;
+                    studentPane.configureClickForDropTargets(defaultDropDestinationsForEntranceStudents);
+                });
+                diningGrid.getChildren().forEach((node) -> {
+                    StudentPane studentPane = (StudentPane) node;
+                    studentPane.configureClickForDropTargets(defaultDropDestinationsForDiningStudents);
+                });
+                //All behavior will automatically return to the default
+            }
+            case StudentPicker -> {
+                //Highlight the correct area
+                entranceGrid.getChildren().forEach((node) -> {
+                    StudentPane studentPane = (StudentPane) node;
+                    studentPane.configureClickForDropTargets(null);
+                });
+                diningGrid.getChildren().forEach((node) -> {
+                    StudentPane studentPane = (StudentPane) node;
+                    studentPane.configureClickForDropTargets(null);
+                });
+                setEnabledWithDropTarget(studentSource, true);
+            }
+            case StudentSwap -> {
+                //Enable both drop targets - will disable one of them after a click
+                setEnabledWithDropTarget(StudentDropTarget.ToEntrance, false);
+                setEnabledWithDropTarget(StudentDropTarget.ToDiningRoom, false);
+                //Add additional actions to students so that when we click on them we also disable the source area to have only 1 area active at any given time
+                Platform.runLater(() -> {
+                    entranceGrid.getChildren().forEach((node) -> {
+                        StudentPane studentPane = (StudentPane) node;
+                        studentPane.configureClickForDropTargets(new StudentDropTarget[]{StudentDropTarget.ToDiningRoom});
+                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
+                            setEnabledWithDropTarget(StudentDropTarget.ToDiningRoom, true);
+                        });
+                    });
+                    diningGrid.getChildren().forEach((node) -> {
+                        StudentPane studentPane = (StudentPane) node;
+                        studentPane.configureClickForDropTargets(new StudentDropTarget[]{StudentDropTarget.ToEntrance});
+                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
+                            setEnabledWithDropTarget(StudentDropTarget.ToEntrance, true);
+                        });
+                    });
+                });
+            }
+        }
+    }
+    
+    private void cleanupStyles() {
+        entranceGrid.setStyle("");
+        diningGrid.setStyle("");
+    }
 
     private void didReceiveEndStudentMoveNotification(Notification notification) {
         this.allowedDropDestinationsForDrag = new StudentDropTarget[0]; //To reset to the initial default state
-        entranceGrid.setStyle("");
-        diningGrid.setStyle("");
+        cleanupStyles();
+    }
+    
+    private enum CardParameterMode {
+        Disabled,
+        StudentPicker,
+        StudentSwap
     }
 }

@@ -66,4 +66,6 @@ public enum Character {
     public boolean getChangesProfControl() {
         return this == Character.CheeseMan;
     }
+    
+    public boolean getHostsStopCards() { return this == Herbalist; };
 }

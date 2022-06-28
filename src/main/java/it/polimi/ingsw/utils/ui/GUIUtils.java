@@ -1,6 +1,7 @@
 package it.polimi.ingsw.utils.ui;
 
 import it.polimi.ingsw.client.ui.GUI;
+import it.polimi.ingsw.client.ui.StudentPane;
 import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
@@ -16,16 +17,8 @@ import java.util.Objects;
 public class GUIUtils {
 	
 	public static AnchorPane createStudentButton(Student student, StudentDropTarget[] validDropTargets) {
-		AnchorPane studentButton = createImageViewWithImageNamed("images/students/" + student.getColor() + ".png");
-		studentButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-			HashMap<String, Object> userInfo = new HashMap<>();
-			userInfo.put(NotificationKeys.ClickedStudentColor.getRawValue(), student);
-			userInfo.put(NotificationKeys.StudentDropTargets.getRawValue(), validDropTargets);
-			// We forward a notification so that the controller class can get the Student from the PlayerMessage
-			NotificationCenter.shared().post(NotificationName.JavaFXDidStartMovingStudent, null, userInfo);
-			event.consume();
-		});
-		studentButton.setStyle(studentButton.getStyle() + ";\n-fx-background-color: white;\n-fx-border-radius: 100px;\n-fx-background-radius: 100px");
+		StudentPane studentButton = new StudentPane(student);
+		studentButton.configureClickForDropTargets(validDropTargets);
 		return studentButton;
 	}
 	
@@ -43,8 +36,12 @@ public class GUIUtils {
 	
 	public static AnchorPane createImageViewWithImageNamed(String imageName) {
 		AnchorPane img = new AnchorPane();
-		img.setStyle("-fx-background-image: url(" + getURI(imageName) + ");\n-fx-background-size: 100% 100%");
+		setStyleWithBackgroundImage(img, imageName);
 		return img;
+	}
+	
+	public static void setStyleWithBackgroundImage(AnchorPane destPane, String imageName) {
+		destPane.setStyle("-fx-background-image: url(" + getURI(imageName) + ");\n-fx-background-size: 100% 100%");
 	}
 	
 	public static String getURI(String resource) {

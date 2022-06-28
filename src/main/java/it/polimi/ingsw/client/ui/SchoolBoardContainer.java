@@ -11,8 +11,8 @@ import javafx.scene.text.Font;
 
 public class SchoolBoardContainer extends RescalableAnchorPane {
 	
-	private Label playerLabel;
-	private SchoolBoardPane boardPane;
+	private final Label playerLabel;
+	private final SchoolBoardPane boardPane;
 	private final boolean isPrimary;
 	
 	public SchoolBoardContainer(boolean isPrimary, String ownerNickname) {

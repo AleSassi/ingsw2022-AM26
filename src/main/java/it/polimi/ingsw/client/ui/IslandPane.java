@@ -5,6 +5,7 @@ import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.TableStateMessage;
+import it.polimi.ingsw.server.model.characters.Character;
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.utils.ui.GUIUtils;
 import it.polimi.ingsw.utils.ui.StudentDropTarget;
@@ -18,15 +19,17 @@ import javafx.scene.text.Font;
 import java.util.*;
 
 public class IslandPane extends RescalableAnchorPane {
-    private int idx;
+    
+    private final int idx;
 
     private final AnchorPane stop;
     private final AnchorPane motherNature;
-    private AnchorPane tower = new AnchorPane();
-    private List<StudentOnIsland> students;
+    private final AnchorPane tower = new AnchorPane();
+    private final List<StudentOnIsland> students;
     private final GridPane gridPane = new GridPane();
-    private Label towerLabel = new Label("0");
+    private final Label towerLabel = new Label("0");
     private String address = null;
+    private AnchorPane destinationModeInterceptor;
 
     private StudentDropTarget[] allowedDropDestinationsForDrag, allowedStudentDestinationsForPhase;
 
@@ -78,7 +81,6 @@ public class IslandPane extends RescalableAnchorPane {
         NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
         NotificationCenter.shared().addObserver(this, this::didReceiveStartStudentMoveNotification, NotificationName.JavaFXDidStartMovingStudent, null);
         NotificationCenter.shared().addObserver(this, this::didReceiveEndStudentMoveNotification, NotificationName.JavaFXDidEndMovingStudent, null);
-
     }
 
     public void setAllowedStudentDestinationsForPhase(StudentDropTarget[] allowedStudentDestinationsForPhase) {
@@ -104,9 +106,40 @@ public class IslandPane extends RescalableAnchorPane {
 
     protected void deleteIsland() {
         new Thread(() -> NotificationCenter.shared().removeObserver(this)).start();
-        for (StudentOnIsland s :
-                students) {
+        for (StudentOnIsland s: students) {
             s.deleteStudent();
+        }
+    }
+    
+    protected void setCardDestinationMode(boolean isCardDestinationMode, HashMap<String, Object> sourceNotificationInfo) {
+        //We use the sourceNotificationInfo param to forward it when we close the control loop
+        setActiveBackground(isCardDestinationMode);
+        if (isCardDestinationMode && destinationModeInterceptor == null) {
+            destinationModeInterceptor = new AnchorPane();
+            destinationModeInterceptor.setPickOnBounds(true);
+            AnchorPane.setBottomAnchor(destinationModeInterceptor, 0.0);
+            AnchorPane.setTopAnchor(destinationModeInterceptor, 0.0);
+            AnchorPane.setLeftAnchor(destinationModeInterceptor, 0.0);
+            AnchorPane.setRightAnchor(destinationModeInterceptor, 0.0);
+            //Add an event handler for click on empty areas
+            destinationModeInterceptor.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
+                event.consume();
+                Platform.runLater(() -> {
+                    getChildren().remove(destinationModeInterceptor);
+                    destinationModeInterceptor = null;
+                });
+                //Send the CardEndControlLoop notification
+                sourceNotificationInfo.put(NotificationKeys.CharacterCardTargetIslandIndex.getRawValue(), idx);
+                NotificationCenter.shared().post(NotificationName.JavaFXDidEndCharacterCardLoop, null, sourceNotificationInfo);
+            });
+            Platform.runLater(() -> {
+                getChildren().add(destinationModeInterceptor);
+            });
+        } else {
+            Platform.runLater(() -> {
+                getChildren().remove(destinationModeInterceptor);
+                destinationModeInterceptor = null;
+            });
         }
     }
 
@@ -116,13 +149,21 @@ public class IslandPane extends RescalableAnchorPane {
         this.allowedDropDestinationsForDrag = dropDestinationsForDrag.stream().filter(allowableDefaultMovements::contains).toList().toArray(new StudentDropTarget[0]);
         //Highlight areas that can be a target for the operation
         if (Arrays.stream(allowedDropDestinationsForDrag).toList().contains(StudentDropTarget.ToIsland)) {
+            setActiveBackground(true);
+        }
+    }
+    
+    private void setActiveBackground(boolean active) {
+        if (active) {
             setStyle(getStyle() + ";\n-fx-background-color: rgba(80,255,80,0.4)");
+        } else {
+            setStyle("-fx-background-image: url(" + address + ");\n-fx-background-size: 100% 100%");
         }
     }
 
     private void didReceiveEndStudentMoveNotification(Notification notification) {
         this.allowedDropDestinationsForDrag = new StudentDropTarget[0]; //To reset to the initial default state
-        setStyle("-fx-background-image: url(" + address + ");\n-fx-background-size: 100% 100%");
+        setActiveBackground(false);
     }
 
 
@@ -141,12 +182,7 @@ public class IslandPane extends RescalableAnchorPane {
     }
 
     private void setMotherNature(TableStateMessage tableStateMessage) {
-        if (tableStateMessage.getIslands().get(idx).isMotherNaturePresent()) {
-            motherNature.setVisible(true);
-        } else if (!tableStateMessage.getIslands().get(idx).isMotherNaturePresent()) {
-            motherNature.setVisible(false);
-        }
-
+        motherNature.setVisible(tableStateMessage.getIslands().get(idx).isMotherNaturePresent());
     }
 
     private void setTowerOnIsland(TableStateMessage tableStateMessage) {
