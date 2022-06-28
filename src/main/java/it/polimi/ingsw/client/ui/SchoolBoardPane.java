@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.ui;
 
+import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
@@ -145,10 +146,9 @@ public class SchoolBoardPane extends RescalableAnchorPane {
 
     private void didReceiveActivePlayerNotification(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof ActivePlayerMessage message) {
-            if (isPrimary) {
-                // Disable if the Player is not active anymore
-                setDisabled(!(message.getActiveNickname().equals(ownerNickname)));
-            }
+            // Disable if the Player is not active anymore
+            setDisabled(!(message.getActiveNickname().equals(ownerNickname) && ownerNickname.equals(Client.getNickname())));
+            setDisable(!(message.getActiveNickname().equals(ownerNickname) && ownerNickname.equals(Client.getNickname())));
         }
     }
 
@@ -172,6 +172,7 @@ public class SchoolBoardPane extends RescalableAnchorPane {
                 row = col == 1 ? row + 1 : row;
             }
         }
+        entranceGrid.setDisable(false);
     }
 
     private void displayDiningRoomFromMessage(PlayerStateMessage message) {
@@ -186,6 +187,7 @@ public class SchoolBoardPane extends RescalableAnchorPane {
             col = 0;
             row += 1;
         }
+        diningGrid.setDisable(false);
     }
     
     private void setupStudentInGrid(int row, int col, Student student, StudentDropTarget[] defaultDropDestinationsForDiningStudents, GridPane diningGrid) {
