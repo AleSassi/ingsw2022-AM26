@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.ui;
 
+import it.polimi.ingsw.client.controller.network.GameClient;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
@@ -109,6 +110,8 @@ public class GUI extends Application {
 				}
 			});
 		});
+		//Terminate the network session
+		GameClient.shared().teardown();
 	}
 	
 	public static void main(String[] args) {

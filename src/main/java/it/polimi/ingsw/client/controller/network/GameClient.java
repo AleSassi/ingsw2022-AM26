@@ -30,21 +30,23 @@ public class GameClient {
     private Socket socket;
     private Timer pongTimer;
     private TimerTask pongTimerTask;
+    private final boolean isGUI;
     
     private BufferedReader bufferedReader;
     private OutputStreamWriter outputStreamWriter;
 
-    private GameClient(int serverPort, String serverIP) {
+    private GameClient(int serverPort, String serverIP, boolean isGUI) {
         this.serverPort = serverPort;
         this.serverIP = serverIP;
         this.decoder = new NetworkMessageDecoder();
+        this.isGUI = isGUI;
         
         NotificationCenter.shared().addObserver(this, (notification) -> teardown(), NotificationName.ClientDidReceiveMatchTerminationMessage, null);
     }
     
-    public static void createClient(String serverIP, int serverPort) {
+    public static void createClient(String serverIP, int serverPort, boolean isGUI) {
         if (instance == null) {
-            instance = new GameClient(serverPort, serverIP);
+            instance = new GameClient(serverPort, serverIP, isGUI);
         } else {
             System.out.println(StringFormatter.formatWithColor("WARNING: common Client object already initialized with server address " + instance.serverIP + ":" + instance.serverPort, ANSIColors.Yellow));
         }
@@ -58,7 +60,8 @@ public class GameClient {
      * This method opens the socket
      */
     public void connectToServer() throws IOException {
-        if (this.socket != null && this.socket.isConnected()) return;
+        if (this.socket != null && this.socket.isConnected() && !this.socket.isClosed()) return;
+        System.out.println("Creating socket");
         this.socket = new Socket(serverIP, serverPort);
         this.outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
         // Decode the JSON to NetworkMessage
@@ -115,7 +118,9 @@ public class GameClient {
             @Override
             public void run() {
                 NotificationCenter.shared().post(NotificationName.ClientDidTimeoutNetwork, null, null);
-                System.exit(0);
+                if (!isGUI) {
+                    System.exit(0);
+                }
             }
         };
         pongTimer.schedule(pongTimerTask, pingDelayMS + pingIntervalMS + pingDelayTolerance);
@@ -154,7 +159,7 @@ public class GameClient {
         }
     }
 
-    private synchronized void teardown() {
+    public synchronized void teardown() {
         try {
             if (outputStreamWriter != null) {
                 outputStreamWriter.close();

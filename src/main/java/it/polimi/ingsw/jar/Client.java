@@ -88,7 +88,7 @@ public class Client {
 				} else {
 					// Connect to the Server
 					System.out.println(StringFormatter.formatWithColor("Connecting to " + serverIP_fromCLI + ":" + serverPort_fromCLI + "...", ANSIColors.Green));
-					GameClient.createClient(serverIP_fromCLI, serverPort_fromCLI);
+					GameClient.createClient(serverIP_fromCLI, serverPort_fromCLI, false);
 					try {
 						GameClient.shared().connectToServer();
 						System.out.println(StringFormatter.formatWithColor("Connected to " + serverIP_fromCLI + ":" + serverPort_fromCLI, ANSIColors.Green));

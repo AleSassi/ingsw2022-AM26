@@ -83,7 +83,7 @@ public class LoginController implements Initializable {
 		//Connect to the server
 		String buttonText = loginButton.getText();
 		loginButton.setText("Connecting to the server...");
-		GameClient.createClient(Client.getServerIP(), Client.getServerPort());
+		GameClient.createClient(Client.getServerIP(), Client.getServerPort(), true);
 		try {
 			GameClient.shared().connectToServer();
 			GameClient.shared().sendMessage(loginMessage);
