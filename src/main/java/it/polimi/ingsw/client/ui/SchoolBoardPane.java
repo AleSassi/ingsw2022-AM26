@@ -348,7 +348,7 @@ public class SchoolBoardPane extends RescalableAnchorPane {
                 //Highlight the correct area
                 entranceGrid.getChildren().forEach((node) -> {
                     StudentPane studentPane = (StudentPane) node;
-                    studentPane.configureClickForDropTargets(null);
+                    studentPane.configureClickForDropTargets(StudentDropTarget.all());
                 });
                 diningGrid.getChildren().forEach((node) -> {
                     StudentPane studentPane = (StudentPane) node;
@@ -365,16 +365,12 @@ public class SchoolBoardPane extends RescalableAnchorPane {
                     entranceGrid.getChildren().forEach((node) -> {
                         StudentPane studentPane = (StudentPane) node;
                         studentPane.configureClickForDropTargets(new StudentDropTarget[]{StudentDropTarget.ToDiningRoom});
-                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
-                            setEnabledWithDropTarget(StudentDropTarget.ToDiningRoom, true);
-                        });
+                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> setEnabledWithDropTarget(StudentDropTarget.ToDiningRoom, true));
                     });
                     diningGrid.getChildren().forEach((node) -> {
                         StudentPane studentPane = (StudentPane) node;
                         studentPane.configureClickForDropTargets(new StudentDropTarget[]{StudentDropTarget.ToEntrance});
-                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
-                            setEnabledWithDropTarget(StudentDropTarget.ToEntrance, true);
-                        });
+                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> setEnabledWithDropTarget(StudentDropTarget.ToEntrance, true));
                     });
                 });
             }

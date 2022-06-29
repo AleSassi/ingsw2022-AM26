@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.ui.characters;
 
 import it.polimi.ingsw.client.controller.network.GameClient;
 import it.polimi.ingsw.client.ui.FaderPane;
+import it.polimi.ingsw.client.ui.GUI;
 import it.polimi.ingsw.client.ui.MainBoardController;
 import it.polimi.ingsw.client.ui.RescalableAnchorPane;
 import it.polimi.ingsw.jar.Client;
@@ -27,6 +28,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +41,7 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 	private final Character character;
 	private final int characterCardIndexInTableList;
 	private int price;
+	private int usesInTurnCount = 0;
 	private boolean purchased = false;
 	private boolean played = false;
 	private MainBoardController parentController;
@@ -48,6 +51,7 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 		this.characterCardIndexInTableList = cardIndex;
 		this.price = cardBean.getTotalPrice();
 		//Initialize the subscription to notifications for auto-update
+		NotificationCenter.shared().addObserver(this, this::didReceiveActivePlayerMessage, NotificationName.ClientDidReceiveActivePlayerMessage, null);
 		NotificationCenter.shared().addObserver(this, this::didReceivePlayerStateMessage, NotificationName.ClientDidReceivePlayerStateMessage, null);
 		NotificationCenter.shared().addObserver(this, this::didReceiveTableStateNotification, NotificationName.ClientDidReceiveTableStateMessage, null);
 		NotificationCenter.shared().addObserver(this, this::didReceiveCharacterCardLoopClosed, NotificationName.JavaFXDidEndCharacterCardLoop, null);
@@ -100,9 +104,7 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 					PlayerActionMessage actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidPurchaseCharacterCard, -1, null, false, -1, -1, -1, characterCardIndexInTableList, null);
 					GameClient.shared().sendMessage(actionMessage);
 				});
-				Platform.runLater(() -> {
-					getChildren().add(buyButton);
-				});
+				Platform.runLater(() -> getChildren().add(buyButton));
 			} else {
 				//Update
 				Platform.runLater(() -> buyButton.setText("Buy: " + cardPrice));
@@ -117,6 +119,14 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 			addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
 				event.consume();
 				if (!purchased) return;
+				if (usesInTurnCount >= character.getMaxNumberOfUsesInTurn()) {
+					//Show an alert
+					Alert alert = new Alert(Alert.AlertType.ERROR);
+					alert.setContentText("The Character Card cannot be used anymore. You reached the maximum number of uses in this turn (" + character.getMaxNumberOfUsesInTurn() + ")");
+					alert.show();
+					return;
+				}
+				usesInTurnCount += 1;
 				
 				executeActionOnClick();
 			});
@@ -206,6 +216,14 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 				updateState(Objects.equals(playerStateMessage.getActiveCharacterCardIdx(), characterCardIndexInTableList), playerStateMessage.getActiveCharacterCardIdx() == null);
 			} else {
 				updateState(purchased, !Objects.equals(playerStateMessage.getActiveCharacterCardIdx(), characterCardIndexInTableList));
+			}
+		}
+	}
+	
+	private void didReceiveActivePlayerMessage(Notification notification) {
+		if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof ActivePlayerMessage activePlayerMessage) {
+			if (!activePlayerMessage.getActiveNickname().equals(Client.getNickname())) {
+				usesInTurnCount = 0;
 			}
 		}
 	}
