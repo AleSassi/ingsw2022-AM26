@@ -27,7 +27,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-public class LoginController implements Initializable {
+public class LoginController extends CleanableController implements Initializable {
 	
 	@FXML
 	private ChoiceBox<String> gameBox;
@@ -108,6 +108,7 @@ public class LoginController implements Initializable {
 					// Present the lobby controller
 					LobbyController lobbyController = GUI.setRoot("scenes/lobby").getController();
 					lobbyController.setInitialData(selectedMatchType, message.getNumberOfPlayersRemainingToFillLobby());
+					NotificationCenter.shared().removeObserver(this);
 				} catch (IOException e) {
 					// Present an alert
 					Platform.runLater(() -> {
@@ -125,5 +126,9 @@ public class LoginController implements Initializable {
 				});
 			}
 		}
+	}
+	
+	@Override
+	protected void cleanupAfterTermination() {
 	}
 }

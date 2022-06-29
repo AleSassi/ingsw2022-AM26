@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainBoardController implements JavaFXRescalable {
+public class MainBoardController extends CleanableController implements JavaFXRescalable {
 	
 	@FXML
 	private AnchorPane mainPane;
@@ -292,10 +292,30 @@ public class MainBoardController implements JavaFXRescalable {
 				try {
 					EndgameController endgameController = GUI.setRoot("scenes/win").getController();
 					endgameController.endGame(message.getWinners());
+					cleanupAfterTermination();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			});
+		}
+	}
+	
+	protected void cleanupAfterTermination() {
+		for (SchoolBoardContainer schoolBoardContainer: schoolBoardContainers) {
+			schoolBoardContainer.cleanupBeforeDisappear();
+		}
+		schoolBoardContainers = null;
+		if (islandContainer != null) {
+			islandContainer.cleanupBeforeDisappear();
+			islandContainer = null;
+		}
+		if (cloudsContainer != null) {
+			cloudsContainer.cleanupBeforeDisappear();
+			cloudsContainer = null;
+		}
+		if (characterCardContainer != null) {
+			characterCardContainer.cleanupBeforeDisappear();
+			characterCardContainer = null;
 		}
 	}
 	

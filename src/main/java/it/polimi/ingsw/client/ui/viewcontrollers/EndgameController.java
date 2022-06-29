@@ -21,22 +21,22 @@ import javafx.scene.control.Label;
 
 import java.io.IOException;
 
-public class EndgameController implements JavaFXRescalable {
+public class EndgameController extends CleanableController implements JavaFXRescalable {
  
 	@FXML
-	Label victoryLabel;
+	private Label victoryLabel;
 	@FXML
-	AnchorPane victoryPane;
+	private AnchorPane victoryPane;
 	@FXML
-	ImageView resultimage;
+	private ImageView resultimage;
 	@FXML
-	Label winnerLabel;
+	private Label winnerLabel;
 	@FXML
-	AnchorPane root;
+	private AnchorPane root;
 	@FXML
-	Button newGameButton;
+	private Button newGameButton;
 	@FXML
-	Button quitButton;
+	private Button quitButton;
 	
 	
 	public void endGame(String[] winnerNicknames) throws IOException {
@@ -121,5 +121,9 @@ public class EndgameController implements JavaFXRescalable {
 	
 	public void newGame(ActionEvent actionEvent) throws IOException {
 		GUI.setRoot("scenes/LoginPage");
+	}
+	
+	@Override
+	protected void cleanupAfterTermination() {
 	}
 }

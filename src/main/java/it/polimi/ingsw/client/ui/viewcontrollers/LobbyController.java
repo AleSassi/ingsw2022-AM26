@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 
-public class LobbyController implements Initializable {
+public class LobbyController extends CleanableController implements Initializable {
 
 
 	private int numberOfPlayersToFill = 4;
@@ -158,6 +158,7 @@ public class LobbyController implements Initializable {
 			if (matchStateMessage != null) {
 				mainBoardController.didReceiveMatchStateMessage(matchStateMessage);
 			}
+			NotificationCenter.shared().removeObserver(this);
 		} catch (IOException e) {
 			// Present an alert
 			Platform.runLater(() -> {
@@ -166,5 +167,9 @@ public class LobbyController implements Initializable {
 				alert.show();
 			});
 		}
+	}
+	
+	@Override
+	protected void cleanupAfterTermination() {
 	}
 }

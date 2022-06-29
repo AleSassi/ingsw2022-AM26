@@ -54,5 +54,4 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 	public void setAllowedStudentMovements(StudentDropTarget[] validStudentDestinations) {
 		boardPane.setAllowedStudentDestinationsForPhase(validStudentDestinations);
 	}
-	
 }

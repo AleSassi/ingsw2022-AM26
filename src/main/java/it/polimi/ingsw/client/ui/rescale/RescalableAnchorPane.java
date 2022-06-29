@@ -1,11 +1,13 @@
 package it.polimi.ingsw.client.ui.rescale;
 
+import it.polimi.ingsw.client.ui.AutoCleanableAnchorPane;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationName;
+import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 
-public abstract class RescalableAnchorPane extends AnchorPane implements JavaFXRescalable {
+public abstract class RescalableAnchorPane extends AutoCleanableAnchorPane implements JavaFXRescalable {
 	
 	public RescalableAnchorPane() {
 		super();
