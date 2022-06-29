@@ -1,19 +1,19 @@
-package it.polimi.ingsw.client.ui;
+package it.polimi.ingsw.client.ui.assistants;
 
-import it.polimi.ingsw.notifications.Notification;
-import it.polimi.ingsw.notifications.NotificationCenter;
-import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.model.assistants.AssistantCard;
 import javafx.application.Platform;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AssistantPickerPane extends GridPane {
 	
+	private final List<AssistantCardPane> assistantCardPanes;
+	
 	public AssistantPickerPane(AssistantCard[] availableAssistants) {
 		super();
+		this.assistantCardPanes = new ArrayList<>();
 		int count = 0;
 		int i = 0, j = 0;
 		for (AssistantCard assistantCard: availableAssistants) {
@@ -25,9 +25,16 @@ public class AssistantPickerPane extends GridPane {
 				GridPane.setColumnIndex(assistantCardPane, finalJ);
 				getChildren().add(assistantCardPane);
 			});
+			assistantCardPanes.add(assistantCardPane);
 			count += 1;
 			i = count / 5;
 			j = count % 5;
+		}
+	}
+	
+	public void setSelectionHandler(AssistantCardSelectionHandler selectionHandler) {
+		for (AssistantCardPane cardPane: assistantCardPanes) {
+			cardPane.setSelectionHandler(selectionHandler);
 		}
 	}
 }

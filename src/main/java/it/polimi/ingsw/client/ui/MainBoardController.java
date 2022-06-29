@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.ui;
 
 import it.polimi.ingsw.client.controller.network.GameClient;
+import it.polimi.ingsw.client.ui.assistants.AssistantCardPickerView;
 import it.polimi.ingsw.client.ui.characters.CharacterCardContainer;
 import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
@@ -9,6 +10,7 @@ import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.*;
 import it.polimi.ingsw.server.model.assistants.AssistantCard;
+import it.polimi.ingsw.server.model.match.MatchPhase;
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.utils.ui.StudentDropTarget;
 import javafx.application.Platform;
@@ -29,6 +31,7 @@ public class MainBoardController implements JavaFXRescalable {
 	@FXML
 	private AnchorPane mainPane;
 	
+	private MatchPhase activeMatchPhase;
 	private List<SchoolBoardContainer> schoolBoardContainers;
 	private Student movingStudentColor;
 	private String currentlyActivePlayerNickname;
@@ -152,42 +155,48 @@ public class MainBoardController implements JavaFXRescalable {
 	
 	protected void didReceiveMatchStateMessage(Notification notification) {
 		if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof MatchStateMessage message && currentlyActivePlayerNickname.equals(Client.getNickname())) {
-			// Update the list of allowed moves
-			switch (message.getCurrentMatchPhase()) {
-				case PlanPhaseStepTwo -> {
-					// Allow only assistant card choice
-					schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(new StudentDropTarget[0]);
-					islandContainer.setAllowedStudentMovements(new StudentDropTarget[0]);
-					cloudsContainer.setActivateCloudPick(false);
-					showAssistantCardModalWindow();
+			prepareForMatchPhase(message.getCurrentMatchPhase());
+		}
+	}
+	
+	private void prepareForMatchPhase(MatchPhase matchPhase) {
+		// Update the list of allowed moves
+		this.activeMatchPhase = matchPhase;
+		System.out.println(activeMatchPhase);
+		switch (matchPhase) {
+			case PlanPhaseStepTwo -> {
+				// Allow only assistant card choice
+				schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(new StudentDropTarget[0]);
+				islandContainer.setAllowedStudentMovements(new StudentDropTarget[0]);
+				cloudsContainer.setActivateCloudPick(false);
+				showAssistantCardModalWindow();
+			}
+			case ActionPhaseStepOne -> {
+				// Allow student movement from entrance to everywhere, and allow character card purchase and play (if applicable)
+				schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(StudentDropTarget.all());
+				islandContainer.setAllowedStudentMovements(StudentDropTarget.all());
+				cloudsContainer.setActivateCloudPick(false);
+				if (characterCardContainer != null) {
+					characterCardContainer.setDisable(false);
 				}
-				case ActionPhaseStepOne -> {
-					// Allow student movement from entrance to everywhere, and allow character card purchase and play (if applicable)
-					schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(StudentDropTarget.all());
-					islandContainer.setAllowedStudentMovements(StudentDropTarget.all());
-					cloudsContainer.setActivateCloudPick(false);
-					if (characterCardContainer != null) {
-						characterCardContainer.setDisable(false);
-					}
+			}
+			case ActionPhaseStepTwo -> {
+				// Disable everything, present a popup to choose the number of steps MN must move by
+				schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(new StudentDropTarget[0]);
+				islandContainer.setAllowedStudentMovements(new StudentDropTarget[0]);
+				cloudsContainer.setActivateCloudPick(false);
+				showMotherNatureMovementAlert();
+				if (characterCardContainer != null) {
+					characterCardContainer.setDisable(true);
 				}
-				case ActionPhaseStepTwo -> {
-					// Disable everything, present a popup to choose the number of steps MN must move by
-					schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(new StudentDropTarget[0]);
-					islandContainer.setAllowedStudentMovements(new StudentDropTarget[0]);
-					cloudsContainer.setActivateCloudPick(false);
-					showMotherNatureMovementAlert();
-					if (characterCardContainer != null) {
-						characterCardContainer.setDisable(true);
-					}
-				}
-				case ActionPhaseStepThree -> {
-					// Disable everything except the Cloud tiles, when clicking on a Cloud tile send the event
-					schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(new StudentDropTarget[0]);
-					islandContainer.setAllowedStudentMovements(new StudentDropTarget[0]);
-					cloudsContainer.setActivateCloudPick(true);
-					if (characterCardContainer != null) {
-						characterCardContainer.setDisable(true);
-					}
+			}
+			case ActionPhaseStepThree -> {
+				// Disable everything except the Cloud tiles, when clicking on a Cloud tile send the event
+				schoolBoardContainers.get(schoolBoardContainers.size() - 1).setAllowedStudentMovements(new StudentDropTarget[0]);
+				islandContainer.setAllowedStudentMovements(new StudentDropTarget[0]);
+				cloudsContainer.setActivateCloudPick(true);
+				if (characterCardContainer != null) {
+					characterCardContainer.setDisable(true);
 				}
 			}
 		}
@@ -195,9 +204,7 @@ public class MainBoardController implements JavaFXRescalable {
 	
 	private void showAssistantCardModalWindow() {
 		AssistantCardPickerView cardPickerView = new AssistantCardPickerView(stateMessage.getAvailableCardsDeck());
-		showModalPopup(cardPickerView);
-		NotificationCenter.shared().addObserver(this, (notification) -> {
-			AssistantCard pickedAssistant = (AssistantCard) notification.getUserInfo().get("clickedAssistant");
+		cardPickerView.setSelectionHandler(pickedAssistant -> {
 			int index = 0;
 			for (AssistantCard assistantCard : stateMessage.getAvailableCardsDeck()) {
 				if (assistantCard == pickedAssistant) {
@@ -207,12 +214,9 @@ public class MainBoardController implements JavaFXRescalable {
 			}
 			PlayerActionMessage actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidPlayAssistantCard, index, null, false, -1, -1, -1, -1, null);
 			GameClient.shared().sendMessage(actionMessage);
-			Platform.runLater(() -> {
-				mainPane.getChildren().remove(cardPickerView);
-				mainPane.getChildren().remove(faderPane);
-				faderPane = null;
-			});
-		}, NotificationName.JavaFXDidClickOnAssistantCard, null);
+			dismissModalPopup(cardPickerView);
+		});
+		showModalPopup(cardPickerView);
 	}
 	
 	private void showFaderPane() {
@@ -266,12 +270,14 @@ public class MainBoardController implements JavaFXRescalable {
 	
 	private void didReceivePlayerActionResponse(Notification notification) {
 		PlayerActionResponse response = (PlayerActionResponse) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
-		if (!response.isActionSuccess()) {
+		if (!response.isActionSuccess() && response.getNickname().equals(Client.getNickname())) {
+			//Restore the UI for the current match phase
+			prepareForMatchPhase(activeMatchPhase);
 			//Alert the user that the action was cancelled
 			Platform.runLater(() -> {
 				Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Invalid move", ButtonType.CLOSE);
 				errorAlert.setContentText(response.getDescriptiveErrorMessage());
-				Platform.runLater(errorAlert::show);
+				errorAlert.show();
 			});
 		}
 	}

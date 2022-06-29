@@ -13,9 +13,8 @@ import java.util.List;
 
 public class CloudsContainer extends RescalableAnchorPane{
 
-    private List<CloudPane> clouds;
-    private double radius;
-
+    private final List<CloudPane> clouds;
+    
     public CloudsContainer(Notification notification) {
         TableStateMessage tableStateMessage = (TableStateMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
         clouds = new ArrayList<>();
@@ -28,20 +27,19 @@ public class CloudsContainer extends RescalableAnchorPane{
     }
 
     public void setActivateCloudPick(boolean activate) {
-        if(activate) {
+        if (activate) {
             setDisable(false);
             for (CloudPane c: clouds) {
                 c.showSelection();
             }
-        }
-        else if(!activate) {
+        } else {
             setDisable(true);
         }
     }
 
     public void rescale(double scale) {
         setPrefSize(70 * scale, 70 * scale);
-        radius = 70 * scale;
+        double radius = 70 * scale;
     
         if (clouds.size() == 0) {
             return;

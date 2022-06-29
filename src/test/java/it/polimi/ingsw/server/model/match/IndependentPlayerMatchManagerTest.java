@@ -688,7 +688,6 @@ class IndependentPlayerMatchManagerTest {
         //Send a victory notification
         NotificationCenter.shared().addObserver(this, (notification) -> {
             List<String> winners = ((List<String>) notification.getUserInfo().get(NotificationKeys.WinnerNickname.getRawValue()));
-            System.out.println(winners);
             assertEquals(1, winners.size());
             assertEquals("Fede", winners.get(0));
         }, NotificationName.PlayerVictory, matchManager);

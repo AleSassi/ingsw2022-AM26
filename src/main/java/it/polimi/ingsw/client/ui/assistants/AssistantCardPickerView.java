@@ -1,12 +1,7 @@
-package it.polimi.ingsw.client.ui;
+package it.polimi.ingsw.client.ui.assistants;
 
+import it.polimi.ingsw.client.ui.ModalPopup;
 import it.polimi.ingsw.server.model.assistants.AssistantCard;
-import javafx.geometry.Pos;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 public class AssistantCardPickerView extends ModalPopup {
 	
@@ -17,6 +12,10 @@ public class AssistantCardPickerView extends ModalPopup {
 		assistantPickerPane = new AssistantPickerPane(availableAssistantCards);
 		getChildren().add(assistantPickerPane);
 		super.rescale(1);
+	}
+	
+	public void setSelectionHandler(AssistantCardSelectionHandler selectionHandler) {
+		assistantPickerPane.setSelectionHandler(selectionHandler);
 	}
 	
 	@Override

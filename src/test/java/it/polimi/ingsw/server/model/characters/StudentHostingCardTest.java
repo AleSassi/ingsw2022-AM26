@@ -344,7 +344,6 @@ class StudentHostingCardTest {
 
         assertDoesNotThrow(() -> {
             Student chosenStolenStudent = Student.BlueUnicorn;
-            System.out.println(player.getCountAtTable(chosenStolenStudent));
             assertEquals(0, card.useCard(tableManager, players, player, new CharacterCardParamSet(chosenStolenStudent, Student.BlueUnicorn, null, null, false, 0, 0, 0, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
             assertEquals(1, player.getCountAtTable(chosenStolenStudent)); // 4 Blue students
             assertEquals(0, players.get(players.size() - 1).getCountAtTable(chosenStolenStudent)); // 1 Blue Student
