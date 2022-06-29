@@ -21,7 +21,6 @@ public enum NotificationName {
 	JavaFXDidStartMovingStudent,
 	JavaFXWindowDidResize,
 	JavaFXDidEndMovingStudent,
-	JavaFXDidClickOnAssistantCard,
 	JavaFXDidPlayCharacterCard,
 	JavaFXDidEndCharacterCardLoop,
 	JavaFXPlayedAssistantCard,
