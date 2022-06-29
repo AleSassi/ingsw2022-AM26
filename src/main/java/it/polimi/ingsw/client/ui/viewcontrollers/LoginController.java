@@ -1,7 +1,8 @@
-package it.polimi.ingsw.client.ui;
+package it.polimi.ingsw.client.ui.viewcontrollers;
 
 
 import it.polimi.ingsw.client.controller.network.GameClient;
+import it.polimi.ingsw.client.ui.GUI;
 import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
@@ -29,27 +30,22 @@ import java.util.ResourceBundle;
 public class LoginController implements Initializable {
 	
 	@FXML
-	ChoiceBox<String> gameBox;
+	private ChoiceBox<String> gameBox;
 	@FXML
-	ChoiceBox<String> wizardBox;
+	private ChoiceBox<String> wizardBox;
 	@FXML
-	ChoiceBox<String> chosenPlayerCount;
+	private ChoiceBox<String> chosenPlayerCount;
 	@FXML
-	TextField nicknameBox;
+	private TextField nicknameBox;
 	@FXML
-	Label statusLabel;
-	@FXML
-	Pane pane;
-	@FXML
-	Button loginButton;
+	private Button loginButton;
 	
-	ObservableList<String> wizardChoices = FXCollections.observableArrayList("wizard1", "wizard2", "wizard3", "wizard4");
-	ObservableList<String> gameChoices = FXCollections.observableArrayList("simple", "expert");
-	ObservableList<String> chosenNumberOfPlayers = FXCollections.observableArrayList("2", "3", "4");
+	private final ObservableList<String> wizardChoices = FXCollections.observableArrayList("wizard1", "wizard2", "wizard3", "wizard4");
+	private final ObservableList<String> gameChoices = FXCollections.observableArrayList("simple", "expert");
+	private final ObservableList<String> chosenNumberOfPlayers = FXCollections.observableArrayList("2", "3", "4");
 	
 	private String chosenUsername;
 	private MatchVariant selectedMatchType;
-	private int chosenLobbySize;
 	
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -61,9 +57,9 @@ public class LoginController implements Initializable {
 		chosenPlayerCount.setItems(chosenNumberOfPlayers);
 	}
 	
-	public void sendFormValuesToServer(ActionEvent actionEvent) {
+	public void sendFormValuesToServer() {
 		chosenUsername = nicknameBox.getText();
-		chosenLobbySize = Integer.parseInt(chosenPlayerCount.getSelectionModel().getSelectedItem());
+		int chosenLobbySize = Integer.parseInt(chosenPlayerCount.getSelectionModel().getSelectedItem());
   
 		if (gameBox.getSelectionModel().getSelectedItem().equals("simple")) {
 			selectedMatchType = MatchVariant.BasicRuleSet;

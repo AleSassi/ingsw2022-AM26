@@ -1,11 +1,11 @@
-package it.polimi.ingsw.client.ui;
+package it.polimi.ingsw.client.ui.islands;
 
+import it.polimi.ingsw.client.ui.rescale.RescalableAnchorPane;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.TableStateMessage;
-import it.polimi.ingsw.server.model.characters.Character;
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.utils.ui.GUIUtils;
 import it.polimi.ingsw.utils.ui.StudentDropTarget;
@@ -43,11 +43,11 @@ public class IslandPane extends RescalableAnchorPane {
 
         Random ran = new Random();
         switch (ran.nextInt(0, 2)) {
-            case 0 -> address = Objects.requireNonNull(getClass().getResource("images/islands/island1.png")).toExternalForm();
-            case 1 -> address = Objects.requireNonNull(getClass().getResource("images/islands/island2.png")).toExternalForm();
-            case 2 -> address = Objects.requireNonNull(getClass().getResource("images/islands/island3.png")).toExternalForm();
+            case 0 -> address = "images/islands/island1.png";
+            case 1 -> address = "images/islands/island2.png";
+            case 2 -> address = "images/islands/island3.png";
         }
-        setStyle("-fx-background-image: url(" + address + ");\n-fx-background-size: 100% 100%");
+        GUIUtils.setStyleWithBackgroundImage(this, "images/islands/island1.png");
 
         motherNature = GUIUtils.createImageViewWithImageNamed("images/mothernature.png");
         stop = GUIUtils.createImageViewWithImageNamed("images/stop.png");
@@ -132,9 +132,7 @@ public class IslandPane extends RescalableAnchorPane {
                 sourceNotificationInfo.put(NotificationKeys.CharacterCardTargetIslandIndex.getRawValue(), idx);
                 NotificationCenter.shared().post(NotificationName.JavaFXDidEndCharacterCardLoop, null, sourceNotificationInfo);
             });
-            Platform.runLater(() -> {
-                getChildren().add(destinationModeInterceptor);
-            });
+            Platform.runLater(() -> getChildren().add(destinationModeInterceptor));
         } else {
             Platform.runLater(() -> {
                 getChildren().remove(destinationModeInterceptor);

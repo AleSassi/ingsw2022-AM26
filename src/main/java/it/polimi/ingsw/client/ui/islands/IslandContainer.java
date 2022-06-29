@@ -1,5 +1,7 @@
-package it.polimi.ingsw.client.ui;
+package it.polimi.ingsw.client.ui.islands;
 
+import it.polimi.ingsw.client.ui.GUI;
+import it.polimi.ingsw.client.ui.rescale.RescalableAnchorPane;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;

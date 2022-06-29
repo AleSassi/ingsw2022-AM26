@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.ui;
 
 import it.polimi.ingsw.client.controller.network.GameClient;
+import it.polimi.ingsw.client.ui.rescale.RescalableAnchorPane;
 import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
@@ -19,11 +20,12 @@ import javafx.scene.layout.RowConstraints;
 
 import java.util.Objects;
 
-public class CloudPane extends RescalableAnchorPane{
-    private int idx;
+public class CloudPane extends RescalableAnchorPane {
+    
+    private final int idx;
     private String address = null;
-    private boolean selectable = true;
-    private GridPane gridPane = new GridPane();
+    private final boolean selectable = true;
+    private final GridPane gridPane = new GridPane();
 
     public CloudPane(int idx, Notification notification) {
         this.idx = idx;

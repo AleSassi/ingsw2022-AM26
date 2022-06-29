@@ -1,12 +1,9 @@
 package it.polimi.ingsw.client.ui;
 
+import it.polimi.ingsw.client.ui.rescale.RescalableAnchorPane;
 import it.polimi.ingsw.notifications.Notification;
-import it.polimi.ingsw.notifications.NotificationCenter;
-import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.utils.ui.StudentDropTarget;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 
 public class SchoolBoardContainer extends RescalableAnchorPane {
@@ -27,11 +24,11 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 		getChildren().addAll(this.playerLabel, this.boardPane);
 	}
 	
-	protected String getOwnerNickname() {
+	public String getOwnerNickname() {
 		return boardPane.getOwnerNickname();
 	}
 	
-	protected void forwardInitialPlayerStatusNotification(Notification notification) {
+	public void forwardInitialPlayerStatusNotification(Notification notification) {
 		boardPane.didReceivePlayerStatusNotification(notification);
 	}
 	

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.ui;
 
+import it.polimi.ingsw.client.ui.rescale.RescalableAnchorPane;
 import javafx.geometry.Pos;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;

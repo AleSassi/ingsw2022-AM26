@@ -1,8 +1,8 @@
 package it.polimi.ingsw.client.ui.characters;
 
 import it.polimi.ingsw.client.ui.GUI;
-import it.polimi.ingsw.client.ui.MainBoardController;
-import it.polimi.ingsw.client.ui.RescalableAnchorPane;
+import it.polimi.ingsw.client.ui.viewcontrollers.MainBoardController;
+import it.polimi.ingsw.client.ui.rescale.RescalableAnchorPane;
 import it.polimi.ingsw.server.controller.network.messages.TableStateMessage;
 import javafx.application.Platform;
 import javafx.scene.layout.AnchorPane;

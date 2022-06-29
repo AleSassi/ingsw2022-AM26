@@ -2,36 +2,23 @@ package it.polimi.ingsw.client.ui.characters;
 
 import it.polimi.ingsw.client.controller.network.GameClient;
 import it.polimi.ingsw.client.ui.FaderPane;
-import it.polimi.ingsw.client.ui.GUI;
-import it.polimi.ingsw.client.ui.MainBoardController;
-import it.polimi.ingsw.client.ui.RescalableAnchorPane;
+import it.polimi.ingsw.client.ui.viewcontrollers.MainBoardController;
+import it.polimi.ingsw.client.ui.rescale.RescalableAnchorPane;
 import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.*;
-import it.polimi.ingsw.server.model.assistants.Wizard;
 import it.polimi.ingsw.server.model.characters.Character;
 import it.polimi.ingsw.server.model.characters.CharacterCardBean;
 import it.polimi.ingsw.server.model.characters.CharacterCardParamSet;
 import it.polimi.ingsw.server.model.student.Student;
-import it.polimi.ingsw.server.model.student.StudentCollection;
 import it.polimi.ingsw.utils.ui.GUIUtils;
-import it.polimi.ingsw.utils.ui.StudentDropTarget;
 import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.text.Font;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 
 public abstract class CharacterCardPane extends RescalableAnchorPane {

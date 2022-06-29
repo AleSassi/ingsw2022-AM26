@@ -1,17 +1,14 @@
 package it.polimi.ingsw.client.ui;
 
+import it.polimi.ingsw.client.ui.rescale.RescalableAnchorPane;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.server.controller.network.messages.TableStateMessage;
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
-import javafx.scene.Node;
 
-import java.lang.reflect.AnnotatedArrayType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CloudsContainer extends RescalableAnchorPane{
+public class CloudsContainer extends RescalableAnchorPane {
 
     private final List<CloudPane> clouds;
     

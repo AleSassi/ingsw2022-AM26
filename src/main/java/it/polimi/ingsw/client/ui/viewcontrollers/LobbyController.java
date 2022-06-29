@@ -1,5 +1,6 @@
-package it.polimi.ingsw.client.ui;
+package it.polimi.ingsw.client.ui.viewcontrollers;
 
+import it.polimi.ingsw.client.ui.GUI;
 import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
@@ -29,9 +30,9 @@ public class LobbyController implements Initializable {
 	private Notification tableMessage, activePlayerMessage, matchStateMessage;
 	
 	@FXML
-	Label statusLabel;
+	private Label statusLabel;
 	@FXML
-	Label matchVariantLabel;
+	private Label matchVariantLabel;
 
 	/**
 	 * Initialize the lobby scene and starting all the notification threads

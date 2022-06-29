@@ -1,5 +1,7 @@
-package it.polimi.ingsw.client.ui;
+package it.polimi.ingsw.client.ui.islands;
 
+import it.polimi.ingsw.client.ui.StudentPane;
+import it.polimi.ingsw.client.ui.rescale.RescalableAnchorPane;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
@@ -12,16 +14,17 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 
-public class StudentOnIsland extends RescalableAnchorPane  {
-    private final AnchorPane studentPane;
+public class StudentOnIsland extends RescalableAnchorPane {
+    
+    private final StudentPane studentPane;
     private final Student color;
-    private Label studentLabel = new Label("0");
-    private int idx;
+    private final Label studentLabel = new Label("0");
+    private final int idx;
 
     public StudentOnIsland(Student s, int idx) {
         this.idx = idx;
         color = s;
-        studentPane = GUIUtils.createImageViewWithImageNamed("images/students/" + s.getColor() +".png");
+        studentPane = new StudentPane(s);
         Platform.runLater(() -> {
             getChildren().addAll(studentLabel, studentPane);
             studentLabel.toFront();

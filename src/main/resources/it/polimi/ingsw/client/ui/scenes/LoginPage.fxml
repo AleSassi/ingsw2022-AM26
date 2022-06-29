@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="pane" cacheShape="false" centerShape="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="644.0" prefWidth="792.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.LoginController">
+<Pane fx:id="pane" cacheShape="false" centerShape="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="644.0" prefWidth="792.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.viewcontrollers.LoginController">
     <children>
         <TextField id="NicknameField" fx:id="nicknameBox" layoutX="175.0" layoutY="174.0" prefHeight="26.0" prefWidth="429.0" />
         <Button id="LoginButton" fx:id="loginButton" layoutX="345.0" layoutY="565.0" mnemonicParsing="false" onAction="#sendFormValuesToServer" prefHeight="35.0" prefWidth="103.0" text="start" />

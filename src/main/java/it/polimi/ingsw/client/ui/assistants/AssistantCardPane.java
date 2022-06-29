@@ -1,6 +1,6 @@
 package it.polimi.ingsw.client.ui.assistants;
 
-import it.polimi.ingsw.client.ui.RescalableAnchorPane;
+import it.polimi.ingsw.client.ui.rescale.RescalableAnchorPane;
 import it.polimi.ingsw.server.model.assistants.AssistantCard;
 import it.polimi.ingsw.utils.ui.GUIUtils;
 import javafx.scene.input.MouseEvent;

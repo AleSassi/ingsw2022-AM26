@@ -1,6 +1,9 @@
-package it.polimi.ingsw.client.ui;
+package it.polimi.ingsw.client.ui.viewcontrollers;
 
 import it.polimi.ingsw.client.controller.network.GameClient;
+import it.polimi.ingsw.client.ui.GUI;
+import it.polimi.ingsw.client.ui.rescale.JavaFXRescalable;
+import it.polimi.ingsw.client.ui.rescale.RescaleUtils;
 import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.ui;
 
 import it.polimi.ingsw.client.controller.network.GameClient;
+import it.polimi.ingsw.client.ui.viewcontrollers.LoginController;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
@@ -20,11 +21,10 @@ import java.util.HashMap;
 public class GUI extends Application {
 	
 	private static Scene scene;
-	private static Stage mainStage;
 	private static double stageWidth, stageHeight;
 	
-	protected static final double referenceWidth = 1300;
-	protected static final double referenceHeight = 810;
+	public static final double referenceWidth = 1300;
+	public static final double referenceHeight = 810;
 	
 	@Override
 	public void start(Stage stage) throws IOException {
@@ -37,7 +37,6 @@ public class GUI extends Application {
 		stage.setHeight(referenceHeight);
 		LoginController loginController = GUI.setRoot("scenes/LoginPage").getController();
 		stage.show();
-		mainStage = stage;
 		stageWidth = stage.getWidth();
 		stageHeight = stage.getHeight();
 		
@@ -71,13 +70,13 @@ public class GUI extends Application {
 		NotificationCenter.shared().addObserver(GUI.class, GUI::didReceiveNetworkTimeoutNotification, NotificationName.ClientDidReceiveMatchTerminationMessage, null);
 	}
 	
-	static FXMLLoader setRoot(String fxml) throws IOException {
+	public static FXMLLoader setRoot(String fxml) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(GUI.class.getResource(fxml + ".fxml"));
 		scene.setRoot(fxmlLoader.load());
 		return fxmlLoader;
 	}
 	
-	static Parent getRoot() {
+	public static Parent getRoot() {
 		return scene.getRoot();
 	}
 	
