@@ -15,10 +15,14 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 	private final SchoolBoardPane boardPane;
 	private final boolean isPrimary;
 	
-	public SchoolBoardContainer(boolean isPrimary, String ownerNickname) {
+	public SchoolBoardContainer(boolean isPrimary, String ownerNickname, Integer coins) {
 		this.isPrimary = isPrimary;
 		this.boardPane = new SchoolBoardPane(isPrimary, ownerNickname);
-		this.playerLabel = new Label(isPrimary ? "Your School Board" : ownerNickname + "'s School Board");
+		String titleString = isPrimary ? "Your School Board" : ownerNickname + "'s School Board";
+		if (coins != null) {
+			titleString += " (Coins: " + coins + ")";
+		}
+		this.playerLabel = new Label(titleString);
 		rescale(1);
 		getChildren().addAll(this.playerLabel, this.boardPane);
 	}

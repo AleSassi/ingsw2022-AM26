@@ -79,7 +79,7 @@ public class MainBoardController implements JavaFXRescalable {
 			}
 			if (!schoolBoardContainers.stream().map(SchoolBoardContainer::getOwnerNickname).toList().contains(message.getNickname())) {
 				//Create the new container
-				SchoolBoardContainer newContainer = new SchoolBoardContainer(message.getNickname().equals(Client.getNickname()), message.getNickname());
+				SchoolBoardContainer newContainer = new SchoolBoardContainer(message.getNickname().equals(Client.getNickname()), message.getNickname(), characterCardContainer != null ? message.getAvailableCoins() : null);
 				Platform.runLater(() -> mainPane.getChildren().add(newContainer));
 				if (newContainer.getOwnerNickname().equals(Client.getNickname())) {
 					schoolBoardContainers.add(newContainer);
