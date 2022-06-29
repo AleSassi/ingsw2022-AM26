@@ -121,6 +121,7 @@ public class EndgameController extends CleanableController implements JavaFXResc
 	
 	public void newGame(ActionEvent actionEvent) throws IOException {
 		GUI.setRoot("scenes/LoginPage");
+		NotificationCenter.shared().removeObserver(this);
 	}
 	
 	@Override
