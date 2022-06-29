@@ -21,8 +21,14 @@ import it.polimi.ingsw.server.model.student.StudentHost;
 
 import java.util.*;
 
+/**
+ * This Class represent the {@code MatchManger}
+ * @author Alessandro Sassi, Federico Albertini
+ */
 public abstract class MatchManager {
- 
+	/**
+	 * Initialize {@code MatchManager}
+	 */
 	private List<Player> playersSortedByCurrentTurnOrder;
 	private int currentLeadPlayer;
 	private MatchPhase matchPhase;
@@ -31,9 +37,15 @@ public abstract class MatchManager {
 	private int numberOfStudentsPickedByCurrentPlayer_AP1 = 0;
 	
 	//region Public methods (used by the Controller to run actions)
+
+
 	/**
-	 * Constructs and sets up the match by adding all players, initializing the TableManager and initializing the entrance for each player
-	 * @param variant Choose by the first player, Basic or Experts
+	 * Constructs and sets up the match by adding all {@link it.polimi.ingsw.server.model.Player Players}, initializing the {@link it.polimi.ingsw.server.model.TableManager TableManager} and initializing the entrance for each {@code Player}
+	 * @param variant (type MatchVariant) variant of the game chose by the first {@code Player}
+	 * @param playersNicknames (type List of String) {@code Player's} nicknames
+	 * @param wiz (type List of Wizard) chosen {@code Wizards}
+	 * @throws InvalidPlayerCountException whenever the {@code Player count} isn't correct
+	 * @throws IncorrectConstructorParametersException whenever the {@code Parameters} of the constructor aren't correct
 	 */
 	public void startMatch(MatchVariant variant, List<String> playersNicknames, List<Wizard> wiz) throws InvalidPlayerCountException, IncorrectConstructorParametersException {
 		int playerCount = playersNicknames.size();
@@ -69,14 +81,17 @@ public abstract class MatchManager {
 	}
 	
 	/**
-	 * Manage the course of the game depending on the match phase
+	 * Manages the course of the game depending on the {@link  MatchPhase}
 	 *
-	 * @param AssistantCardIndex Index of the Assistant card to play
-	 * @param studentToMove      Student type to move
-	 * @param islandDestination  Island idx to move to the students
-	 * @param moveToIsland       Move to Island or To dining room
-	 * @param motherNatureSteps  Steps to move mother nature
-	 * @param cloudIdx           Cloud's idx from which to pick the students
+	 * @param AssistantCardIndex (type int) Index of the {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} to play
+	 * @param studentToMove      (type Student) {@link it.polimi.ingsw.server.model.student.Student Student} type to move
+	 * @param islandDestination  (type int) {@link it.polimi.ingsw.server.model.student.Island Island's} idx to move the {@code Students} to
+	 * @param moveToIsland       (type boolean) Move to {@link it.polimi.ingsw.server.model.student.Island Island} or to dining room
+	 * @param motherNatureSteps  (type int) Steps to move mother nature
+	 * @param cloudIdx           (type int) {@link it.polimi.ingsw.server.model.student.Cloud Cloud's} idx from which to pick the {@code Students}
+	 * @throws StudentMovementInvalidException whenever the {@code Student's} movement is not aloud
+	 * @throws AssistantCardNotPlayableException whenever the {@code AssistantCard} is not aloud to be played
+	 * @throws CloudPickInvalidException whenever the picked {@link it.polimi.ingsw.server.model.student.Cloud Cloud} is not valid
 	 */
 	public void runAction(int AssistantCardIndex, Student studentToMove, int islandDestination, boolean moveToIsland, int motherNatureSteps, int cloudIdx) throws StudentMovementInvalidException, AssistantCardNotPlayableException, CloudPickInvalidException {
 		switch (matchPhase) {
@@ -105,7 +120,8 @@ public abstract class MatchManager {
 	}
 	
 	/**
-	 * Change the currentPlayer to the next player in the playerSortedByCurrentOrder and change the phase according to the rules
+	 * Changes the currentPlayer to the next {@link it.polimi.ingsw.server.model.Player Player} in the playerSortedByCurrentOrder and changes the {@link it.polimi.ingsw.server.model.match.MatchPhase MatchPhase} according to the rules
+	 * @return (type boolean) returns true if it needs to move the next {@code Player} in playerSortedByCurrentOrder
 	 */
 	protected boolean moveToNextPlayer() {
 		switch (matchPhase) {
@@ -159,9 +175,9 @@ public abstract class MatchManager {
 	}
 	
 	/**
-	 * Sort the players by the assistant card priority number (the lowest first) for the next round
+	 * Sorts the {@link it.polimi.ingsw.server.model.Player Players} by the {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} priority number (the lowest first) for the next round
 	 *
-	 * @return the list of ordered player
+	 * @return (type List of Player)the list of ordered {@code Players}
 	 */
 	public List<Player> getPlayersSortedByRoundTurnOrder() {
 		//TODO: Need to alter the sorting lambda to account for when the Player has the same priority number
@@ -169,7 +185,8 @@ public abstract class MatchManager {
 		result.sort(Comparator.comparingInt(playerA -> (playerA.getLastPlayedAssistantCard().getPriorityNumber() + playerA.getAssistantCardOrderModifier())));
 		return result;
 	}
-	
+
+
 	private List<Player> getPlayersSortedByClockwiseOrder() {
 		List<Player> result = new ArrayList<>();
 		//Rearrange moving to the end all players until you find the one with the lowest card
@@ -199,18 +216,25 @@ public abstract class MatchManager {
 	}
 	
 	/**
-	 * @return the current playing player
+	 * Gets the current {@link it.polimi.ingsw.server.model.Player Player}
+	 * @return the current playing {@code Player}
 	 */
 	public Player getCurrentPlayer() {
 		return playersSortedByCurrentTurnOrder.get(currentLeadPlayer);
 	}
-	
+
+	/**
+	 * Gets the current {@link  MatchPhase}
+	 * @return (type MatchPhase)  returns the current {@code MatchPhase}
+	 */
 	public MatchPhase getMatchPhase() {
 		return matchPhase;
 	}
 	
 	/**
-	 * Checks if the assistant card is playable by checking the card that has been played by the lst player is the same as the one he wants to play
+	 * Checks if the {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} is playable by checking the card that has been played by the last {@link it.polimi.ingsw.server.model.Player Player} is the same as the one he wants to play
+	 * @param cardIdxForCurrentPlayer (type int) {@code AssistantCard's} index to check
+	 * @return (type boolean) returns true if the {@code AssistantCard} is playable
 	 */
 	public boolean isAssistantCardPlayable(int cardIdxForCurrentPlayer) {
 		// Check for out-of-bounds
@@ -231,7 +255,11 @@ public abstract class MatchManager {
 	
 	//region Public CharacterCard methods
 	/**
-	 * Purchase the character card
+	 * Purchase the {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard}
+	 * @param cardIndex (type int) {@code CharacterCard's} index to purchase
+	 * @return (type boolean) returns true if the {@code CharacterCard} is purchased correctly
+	 * @throws CharacterCardAlreadyInUseException whenever the selected {@code CharacterCard} is already in use
+	 * @throws CharacterCardIncorrectParametersException whenever the {@code Parameters} for the {@code CharacterCard} are not correct
 	 */
 	public boolean purchaseCharacterCards(int cardIndex) throws CharacterCardAlreadyInUseException, CharacterCardIncorrectParametersException {
 		try {
@@ -248,7 +276,12 @@ public abstract class MatchManager {
 	}
 	
 	/**
-	 * Executes the relative effect of the card that the player played
+	 * Executes the relative effect of the {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard} that the {@link it.polimi.ingsw.server.model.Player Player} played
+	 * @param userInfo (type CharacterCardNetworkParamSet) {@code CharacterCard's} parameters
+	 * @return (type int) played {@code CharacterCard's} index
+	 * @throws CharacterCardIncorrectParametersException whenever the {@code Parameters} for the {@code CharacterCard} are not correct
+	 * @throws CharacterCardNoMoreUsesAvailableException whenever the selected {@code CharacterCard} has no more uses
+	 * @throws CharacterCardNotPurchasedException whenever the selected {@code CharacterCard} has not been purchased
 	 */
 	public int useCharacterCard(CharacterCardNetworkParamSet userInfo) throws CharacterCardIncorrectParametersException, CharacterCardNoMoreUsesAvailableException, CharacterCardNotPurchasedException {
 		if (getCurrentPlayer().getActiveCharacterCard() != null) {
@@ -264,17 +297,24 @@ public abstract class MatchManager {
 	
 	//region Abstract methods
 	/**
-	 * Create and adds the player with the nickname and wizard
+	 * Initialize the {@link it.polimi.ingsw.server.model.Player Player} and adds it to the list
+	 * @param nickname (type String) {@code Player's} nickname
+	 * @param wiz (type Wizard) chosen {@code Wizard}
+	 * @param maxTowerCount (type int) max number of {@link it.polimi.ingsw.server.model.Tower Tower}
+	 * @throws IncorrectConstructorParametersException whenever the parameters aren't correct
+	 * @throws InvalidPlayerCountException whenever the {@code Player} count isn't correct
 	 */
 	protected abstract void addPlayer(String nickname, Wizard wiz, int maxTowerCount) throws InvalidPlayerCountException, IncorrectConstructorParametersException;
-	
+
 	/**
-	 * return the list of all player in order of addition
+	 * Gets all the {@link it.polimi.ingsw.server.model.Player Players} of the {@code Match}
+	 * @return (type List of Player) returns all the {@code Players}
 	 */
 	public abstract List<Player> getAllPlayers();
-	
+
 	/**
-	 * @return The list of players with towers
+	 * Gets just the {@link it.polimi.ingsw.server.model.Player Players} with {@link it.polimi.ingsw.server.model.Tower Tower}
+	 * @return (type List of Player) returns all the {@code Players}
 	 */
 	protected abstract List<Player> getPlayersWithTowers();
 	//endregion
@@ -282,7 +322,8 @@ public abstract class MatchManager {
 	//region Private methods & Game Phase methods
 	
 	/**
-	 * Initialize Player's p entrance
+	 * Initialize {@link it.polimi.ingsw.server.model.Player Player's} entrance
+	 * @param p (type Player) {@code Player's} entrance to initialize
 	 */
 	private void initEntrance(Player p) {
 		try {
@@ -294,7 +335,8 @@ public abstract class MatchManager {
 	}
 	
 	/**
-	 * Picks the students from the bag and places them on the clouds depending on the number of players
+	 * Picks the {@link it.polimi.ingsw.server.model.student.Student Students} from the bag and places them on the {@link it.polimi.ingsw.server.model.student.Cloud Clouds} depending on the number of {@link it.polimi.ingsw.server.model.Player Players}
+	 * @throws CollectionUnderflowError whenever it tries to remove a {@code Student} from an empty {@code StudentCollection}
 	 */
 	private void PP_FillCloudCards() throws CollectionUnderflowError {
 		int numberOfStudent = pawnCounts.getStudentsDrawnFromCloud();
@@ -308,7 +350,9 @@ public abstract class MatchManager {
 	}
 	
 	/**
-	 * Check if the Assistant card is playable and plays it
+	 * Check if the {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} is playable and plays it
+	 * @param cardIndex (type int) {@code AssistantCard's} index
+	 * @throws AssistantCardNotPlayableException whenever the {@code AssistantCard} is not aloud to be played
 	 */
 	private void PP_PlayAssistantCard(int cardIndex) throws AssistantCardNotPlayableException {
 		if (!isAssistantCardPlayable(cardIndex)) throw new AssistantCardNotPlayableException();
@@ -328,7 +372,10 @@ public abstract class MatchManager {
 	}
 	
 	/**
-	 * Moves the student s from the Player entrance space to the islandIdx island
+	 * Moves the {@link it.polimi.ingsw.server.model.student.Student Student} from the {@link it.polimi.ingsw.server.model.Player Player's} entrance to an {@link it.polimi.ingsw.server.model.student.Island Island}
+	 * @param s (type Student) {@code Student to move}
+	 * @param islandIdx (type int) {@code Island's} index
+	 * @throws StudentMovementInvalidException whenever the {@code Student's} movement is not aloud
 	 */
 	private void AP_MoveStudentToIsland(Student s, int islandIdx) throws StudentMovementInvalidException {
 		try {
@@ -340,7 +387,9 @@ public abstract class MatchManager {
 	}
 	
 	/**
-	 * Moves the student s to the dining room
+	 * Moves the {@link it.polimi.ingsw.server.model.student.Student Student} to the dining room
+	 * @param s (type Student) {@code Student} to move
+	 * @throws StudentMovementInvalidException whenever the {@code Student's} movement is not aloud
 	 */
 	private void AP_MoveStudentToDiningRoom(Student s) throws StudentMovementInvalidException {
 		try {
@@ -355,9 +404,10 @@ public abstract class MatchManager {
 	}
 	
 	/**
-	 * Picks all the students from the cloud and place them in the player's entrance
-	 *
-	 * @param cloudIdx clouds's id
+	 * Picks all the {@link it.polimi.ingsw.server.model.student.Student Students} from the {@link it.polimi.ingsw.server.model.student.Cloud Cloud} and place them in the {@link it.polimi.ingsw.server.model.Player Player's} entrance
+	 * @throws CloudPickInvalidException whenever the {@code Cloud} picked cannot be selected
+
+	 * @param cloudIdx (type int) {@code Cloud's} idx
 	 */
 	private void AP_CollectAllStudentsFromCloud(int cloudIdx) throws CloudPickInvalidException {
 		try {
@@ -368,7 +418,8 @@ public abstract class MatchManager {
 	}
 	
 	/**
-	 * Moves Mother Nature by the step and checks if there are any modifier activated by the active character cards
+	 * Moves Mother Nature by the step and checks if there are any modifier activated by the active {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard}
+	 * @param steps (type int) {@code Mother Nature's} steps
 	 */
 	private void AP_MoveMotherNatureBySteps(int steps) {
 		int stepsWithCardModifier = steps;
@@ -383,7 +434,8 @@ public abstract class MatchManager {
 	}
 	
 	/**
-	 * Checks the number of students checkedStudent and assign the relative professor to the player
+	 * Checks the number of {@link it.polimi.ingsw.server.model.student.Student Students} and assigns the relative {@link it.polimi.ingsw.server.model.Professor Professor} to the {@link it.polimi.ingsw.server.model.Player Player}
+	 * @param checkedStudent (type Student) {@code Students} to check
 	 */
 	private void AP_CheckAndAssignProfessorTo(Student checkedStudent) {
 		Professor associatedProf = checkedStudent.getAssociatedProfessor();
@@ -413,7 +465,7 @@ public abstract class MatchManager {
 	}
 	
 	/**
-	 * Checks the influence on the current Island and in case assigns the control to a player
+	 * Checks the influence on the current {@link it.polimi.ingsw.server.model.student.Island Island} and in case assigns the control to a {@link it.polimi.ingsw.server.model.Player Player}
 	 */
 	private void AP_CheckAndChangeCurrentIslandControl() {
 		try {
@@ -443,7 +495,7 @@ public abstract class MatchManager {
 	}
 	
 	/**
-	 * Check the Match End conditions: Player has no more tower, no students left in the bag, no more assistant cards available
+	 * Check the Match End conditions: {@link it.polimi.ingsw.server.model.Player Player} has no more {@link it.polimi.ingsw.server.model.Tower Towers}, no {@link it.polimi.ingsw.server.model.student.Student Students} left in the bag, no more {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCards} available
 	 */
 	private void roundCheckMatchEnd() {
 		if (!managedTable.checkAndNotifyMatchEnd()) {
@@ -457,14 +509,22 @@ public abstract class MatchManager {
 			}
 		}
 	}
-	
+
+	/**
+	 * MatchVictoryNotification Callback
+	 * @param notification (type Notification) {@code Notification's} message
+	 */
 	private void didReceiveMatchVictoryNotification(Notification notification) {
 		if (notification.getUserInfo() != null && notification.getUserInfo().containsKey(NotificationKeys.WinnerTowerType.getRawValue())) {
 			List<Tower> winningTowers = (List<Tower>) notification.getUserInfo().get(NotificationKeys.WinnerTowerType.getRawValue());
 			resolveParityAndNotifyWinnerNicknames(winningTowers);
 		}
 	}
-	
+
+	/**
+	 * In case of victory resolves the parity in case of Teams Match and notifies the {@link it.polimi.ingsw.server.model.Player Players}
+	 * @param winningTowers (type List<Tower>) list of winning {@code Towers}
+	 */
 	private void resolveParityAndNotifyWinnerNicknames(List<Tower> winningTowers) {
 		List<Player> activePlayers = getAllPlayers();
 		List<String> winnerNicknames = new ArrayList<>();
@@ -499,10 +559,20 @@ public abstract class MatchManager {
 	//endregion
 	
 	//region Messages
+
+	/**
+	 * Generates the {@link TableStateMessage}
+	 * @return (type TableStateMessage) {@code TableStateMessage}
+	 */
 	public TableStateMessage generateTableStateMessage() {
 		return managedTable.getStateMessage();
 	}
-	
+
+	/**
+	 * Generates the {@link PlayerStateMessage}
+	 * @param playerNickname (type String) {@code Player's} state to generate message
+	 * @return (type PlayerStateMessage) {@code PlayerStateMessage}
+	 */
 	public PlayerStateMessage generatePlayerStateMessage(String playerNickname) {
 		List<Player> players = getAllPlayers();
 		for (Player player: players) {

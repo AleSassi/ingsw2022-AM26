@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class StudentHostTest {
 
     /**
-     * Method getCountTest test that can return the count of student of the same type
+     * Tests that {@code getCount} returns the count of {@link it.polimi.ingsw.server.model.student.Student Student} of the same type
      */
     @Test
     void getCountTest() {
@@ -29,7 +29,7 @@ class StudentHostTest {
     }
 
     /**
-     * Method isEmptyTest test that can return true if the StudentHost is empty
+     * Tests that {@code isEmpty} returns true if the {@link it.polimi.ingsw.server.model.student.StudentHost StudentHost} is empty
      */
     @Test
     void isEmptyTest() {
@@ -38,7 +38,7 @@ class StudentHostTest {
     }
 
     /**
-     * Method placeStudentsTest test that can place student of a given type and number correctly
+     * Tests that {@code placeStudents} places {@link it.polimi.ingsw.server.model.student.Student Students} of a given type and number correctly
      */
     @Test
     void placeStudentsTest() {
@@ -50,7 +50,7 @@ class StudentHostTest {
     }
 
     /**
-     * Method removeStudentTest test that can remove student of a given type and number correctly
+     * Tests that {@code removeStudent} removes {@link it.polimi.ingsw.server.model.student.Student Students} of a given type and number correctly
      */
     @Test
     void removeStudentTest() {
@@ -65,7 +65,7 @@ class StudentHostTest {
     }
 
     /**
-     * Method removeRandomTest test that can remove a random student from a StudentHost
+     * Tests that {@code removeRandom} removes a random {@link it.polimi.ingsw.server.model.student.Student Student} from a {@link it.polimi.ingsw.server.model.student.StudentHost StudentHost}
      */
     @Test
     void removeRandomTest() {
@@ -85,6 +85,9 @@ class StudentHostTest {
 
     }
 
+    /**
+     * Tests if it throws CollectionUnderflowError whenever it removes {@link it.polimi.ingsw.server.model.student.Student Student} from an empty {@link it.polimi.ingsw.server.model.student.StudentCollection StudentCollection}
+     */
     @Test
     void underflowTest() {
         StudentHost studentHost = new StudentHost();

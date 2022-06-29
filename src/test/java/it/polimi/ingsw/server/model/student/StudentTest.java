@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Class StudentTest test Student
+ * Class StudentTest test {@link it.polimi.ingsw.server.model.student.Student Student}
  * Coverage 100%
  *
  * @author Federico Albertini
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class StudentTest {
 
     /**
-     * Method getAssociatedProfessor test that can return the Professor associated to the Student
+     * Test that {@code getAssociatedProfessor} returns the {@link it.polimi.ingsw.server.model.Professor Professor} associated to the {@link it.polimi.ingsw.server.model.student.Student Student}
      */
     @Test
     void getAssociatedProfessorTest() {
@@ -33,7 +33,7 @@ class StudentTest {
     }
 
     /**
-     * Method getRawValueOf tests that can return the index of the list of Students
+     * Tests that {@code getRawValueOf} returns the index of the list of {@link it.polimi.ingsw.server.model.student.Student Student}
      */
     @Test
     void getRawValueOfTest() {
@@ -45,7 +45,7 @@ class StudentTest {
     }
 
     /**
-     * Method getRandomStudent test that returns a random Student
+     * Tests that {@code getRandomStudent} returns a random {@link it.polimi.ingsw.server.model.student.Student Student}
      */
     @Test
     void getRandomStudentTest() {
@@ -59,7 +59,10 @@ class StudentTest {
             case BlueUnicorn -> assertEquals(Student.BlueUnicorn, s);
         }
     }
-    
+
+    /**
+     * Tests that {@code getColor} returns the color of the {@link it.polimi.ingsw.server.model.student.Student Student}
+     */
     @Test
     void testGetColor() {
         assertEquals("red", Student.RedDragon.getColor());

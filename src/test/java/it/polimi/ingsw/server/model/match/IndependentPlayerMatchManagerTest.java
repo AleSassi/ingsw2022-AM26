@@ -22,6 +22,9 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * {@code IndependentPlayerMatchManagerTest} class tests {@link it.polimi.ingsw.server.model.match.IndependentPlayerMatchManager IndependentPlayerMatchManager}
+ */
 class IndependentPlayerMatchManagerTest {
 
     private IndependentPlayerMatchManager matchManager;
@@ -46,7 +49,10 @@ class IndependentPlayerMatchManagerTest {
         assertEquals("Fede", matchManager.getAllPlayers().get(0).getNickname());
         assertEquals("Ale", matchManager.getAllPlayers().get(1).getNickname());
     }
-    
+
+    /**
+     * Test {@code addPLayer} with 3 new {@link it.polimi.ingsw.server.model.Player Players}
+     */
     @Test
     void testAddThreePlayers() {
         MatchManager matchManager = new IndependentPlayerMatchManager();
@@ -72,7 +78,7 @@ class IndependentPlayerMatchManagerTest {
     }
 
     /**
-     * This method test that the card that the player wants to be played will be the last played card
+     * Tests the {@code planPhaseTwo}
      */
     @Test
     void planPhaseTwoTest() {
@@ -83,7 +89,10 @@ class IndependentPlayerMatchManagerTest {
         assertEquals(MatchPhase.PlanPhaseStepTwo, matchManager.getMatchPhase());
         assertEquals("Ale", matchManager.getCurrentPlayer().getNickname());
     }
-    
+
+    /**
+     * Tests that whenever the {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard's} index is out of bounds {@code runPhase} works correctly
+     */
     @Test
     void testUnplayableAssistant() {
         planPhaseTwoTest();
@@ -127,7 +136,7 @@ class IndependentPlayerMatchManagerTest {
     }
 
     /**
-     * This method test that
+     * Tests {@code actionPhaseOneRoom} manages the ActionPhaseOne with {@link it.polimi.ingsw.server.model.student.Student Student} movement to diningRoom
      */
     @RepeatedTest(10)
     void actionPhaseOneRoomTest() {
@@ -186,7 +195,7 @@ class IndependentPlayerMatchManagerTest {
     }
 
     /**
-     * This method tests that ActionPhaseOne with movement to island works correctly
+     * Tests {@code actionPhaseOneIsland} manages the ActionPhaseOne with {@link it.polimi.ingsw.server.model.student.Student Student} movement to {@link it.polimi.ingsw.server.model.student.Island Island}
      */
     @RepeatedTest(10)
     void actionPhaseOneIslandTest() {
@@ -264,7 +273,7 @@ class IndependentPlayerMatchManagerTest {
     }
 
     /**
-     * This method test that the actionPhaseThree works correctly
+     * This method test that the {@code actionPhaseThree} works correctly
      */
     @Test
     void actionPhaseThreeTest() {
@@ -283,6 +292,9 @@ class IndependentPlayerMatchManagerTest {
         assertEquals(0, totCount);
     }
 
+    /**
+     * Test that {@code getPlayersSortedByRoundTurnOrder} sorts the {@link it.polimi.ingsw.server.model.Player Players} correctly
+     */
     @Test
     void getPlayersSortedByRoundTurnOrderTest() {
         List<Player> players = new ArrayList<>();
@@ -297,6 +309,9 @@ class IndependentPlayerMatchManagerTest {
         assertEquals("Fede", matchManager.getPlayersSortedByRoundTurnOrder().get(0).getNickname());
     }
 
+    /**
+     * Test that {@code testMoveToNextPlayer} moves to next {@link it.polimi.ingsw.server.model.Player Player} correctly
+     */
     @Test
     void testMoveToNextPlayer() {
         assertEquals("Fede", matchManager.getCurrentPlayer().getNickname());
@@ -305,7 +320,7 @@ class IndependentPlayerMatchManagerTest {
     }
 
     /**
-     * This method test that the list of all players is returned correctly
+     * This method test that the list of all {@link it.polimi.ingsw.server.model.Player Players} is returned correctly
      *
      */
     @Test
@@ -315,7 +330,7 @@ class IndependentPlayerMatchManagerTest {
     }
 
     /**
-     * This method test that the list of players having towers is returned correctly
+     * This method test that the list of {@link it.polimi.ingsw.server.model.Player Players} having {@link it.polimi.ingsw.server.model.Tower Towers} is returned correctly
      */
     @Test
     void getPlayersWithTowersTest() {
@@ -369,7 +384,10 @@ class IndependentPlayerMatchManagerTest {
             }
         }
     }
-    
+
+    /**
+     * Tests the flow of a simple turn
+     */
     @Test
     void testSimpleTurn() {
         planPhaseTwoTest();
@@ -405,7 +423,10 @@ class IndependentPlayerMatchManagerTest {
         assertEquals(MatchPhase.ActionPhaseStepOne, matchManager.getMatchPhase());
         assertEquals("Ale", matchManager.getCurrentPlayer().getNickname());
     }
-    
+
+    /**
+     * Tests a full round
+     */
     @Test
     void testFullRound() {
         testSimpleTurn();
@@ -438,9 +459,12 @@ class IndependentPlayerMatchManagerTest {
         assertEquals(MatchPhase.PlanPhaseStepTwo, matchManager.getMatchPhase());
         assertEquals("Fede", matchManager.getCurrentPlayer().getNickname());
     }
-    
+
+    /**
+     * Tests CollectionUnderflowError
+     */
     @Test
-    void testPickFromEmptyCloud() {
+    void testPickFromEmptyCloudTest() {
         testSimpleTurn();
         //Move 3 Students to the Table
         int[] removedStudents = new int[Student.values().length];
@@ -471,7 +495,10 @@ class IndependentPlayerMatchManagerTest {
         assertEquals(MatchPhase.ActionPhaseStepThree, matchManager.getMatchPhase());
         assertEquals("Ale", matchManager.getCurrentPlayer().getNickname());
     }
-    
+
+    /**
+     * Tests the CharacterCardPurchase
+     */
     @RepeatedTest(10)
     void testCharacterCardPurchase() {
         planPhaseTwoTest();
@@ -491,7 +518,10 @@ class IndependentPlayerMatchManagerTest {
             assertDoesNotThrow(() -> matchManager.purchaseCharacterCards(finalCardIndex));
         }
     }
-    
+
+    /**
+     * Tests {@code CharacterCardUse} works correctly
+     */
     @RepeatedTest(20)
     void testCharacterCardUse() {
         testCharacterCardPurchase();

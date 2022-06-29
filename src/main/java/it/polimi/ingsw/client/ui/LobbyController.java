@@ -22,7 +22,8 @@ import java.util.ResourceBundle;
 
 
 public class LobbyController implements Initializable {
-	
+
+
 	private int numberOfPlayersToFill = 4;
 	private List<Notification> playerStateMessagesQueue; //Used to forward them to the main controller, since it might happen that the main controller is initialized and presented after the notification arrives
 	private Notification tableMessage, activePlayerMessage, matchStateMessage;
@@ -31,7 +32,12 @@ public class LobbyController implements Initializable {
 	Label statusLabel;
 	@FXML
 	Label matchVariantLabel;
-	
+
+	/**
+	 * Initialize the lobby scene and starting all the notification threads
+	 * @param url
+	 * @param resourceBundle
+	 */
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		playerStateMessagesQueue = new ArrayList<>();
@@ -60,7 +66,12 @@ public class LobbyController implements Initializable {
 		NotificationCenter.shared().addObserver(this, this::didReceiveActivePlayerMessage, NotificationName.ClientDidReceiveActivePlayerMessage, null);
 		NotificationCenter.shared().addObserver(this, this::didReceiveMatchPhaseMessage, NotificationName.ClientDidReceiveMatchStateMessage, null);
 	}
-	
+
+	/**
+	 * This method sets the matchVariant and the remainingNumberOfPlayers label
+	 * @param matchVariant
+	 * @param remainingNumberOfPlayers
+	 */
 	public void setInitialData(MatchVariant matchVariant, int remainingNumberOfPlayers) {
 		numberOfPlayersToFill = remainingNumberOfPlayers;
 		Platform.runLater(() -> {
@@ -71,7 +82,11 @@ public class LobbyController implements Initializable {
 			moveToGameScene();
 		}
 	}
-	
+
+	/**
+	 * This method updates and display the number of remaining Players from the notification
+	 * @param notification
+	 */
 	private void otherPlayerLoggedInReceived(Notification notification) {
 		LoginResponse message = (LoginResponse) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
 		
@@ -89,23 +104,42 @@ public class LobbyController implements Initializable {
 			}
 		}
 	}
-	
+
+	/**
+	 * PlayerStateMessage callback, adds the message to the queue
+	 * @param notification
+	 */
 	private void didReceivePlayerStateMessage(Notification notification) {
 		playerStateMessagesQueue.add(notification);
 	}
-	
+
+	/**
+	 * TableStateMessage callBack
+	 * @param notification
+	 */
 	private void didReceiveTableStateMessage(Notification notification) {
 		tableMessage = notification;
 	}
-	
+
+	/**
+	 * ActivePlayerMessage callback
+	 * @param notification
+	 */
 	private void didReceiveActivePlayerMessage(Notification notification) {
 		activePlayerMessage = notification;
 	}
-	
+
+	/**
+	 * MatchPhaseMessage callback
+	 * @param notification
+	 */
 	private void didReceiveMatchPhaseMessage(Notification notification) {
 		matchStateMessage = notification;
 	}
-	
+
+	/**
+	 * This method moves to the main scene and forward all the initial network messages to the next scene
+	 */
 	private void moveToGameScene() {
 		try {
 			MainBoardController mainBoardController = GUI.setRoot("scenes/mainBoard").getController();

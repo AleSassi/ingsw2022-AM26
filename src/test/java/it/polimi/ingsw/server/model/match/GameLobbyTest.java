@@ -14,6 +14,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameLobbyTest {
 
+    /**
+     * Checks if the new {@link it.polimi.ingsw.server.model.match.GameLobby GameLobby} has no {@link it.polimi.ingsw.server.model.Player Players} in it
+     */
     @Test
     void testEmptyMatch() {
         GameLobby lobby = new GameLobby(3, MatchVariant.BasicRuleSet);
@@ -21,6 +24,9 @@ class GameLobbyTest {
         assertEquals(0, lobby.getNumberOfPlayers());
     }
 
+    /**
+     * Checks if throws {@code LobbyFullException} if a new {@link it.polimi.ingsw.server.model.Player Player} tries to enter a full {@link it.polimi.ingsw.server.model.match.GameLobby GameLobby}
+     */
     @Test
     void testFullMatch() {
         GameLobby lobby = new GameLobby(2, MatchVariant.BasicRuleSet);
@@ -34,6 +40,9 @@ class GameLobbyTest {
         assertEquals(2, lobby.getNumberOfPlayers());
     }
 
+    /**
+     * Checks if it throws {@code NicknameNotUniqueException} whenever a new {@link it.polimi.ingsw.server.model.Player Player's} nickname is not unique
+     */
     @Test
     void testUniqueNicknameException() {
         GameLobby lobby = new GameLobby(2, MatchVariant.BasicRuleSet);
@@ -42,7 +51,10 @@ class GameLobbyTest {
             lobby.addPlayer("Ale", Wizard.Wizard2);
         });
     }
-    
+
+    /**
+     * Test that the new {@link it.polimi.ingsw.server.model.match.MatchManager MatchManager's} parameters are correctly initialized ({@link it.polimi.ingsw.server.model.match.IndependentPlayerMatchManager IndependentPlayerMatchManager} case)
+     */
     @Test
     void testMatchManagerCreation() {
         GameLobby lobby = new GameLobby(2, MatchVariant.BasicRuleSet);
@@ -58,6 +70,9 @@ class GameLobbyTest {
         });
     }
 
+    /**
+     * Test that the new {@link it.polimi.ingsw.server.model.match.MatchManager MatchManager's} parameters are correctly initialized ({@link it.polimi.ingsw.server.model.match.TeamMatchManager TeamMatchManager} case)
+     */
     @Test
     void testTeamMatchManagerCreation() {
         GameLobby lobby = new GameLobby(4, MatchVariant.BasicRuleSet);

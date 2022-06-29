@@ -9,6 +9,9 @@ import it.polimi.ingsw.server.model.assistants.Wizard;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This Class represent the {@link  MatchManager} in case of team {@code Match}
+ */
 public class TeamMatchManager extends MatchManager {
 	
 	List<PlayerTeam> teams;
@@ -18,7 +21,11 @@ public class TeamMatchManager extends MatchManager {
 	}
 
 	/**
-	 * If there isn't an available team it create one and add the player to it, if there is one it will just add the player to it
+	 * Initialize the {@link Player} and adds it to the team in the order of login
+	 * @param nickname (type String) {@code Player's} nickname
+	 * @param wiz (type Wizard) chosen {@code Wizard}
+	 * @param maxTowerCount (type int) max number of {@code Tower}
+	 * @throws IncorrectConstructorParametersException whenever the {@code Parameters} of the constructor aren't correct
 	 */
 	@Override
 	protected void addPlayer(String nickname, Wizard wiz, int maxTowerCount) throws IncorrectConstructorParametersException {
@@ -43,6 +50,10 @@ public class TeamMatchManager extends MatchManager {
 		teams.get(teams.size() - 1).addPlayer(player);
 	}
 
+	/**
+	 * Gets all the {@link Player} of the {@code Match}
+	 * @return (type List of Player) returns all the {@code Players}
+	 */
 	@Override
 	public List<Player> getAllPlayers() {
 		List<Player> result = new ArrayList<>();
@@ -52,7 +63,8 @@ public class TeamMatchManager extends MatchManager {
 		return result;
 	}
 	/**
-	 * Returns just the player with towers for each team
+	 * Gets just the {@link Player} with {@link Tower}
+	 * @return (type List of Player) returns all the {@code Players}
 	 */
 	@Override
 	protected List<Player> getPlayersWithTowers() {

@@ -9,6 +9,9 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Class {@code NotificationTest} tests {@link it.polimi.ingsw.notifications.Notification Notification}
+ */
 class NotificationTest {
 	
 	private Notification notification;
@@ -20,12 +23,18 @@ class NotificationTest {
 		userInfo.put("aRandomKey", 990786);
 		notification = new Notification(NotificationName.PlayerVictory, userInfo);
 	}
-	
+
+	/**
+	 * Tests that {@code getName} returns the right nickname
+	 */
 	@Test
 	void testGetName() {
 		assertEquals(NotificationName.PlayerVictory, notification.getName());
 	}
-	
+
+	/**
+	 * Test that {@code getUserInfo} returns the right User's infos
+	 */
 	@Test
 	void testGetUserInfo() {
 		HashMap<String, Object> userInfo = notification.getUserInfo();
