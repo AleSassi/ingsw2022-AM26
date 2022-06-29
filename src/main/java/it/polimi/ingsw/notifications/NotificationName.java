@@ -1,5 +1,8 @@
 package it.polimi.ingsw.notifications;
 
+/**
+ * Enum NotificationName are all the {@code Notification's} names
+ */
 public enum NotificationName {
 	ServerDidReceiveLoginMessage,
 	ServerDidReceivePlayerActionMessage,

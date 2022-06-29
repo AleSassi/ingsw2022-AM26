@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Class StudentCollectionTest test StudentCollection
+ * Class {@code StudentCollectionTest} tests {@link it.polimi.ingsw.server.model.student.StudentCollection StudentCollection}
  * Coverage 100%
  *
  * @author Federico Albertini
@@ -25,7 +25,7 @@ class StudentCollectionTest {
     }
 
     /**
-     * Method getCountTest tests that can return the count of a single type of student
+     *  Tests that {@code getCount} can return the count of a single type of {@link it.polimi.ingsw.server.model.student.Student Student}
      */
     @Test
     void getCountTest() {
@@ -37,7 +37,7 @@ class StudentCollectionTest {
     }
 
     /**
-     * Method getTotalCountTest tests that can return the total count of students
+     * Tests that {@code getTotalCount} returns the total count of {@link it.polimi.ingsw.server.model.student.Student Student}
      */
     @Test
     void getTotalCountTest() {
@@ -48,7 +48,7 @@ class StudentCollectionTest {
     }
 
     /**
-     * Method removeStudentsTest tests that can remove students of given type and count from the collection correctly
+     * Tests that {@code removeStudents} removes a {@link it.polimi.ingsw.server.model.student.Student Student} of given type and count from the {@link it.polimi.ingsw.server.model.student.StudentCollection StudentCollection} correctly
      */
     @Test
     void removeStudentsTest() {
@@ -61,7 +61,7 @@ class StudentCollectionTest {
     }
 
     /**
-     * Method addStudentsTest tests that can add students of given type and count from the collection correctly
+     * Tests that {@code addStudents} adds {@link it.polimi.ingsw.server.model.student.Student Students} of given type and count from the collection correctly
      */
     @Test
     void addStudentsTest() {
@@ -73,7 +73,7 @@ class StudentCollectionTest {
     }
 
     /**
-     * Method mergeWithCollectionTest tests that can merge two collections correctly
+     * Tests that {@code mergeWithCollection} merges two {@link it.polimi.ingsw.server.model.student.StudentCollection StudentCollection} correctly
      */
     @Test
     void mergeWithCollectionTest() {
@@ -89,7 +89,7 @@ class StudentCollectionTest {
     }
 
     /**
-     * Method pickRandomTest tests that return a random student type from the collection and remove it correctly
+     * Tests that {@code pickRandom} returns a random {@link it.polimi.ingsw.server.model.student.Student Student} type from the {@link it.polimi.ingsw.server.model.student.StudentCollection StudentCollection} and removes it correctly
      */
     @Test
     void pickRandomTest() {
@@ -110,7 +110,7 @@ class StudentCollectionTest {
     }
 
     /**
-     * Method testEqualsTest tests that returns true if two collections are the same
+     * Tests that {@code testEquals} returns true if two {@link it.polimi.ingsw.server.model.student.StudentCollection StudentCollections} are the same
      */
     @Test
     void testEqualsTest() {
@@ -126,6 +126,9 @@ class StudentCollectionTest {
         assertNotEquals(collection, collection3);
     }
 
+    /**
+     * Tests that whenever it tries to remove a {@link it.polimi.ingsw.server.model.student.Student Student} from an empty {@link it.polimi.ingsw.server.model.student.StudentCollection StudentCollection} it throws {@code CollectionUnderflowError}
+     */
     @Test
     void underflowTest() {
         StudentCollection collection = new StudentCollection();

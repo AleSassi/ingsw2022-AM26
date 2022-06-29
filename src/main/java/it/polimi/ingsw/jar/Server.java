@@ -7,19 +7,34 @@ import it.polimi.ingsw.server.controller.network.GameServer;
 import it.polimi.ingsw.server.exceptions.server.UnavailablePortException;
 import it.polimi.ingsw.server.exceptions.server.UnrecognizedCommandException;
 
+/**
+ * Class {@code Server} is the executable for the Server
+ */
 public class Server {
 	
 	private static final int minPort = 1024;
 	private static final int maxPort = 65535;
-	
+
+	/**
+	 * Gets the minimum {@code Port Number} that could be used
+	 * @return (type int) returns the minimum {@code Port Number} that could be used
+	 */
 	public static int getMinPort() {
 		return minPort;
 	}
-	
+
+	/**
+	 * Gets the maximum {@code Port Number} that could be used
+	 * @return (type int) returns the maximum {@code Port Number} that could be used
+	 */
 	public static int getMaxPort() {
 		return maxPort;
 	}
-	
+
+	/**
+	 * Initializes the Server with all the chosen parameter and starts it
+	 * @param args (type String[])
+	 */
 	public static void main(String[] args) {
 		if (args.length == 0) {
 			// Print the help menu
@@ -65,7 +80,10 @@ public class Server {
 			}
 		}
 	}
-	
+
+	/**
+	 * Prints all the command relative to this {@code Server}
+	 */
 	private static void printHelpMenu() {
 		System.out.println(StringFormatter.formatWithColor("Eriantys AM26 Server - Help Menu", ANSIColors.Yellow));
 		System.out.println("This executable allows you to start a TCP server that listens to incoming connections and messages from Eriantys clients.");

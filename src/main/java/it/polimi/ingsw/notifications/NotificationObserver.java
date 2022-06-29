@@ -2,26 +2,47 @@ package it.polimi.ingsw.notifications;
 
 import java.util.Objects;
 
+/**
+ * Class {@code NotificationObserver} represent the {@code Observer} who listen to the {@link Notification Notifications}
+ */
 class NotificationObserver {
 
 	private final Object observer;
 	private final Object observedObject;
 	private final NotificationCallback callback;
-	
+
+	/**
+	 * Constructor that initializes the {@code observedObject, callback, observer}
+	 * @param observer	(type Object) observer
+	 * @param observedObject (type Object) object to observe for the {@code Notifications}
+	 * @param callback (type NotificationCallback) callback of the {@link  NotificationCallback}
+	 */
 	public NotificationObserver(Object observer, Object observedObject, NotificationCallback callback) {
 		this.observedObject = observedObject;
 		this.callback = callback;
 		this.observer = observer;
 	}
-	
+
+	/**
+	 * Gets the {@code Observer}
+	 * @return (type Object) returns the {@code Observer}
+	 */
 	public Object getObserver() {
 		return observer;
 	}
-	
+
+	/**
+	 * Gets the {@code ObservedObject}
+	 * @return (type Object) returns the {@code Observed Object}
+	 */
 	public Object getObservedObject() {
 		return observedObject;
 	}
-	
+
+	/**
+	 * Gets the {@link  NotificationCallback}
+	 * @return (type NotificationCallback) returns the {@code NotificationCallback}
+	 */
 	public NotificationCallback getCallback() {
 		return callback;
 	}

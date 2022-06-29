@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Class IslandTest test Island
+ * Class {@code IslandTest } tests {@link it.polimi.ingsw.server.model.student.Island Island}
  * Coverage 100%
  *
  * @author Federico Albertini
@@ -28,7 +28,7 @@ class IslandTest {
     }
 
     /**
-     * Method itHasStopCardTest tests that can return true if StopCard is present on an island
+     * Tests that {@code itHasStopCard} returns true if StopCard is present on an {@link it.polimi.ingsw.server.model.student.Island Island}
      */
     @Test
     void itHasStopCardTest() {
@@ -37,7 +37,7 @@ class IslandTest {
     }
 
     /**
-     * Method getActiveTowerTypeTest tests that can return the active tower on island
+     * Tests that {@code getActiveTowerType} returns the active {@link it.polimi.ingsw.server.model.Tower Tower} on {@link it.polimi.ingsw.server.model.student.Island Island}
      */
     @Test
     void getActiveTowerTypeTest() {
@@ -48,7 +48,7 @@ class IslandTest {
     }
 
     /**
-     * Method getTowerCountTest tests that can return the total count of the Tower on an island
+     * Tests that {@code getTowerCount} returns the total count of the {@link it.polimi.ingsw.server.model.Tower Tower} on {@link it.polimi.ingsw.server.model.student.Island Island}
      */
     @Test
     void getTowerCountTest() {
@@ -61,7 +61,7 @@ class IslandTest {
     }
 
     /**
-     * Method isMotherNaturePresentTest tests that can return true if MotherNature is present on the island
+     * Tests that {@code isMotherNaturePresent} returns true if MotherNature is present on the {@link it.polimi.ingsw.server.model.student.Island Island}
      */
     @Test
     void isMotherNaturePresentTest() {
@@ -70,7 +70,7 @@ class IslandTest {
     }
 
     /**
-     * Method setStopCardTest tests that can set properly the stopCard on the island
+     * Tests that {@code setStopCard} sets properly the stopCard on the {@link it.polimi.ingsw.server.model.student.Island Island}
      */
     @Test
     void setStopCardTest() {
@@ -79,7 +79,7 @@ class IslandTest {
     }
 
     /**
-     * Method getInfluenceTest tests that can return the correct influence of a player on this island
+     * Tests that {@code getInfluence} returns the correct influence of a {@link it.polimi.ingsw.server.model.Player Player} on this {@link it.polimi.ingsw.server.model.student.Island Island}
      */
     @Test
     void getInfluenceTest() {
@@ -101,7 +101,7 @@ class IslandTest {
     }
 
     /**
-     * Method isUnifiableWithTest tests that can return true if two islands can be unified
+     * Tests that {@code isUnifiableWith} returns true if two {@link it.polimi.ingsw.server.model.student.Island Islands} can be unified
      */
     @Test
     void isUnifiableWithTest() {
@@ -112,7 +112,7 @@ class IslandTest {
     }
 
     /**
-     * Method acquireIslandTest tests that can unifies two island correctly
+     * Tests that {@code acquireIsland} unifies two {@link it.polimi.ingsw.server.model.student.Island Islands} correctly
      */
     @Test
     void acquireIslandTest() {
@@ -134,7 +134,7 @@ class IslandTest {
     }
 
     /**
-     * Method getNumberOfSameStudentsTest test that can return the number of the student type asked
+     * Tests that {@code getNumberOfSameStudents} returns the number of the {@link it.polimi.ingsw.server.model.student.Student Students} type asked
      */
     @Test
     void getNumberOfSameStudentsTest() {
@@ -145,7 +145,7 @@ class IslandTest {
     }
 
     /**
-     * Method setTowerTest test that can set the tower type correctly
+     * Tests that {@code setTower} sets the {@link it.polimi.ingsw.server.model.Tower Tower} type correctly
      */
     @Test
     void setTowerTest() {
@@ -154,7 +154,7 @@ class IslandTest {
     }
 
     /**
-     * Method setMotherNaturePresentTest test that can set MotherNature presence correctly
+     * Tests that {@code setMotherNaturePresent} sets MotherNature presence correctly
      */
     @Test
     void setMotherNaturePresentTest() {
@@ -163,7 +163,7 @@ class IslandTest {
     }
 
     /**
-     * Method mergeHostedStudentWithTest test that can merge two HostedStudent together correctly
+     * Tests that {@code mergeHostedStudentWith} merges two {@link it.polimi.ingsw.server.model.student.Island Island} together correctly
      */
     @Test
     void mergeHostedStudentWithTest() {

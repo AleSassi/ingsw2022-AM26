@@ -27,10 +27,10 @@ class CloudTest {
     }
 
     /**
-     * Method extractAllStudentsAndRemove tests that can return a StudentCollection with all the Students extracted from cloud
+     * Tests {@code extractAllStudentsAndRemove} can return a {@link it.polimi.ingsw.server.model.student.StudentCollection StudentCollection} with all the {@link it.polimi.ingsw.server.model.student.Student Students} extracted from {@link it.polimi.ingsw.server.model.student.Cloud Cloud}
      */
     @Test
-    void extractAllStudentsAndRemove() {
+    void extractAllStudentsAndRemoveTest() {
         for (Student s : Student.values()) {
             cloud.placeStudents(s, 10);
         }
@@ -47,10 +47,10 @@ class CloudTest {
     }
     
     /**
-     * Test that the Cloud returns an empty collection if the Cloud itself is empty
+     * Tests that {@code extractAllStudentsFromEmptyCloudTest} returns an empty {@link it.polimi.ingsw.server.model.student.StudentCollection StudentCollection} if the {@link it.polimi.ingsw.server.model.student.Cloud Cloud} itself is empty
      */
     @Test
-    void extractAllStudentsFromEmptyCloud() {
+    void extractAllStudentsFromEmptyCloudTest() {
         assertDoesNotThrow(() -> {
             StudentCollection result;
             result = cloud.extractAllStudentsAndRemove();

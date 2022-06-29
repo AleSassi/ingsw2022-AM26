@@ -1,5 +1,8 @@
 package it.polimi.ingsw.server.model.match;
 
+/**
+ * Enum representing the {@code MatchPhases} of the game
+ */
 public enum MatchPhase {
     PlanPhaseStepOne,
     PlanPhaseStepTwo,
@@ -7,6 +10,10 @@ public enum MatchPhase {
     ActionPhaseStepTwo,
     ActionPhaseStepThree;
 
+    /**
+     * Moves to next {@code MatchPhase}
+     * @return the next {MatchPhase}
+     */
     public MatchPhase nextPhase() {
         switch (this) {
             case PlanPhaseStepOne, ActionPhaseStepThree -> {

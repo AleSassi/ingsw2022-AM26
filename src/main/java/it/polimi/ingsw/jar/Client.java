@@ -13,6 +13,9 @@ import java.net.ConnectException;
 import java.net.SocketException;
 import java.util.regex.Pattern;
 
+/**
+ * Class {@code Client} is the executable for the Client
+ */
 public class Client {
 	
 	private static final Pattern ipPattern = Pattern.compile(
@@ -20,7 +23,11 @@ public class Client {
 	private static String nickname;
 	private static String serverIP;
 	private static int serverPort;
-	
+
+	/**
+	 * Initialize the Client with the chosen parameters and starts it
+	 * @param args (type String[])
+	 */
 	public static void main(String[] args) {
 		
 		if (args.length == 0) {
@@ -104,7 +111,10 @@ public class Client {
 			GameClient.shared().terminate();
 		}
 	}
-	
+
+	/**
+	 * Prints all the possible commands relative to this {@code Client}
+	 */
 	private static void printHelpMenu() {
 		System.out.println(StringFormatter.formatWithColor("Eriantys AM26 Client - Help Menu", ANSIColors.Yellow));
 		System.out.println("This executable allows you to start a TCP client to play Eriantys with other players.");
@@ -112,23 +122,44 @@ public class Client {
 			System.out.println(StringFormatter.formatWithColor(commandTag.getCommand() + ", " + commandTag.getShortCommand(), ANSIColors.Green) + "\t" + commandTag.getDescription());
 		}
 	}
-	
+
+	/**
+	 * Validates the given {@code IP}
+	 * @param ip (type String) IP to validate
+	 * @return (type boolean) returns true if the {@code IP} is validated
+	 */
 	public static boolean validate(final String ip) {
 		return ipPattern.matcher(ip).matches();
 	}
-	
+
+	/**
+	 * Gets this {@link it.polimi.ingsw.server.model.Player Player's} nickname
+	 * @return (type String) returns this {@code Player's} nickname
+	 */
 	public static String getNickname() {
 		return nickname;
 	}
-	
+
+	/**
+	 * Gets the {@link Server Server's} IP
+	 * @return (type String) returns the {@code Server's} IP
+	 */
 	public static String getServerIP() {
 		return serverIP;
 	}
-	
+
+	/**
+	 * Gets the {@link Server Server's} Port
+	 * @return (type int) returns the {@code Server's} Port
+	 */
 	public static int getServerPort() {
 		return serverPort;
 	}
-	
+
+	/**
+	 * Sets this {@code Client's} nickname
+	 * @param nickname (type String) chosen nickname
+	 */
 	public static void setNickname(String nickname) {
 		Client.nickname = nickname;
 	}
