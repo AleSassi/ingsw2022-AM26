@@ -105,9 +105,7 @@ public class MainBoardController implements JavaFXRescalable {
 			if (characterCardContainer == null && !(message.getPlayableCharacterCards() == null || message.getPlayableCharacterCards().isEmpty())) {
 				characterCardContainer = new CharacterCardContainer(message);
 				characterCardContainer.setParentController(this);
-				Platform.runLater(() -> {
-					mainPane.getChildren().add(characterCardContainer);
-				});
+				Platform.runLater(() -> mainPane.getChildren().add(characterCardContainer));
 			}
 			if (islandContainer == null && cloudsContainer == null) {
 				islandContainer = new IslandContainer(notification);
@@ -239,9 +237,9 @@ public class MainBoardController implements JavaFXRescalable {
 					PlayerActionMessage actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidMoveMNBySteps, -1, null, false, -1, number, -1, -1, null);
 					GameClient.shared().sendMessage(actionMessage);
 				} catch (NumberFormatException e) {
-					this.showAssistantCardModalWindow();
+					this.showMotherNatureMovementAlert();
 				}
-			}, this::showAssistantCardModalWindow);
+			}, this::showMotherNatureMovementAlert);
 		});
 	}
 	
