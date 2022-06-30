@@ -166,7 +166,6 @@ public class MainBoardController extends CleanableController implements JavaFXRe
 	private void prepareForMatchPhase(MatchPhase matchPhase) {
 		// Update the list of allowed moves
 		this.activeMatchPhase = matchPhase;
-		System.out.println(activeMatchPhase);
 		switch (matchPhase) {
 			case PlanPhaseStepTwo -> {
 				// Allow only assistant card choice

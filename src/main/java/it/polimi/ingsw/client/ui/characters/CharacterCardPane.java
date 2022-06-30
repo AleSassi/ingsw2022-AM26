@@ -142,7 +142,6 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 				Student clickedStudentSrc = (Student) notification.getUserInfo().get(NotificationKeys.CharacterCardSourceStudent.getRawValue());
 				Student clickedStudentDst = (Student) notification.getUserInfo().get(NotificationKeys.CharacterCardDestinationStudent.getRawValue());
 				Integer targetIslandIdx = (Integer) notification.getUserInfo().get(NotificationKeys.CharacterCardTargetIslandIndex.getRawValue());
-				System.out.println(clickedStudentSrc + " " + clickedStudentDst);
 				Student[] tempStudents = new Student[]{clickedStudentSrc, clickedStudentDst};
 				adaptStudentsForControlLoopClosed(tempStudents);
 				clickedStudentSrc = tempStudents[0];
