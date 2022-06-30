@@ -126,9 +126,9 @@ public class TableManager {
 
     public StudentCollection pickStudentsFromBag(int count) throws CollectionUnderflowError {
         StudentCollection result = new StudentCollection();
-        /*for (int studentIdx = 0; studentIdx < count; studentIdx++) {
+        for (int studentIdx = 0; studentIdx < count; studentIdx++) {
             result.addStudents(studentBag.removeRandom(), 1);
-        }*/
+        }
         result.addStudents(Student.BlueUnicorn, count);
         return result;
     }
