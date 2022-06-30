@@ -19,7 +19,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
+/**
+ * Class {@code PlayerStateMessage} represent the PlayerState message
+ */
 public class PlayerStateMessage extends NetworkMessage {
 	
 	private String nickname;

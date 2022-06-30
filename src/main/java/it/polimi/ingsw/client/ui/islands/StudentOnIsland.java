@@ -14,6 +14,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 
+/**
+ * Class {@code StudentOnIsland} represent the graphic assets of the {@link it.polimi.ingsw.server.model.student.Student Students} on the {@link it.polimi.ingsw.server.model.student.Island Island}
+ */
 public class StudentOnIsland extends RescalableAnchorPane {
     
     private final StudentPane studentPane;
@@ -21,6 +24,11 @@ public class StudentOnIsland extends RescalableAnchorPane {
     private final Label studentLabel = new Label("0");
     private final int idx;
 
+    /**
+     * Constructor creates a new {@link it.polimi.ingsw.server.model.student.Student Student}
+     * @param s (type Student) type of {@code Student}
+     * @param idx (type int) {@link it.polimi.ingsw.server.model.student.Island Island's} index
+     */
     public StudentOnIsland(Student s, int idx) {
         this.idx = idx;
         color = s;
@@ -37,6 +45,10 @@ public class StudentOnIsland extends RescalableAnchorPane {
         NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
     }
 
+    /**
+     * Callback for the {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage}
+     * @param notification (type Notification)
+     */
     public void didReceiveTableState(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof TableStateMessage message) {
             if(message.getIslands().size() - 1 >= idx) {
@@ -57,6 +69,9 @@ public class StudentOnIsland extends RescalableAnchorPane {
         }
     }
 
+    /**
+     * Deletes this {@code StudentOnIsland}
+     */
     public void deleteStudent() {
         new Thread(() -> NotificationCenter.shared().removeObserver(this)).start();
     }

@@ -21,7 +21,10 @@ class ActivePlayerMessageTest {
 			message = new ActivePlayerMessage(testPlayer);
 		});
 	}
-	
+
+	/**
+	 * Tests the encoding and decoding process
+	 */
 	@Test
 	void testEncodeDecode() {
 		String encoded = message.serialize();
@@ -30,7 +33,10 @@ class ActivePlayerMessageTest {
 			assertEquals(message, messageDecoded);
 		});
 	}
-	
+
+	/**
+	 * Tests the case of a wrong decode
+	 */
 	@Test
 	void testWrongDecode() {
 		String encoded = "{\"wrongKey\":2}";

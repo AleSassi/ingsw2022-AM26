@@ -15,7 +15,9 @@ class PingPongMessageTest {
 	void initMessage() {
 		message = new PingPongMessage(true);
 	}
-	
+	/**
+	 * Tests the encoding and decoding process
+	 */
 	@Test
 	void testEncodeDecode() {
 		String encoded = message.serialize();
@@ -24,7 +26,9 @@ class PingPongMessageTest {
 			assertEquals(message, messageDecoded);
 		});
 	}
-	
+	/**
+	 * Tests the case of a wrong decode
+	 */
 	@Test
 	void testWrongDecode() {
 		String encoded = "{\"wrongKey\":2}";

@@ -8,10 +8,17 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+/**
+ * Class {@code ModalPopup} represent a support {@code AnchorPane}
+ */
 public abstract class ModalPopup extends RescalableAnchorPane {
 	
 	private final Label title;
-	
+
+	/**
+	 * Constructor creates this {@code ModalPopup}
+	 * @param titleText (type String) title for the label
+	 */
 	public ModalPopup(String titleText) {
 		title = new Label(titleText);
 		title.setFont(new Font("Avenir", 30));
@@ -35,13 +42,25 @@ public abstract class ModalPopup extends RescalableAnchorPane {
 		setStyle("-fx-background-color: #fafafa;\n-fx-background-radius: " + 20 * scale);
 		rescaleChildren(scale);
 	}
-	
+
+	/**
+	 * Rescale his children
+	 * @param scale (type double) scale value
+	 */
 	protected abstract void rescaleChildren(double scale);
-	
+
+	/**
+	 * Gets the default Width
+	 * @return (type double) returns the default Width
+	 */
 	public static double getUnscaledWidth() {
 		return 400;
 	}
-	
+
+	/**
+	 * Gets the default Height
+	 * @return (type double) returns the default Height
+	 */
 	public static double getUnscaledHeight() {
 		return 480;
 	}

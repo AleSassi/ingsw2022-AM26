@@ -16,7 +16,9 @@ class MatchStateMessageTest {
 	void initMessage() {
 		message = new MatchStateMessage(MatchPhase.ActionPhaseStepOne);
 	}
-	
+	/**
+	 * Tests the encoding and decoding process
+	 */
 	@Test
 	void testEncodeDecode() {
 		String encoded = message.serialize();
@@ -25,7 +27,9 @@ class MatchStateMessageTest {
 			assertEquals(message, messageDecoded);
 		});
 	}
-	
+	/**
+	 * Tests the case of a wrong decode
+	 */
 	@Test
 	void testWrongDecode() {
 		String encoded = "{\"wrongKey\":2}";

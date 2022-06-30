@@ -17,7 +17,10 @@ class LoginMessageTest {
 	void initMessage() {
 		message = new LoginMessage("Ale", 3, MatchVariant.BasicRuleSet, Wizard.Wizard1);
 	}
-	
+
+	/**
+	 * Tests the encoding and decoding process
+	 */
 	@Test
 	void testEncodeDecode() {
 		String encoded = message.serialize();
@@ -26,7 +29,9 @@ class LoginMessageTest {
 			assertEquals(message, messageDecoded);
 		});
 	}
-	
+	/**
+	 * Tests the case of a wrong decode
+	 */
 	@Test
 	void testWrongDecode() {
 		String encoded = "{\"wrongKey\":2}";

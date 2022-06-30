@@ -7,7 +7,9 @@ import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-
+/**
+ * Class {@code PlayerActionResponse} represent the PlayerActionResponse message
+ */
 public class PlayerActionResponse extends NetworkMessage {
 	
 	private String nickname;

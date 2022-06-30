@@ -15,6 +15,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 
+/**
+ * Class {@code SchoolBoardContainer} represent the container for the {@link it.polimi.ingsw.client.ui.SchoolBoardPane SchoolBoardPane}
+ */
 public class SchoolBoardContainer extends RescalableAnchorPane {
 	
 	private final Label playerLabel;
@@ -23,7 +26,12 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 	private final String titleTextNoCoins;
 	private final String ownerNickname;
 	private AssistantCardPane pickedAssistantCard;
-	
+	/**
+	 * Constructor creates the {@code SchoolBoardContainer}
+	 * @param isPrimary (type boolean) true if the Cli{@link it.polimi.ingsw.client.ui.SchoolBoardPane SchoolBoardPane}
+	 * @param ownerNickname (type String) owner's nickname
+	 * @param coins (type int) {@link it.polimi.ingsw.server.model.Player Player's} coins
+	 */
 	public SchoolBoardContainer(boolean isPrimary, String ownerNickname, int coins) {
 		this.isPrimary = isPrimary;
 		this.ownerNickname = ownerNickname;
@@ -34,15 +42,27 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 		getChildren().addAll(this.playerLabel, this.boardPane);
 		NotificationCenter.shared().addObserver(this, this::didReceivePlayerStateNotification, NotificationName.ClientDidReceivePlayerStateMessage, null);
 	}
-	
+
+	/**
+	 * Gets the owner of the main {@link it.polimi.ingsw.client.ui.SchoolBoardPane}
+	 * @return (type String) return the owner of the main {@link it.polimi.ingsw.client.ui.SchoolBoardPane}
+	 */
 	public String getOwnerNickname() {
 		return boardPane.getOwnerNickname();
 	}
-	
+
+	/**
+	 * Forwards the initial {@code PlayerStatusNotification} to the {@code boardPane}
+	 * @param notification (type Notification)
+	 */
 	public void forwardInitialPlayerStatusNotification(Notification notification) {
 		boardPane.didReceivePlayerStatusNotification(notification);
 	}
-	
+
+	/**
+	 * {@code PlayerState} callback
+	 * @param notification (type Notification)
+	 */
 	private void didReceivePlayerStateNotification(Notification notification) {
 		if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof PlayerStateMessage message) {
 			if (message.getNickname().equals(ownerNickname)) {
@@ -53,7 +73,11 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 			}
 		}
 	}
-	
+
+	/**
+	 * Updates the picked {@link it.polimi.ingsw.client.ui.assistants.AssistantCardPane AssistantCardPane}
+	 * @param pickedAssistant (type AssistantCard)
+	 */
 	private void updatePickedAssistantCard(AssistantCard pickedAssistant) {
 		if (pickedAssistant == null) return;
 		
@@ -68,7 +92,12 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 			rescale(getCurrentScaleValue());
 		});
 	}
-	
+
+	/**
+	 * Builds the title {@code Label} with the {@link it.polimi.ingsw.server.model.Player Player's} coins
+	 * @param coins (type int)
+	 * @return (type String) returns the title {@code Label} with the {@link it.polimi.ingsw.server.model.Player Player's} coins
+	 */
 	private String buildTitleWithCoins(int coins) {
 		return coins >= 0 ? titleTextNoCoins + " (Coins: " + coins + ")" : titleTextNoCoins; //Interpret negative values as Coins not available
 	}
@@ -90,12 +119,20 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 		}
 		this.setPrefSize(this.boardPane.getPrefWidth(), this.boardPane.getPrefHeight() + this.boardPane.getLayoutY());
 	}
-	
+
+	/**
+	 * Activates this {@code SchoolBoardContainer}
+	 * @param active (type boolean) true if need to be set to active
+	 */
 	public void setActive(boolean active) {
 		setDisabled(!active);
 		this.boardPane.setDisable(!active);
 	}
-	
+
+	/**
+	 * Sets the allowed {@link it.polimi.ingsw.utils.ui.StudentDropTarget StudentDropTargets}
+	 * @param validStudentDestinations (type StudentDropTarget[])
+	 */
 	public void setAllowedStudentMovements(StudentDropTarget[] validStudentDestinations) {
 		boardPane.setAllowedStudentDestinationsForPhase(validStudentDestinations);
 	}

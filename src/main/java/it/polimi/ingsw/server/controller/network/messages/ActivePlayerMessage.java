@@ -9,10 +9,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+/**
+ * Class {@code ActivePlayerMessage} represent the messages of the current playing {@link it.polimi.ingsw.server.model.Player Player}
+ */
 public class ActivePlayerMessage extends NetworkMessage {
 	
 	private String activeNickname;
-	
+
+
 	public ActivePlayerMessage(@NotNull Player activePlayer) {
 		super();
 		this.activeNickname = activePlayer.getNickname();
@@ -21,7 +25,11 @@ public class ActivePlayerMessage extends NetworkMessage {
 	public ActivePlayerMessage(String serializedString) throws MessageDecodeException {
 		super(serializedString);
 	}
-	
+
+	/**
+	 * Gets the current playing {@link it.polimi.ingsw.server.model.Player Player's} nickname
+	 * @return (type String) returns the current playing {@link it.polimi.ingsw.server.model.Player Player's} nickname
+	 */
 	public String getActiveNickname() {
 		return activeNickname;
 	}

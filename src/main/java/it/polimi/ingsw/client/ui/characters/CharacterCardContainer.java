@@ -12,11 +12,18 @@ import javafx.scene.layout.RowConstraints;
 
 import java.util.ArrayList;
 
+/**
+ * Class {@code CharacterCardContainer} represent the container fot the {@link it.polimi.ingsw.client.ui.characters.CharacterCardPane CharacterCardPane}
+ */
 public class CharacterCardContainer extends RescalableAnchorPane {
  
 	private final GridPane characterCardGridPane = new GridPane();
     private final ArrayList<CharacterCardPane> cards = new ArrayList<>();
-	
+
+	/**
+	 * Constructor creates the {@code CharacterCardContainer} from the {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage}
+	 * @param initialMessage (type TableStateMessage)
+	 */
 	public CharacterCardContainer(TableStateMessage initialMessage) {
 		for (int i = 0; i < 3; i++) {
 			CharacterCardPane card = CharacterCardPaneBuilder.buildPane(i, initialMessage.getPlayableCharacterCards().get(i));
@@ -38,7 +45,11 @@ public class CharacterCardContainer extends RescalableAnchorPane {
 		});
 		rescale(getCurrentScaleValue());
 	}
-	
+
+	/**
+	 * Sets the parent {@code Controller}
+	 * @param controller (type MainBoardController)
+	 */
 	public void setParentController(MainBoardController controller) {
 		for (CharacterCardPane cardPane: cards) {
 			cardPane.setParentController(controller);

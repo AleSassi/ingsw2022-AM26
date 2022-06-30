@@ -19,7 +19,9 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.*;
 
 class NetworkMessageDecoderTest {
-	
+	/**
+	 * Tests the decoding of a message
+	 */
 	@Test
 	void decodeMessage() {
 		assertDoesNotThrow(() -> {

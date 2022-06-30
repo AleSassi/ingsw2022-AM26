@@ -22,7 +22,10 @@ class NotificationCenterTest {
 		NotificationCenter.shared().addObserver(this, (notification) -> callbacksCalled.add(true), NotificationName.TestNotification, observedObject);
 		NotificationCenter.shared().addObserver(this, (notification) -> callbacksCalled.add(true), NotificationName.TestNotification, observedObject);
 	}
-	
+
+	/**
+	 * Tests that all the callback are called correctly
+	 */
 	@Test
 	void testAllCallbacksCalled() {
 		NotificationCenter.shared().post(NotificationName.TestNotification, null, null);
@@ -31,7 +34,10 @@ class NotificationCenterTest {
 			assertTrue(bool);
 		}
 	}
-	
+
+	/**
+	 * Tests that the observed object's callback is called correctly
+	 */
 	@Test
 	void testObservedObjectCallbacksCalled() {
 		NotificationCenter.shared().post(NotificationName.TestNotification, "Ale", null);
@@ -40,13 +46,19 @@ class NotificationCenterTest {
 			assertTrue(bool);
 		}
 	}
-	
+
+	/**
+	 * Tests that the callback is not called when it doesn't supposed to be called
+	 */
 	@Test
 	void testNoCallbacksCalled() {
 		NotificationCenter.shared().post(NotificationName.TestNotification, "Fede", null);
 		assertTrue(callbacksCalled.isEmpty());
 	}
-	
+
+	/**
+	 * Test that {@code RemoveObservers} removes the observers
+	 */
 	@Test
 	void testRemoveObservers() {
 		NotificationCenter.shared().removeObserver(this);

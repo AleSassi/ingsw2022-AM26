@@ -20,6 +20,9 @@ import javafx.scene.layout.RowConstraints;
 
 import java.util.Objects;
 
+/**
+ * Class {@code CloudPane} represent the JavaFX controller for the {@link it.polimi.ingsw.server.model.student.Cloud Cloud}
+ */
 public class CloudPane extends RescalableAnchorPane {
     
     private final int idx;
@@ -27,6 +30,11 @@ public class CloudPane extends RescalableAnchorPane {
     private final boolean selectable = true;
     private final HighlightableGridPane gridPane = new HighlightableGridPane();
 
+    /**
+     * Constructor creates a new {@code CloudPane}
+     * @param idx (type int) {@link it.polimi.ingsw.server.model.student.Cloud Cloud's} index
+     * @param notification (type Notification)
+     */
     public CloudPane(int idx, Notification notification) {
         this.idx = idx;
         switch (idx) {
@@ -45,11 +53,19 @@ public class CloudPane extends RescalableAnchorPane {
         NotificationCenter.shared().addObserver(this, this:: didReceiveClickOnCloud, NotificationName.JavaFXDidClickOnCloud, null);
     }
 
+    /**
+     * Click event callback
+     * @param notification (type Notification)
+     */
     private void didReceiveClickOnCloud(Notification notification) {
         gridPane.highlight(false);
         setStyle("-fx-background-image: url(" + address + ");\n-fx-background-size: 100% 100%");
     }
 
+    /**
+     * {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage}
+     * @param notification (type Notification)
+     */
     private void didReceiveTableState(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof TableStateMessage message) {
             Platform.runLater(() -> gridPane.getChildren().clear());
@@ -58,12 +74,19 @@ public class CloudPane extends RescalableAnchorPane {
         }
     }
 
+    /**
+     * Shows a transparent pane
+     */
     public void showSelection() {
         if(gridPane.getChildren().size() != 0) {
             gridPane.highlight(true);
         }
     }
 
+    /**
+     * Sets the {@link it.polimi.ingsw.server.model.student.Student Students} on this {@code CloudPane}
+     * @param message (type TableStateMessage) {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage}
+     */
     private void setStudentOnCloud(TableStateMessage message) {
         int c = 0;
         int r = 0;
@@ -83,6 +106,9 @@ public class CloudPane extends RescalableAnchorPane {
         }
     }
 
+    /**
+     * Click event
+     */
     private void clickOnCloud() {
         this.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if (selectable) {

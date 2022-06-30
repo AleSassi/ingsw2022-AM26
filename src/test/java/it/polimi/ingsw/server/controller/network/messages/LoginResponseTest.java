@@ -15,7 +15,9 @@ class LoginResponseTest {
 	void initMessage() {
 		message = new LoginResponse("Ale", true, 2, null);
 	}
-	
+	/**
+	 * Tests the encoding and decoding process
+	 */
 	@Test
 	void testEncodeDecode() {
 		String encoded = message.serialize();
@@ -24,7 +26,9 @@ class LoginResponseTest {
 			assertEquals(message, messageDecoded);
 		});
 	}
-	
+	/**
+	 * Tests the case of a wrong decode
+	 */
 	@Test
 	void testWrongDecode() {
 		String encoded = "{\"wrongKey\":2}";

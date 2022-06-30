@@ -3,6 +3,9 @@ package it.polimi.ingsw.server.controller.network.messages;
 import it.polimi.ingsw.server.model.characters.CharacterCardParamSet;
 import it.polimi.ingsw.server.model.student.Student;
 
+/**
+ * Class {@code CharacterCardNetworkParamSet} represent the Character Card Parameters set message
+ */
 public class CharacterCardNetworkParamSet {
 	
 	/**

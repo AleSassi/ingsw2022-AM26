@@ -9,10 +9,18 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 
+/**
+ * Class {@code CharacterCardStopCardHostPane} represent the set StopCard {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard}
+ */
 public class CharacterCardStopCardHostPane extends CharacterCardGenericPane {
 	
 	private Label stopCardLabel;
-	
+
+	/**
+	 * Constructor creates a new {@code CharacterCardStopCardHostPane}
+	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard's} index
+	 * @param cardBean (type CharacterCardBean)
+	 */
 	public CharacterCardStopCardHostPane(int cardIndex, CharacterCardBean cardBean) {
 		super(cardIndex, cardBean);
 	}
@@ -28,7 +36,11 @@ public class CharacterCardStopCardHostPane extends CharacterCardGenericPane {
 		AnchorPane.setBottomAnchor(stopCardLabel, 0.0);
 		Platform.runLater(() -> getChildren().add(stopCardLabel));
 	}
-	
+
+	/**
+	 * Updates the StopCard {@code Label}
+	 * @param newStopCardCount (type int)
+	 */
 	private void updateStopCardText(int newStopCardCount) {
 		Platform.runLater(() -> stopCardLabel.setText("SC: " + newStopCardCount));
 	}

@@ -13,7 +13,9 @@ import it.polimi.ingsw.server.model.student.StudentHost;
 
 import java.util.List;
 import java.util.Objects;
-
+/**
+ * Class {@code TableStateMessage} represent the TableState message
+ */
 public class TableStateMessage extends NetworkMessage {
 	
 	private List<Professor> availableProfessors;

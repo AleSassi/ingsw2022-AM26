@@ -6,7 +6,9 @@ import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
 import it.polimi.ingsw.server.model.match.MatchPhase;
 import org.jetbrains.annotations.NotNull;
-
+/**
+ * Class {@code MatchStateMessage} represent the messages of the match state
+ */
 public class MatchStateMessage extends NetworkMessage {
 	
 	private MatchPhase currentMatchPhase;

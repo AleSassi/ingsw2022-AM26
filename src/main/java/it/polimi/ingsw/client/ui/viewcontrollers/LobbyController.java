@@ -25,6 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Class {@code LobbyController} represent the JavaFX controller for the Lobby
+ */
 
 public class LobbyController extends RescalableController {
 
@@ -42,9 +45,9 @@ public class LobbyController extends RescalableController {
 	private ImageView eriantysImg;
 
 	/**
-	 * Initialize the lobby scene and starting all the notification threads
-	 * @param url
-	 * @param resourceBundle
+	 * Initialize the {@code LobbyController} and creates the {@link it.polimi.ingsw.notifications.Notification Notification's} observers
+	 * @param url (type URL)
+	 * @param resourceBundle (type ResourceBundle)
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -78,9 +81,9 @@ public class LobbyController extends RescalableController {
 	}
 
 	/**
-	 * This method sets the matchVariant and the remainingNumberOfPlayers label
-	 * @param matchVariant
-	 * @param remainingNumberOfPlayers
+	 * Sets the {@link it.polimi.ingsw.server.model.match.MatchVariant MatchVariant} and the remainingNumberOfPlayers label
+	 * @param matchVariant (type MatchVariant) {@code MatchVariant} to sets to
+	 * @param remainingNumberOfPlayers (type int)
 	 */
 	public void setInitialData(MatchVariant matchVariant, int remainingNumberOfPlayers) {
 		numberOfPlayersToFill = remainingNumberOfPlayers;
@@ -94,8 +97,8 @@ public class LobbyController extends RescalableController {
 	}
 
 	/**
-	 * This method updates and display the number of remaining Players from the notification
-	 * @param notification
+	 * Updates and display the number of remaining {@link it.polimi.ingsw.server.model.Player Players} from the {@link it.polimi.ingsw.notifications.Notification Notification}
+	 * @param notification (type Notification)
 	 */
 	private void otherPlayerLoggedInReceived(Notification notification) {
 		LoginResponse message = (LoginResponse) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
@@ -122,38 +125,38 @@ public class LobbyController extends RescalableController {
 
 	/**
 	 * PlayerStateMessage callback, adds the message to the queue
-	 * @param notification
+	 * @param notification (type Notification)
 	 */
 	private void didReceivePlayerStateMessage(Notification notification) {
 		playerStateMessagesQueue.add(notification);
 	}
 
 	/**
-	 * TableStateMessage callBack
-	 * @param notification
+	 * {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage's} callBack
+	 * @param notification (type Notification)
 	 */
 	private void didReceiveTableStateMessage(Notification notification) {
 		tableMessage = notification;
 	}
 
 	/**
-	 * ActivePlayerMessage callback
-	 * @param notification
+	 * {@link it.polimi.ingsw.server.controller.network.messages.ActivePlayerMessage ActivePlayerMessage's} callback
+	 * @param notification (type Notification)
 	 */
 	private void didReceiveActivePlayerMessage(Notification notification) {
 		activePlayerMessage = notification;
 	}
 
 	/**
-	 * MatchPhaseMessage callback
-	 * @param notification
+	 * {@link it.polimi.ingsw.server.controller.network.messages.MatchStateMessage MatchStateMessage's} callback
+	 * @param notification (type Notification)
 	 */
 	private void didReceiveMatchPhaseMessage(Notification notification) {
 		matchStateMessage = notification;
 	}
 
 	/**
-	 * This method moves to the main scene and forward all the initial network messages to the next scene
+	 * Moves to the main scene and forward all the initial network messages to the next scene
 	 */
 	private void moveToGameScene() {
 		try {

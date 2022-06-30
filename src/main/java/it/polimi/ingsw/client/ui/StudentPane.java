@@ -12,18 +12,29 @@ import javafx.scene.layout.AnchorPane;
 
 import java.util.HashMap;
 
+/**
+ * Class {@code StudentPane} represent the {@link it.polimi.ingsw.server.model.student.Student Student} pawns
+ */
 public class StudentPane extends AnchorPane {
 	
 	private final Student student;
 	private EventHandler<MouseEvent> clickEventHandler;
-	
+
+	/**
+	 * Constructor creates the {@code AnchorPane}
+	 * @param student (type Student) the {@link it.polimi.ingsw.server.model.student.Student Student} type to set
+	 */
 	public StudentPane(Student student) {
 		super();
 		this.student = student;
 		GUIUtils.setStyleWithBackgroundImage(this, "images/students/" + student.getColor() + ".png");
 		setStyle(getStyle() + ";\n-fx-background-color: white;\n-fx-border-radius: 100px;\n-fx-background-radius: 100px");
 	}
-	
+
+	/**
+	 * Configures the {@link it.polimi.ingsw.utils.ui.StudentDropTarget StudentDropTargets} of this {@code StudentPane}
+	 * @param validDropTargets (type StudentDropTarget[])
+	 */
 	public void configureClickForDropTargets(StudentDropTarget[] validDropTargets) {
 		if (clickEventHandler != null) {
 			removeEventHandler(MouseEvent.MOUSE_CLICKED, clickEventHandler);

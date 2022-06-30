@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Class {@code StudentColorPicker} represent the {@link it.polimi.ingsw.server.model.student.Student Student} picker for the {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard}
+ */
 public class StudentColorPicker extends ModalPopup {
 	
 	private StudentColorPickerHandler completionHandler;
@@ -33,7 +36,10 @@ public class StudentColorPicker extends ModalPopup {
 		placeStudents();
 		super.rescale(getCurrentScaleValue());
 	}
-	
+
+	/**
+	 * Places the {@link it.polimi.ingsw.client.ui.StudentPane StudentPane} on this {@code StudentColorPicker}
+	 */
 	private void placeStudents() {
 		int row = 1, col = 1;
 		for (Student student: Student.values()) {
@@ -57,7 +63,11 @@ public class StudentColorPicker extends ModalPopup {
 		getChildren().add(studentGridPane);
 		studentGridPane.getChildren().addAll(studentPanes);
 	}
-	
+
+	/**
+	 * Sets the {@code EventHandler}
+	 * @param completionHandler (type StudentColorPickerHandler)
+	 */
 	public void setCompletionHandler(StudentColorPickerHandler completionHandler) {
 		this.completionHandler = completionHandler;
 	}
