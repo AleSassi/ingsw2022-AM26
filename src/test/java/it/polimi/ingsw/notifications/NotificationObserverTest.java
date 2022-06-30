@@ -16,7 +16,7 @@ class NotificationObserverTest {
 	@BeforeEach
 	void initObserver() {
 		assertDoesNotThrow(() -> {
-			Player observedPlayer = new Player("Ale", Wizard.Wizard1, Tower.White, 8);
+			Player observedPlayer = new Player("Ale", Wizard.Wizard1, Tower.White, 8, 1);
 			observer = new NotificationObserver(this, observedPlayer, (notification) -> System.out.println("Hello"));
 		});
 	}
@@ -24,7 +24,7 @@ class NotificationObserverTest {
 	@Test
 	void getObservedObject() {
 		assertDoesNotThrow(() -> {
-			Player observedPlayer = new Player("Ale", Wizard.Wizard1, Tower.White, 8);
+			Player observedPlayer = new Player("Ale", Wizard.Wizard1, Tower.White, 8, 1);
 			assertEquals(observedPlayer, observer.getObservedObject());
 		});
 	}

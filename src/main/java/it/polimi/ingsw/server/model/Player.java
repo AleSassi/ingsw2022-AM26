@@ -26,7 +26,7 @@ public class Player {
 	private final Wizard wizard;
 	private int assistantCardOrderModifier;
 	
-	public Player(String nickname, Wizard wiz, Tower towerColor, int initialTowerCount) throws IncorrectConstructorParametersException {
+	public Player(String nickname, Wizard wiz, Tower towerColor, int initialTowerCount, int initialCoins) throws IncorrectConstructorParametersException {
 		if (nickname == null || wiz == null) throw new IncorrectConstructorParametersException();
 		
 		this.wizard = wiz;
@@ -34,7 +34,7 @@ public class Player {
 		this.board = new SchoolBoard(towerColor, initialTowerCount);
 		this.availableCardsDeck = new AvailableCardsDeck();
 		this.playedCardDeck = new PlayedCardDeck();
-		this.availableCoins = 1;
+		this.availableCoins = initialCoins;
 		this.assistantCardOrderModifier = 0;
 	}
 	
@@ -223,7 +223,7 @@ public class Player {
 	 */
 	public Player copy() {
 		try {
-			Player copy = new Player(nickname, wizard, getTowerType(), 0);
+			Player copy = new Player(nickname, wizard, getTowerType(), 0, 0);
 			copy.playedCard = playedCard;
 			copy.availableCardsDeck = availableCardsDeck;
 			copy.playedCardDeck = playedCardDeck;

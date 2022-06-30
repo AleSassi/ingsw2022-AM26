@@ -439,7 +439,7 @@ class StudentHostingCardTest {
         }
         //Simulate the Player putting some Students on Island 0
         assertDoesNotThrow(() -> {
-            player = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
+            player = new Player("Ale", Wizard.Wizard1, Tower.Black, 8, 1);
             if (initEntrance) {
                 player.addStudentToEntrance(Student.BlueUnicorn);
                 player.addStudentToEntrance(Student.BlueUnicorn);
@@ -472,7 +472,7 @@ class StudentHostingCardTest {
             players = new ArrayList<>();
             players.add(player);
     
-            Player secondPlayer = new Player("Fede", Wizard.Wizard2, Tower.White, 8);
+            Player secondPlayer = new Player("Fede", Wizard.Wizard2, Tower.White, 8, 1);
             secondPlayer.addStudentToEntrance(Student.RedDragon);
             secondPlayer.addStudentToEntrance(Student.RedDragon);
             secondPlayer.addStudentToEntrance(Student.RedDragon);

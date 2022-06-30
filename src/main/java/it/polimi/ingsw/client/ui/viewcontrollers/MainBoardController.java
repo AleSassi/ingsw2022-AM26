@@ -86,7 +86,7 @@ public class MainBoardController extends CleanableController implements JavaFXRe
 			}
 			if (!schoolBoardContainers.stream().map(SchoolBoardContainer::getOwnerNickname).toList().contains(message.getNickname())) {
 				//Create the new container
-				SchoolBoardContainer newContainer = new SchoolBoardContainer(message.getNickname().equals(Client.getNickname()), message.getNickname(), characterCardContainer != null ? message.getAvailableCoins() : null);
+				SchoolBoardContainer newContainer = new SchoolBoardContainer(message.getNickname().equals(Client.getNickname()), message.getNickname(), message.getAvailableCoins());
 				Platform.runLater(() -> mainPane.getChildren().add(newContainer));
 				if (newContainer.getOwnerNickname().equals(Client.getNickname())) {
 					schoolBoardContainers.add(newContainer);

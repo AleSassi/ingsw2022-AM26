@@ -28,7 +28,7 @@ class PlayerTest {
     @BeforeEach
     void initPlayer() {
         assertDoesNotThrow(() -> {
-            test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8);
+            test = new Player("giovanni", Wizard.Wizard1, Tower.Black, 8, 1);
         });
     }
     
@@ -179,6 +179,9 @@ class PlayerTest {
     @Test
     void testReachedMaxCollectableCoins() {
         TableManager tableManager = new TableManager(2, false);
+        //Must manually pick 2 coins from the Table, as this pick is delegated to the MatchManager when initializing the Match (coins are not given out if the variant is Basic)
+        tableManager.getCoinFromReserve();
+        tableManager.getCoinFromReserve();
         for (int i = 0; i < 10; i++) {
             assertDoesNotThrow(() -> {
                 test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn, tableManager);
@@ -210,7 +213,7 @@ class PlayerTest {
         }
         assertEquals(16, test.getAvailableCoins());
         assertDoesNotThrow(() -> {
-            Player test2 = new Player("Test2", Wizard.Wizard2, Tower.White, 8);
+            Player test2 = new Player("Test2", Wizard.Wizard2, Tower.White, 8, 1);
             for (int i = 0; i < 10; i++) {
                 assertDoesNotThrow(() -> {
                     test2.placeStudentAtTableAndGetCoin(Student.GreenFrog, tableManager);

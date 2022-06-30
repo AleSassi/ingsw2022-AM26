@@ -35,6 +35,7 @@ public abstract class MatchManager {
 	private TableManager managedTable;
 	private PawnCounts pawnCounts;
 	private int numberOfStudentsPickedByCurrentPlayer_AP1 = 0;
+	private MatchVariant matchVariant;
 	
 	//region Public methods (used by the Controller to run actions)
 
@@ -53,9 +54,10 @@ public abstract class MatchManager {
 		
 		pawnCounts = new PawnCounts(playerCount);
 		managedTable = new TableManager(pawnCounts.getCloudTileCount(), variant == MatchVariant.ExpertRuleSet);
+		this.matchVariant = variant;
 		
 		for (int i = 0; i < playerCount; i++) {
-			addPlayer(playersNicknames.get(i), wiz.get(i), pawnCounts.getTowersPerPlayer());
+			addPlayer(playersNicknames.get(i), wiz.get(i), pawnCounts.getTowersPerPlayer(), getMatchVariant() == MatchVariant.BasicRuleSet ? -1 : managedTable.getCoinFromReserve());
 		}
 		for (Player player : getAllPlayers()) {
 			initEntrance(player);
@@ -78,6 +80,10 @@ public abstract class MatchManager {
 		for (Player player: getAllPlayers()) {
 			NotificationCenter.shared().addObserver(this, this::didReceiveMatchVictoryNotification, NotificationName.PlayerVictory, player);
 		}
+	}
+	
+	public MatchVariant getMatchVariant() {
+		return matchVariant;
 	}
 	
 	/**
@@ -301,10 +307,11 @@ public abstract class MatchManager {
 	 * @param nickname (type String) {@code Player's} nickname
 	 * @param wiz (type Wizard) chosen {@code Wizard}
 	 * @param maxTowerCount (type int) max number of {@link it.polimi.ingsw.server.model.Tower Tower}
+	 * @param initialCoins (type int) the number of coins the Player owns at the beginning of the game. Set it to -1 when the Coins feature is disabled
 	 * @throws IncorrectConstructorParametersException whenever the parameters aren't correct
 	 * @throws InvalidPlayerCountException whenever the {@code Player} count isn't correct
 	 */
-	protected abstract void addPlayer(String nickname, Wizard wiz, int maxTowerCount) throws InvalidPlayerCountException, IncorrectConstructorParametersException;
+	protected abstract void addPlayer(String nickname, Wizard wiz, int maxTowerCount, int initialCoins) throws InvalidPlayerCountException, IncorrectConstructorParametersException;
 
 	/**
 	 * Gets all the {@link it.polimi.ingsw.server.model.Player Players} of the {@code Match}

@@ -25,10 +25,11 @@ public class TeamMatchManager extends MatchManager {
 	 * @param nickname (type String) {@code Player's} nickname
 	 * @param wiz (type Wizard) chosen {@code Wizard}
 	 * @param maxTowerCount (type int) max number of {@code Tower}
+	 * @param initialCoins (type int) the number of coins the Player owns at the beginning of the game. Set it to -1 when the Coins feature is disabled
 	 * @throws IncorrectConstructorParametersException whenever the {@code Parameters} of the constructor aren't correct
 	 */
 	@Override
-	protected void addPlayer(String nickname, Wizard wiz, int maxTowerCount) throws IncorrectConstructorParametersException {
+	protected void addPlayer(String nickname, Wizard wiz, int maxTowerCount, int initialCoins) throws IncorrectConstructorParametersException {
 		if (teams.isEmpty() || teams.get(teams.size() - 1).getAllPlayers().size() == 2) {
 			//We add a new Team if needed
 			PlayerTeam team = new PlayerTeam();
@@ -46,7 +47,7 @@ public class TeamMatchManager extends MatchManager {
 			numberOfTowers = maxTowerCount;
 		}
 		
-		Player player = new Player(nickname, wiz, towerType, numberOfTowers);
+		Player player = new Player(nickname, wiz, towerType, numberOfTowers, initialCoins);
 		teams.get(teams.size() - 1).addPlayer(player);
 	}
 

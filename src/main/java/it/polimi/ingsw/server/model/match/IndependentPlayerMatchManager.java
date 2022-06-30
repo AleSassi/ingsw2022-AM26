@@ -31,11 +31,12 @@ public class IndependentPlayerMatchManager extends MatchManager {
      * @param nickname (type String) {@code Player's} nickname
      * @param wiz (type Wizard) chosen {@code Wizard}
      * @param maxTowerCount (type int) max number of {@link it.polimi.ingsw.server.model.Tower Tower}
+     * @param initialCoins (type int) the number of coins the Player owns at the beginning of the game. Set it to -1 when the Coins feature is disabled
      * @throws InvalidPlayerCountException whenever the {@code Player count} isn't correct
      * @throws IncorrectConstructorParametersException whenever the {@code Parameters} of the constructor aren't correct
      */
     @Override
-    protected void addPlayer(String nickname, Wizard wiz, int maxTowerCount) throws InvalidPlayerCountException, IncorrectConstructorParametersException {
+    protected void addPlayer(String nickname, Wizard wiz, int maxTowerCount, int initialCoins) throws InvalidPlayerCountException, IncorrectConstructorParametersException {
         if (players.size() > 3) throw new InvalidPlayerCountException();
         
         Tower tower = null;
@@ -44,7 +45,7 @@ public class IndependentPlayerMatchManager extends MatchManager {
             case 1 -> tower = Tower.White;
             case 2 -> tower = Tower.Gray;
         }
-        players.add(new Player(nickname, wiz, tower, maxTowerCount));
+        players.add(new Player(nickname, wiz, tower, maxTowerCount, initialCoins));
     }
 
     /**

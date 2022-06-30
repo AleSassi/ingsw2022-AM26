@@ -84,8 +84,8 @@ class IslandTest {
     @Test
     void getInfluenceTest() {
         assertDoesNotThrow(() -> {
-            Player p1 = new Player("Ale", Wizard.Wizard1, Tower.Black, 6);
-            Player p2 = new Player("Leo", Wizard.Wizard2, Tower.Gray, 6);
+            Player p1 = new Player("Ale", Wizard.Wizard1, Tower.Black, 6, 1);
+            Player p2 = new Player("Leo", Wizard.Wizard2, Tower.Gray, 6, 1);
             island.placeStudents(Student.YellowElf, 2);
             island.placeStudents(Student.BlueUnicorn, 3);
             island.placeStudents(Student.GreenFrog, 2);

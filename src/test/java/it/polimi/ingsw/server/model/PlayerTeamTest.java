@@ -20,8 +20,8 @@ class PlayerTeamTest {
     void initTeam() {
         testTeam = new PlayerTeam();
         assertDoesNotThrow(() -> {
-            player1 = new Player("pippo", Wizard.Wizard1, Tower.Black, 8);
-            player2 = new Player("giovanni", Wizard.Wizard1, Tower.Black, 0);
+            player1 = new Player("pippo", Wizard.Wizard1, Tower.Black, 8, 1);
+            player2 = new Player("giovanni", Wizard.Wizard1, Tower.Black, 0, 1);
             testTeam.addPlayer(player1);
             testTeam.addPlayer(player2);
         });

@@ -326,7 +326,7 @@ class GenericModifierCardTest {
         initCardWithCharacter(characterInit);
         //Simulate the Player putting some Students on Island 0
         assertDoesNotThrow(() -> {
-            player = new Player("Test", Wizard.Wizard1, Tower.Black, 8);
+            player = new Player("Test", Wizard.Wizard1, Tower.Black, 8, 1);
             player.addProfessor(Professor.BlueUnicorn);
             player.addProfessor(Professor.GreenFrog);
         });

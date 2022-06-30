@@ -17,7 +17,7 @@ class ActivePlayerMessageTest {
 	@BeforeEach
 	void initMessage() {
 		assertDoesNotThrow(() -> {
-			Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.White, 8);
+			Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.White, 8, 1);
 			message = new ActivePlayerMessage(testPlayer);
 		});
 	}

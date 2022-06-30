@@ -273,8 +273,8 @@ class TableManagerTest {
     @Test
     void testChangeControl() {
         assertDoesNotThrow(() -> {
-            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
-            Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 8);
+            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8, 1);
+            Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 8, 1);
     
             assertDoesNotThrow(() -> tableManager.getCurrentIsland().setTower(testPlayer.pickAndRemoveTower()));
             assertDoesNotThrow(() -> tableManager.changeControlOfCurrentIsland(testPlayer, testPlayer2));
@@ -288,8 +288,8 @@ class TableManagerTest {
     @Test
     void testChangeControlWrongParams() {
         assertDoesNotThrow(() -> {
-            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
-            Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 8);
+            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8, 1);
+            Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 8, 1);
     
             tableManager.getCurrentIsland().setTower(Tower.White);
             assertThrows(IllegalArgumentException.class, () -> tableManager.changeControlOfCurrentIsland(testPlayer, testPlayer2));
@@ -303,8 +303,8 @@ class TableManagerTest {
     @Test
     void testChangeControl_WithStopCard() {
         assertDoesNotThrow(() -> {
-            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
-            Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 8);
+            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8, 1);
+            Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 8, 1);
     
             tableManager.getCurrentIsland().setStopCard(true);
             tableManager.moveMotherNature(12);
@@ -320,8 +320,8 @@ class TableManagerTest {
     @Test
     void testChangeControl_WithVictoryCondition() {
         assertDoesNotThrow(() -> {
-            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
-            Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 0);
+            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8, 1);
+            Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 0, 1);
     
             tableManager.getCurrentIsland().setTower(Tower.Black);
             assertDoesNotThrow(() -> tableManager.changeControlOfCurrentIsland(testPlayer, testPlayer2));
@@ -335,8 +335,8 @@ class TableManagerTest {
     @Test
     void testUnificationPossible() {
         assertDoesNotThrow(() -> {
-            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
-            Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 8);
+            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8, 1);
+            Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 8, 1);
     
             assertDoesNotThrow(() -> tableManager.getCurrentIsland().setTower(testPlayer.pickAndRemoveTower()));
             tableManager.getIslandAtIndex(TableManager.circularWrap(tableManager.getCurrentIslandIndex() + 1, 12)).setTower(Tower.White);
@@ -353,9 +353,9 @@ class TableManagerTest {
     @Test
     void testMatchEnd_IslandsCondition() {
         assertDoesNotThrow(() -> {
-            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 6);
-            Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 6);
-            Player testPlayer3 = new Player("Leo", Wizard.Wizard1, Tower.Gray, 6);
+            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 6, 1);
+            Player testPlayer2 = new Player("Fede", Wizard.Wizard1, Tower.White, 6, 1);
+            Player testPlayer3 = new Player("Leo", Wizard.Wizard1, Tower.Gray, 6, 1);
     
             assertDoesNotThrow(() -> {
                 //Force the Islands to merge
@@ -441,7 +441,7 @@ class TableManagerTest {
         int currentIslandIdx = tableManager.getCurrentIslandIndex();
 
         assertDoesNotThrow(() -> {
-            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8);
+            Player testPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8, 1);
             testPlayer.addProfessor(Professor.BlueUnicorn);
             testPlayer.addProfessor(Professor.PinkFair);
     

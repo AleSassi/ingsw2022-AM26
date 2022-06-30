@@ -25,7 +25,6 @@ public class TableManager {
 
     public TableManager(int cloudTileCount, boolean allowsCharacterCards) {
         //ASSUMPTION: CloudTileCount === PlayerCount
-        coinReserve = 20 - cloudTileCount;
         playableCharacterCards = new ArrayList<>();
         if (allowsCharacterCards) {
             CharacterCardExtractor cardExtractor = new CharacterCardExtractor();

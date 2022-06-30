@@ -25,7 +25,7 @@ class NetworkMessageDecoderTest {
 		assertDoesNotThrow(() -> {
 			//Create a message, then decode & compare
 			NetworkMessageDecoder decoder = new NetworkMessageDecoder();
-			NetworkMessage message = new ActivePlayerMessage(new Player("Ale", Wizard.Wizard1, Tower.White, 8));
+			NetworkMessage message = new ActivePlayerMessage(new Player("Ale", Wizard.Wizard1, Tower.White, 8, 1));
 			assertEquals(message, decoder.decodeMessage(message.serialize()));
 			message = new LoginMessage("Ale", 2, MatchVariant.BasicRuleSet, Wizard.Wizard1);
 			assertEquals(message, decoder.decodeMessage(message.serialize()));
