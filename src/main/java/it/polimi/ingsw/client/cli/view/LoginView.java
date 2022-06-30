@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.cli.view;
 import it.polimi.ingsw.client.controller.network.GameClient;
 import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
+import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.server.controller.network.messages.LoginMessage;
 import it.polimi.ingsw.server.model.assistants.Wizard;
 import it.polimi.ingsw.server.model.match.MatchVariant;
@@ -61,6 +62,7 @@ public class LoginView extends TerminalView {
 		GameClient.shared().sendMessage(loginMessage);
 		GameClient.shared().startPongTimeoutTimer();
 		// Once the LoginView finished, we start the LoginWaitingRoom
+		NotificationCenter.shared().removeObserver(this);
 		LoginWaitingRoom loginWaitingRoom = new LoginWaitingRoom(matchVariant);
 		loginWaitingRoom.run();
 	}
