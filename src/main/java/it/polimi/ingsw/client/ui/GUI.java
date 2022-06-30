@@ -21,12 +21,12 @@ import java.util.HashMap;
 
 public class GUI extends Application {
 	
-	private static Scene scene;
-	private static double stageWidth, stageHeight;
-	private static double stageScale = 1.0;
-	
 	public static final double referenceWidth = 1300;
 	public static final double referenceHeight = 810;
+	
+	private static Scene scene;
+	private static double stageWidth = referenceWidth, stageHeight = referenceHeight;
+	private static double stageScale = 1.0;
 	
 	@Override
 	public void start(Stage stage) throws IOException {

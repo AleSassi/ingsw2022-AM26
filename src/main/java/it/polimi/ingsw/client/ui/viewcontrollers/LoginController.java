@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.ui.viewcontrollers;
 
 import it.polimi.ingsw.client.controller.network.GameClient;
 import it.polimi.ingsw.client.ui.GUI;
+import it.polimi.ingsw.client.ui.rescale.RescalableController;
 import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
@@ -19,7 +20,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
@@ -27,8 +30,20 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-public class LoginController extends CleanableController implements Initializable {
+public class LoginController extends RescalableController {
 	
+	@FXML
+	public ImageView cranioImg;
+	@FXML
+	public ImageView eriantysImg;
+	@FXML
+	private Label nicknameFieldTitleLabel;
+	@FXML
+	private Label playerNumberTitleLabel;
+	@FXML
+	private Label wizardTitleLabel;
+	@FXML
+	private Label matchTypeTitleLabel;
 	@FXML
 	private ChoiceBox<String> gameBox;
 	@FXML
@@ -40,8 +55,8 @@ public class LoginController extends CleanableController implements Initializabl
 	@FXML
 	private Button loginButton;
 	
-	private final ObservableList<String> wizardChoices = FXCollections.observableArrayList("wizard1", "wizard2", "wizard3", "wizard4");
-	private final ObservableList<String> gameChoices = FXCollections.observableArrayList("simple", "expert");
+	private final ObservableList<String> wizardChoices = FXCollections.observableArrayList("Wizard 1", "Wizard 2", "Wizard 3", "Wizard 4");
+	private final ObservableList<String> gameChoices = FXCollections.observableArrayList("Basic (simplified rules)", "Expert (full rules for more action)");
 	private final ObservableList<String> chosenNumberOfPlayers = FXCollections.observableArrayList("2", "3", "4");
 	
 	private String chosenUsername;
@@ -49,50 +64,64 @@ public class LoginController extends CleanableController implements Initializabl
 	
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		gameBox.setValue("simple");
+		super.initialize(url, resourceBundle);
+		gameBox.setValue(gameChoices.get(0));
 		gameBox.setItems(gameChoices);
-		wizardBox.setValue("wizard1");
+		wizardBox.setValue(wizardChoices.get(0));
 		wizardBox.setItems(wizardChoices);
-		chosenPlayerCount.setValue("2");
+		chosenPlayerCount.setValue(chosenNumberOfPlayers.get(0));
 		chosenPlayerCount.setItems(chosenNumberOfPlayers);
+		rescale(getCurrentScaleValue());
 	}
 	
 	public void sendFormValuesToServer() {
 		chosenUsername = nicknameBox.getText();
-		int chosenLobbySize = Integer.parseInt(chosenPlayerCount.getSelectionModel().getSelectedItem());
-  
-		if (gameBox.getSelectionModel().getSelectedItem().equals("simple")) {
-			selectedMatchType = MatchVariant.BasicRuleSet;
-		} else {
-			selectedMatchType = MatchVariant.ExpertRuleSet;
-		}
-		
-		Wizard wiz = switch (wizardBox.getSelectionModel().getSelectedItem()) {
-			case "wizard1" -> Wizard.Wizard1;
-			case "wizard2" -> Wizard.Wizard2;
-			case "wizard3" -> Wizard.Wizard3;
-			default -> Wizard.Wizard4;
-		};
-		NetworkMessage loginMessage = new LoginMessage(chosenUsername, chosenLobbySize, selectedMatchType, wiz);
-		NotificationCenter.shared().addObserver(this, this::didReceiveLoginResponse, NotificationName.ClientDidReceiveLoginResponse, GameClient.shared());
-		
-		//Connect to the server
-		String buttonText = loginButton.getText();
-		loginButton.setText("Connecting to the server...");
-		GameClient.createClient(Client.getServerIP(), Client.getServerPort(), true);
-		try {
-			GameClient.shared().connectToServer();
-			GameClient.shared().sendMessage(loginMessage);
-		} catch (IOException e) {
+		if (chosenUsername == null || chosenUsername.length() == 0 || chosenUsername.contains(" ")) {
+			//Error when validating the username
 			// Present an alert
 			Platform.runLater(() -> {
 				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setHeaderText("Server Unreachable");
-				alert.setContentText("Could not connect to the server. Please make sure that the server is active and reachable on the specified port.");
+				alert.setHeaderText("Invalid username");
+				alert.setContentText("You must type a username to use for the Match (non-null, non-empty, no whitespaces).");
 				alert.show();
 			});
-		} finally {
-			loginButton.setText(buttonText);
+		} else {
+			int chosenLobbySize = Integer.parseInt(chosenPlayerCount.getSelectionModel().getSelectedItem());
+			
+			if (gameBox.getSelectionModel().getSelectedItem().equals(gameChoices.get(0))) {
+				selectedMatchType = MatchVariant.BasicRuleSet;
+			} else {
+				selectedMatchType = MatchVariant.ExpertRuleSet;
+			}
+			
+			Wizard wiz = Wizard.Wizard4;
+			for (int i = 0; i < wizardChoices.size(); i++) {
+				if (wizardBox.getSelectionModel().getSelectedItem().equals(wizardChoices.get(i))) {
+					wiz = Wizard.values()[i];
+				}
+			}
+			
+			NetworkMessage loginMessage = new LoginMessage(chosenUsername, chosenLobbySize, selectedMatchType, wiz);
+			NotificationCenter.shared().addObserver(this, this::didReceiveLoginResponse, NotificationName.ClientDidReceiveLoginResponse, GameClient.shared());
+			
+			//Connect to the server
+			String buttonText = loginButton.getText();
+			loginButton.setText("Connecting to the server...");
+			GameClient.createClient(Client.getServerIP(), Client.getServerPort(), true);
+			try {
+				GameClient.shared().connectToServer();
+				GameClient.shared().sendMessage(loginMessage);
+			} catch (IOException e) {
+				// Present an alert
+				Platform.runLater(() -> {
+					Alert alert = new Alert(Alert.AlertType.ERROR);
+					alert.setHeaderText("Server Unreachable");
+					alert.setContentText("Could not connect to the server. Please make sure that the server is active and reachable on the specified port.");
+					alert.show();
+				});
+			} finally {
+				loginButton.setText(buttonText);
+			}
 		}
 	}
 	
@@ -130,5 +159,41 @@ public class LoginController extends CleanableController implements Initializabl
 	
 	@Override
 	protected void cleanupAfterTermination() {
+	}
+	
+	@Override
+	public void rescale(double scale) {
+		//Set everything up so that it is centered
+		rescaleToCenter(nicknameBox, 429, 26, 174, scale);
+		rescaleToCenter(loginButton, 103, 35, 565, scale);
+		rescaleToCenter(gameBox, 429, 26, 423, scale);
+		rescaleToCenter(wizardBox, 429, 26, 339, scale);
+		rescaleToCenter(chosenPlayerCount, 429, 25, 256, scale);
+		rescaleToCenter(nicknameFieldTitleLabel, 429, 17, 154, scale);
+		rescaleToCenter(playerNumberTitleLabel, 429, 17, 236, scale);
+		rescaleToCenter(wizardTitleLabel, 429, 17, 319, scale);
+		rescaleToCenter(matchTypeTitleLabel, 429, 17, 403, scale);
+		
+		cranioImg.setFitWidth(81 * scale);
+		cranioImg.setFitHeight(90 * scale);
+		cranioImg.setLayoutX((800 - GUI.referenceWidth * 0.5) * scale + GUI.getWindowWidth() * 0.5);
+		cranioImg.setLayoutY(42 * scale);
+		
+		eriantysImg.setFitWidth(308 * scale);
+		eriantysImg.setFitHeight(89 * scale);
+		eriantysImg.setLayoutX((420 - GUI.referenceWidth * 0.5) * scale + GUI.getWindowWidth() * 0.5);
+		eriantysImg.setLayoutY(42 * scale);
+	}
+	
+	private void rescaleToCenter(Control node, double width, double height, double y, double scale) {
+		node.setLayoutX(getCenterX(width, scale));
+		node.setLayoutY(y * scale);
+		node.setPrefWidth(width * scale);
+		node.setPrefHeight(height * scale);
+		node.setStyle("-fx-font-size: " + (15 * scale));
+	}
+	
+	private double getCenterX(double width, double scale) {
+		return (GUI.getWindowWidth() - (width * scale)) * 0.5;
 	}
 }
