@@ -12,6 +12,7 @@ import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Professor;
 import it.polimi.ingsw.server.model.TableManager;
 import it.polimi.ingsw.server.model.Tower;
+import it.polimi.ingsw.server.model.assistants.AssistantCard;
 import it.polimi.ingsw.server.model.assistants.Wizard;
 import it.polimi.ingsw.server.model.characters.CharacterCard;
 import it.polimi.ingsw.server.model.characters.CharacterCardParamSet;
@@ -36,6 +37,7 @@ public abstract class MatchManager {
 	private PawnCounts pawnCounts;
 	private int numberOfStudentsPickedByCurrentPlayer_AP1 = 0;
 	private MatchVariant matchVariant;
+	private List<AssistantCard> playedAssistantsInRound = new ArrayList<>();
 	
 	//region Public methods (used by the Controller to run actions)
 
@@ -168,6 +170,7 @@ public abstract class MatchManager {
 					} catch (CollectionUnderflowError e) {
 						System.out.println("MatchManager WARNING: Insufficient students in the Bag, the Cloud will have no students on it");
 					}
+					playedAssistantsInRound = new ArrayList<>();
 					startsNewRound = true;
 					matchPhase = MatchPhase.PlanPhaseStepTwo;
 				} else {
@@ -248,8 +251,8 @@ public abstract class MatchManager {
 			return false;
 		}
 		boolean result = true;
-		for (Player p : getAllPlayers()) {
-			if (p.getLastPlayedAssistantCard() == getCurrentPlayer().getAvailableAssistantCards().get(cardIdxForCurrentPlayer)) {
+		for (AssistantCard assistantCard: playedAssistantsInRound) {
+			if (assistantCard == getCurrentPlayer().getAvailableAssistantCards().get(cardIdxForCurrentPlayer)) {
 				result = false;
 				break;
 			}
@@ -372,6 +375,7 @@ public abstract class MatchManager {
 				if (isAlreadyPlayed) {
 					getCurrentPlayer().setAssistantCardOrderModifier(numberOfSameCardsOnTable);
 				}
+				playedAssistantsInRound.add(getCurrentPlayer().getLastPlayedAssistantCard());
 			}
 		} catch (CollectionUnderflowError | IndexOutOfBoundsException e) {
 			throw new AssistantCardNotPlayableException();
