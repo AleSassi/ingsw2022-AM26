@@ -97,6 +97,8 @@ public class MainBoardController extends CleanableController implements JavaFXRe
 				//Forward the notification event to the new container
 				newContainer.forwardInitialPlayerStatusNotification(notification);
 			}
+			//Clear pending actions
+			movingStudentColor = null;
 		}
 	}
 	

@@ -25,7 +25,7 @@ public class CloudPane extends RescalableAnchorPane {
     private final int idx;
     private String address = null;
     private final boolean selectable = true;
-    private final GridPane gridPane = new GridPane();
+    private final HighlightableGridPane gridPane = new HighlightableGridPane();
 
     public CloudPane(int idx, Notification notification) {
         this.idx = idx;
@@ -46,6 +46,7 @@ public class CloudPane extends RescalableAnchorPane {
     }
 
     private void didReceiveClickOnCloud(Notification notification) {
+        gridPane.highlight(false);
         setStyle("-fx-background-image: url(" + address + ");\n-fx-background-size: 100% 100%");
     }
 
@@ -53,12 +54,13 @@ public class CloudPane extends RescalableAnchorPane {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof TableStateMessage message) {
             Platform.runLater(() -> gridPane.getChildren().clear());
             setStudentOnCloud(message);
+            gridPane.highlight(false);
         }
     }
 
     public void showSelection() {
         if(gridPane.getChildren().size() != 0) {
-            setStyle(getStyle() + ";\n-fx-background-color: rgba(80,255,80,0.4)");
+            gridPane.highlight(true);
         }
     }
 

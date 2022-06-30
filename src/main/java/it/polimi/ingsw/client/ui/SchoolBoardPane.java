@@ -7,8 +7,10 @@ import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.ActivePlayerMessage;
+import it.polimi.ingsw.server.controller.network.messages.MatchStateMessage;
 import it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage;
 import it.polimi.ingsw.server.model.characters.Character;
+import it.polimi.ingsw.server.model.match.MatchPhase;
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.utils.ui.GUIUtils;
 import it.polimi.ingsw.utils.ui.StudentDropTarget;
@@ -29,8 +31,8 @@ public class SchoolBoardPane extends RescalableAnchorPane {
     private Character activeCharacter;
     private Student pickedSrcStudentForSwap;
 
-    private final GridPane entranceGrid;
-    private final GridPane diningGrid;
+    private final HighlightableGridPane entranceGrid;
+    private final HighlightableGridPane diningGrid;
     private final GridPane professors;
     private final GridPane towersGrid;
     
@@ -46,11 +48,11 @@ public class SchoolBoardPane extends RescalableAnchorPane {
         //Set the Background Image
         setStyle("-fx-background-image: url(" + GUIUtils.getURI("images/Plancia_DEF2.png") + ");\n-fx-background-size: 100% 100%");
         //Create the grid that handles the Students
-        entranceGrid = new GridPane();
+        entranceGrid = new HighlightableGridPane();
         setupMouseClickAfterStudentStartMoving(entranceGrid, StudentDropTarget.ToEntrance);
         setDisabled(!isPrimary);
         //Create the grid for the dining room
-        diningGrid = new GridPane();
+        diningGrid = new HighlightableGridPane();
         setupMouseClickAfterStudentStartMoving(diningGrid, StudentDropTarget.ToDiningRoom);
         //Create the V-Stack for the Professors
         professors = new GridPane();
@@ -61,6 +63,7 @@ public class SchoolBoardPane extends RescalableAnchorPane {
         getChildren().addAll(entranceGrid, diningGrid, professors, towersGrid);
         //Register for auto-update notifications
         NotificationCenter.shared().addObserver(this, this::didReceivePlayerStatusNotification, NotificationName.ClientDidReceivePlayerStateMessage, null);
+        NotificationCenter.shared().addObserver(this, this::didReceiveMatchStateNotification, NotificationName.ClientDidReceiveMatchStateMessage, null);
         NotificationCenter.shared().addObserver(this, this::didReceiveActivePlayerNotification, NotificationName.ClientDidReceiveActivePlayerMessage, null);
         NotificationCenter.shared().addObserver(this, this::didReceiveStartStudentMoveNotification, NotificationName.JavaFXDidStartMovingStudent, null);
         NotificationCenter.shared().addObserver(this, this::didReceiveEndStudentMoveNotification, NotificationName.JavaFXDidEndMovingStudent, null);
@@ -149,6 +152,17 @@ public class SchoolBoardPane extends RescalableAnchorPane {
             // Disable if the Player is not active anymore
             setDisabled(!(message.getActiveNickname().equals(ownerNickname) && ownerNickname.equals(Client.getNickname())));
             setDisable(!(message.getActiveNickname().equals(ownerNickname) && ownerNickname.equals(Client.getNickname())));
+        }
+    }
+    
+    private void didReceiveMatchStateNotification(Notification notification) {
+        if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof MatchStateMessage message && !isDisabled()) {
+            if (message.getCurrentMatchPhase() == MatchPhase.ActionPhaseStepOne) {
+                Platform.runLater(() -> {
+                    entranceGrid.highlight(true);
+                    diningGrid.highlight(false);
+                });
+            }
         }
     }
 
@@ -298,15 +312,17 @@ public class SchoolBoardPane extends RescalableAnchorPane {
                 entranceGrid.setDisable(false);
                 if (mutuallyDisablingOtherAreas) {
                     diningGrid.setDisable(true);
+                    diningGrid.highlight(false);
                 }
-                entranceGrid.setStyle(entranceGrid.getStyle() + ";\n-fx-background-color: rgba(80,255,80,0.4)");
+                entranceGrid.highlight(true);
             }
             case ToDiningRoom -> {
                 if (mutuallyDisablingOtherAreas) {
                     entranceGrid.setDisable(true);
+                    entranceGrid.highlight(false);
                 }
                 diningGrid.setDisable(false);
-                diningGrid.setStyle(diningGrid.getStyle() + ";\n-fx-background-color: rgba(80,255,80,0.4)");
+                diningGrid.highlight(true);
             }
         }
     }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.ui.islands;
 
+import it.polimi.ingsw.client.ui.HighlightableGridPane;
 import it.polimi.ingsw.client.ui.rescale.RescalableAnchorPane;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
@@ -26,7 +27,7 @@ public class IslandPane extends RescalableAnchorPane {
     private final AnchorPane motherNature;
     private final AnchorPane tower = new AnchorPane();
     private final List<StudentOnIsland> students;
-    private final GridPane gridPane = new GridPane();
+    private final HighlightableGridPane gridPane = new HighlightableGridPane();
     private final Label towerLabel = new Label("0");
     private String address = null;
     private AnchorPane destinationModeInterceptor;
@@ -153,8 +154,9 @@ public class IslandPane extends RescalableAnchorPane {
     
     private void setActiveBackground(boolean active) {
         if (active) {
-            setStyle(getStyle() + ";\n-fx-background-color: rgba(80,255,80,0.4)");
+            gridPane.highlight(true);
         } else {
+            gridPane.highlight(false);
             GUIUtils.setStyleWithBackgroundImage(this, address);
         }
     }
@@ -172,6 +174,8 @@ public class IslandPane extends RescalableAnchorPane {
                 setMotherNature(message);
                 setStop(message);
             }
+            //Clear the style
+            setActiveBackground(false);
         }
     }
 

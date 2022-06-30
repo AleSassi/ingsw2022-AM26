@@ -30,7 +30,7 @@ public class CharacterCardStopCardHostPane extends CharacterCardGenericPane {
 	}
 	
 	private void updateStopCardText(int newStopCardCount) {
-		stopCardLabel.setText("SC: " + newStopCardCount);
+		Platform.runLater(() -> stopCardLabel.setText("SC: " + newStopCardCount));
 	}
 	
 	@Override
