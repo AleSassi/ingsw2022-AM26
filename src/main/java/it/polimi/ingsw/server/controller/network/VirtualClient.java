@@ -1,9 +1,6 @@
 package it.polimi.ingsw.server.controller.network;
 
-import it.polimi.ingsw.server.controller.network.messages.LoginMessage;
-import it.polimi.ingsw.server.controller.network.messages.MatchTerminationMessage;
-import it.polimi.ingsw.server.controller.network.messages.NetworkMessage;
-import it.polimi.ingsw.server.controller.network.messages.NetworkMessageDecoder;
+import it.polimi.ingsw.server.controller.network.messages.*;
 import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
 
 import java.io.BufferedReader;
@@ -13,9 +10,9 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 public class VirtualClient {
 	
@@ -23,6 +20,7 @@ public class VirtualClient {
 	private final Socket socket;
 	private final NetworkMessageDecoder decoder;
 	private final GameServer parentServer;
+	private final Future<?> task;
 	private boolean isPingable = false;
 	
 	private BufferedReader bufferedReader;
@@ -34,44 +32,47 @@ public class VirtualClient {
 		this.parentServer = parentServer;
 		System.out.println("Accepted a connection to " + socket.getRemoteSocketAddress());
 		// Create a Runnable instance that will listen to incoming messages
-		executorService.submit(() -> {
-			try {
-				bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				while (true) {
-					String json = bufferedReader.readLine();
-					
-					if (json != null && !json.isEmpty() && !json.isBlank()) {
-						// Decode the JSON to NetworkMessage
-						try {
-							NetworkMessage message = decoder.decodeMessage(json);
-							if (isTerminationMessage(message)) {
-								break;
-							}
-							didReceiveMessage(message);
-						} catch (MessageDecodeException e) {
-							// The message is wrong - we do nothing
-							//TODO: Send an error message (malformed request)
-							e.printStackTrace();
+		task = executorService.submit(this::readMessagesFromSocket);
+	}
+	
+	private void readMessagesFromSocket() {
+		try {
+			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			while (true) {
+				String json = bufferedReader.readLine();
+				
+				if (json != null && !json.isEmpty() && !json.isBlank()) {
+					// Decode the JSON to NetworkMessage
+					try {
+						NetworkMessage message = decoder.decodeMessage(json);
+						if (isTerminationMessage(message)) {
+							break;
 						}
+						didReceiveMessage(message);
+					} catch (MessageDecodeException e) {
+						// The message is wrong - we do nothing
+						//Send an error message (malformed request)
+						sendMessage(new PlayerActionResponse(nickname, PlayerActionMessage.ActionType.DidPlayAssistantCard, false, "Malformed request"));
 					}
-				}
-				notifyPlayerDisconnection();
-			} catch (IOException e) {
-				try {
-					bufferedReader.close();
-					if (outputStreamWriter != null) {
-						outputStreamWriter.close();
-					}
-					if (!socket.isClosed()) {
-						socket.close();
-					}
-					bufferedReader = null;
-					outputStreamWriter = null;
-				} catch (IOException ex) {
-					ex.printStackTrace();
 				}
 			}
-		});
+			notifyPlayerDisconnection();
+		} catch (IOException e) {
+			try {
+				bufferedReader.close();
+				if (outputStreamWriter != null) {
+					outputStreamWriter.close();
+				}
+				if (!socket.isClosed()) {
+					socket.close();
+				}
+				bufferedReader = null;
+				outputStreamWriter = null;
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+			task.cancel(true);
+		}
 	}
 	
 	public String getNickname() {
@@ -125,6 +126,8 @@ public class VirtualClient {
 	
 	public synchronized void terminateConnection() {
 		try {
+			task.cancel(true);
+			bufferedReader.close();
 			if (outputStreamWriter != null) {
 				outputStreamWriter.close();
 			}

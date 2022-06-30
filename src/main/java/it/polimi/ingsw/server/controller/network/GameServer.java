@@ -90,7 +90,6 @@ public class GameServer {
 			Set<GameController> disconnectedControllers = new HashSet<>();
 			for (VirtualClient disconnectedClient: disconnectedClients) {
 				// Signal the termination
-				//TODO: With multiple concurrent matches we need to find the match to which the Player belongs to. In this case it is not needed, since we only have one match
 				Optional<GameController> activeController = activeControllers.stream().filter((controller) -> controller.containsPlayerWithNickname(disconnectedClient.getNickname())).findFirst();
 				if (activeController.isPresent()) {
 					String[] controllerNicknames = activeController.get().getConnectedPlayerNicknames();
