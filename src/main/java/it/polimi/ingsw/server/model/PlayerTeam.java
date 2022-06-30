@@ -23,11 +23,7 @@ public class PlayerTeam {
      */
     public List<Player> getAllPlayers() {
         // We should copy the Players list to avoid object modifications
-        List<Player> result = new ArrayList<>();
-        for (Player player: players) {
-            result.add(player.copy());
-        }
-        return result;
+        return new ArrayList<>(players);
     }
     /**
      * the method take a player like parameter and check if this player is inside the team
