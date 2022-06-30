@@ -19,6 +19,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.HashMap;
 
+/**
+ * Class {@code GUI} represent the controller for the JavaFX window
+ */
 public class GUI extends Application {
 	
 	public static final double referenceWidth = 1300;
@@ -27,7 +30,12 @@ public class GUI extends Application {
 	private static Scene scene;
 	private static double stageWidth = referenceWidth, stageHeight = referenceHeight;
 	private static double stageScale = 1.0;
-	
+
+	/**
+	 * JavaFX method - Loads the {@code Stage} and sets the parameters
+	 * @param stage (type Stage) {@code Stage} to load
+	 * @throws IOException whenever the {@code Scene} fails to initialize from the main FXML file
+	 */
 	@Override
 	public void start(Stage stage) throws IOException {
 		scene = new Scene(loadFXML("scenes/LoginPage"));
@@ -60,39 +68,65 @@ public class GUI extends Application {
 			NotificationCenter.shared().post(NotificationName.JavaFXWindowDidResize, null, userInfo);
 		});
 	}
-	
+
+	/**
+	 * Gets the window width
+	 * @return (type double) returns the window width
+	 */
 	public static double getWindowWidth() {
 		return stageWidth;
 	}
-	
+	/**
+	 * Gets the window height
+	 * @return (type double) returns the window height
+	 */
 	public static double getWindowHeight() {
 		return stageHeight;
 	}
-	
+
+	/**
+	 * Gets the {@code Stage's} scale
+	 * @return (type double) returns the {@code Stage's} scale
+	 */
 	public static double getStageScale() {
 		return stageScale;
 	}
-	
+
+	/**
+	 * Creates the observer fot the disconnection events
+	 */
 	public static void registerForDisconnectionEvents() {
 		NotificationCenter.shared().addObserver(GUI.class, GUI::didReceiveNetworkTimeoutNotification, NotificationName.ClientDidTimeoutNetwork, null);
 		NotificationCenter.shared().addObserver(GUI.class, GUI::didReceiveNetworkTimeoutNotification, NotificationName.ClientDidReceiveMatchTerminationMessage, null);
 	}
-	
+
+	/**
+	 * Loads the main FXML file adn sets the {@code Root}
+	 * @param fxml (type String) {@code FXML's} file name
+	 * @return (type FXMLLoader) returns the loader
+	 * @throws IOException whenever the {@code Scene} fails to initialize from the main FXML file
+	 */
 	public static FXMLLoader setRoot(String fxml) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(GUI.class.getResource(fxml + ".fxml"));
 		scene.setRoot(fxmlLoader.load());
 		return fxmlLoader;
 	}
-	
-	public static Parent getRoot() {
-		return scene.getRoot();
-	}
-	
+
+	/**
+	 * Loads the {@code FXMLLoader}
+	 * @param fxml (type String) {@code FXML's} file name
+	 * @return (type Parent) returns the {@code Parent}
+	 * @throws IOException whenever the {@code Scene} fails to initialize from the main FXML file
+	 */
 	private static Parent loadFXML(String fxml) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(GUI.class.getResource(fxml + ".fxml"));
 		return fxmlLoader.load();
 	}
-	
+
+	/**
+	 * {@code NetworkTimeout} callback
+	 * @param notification (type Notification)
+	 */
 	private static void didReceiveNetworkTimeoutNotification(Notification notification) {
 		// Present an alert
 		Platform.runLater(() -> {
@@ -120,7 +154,11 @@ public class GUI extends Application {
 		//Terminate the network session
 		GameClient.shared().teardown();
 	}
-	
+
+	/**
+	 * Starts the GUI
+	 * @param args (type String[])
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}

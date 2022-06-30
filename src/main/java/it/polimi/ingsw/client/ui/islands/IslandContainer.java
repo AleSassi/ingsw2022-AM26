@@ -15,13 +15,16 @@ import javafx.application.Platform;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class {@code IslandContainer} is the javaFX controller for the IslandsContainer
+ */
 public class IslandContainer extends RescalableAnchorPane {
     
     private final List<IslandPane> islands = new ArrayList<>();
     
     /**
-     * Initialize the IslandContainer with the islands
-     * @param notification
+     * Initialize the {@code IslandContainer} with the {@link it.polimi.ingsw.client.ui.islands.IslandPane}
+     * @param notification (type Notification)
      */
     public IslandContainer(Notification notification) {
         for(int i = 0; i < 12; i++) {
@@ -30,7 +33,7 @@ public class IslandContainer extends RescalableAnchorPane {
             Platform.runLater(() -> getChildren().add(island));
         }
 
-        rescale(getCurrentScaleValue());
+        rescale(1);
 
         NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
         NotificationCenter.shared().addObserver(this, this::didReceiveCharacterCardPlayedNotification, NotificationName.JavaFXDidPlayCharacterCard, null);
@@ -39,8 +42,8 @@ public class IslandContainer extends RescalableAnchorPane {
 
 
     /**
-     * TableState notification callback, updates the number of island from the TableState notification
-     * @param notification
+     * {@code TableState} notification callback, updates the number of {@link it.polimi.ingsw.client.ui.islands.IslandPane} from the TableState notification
+     * @param notification (type Notification)
      */
     private void didReceiveTableState(Notification notification) {
         TableStateMessage tableStateMessage = (TableStateMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
@@ -50,10 +53,14 @@ public class IslandContainer extends RescalableAnchorPane {
                 getChildren().remove(getChildren().size() - 1);
                 islands.remove(islands.size() - 1);
             }
-            rescale(getCurrentScaleValue());
+            rescale(1);
         });
     }
-    
+
+    /**
+     * {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard} notification callback
+     * @param notification (type Notification)
+     */
     private void didReceiveCharacterCardPlayedNotification(Notification notification) {
         if (notification.getUserInfo() != null) {
             Character playedCharacter = (Character) notification.getUserInfo().get(NotificationKeys.JavaFXPlayedCharacter.getRawValue());
@@ -65,13 +72,21 @@ public class IslandContainer extends RescalableAnchorPane {
             }
         }
     }
-    
+
+    /**
+     * Cleans the pane after the {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard} control loop ends
+     * @param notification (type Notification)
+     */
     private void cleanupAfterCardControlLoopEnds(Notification notification) {
         for (IslandPane islandPane: islands) {
             islandPane.setCardDestinationMode(false, notification.getUserInfo());
         }
     }
 
+    /**
+     * Sets the allowed {@link it.polimi.ingsw.server.model.student.Student Student's} movement
+     * @param validStudentDestinations (type StudentDropTarget[])
+     */
     public void setAllowedStudentMovements(StudentDropTarget[] validStudentDestinations) {
         for (IslandPane island : islands) {
             island.setAllowedStudentDestinationsForPhase(validStudentDestinations);

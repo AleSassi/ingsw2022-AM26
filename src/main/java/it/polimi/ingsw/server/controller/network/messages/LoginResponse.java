@@ -7,7 +7,9 @@ import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-
+/**
+ * Class {@code LoginResponse} represent the messages of the response of a login
+ */
 public class LoginResponse extends NetworkMessage {
 	
 	private String nickname;

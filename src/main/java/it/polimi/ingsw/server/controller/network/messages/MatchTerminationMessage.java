@@ -7,7 +7,9 @@ import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-
+/**
+ * Class {@code MatchTerminationMessage} represent the messages of the termination of the match
+ */
 public class MatchTerminationMessage extends NetworkMessage {
 	
 	private String terminationReason;

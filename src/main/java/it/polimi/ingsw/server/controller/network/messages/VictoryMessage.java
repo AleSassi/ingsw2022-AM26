@@ -7,7 +7,9 @@ import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-
+/**
+ * Class {@code VictoryMessage} represent the Victory message
+ */
 public class VictoryMessage extends NetworkMessage {
 	
 	private String[] winners;

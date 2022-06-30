@@ -8,10 +8,17 @@ import it.polimi.ingsw.server.controller.network.messages.TableStateMessage;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class {@code CloudsContainer} represent the JavaFX controller for the {@link it.polimi.ingsw.client.ui.CloudPane CloudPanes} container
+ */
 public class CloudsContainer extends RescalableAnchorPane {
 
     private final List<CloudPane> clouds;
-    
+
+    /**
+     * Constructor creates a new {@code CloudsContainer}
+     * @param notification (type Notification)
+     */
     public CloudsContainer(Notification notification) {
         TableStateMessage tableStateMessage = (TableStateMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
         clouds = new ArrayList<>();
@@ -23,6 +30,10 @@ public class CloudsContainer extends RescalableAnchorPane {
         rescale(getCurrentScaleValue());
     }
 
+    /**
+     * Shows the selectables {@link it.polimi.ingsw.client.ui.CloudPane CloudPane}
+     * @param activate (type boolean) true if needs to show the selectables {@code CloudPane}
+     */
     public void setActivateCloudPick(boolean activate) {
         if (activate) {
             setDisable(false);

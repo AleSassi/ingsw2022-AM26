@@ -25,6 +25,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Class {@code GameControllerTest} tests {@link it.polimi.ingsw.server.controller.GameController}
+ */
 class GameControllerTest {
 	
 	private GameController controller;
@@ -43,7 +46,10 @@ class GameControllerTest {
 			return null;
 		}).when(server).sendMessage(any(NetworkMessage.class), anyString());
 	}
-	
+
+	/**
+	 * Tests a simple login
+	 */
 	@Test
 	void testSimpleLogin() {
 		HashMap<String, Object> userInfo = new HashMap<>();
@@ -55,7 +61,10 @@ class GameControllerTest {
 		assertEquals(2, controller.getMaxPlayerCount());
 		assertEquals(MatchVariant.ExpertRuleSet, controller.getMatchVariant());
 	}
-	
+
+	/**
+	 * Tests two logins in sequence
+	 */
 	@Test
 	void testSequenceLogin() {
 		HashMap<String, Object> userInfo = new HashMap<>();
@@ -72,7 +81,10 @@ class GameControllerTest {
 		assertEquals(2, controller.getMaxPlayerCount());
 		assertEquals(MatchVariant.ExpertRuleSet, controller.getMatchVariant());
 	}
-	
+
+	/**
+	 * Tests multiple logins
+	 */
 	@Test
 	void testMultiLogin() {
 		sentMessages = new ArrayList<>();
@@ -102,7 +114,10 @@ class GameControllerTest {
 		assertEquals(3, controller.getMaxPlayerCount());
 		assertEquals(MatchVariant.ExpertRuleSet, controller.getMatchVariant());
 	}
-	
+
+	/**
+	 * Tests the login phase and start the match
+	 */
 	@Test
 	void testLoginAndMatchStart() {
 		testSequenceLogin();
@@ -118,7 +133,10 @@ class GameControllerTest {
 		assertTrue(sentMessages.get(12) instanceof MatchStateMessage message && message.getCurrentMatchPhase() == MatchPhase.PlanPhaseStepTwo);
 		assertEquals(13, sentMessages.size());
 	}
-	
+
+	/**
+	 * Tests that a {@link it.polimi.ingsw.server.model.Player Player} can't log in a full lobby
+	 */
 	@Test
 	void testPlayerOverflow() {
 		testLoginAndMatchStart();
@@ -128,7 +146,10 @@ class GameControllerTest {
 		assertEquals(new LoginResponse("Test", false, Integer.MAX_VALUE, "The lobby you entered in is already full"), sentMessages.get(13));
 		assertFalse(controller.containsPlayerWithNickname("Test"));
 	}
-	
+
+	/**
+	 * Tests that a {@link it.polimi.ingsw.server.model.Player Player} can't log in while another {@code Player} has the same nickname
+	 */
 	@Test
 	void testBlockLoginWithSameName() {
 		testMultiLogin();
@@ -137,7 +158,10 @@ class GameControllerTest {
 		NotificationCenter.shared().post(NotificationName.ServerDidReceiveLoginMessage, controller, userInfo);
 		assertEquals(new LoginResponse("Ale", false, Integer.MAX_VALUE, "The nickname you entered is not unique. Please choose another nickname"), sentMessages.get(3));
 	}
-	
+
+	/**
+	 * Tests that a {@link it.polimi.ingsw.server.model.Player Player} can't log in while another {@code Player} has the same wizard
+	 */
 	@Test
 	void testBlockLoginWithSameWizard() {
 		testMultiLogin();
@@ -146,13 +170,19 @@ class GameControllerTest {
 		NotificationCenter.shared().post(NotificationName.ServerDidReceiveLoginMessage, controller, userInfo);
 		assertEquals(new LoginResponse("Test", false, Integer.MAX_VALUE, "The Wizard you have chosen has already been taken by another player in the same lobby"), sentMessages.get(3));
 	}
-	
+
+	/**
+	 * Tests the termination of the game
+	 */
 	@Test
 	void testTerminate() {
 		NotificationCenter.shared().post(NotificationName.ServerDidTerminateMatch, controller, null);
 		assertTrue(controller.isTerminated());
 	}
-	
+
+	/**
+	 * Tests the victory notification
+	 */
 	@RepeatedTest(100)
 	void testVictoryNotificationForwarding() {
 		testLoginAndMatchStart();
@@ -164,7 +194,10 @@ class GameControllerTest {
 		assertEquals(victoryMessage, sentMessages.get(13));
 		assertEquals(victoryMessage, sentMessages.get(14));
 	}
-	
+
+	/**
+	 * Tests that all the {@link it.polimi.ingsw.server.model.Player Player's} action are blocked if not logged in
+	 */
 	@Test
 	void testBlockActionWhenNotLoggedIn() {
 		testSimpleLogin();
@@ -173,7 +206,10 @@ class GameControllerTest {
 		NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, controller, userInfo);
 		assertEquals(new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPlayAssistantCard, false, "You are trying to run an Action without logging in first, or without waiting for the Match to start"), sentMessages.get(1));
 	}
-	
+
+	/**
+	 * Tests the PlayAssistant move
+	 */
 	@Test
 	void testReceivePlayAssistantMessage() {
 		testLoginAndMatchStart();
@@ -192,7 +228,10 @@ class GameControllerTest {
 		assertTrue(sentMessages.get(22) instanceof ActivePlayerMessage message && message.getActiveNickname().equals("Fra"));
 		assertTrue(sentMessages.get(23) instanceof MatchStateMessage message && message.getCurrentMatchPhase() == MatchPhase.PlanPhaseStepTwo);
 	}
-	
+
+	/**
+	 * Tests that if the PlayAssistant move has the wrong parameters doesn't go through
+	 */
 	@Test
 	void testReceivePlayAssistantMessageWithParamError() {
 		testLoginAndMatchStart();
@@ -201,7 +240,10 @@ class GameControllerTest {
 		NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, controller, userInfo);
 		assertEquals(new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPlayAssistantCard, false, "Invalid move: the Assistant Card you chose cannot be played, because other opponents have already played it before you or the index is not valid"), sentMessages.get(13));
 	}
-	
+
+	/**
+	 * Tests the case of a message received by an invalid {@link it.polimi.ingsw.server.model.Player Player}
+	 */
 	@Test
 	void testReceiveMessageFromInvalidPlayer() {
 		testLoginAndMatchStart();
@@ -210,7 +252,10 @@ class GameControllerTest {
 		NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, controller, userInfo);
 		assertEquals(new PlayerActionResponse("Fra", PlayerActionMessage.ActionType.DidPlayAssistantCard, false, "Invalid move: you are not the current Player"), sentMessages.get(13));
 	}
-	
+
+	/**
+	 * Tests an invalid move
+	 */
 	@Test
 	void testInvalidMove() {
 		testLoginAndMatchStart();
@@ -219,7 +264,10 @@ class GameControllerTest {
 		NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, controller, userInfo);
 		assertEquals(new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidMoveStudent, false, "Invalid move: the action is not valid for the current Match Phase"), sentMessages.get(13));
 	}
-	
+
+	/**
+	 * Tests a complete round
+	 */
 	@Test
 	void testRound() {
 		testReceivePlayAssistantMessage();
@@ -238,7 +286,10 @@ class GameControllerTest {
 		assertTrue(sentMessages.get(33) instanceof ActivePlayerMessage message && message.getActiveNickname().equals("Ale"));
 		assertTrue(sentMessages.get(34) instanceof MatchStateMessage message && message.getCurrentMatchPhase() == MatchPhase.ActionPhaseStepOne);
 	}
-	
+
+	/**
+	 * Tests the {@link it.polimi.ingsw.server.model.student.Student Student} move to the diningroom message
+	 */
 	@RepeatedTest(5)
 	void testReceiveStudToTableMessage() {
 		testRound();
@@ -265,7 +316,10 @@ class GameControllerTest {
 		assertTrue(sentMessages.get(44) instanceof ActivePlayerMessage message && message.getActiveNickname().equals("Ale"));
 		assertTrue(sentMessages.get(45) instanceof MatchStateMessage message && message.getCurrentMatchPhase() == MatchPhase.ActionPhaseStepOne);
 	}
-	
+
+	/**
+	 * Tests the {@link it.polimi.ingsw.server.model.student.Student Student} move to the island message
+	 */
 	@Test
 	void testReceiveStudToIslandMessage() {
 		testRound();
@@ -292,7 +346,10 @@ class GameControllerTest {
 		assertTrue(sentMessages.get(44) instanceof ActivePlayerMessage message && message.getActiveNickname().equals("Ale"));
 		assertTrue(sentMessages.get(45) instanceof MatchStateMessage message && message.getCurrentMatchPhase() == MatchPhase.ActionPhaseStepOne);
 	}
-	
+
+	/**
+	 * Tests the {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard's} purchase message
+	 */
 	@RepeatedTest(10)
 	void testReceivePurchaseCharacterCardWithoutCoins() {
 		testRound();
@@ -311,7 +368,10 @@ class GameControllerTest {
 			assertEquals(new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPurchaseCharacterCard, false, "Not enough Coins to purchase the Card"), sentMessages.get(35));
 		}
 	}
-	
+
+	/**
+	 * Tests
+	 */
 	@Test
 	void testReceivePurchaseCharacterCardOutOfBounds() {
 		testRound();
@@ -320,7 +380,9 @@ class GameControllerTest {
 		NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, controller, userInfo);
 		assertEquals(new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPurchaseCharacterCard, false, "Invalid action: the Character Card index you sent was incorrect"), sentMessages.get(35));
 	}
-	
+	/**
+	 * Tests the case of an already purchased {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard}
+	 */
 	@RepeatedTest(10)
 	void testReceivePurchaseCharacterCardAlreadyInUse() {
 		testRound();
@@ -431,7 +493,10 @@ class GameControllerTest {
 			}
 		}
 	}
-	
+
+	/**
+	 * Tests the case of a {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard} played without purchasing it
+	 */
 	@Test
 	void testReceivePlayCharacterCardWithoutPurchase() {
 		testRound();
@@ -448,7 +513,10 @@ class GameControllerTest {
 		NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, controller, userInfo);
 		assertEquals(new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPlayCharacterCard, false, "Invalid move: you have not purchased the Character card"), sentMessages.get(35));
 	}
-	
+
+	/**
+	 * Tests a {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard} use with the wrong parameters
+	 */
 	@RepeatedTest(10)
 	void testReceivePlayCharacterWithWrongParams() {
 		testRound();
@@ -481,7 +549,10 @@ class GameControllerTest {
 			assertEquals(new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPlayCharacterCard, false, "Invalid move: the Character Card parameters are not valid"), sentMessages.get(46));
 		}
 	}
-	
+
+	/**
+	 * Test the case of multiple {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard} uses
+	 */
 	@RepeatedTest(20)
 	void testTooManyCardUses() {
 		testRound();
@@ -547,7 +618,10 @@ class GameControllerTest {
 			assertEquals(new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPlayCharacterCard, false, "Invalid move: the Character Card cannot be used anymore (reached max use limit)"), sentMessages.get(57 + 11 * (numberOfTimesPlayed - 1)));
 		}
 	}
-	
+
+	/**
+	 * Tests a move without a {@link it.polimi.ingsw.server.model.student.Student Student}
+	 */
 	@RepeatedTest(10)
 	void testStudentMovementWithoutStudent() {
 		testRound();
@@ -566,7 +640,10 @@ class GameControllerTest {
 			assertEquals(new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidMoveStudent, false, "Invalid move: the movement of the selected Student is not valid"), sentMessages.get(35));
 		}
 	}
-	
+
+	/**
+	 * Test the case of an empty {@link it.polimi.ingsw.server.model.student.Cloud Cloud} choosen
+	 */
 	@Test
 	void testEmptyCloudPick() {
 		testRound();
@@ -672,7 +749,10 @@ class GameControllerTest {
 		NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, controller, userInfo);
 		assertEquals(new PlayerActionResponse("Fra", PlayerActionMessage.ActionType.DidChooseCloudIsland, false, "Invalid move: the Cloud you chose is empty. This is not allowed, unless the Bag is also empty"), sentMessages.get(35 + 11 * i));
 	}
-	
+
+	/**
+	 * Test the seconf plan phase
+	 */
 	@RepeatedTest(10)
 	void testSecondPlanPhase() {
 		testRound();

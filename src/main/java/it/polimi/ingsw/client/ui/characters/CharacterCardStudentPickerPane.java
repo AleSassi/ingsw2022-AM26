@@ -20,10 +20,18 @@ import javafx.scene.layout.GridPane;
 
 import java.util.HashMap;
 
+/**
+ * Class {@code CharacterCardStudentPickerPane} represent the StudentPicker {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard}
+ */
 public class CharacterCardStudentPickerPane extends CharacterCardPane {
 	
 	private AnchorPane pickedStudentPane;
-	
+
+	/**
+	 * Constructor creates a new {@code CharacterCardStudentPickerPane}
+	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard's} index
+	 * @param cardBean (type CharacterCardBean)
+	 */
 	public CharacterCardStudentPickerPane(int cardIndex, CharacterCardBean cardBean) {
 		super(cardIndex, cardBean);
 	}
@@ -32,7 +40,11 @@ public class CharacterCardStudentPickerPane extends CharacterCardPane {
 	protected void performAdditionalInitializationForCard(int cardIndex, CharacterCardBean cardBean) {
 		setupPickedStudentPane(cardBean.getExcludedStudent());
 	}
-	
+
+	/**
+	 * Sets up the picked {@link it.polimi.ingsw.client.ui.StudentPane StudentPane}
+	 * @param pickedStudent (type Student)
+	 */
 	private void setupPickedStudentPane(Student pickedStudent) {
 		if (pickedStudent != null) {
 			if (pickedStudentPane != null) {

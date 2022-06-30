@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
-
+/**
+ * Class {@code NetworkMessageDecoder} represent the message decoder
+ */
 public class NetworkMessageDecoder {
 	
 	private static class DummyMessage extends NetworkMessage {

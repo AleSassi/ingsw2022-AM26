@@ -22,7 +22,9 @@ class PlayerStateMessageTest {
 			message = new PlayerStateMessage(dummyPlayer.getNickname(), null, dummyPlayer.getAvailableAssistantCards(), null, dummyPlayer.getBoard(), dummyPlayer.getAvailableCoins(), dummyPlayer.getWizard());
 		});
 	}
-	
+	/**
+	 * Tests the encoding and decoding process
+	 */
 	@Test
 	void testEncodeDecode() {
 		String encoded = message.serialize();
@@ -31,7 +33,9 @@ class PlayerStateMessageTest {
 			assertEquals(message, messageDecoded);
 		});
 	}
-	
+	/**
+	 * Tests the case of a wrong decode
+	 */
 	@Test
 	void testWrongDecode() {
 		String encoded = "{\"wrongKey\":2}";

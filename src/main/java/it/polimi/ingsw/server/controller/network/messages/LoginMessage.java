@@ -8,6 +8,9 @@ import it.polimi.ingsw.server.model.assistants.Wizard;
 import it.polimi.ingsw.server.model.match.MatchVariant;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Class {@code LoginMessage} represent the messages of a new login
+ */
 public class LoginMessage extends NetworkMessage {
 	
 	private String nickname;
@@ -44,7 +47,6 @@ public class LoginMessage extends NetworkMessage {
 	
 	@Override
 	public String serialize() {
-		//TODO: Can we put this code into the Network Message Abstract Class?
 		Gson gson = new Gson();
 		return gson.toJson(this);
 	}

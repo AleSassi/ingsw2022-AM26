@@ -19,6 +19,9 @@ import javafx.scene.text.Font;
 
 import java.util.*;
 
+/**
+ * Class {@code IslandPane} represent the JavaFX controller fot the {@link it.polimi.ingsw.server.model.student.Island Islands}
+ */
 public class IslandPane extends RescalableAnchorPane {
     
     private final int idx;
@@ -34,6 +37,11 @@ public class IslandPane extends RescalableAnchorPane {
 
     private StudentDropTarget[] allowedDropDestinationsForDrag, allowedStudentDestinationsForPhase;
 
+    /**
+     * Constructor creates an {@code IslandPane}
+     * @param idx (type int) {@link it.polimi.ingsw.server.model.student.Island Island's} index
+     * @param notification (type Notification)
+     */
     public IslandPane(int idx, Notification notification) {
         this.allowedDropDestinationsForDrag = new StudentDropTarget[0];
         this.allowedStudentDestinationsForPhase = new StudentDropTarget[0];
@@ -84,10 +92,19 @@ public class IslandPane extends RescalableAnchorPane {
         NotificationCenter.shared().addObserver(this, this::didReceiveEndStudentMoveNotification, NotificationName.JavaFXDidEndMovingStudent, null);
     }
 
+    /**
+     * Sets the allowed {@link it.polimi.ingsw.server.model.student.Student Student's} destination relative to the current {@link it.polimi.ingsw.server.model.match.MatchPhase MatchPhase}
+     * @param allowedStudentDestinationsForPhase (type StudentDropTarger[]) allowed {@code Student's} destinations for current {@code MatchPhase}
+     */
     public void setAllowedStudentDestinationsForPhase(StudentDropTarget[] allowedStudentDestinationsForPhase) {
         this.allowedStudentDestinationsForPhase = allowedStudentDestinationsForPhase;
     }
 
+    /**
+     * Sets the MouseClick event
+     * @param targetPane (type Pane) origin target
+     * @param dropTarget (type Pane) destionation target
+     */
     private void setupMouseClickAfterStudentStartMoving(Pane targetPane, StudentDropTarget dropTarget) {
         targetPane.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             for (StudentDropTarget allowedDropTarget : allowedDropDestinationsForDrag) {
@@ -105,13 +122,21 @@ public class IslandPane extends RescalableAnchorPane {
 
     }
 
+    /**
+     * Deletes the {@code IslandPnae}
+     */
     protected void deleteIsland() {
         new Thread(() -> NotificationCenter.shared().removeObserver(this)).start();
         for (StudentOnIsland s: students) {
             s.deleteStudent();
         }
     }
-    
+
+    /**
+     * Sets the {@link it.polimi.ingsw.client.ui.characters.CharacterCardPane CharacterCardPane} to destination mode
+     * @param isCardDestinationMode (type boolean) true if needs to be set to destination mode
+     * @param sourceNotificationInfo (typ HashMap(String, Object) {@code sourceNotificationInfo}
+     */
     protected void setCardDestinationMode(boolean isCardDestinationMode, HashMap<String, Object> sourceNotificationInfo) {
         //We use the sourceNotificationInfo param to forward it when we close the control loop
         setActiveBackground(isCardDestinationMode);
@@ -142,6 +167,10 @@ public class IslandPane extends RescalableAnchorPane {
         }
     }
 
+    /**
+     * Student movement callback
+     * @param notification (type Notification)
+     */
     private void didReceiveStartStudentMoveNotification(Notification notification) {
         List<StudentDropTarget> allowableDefaultMovements = Arrays.stream(allowedStudentDestinationsForPhase).toList();
         List<StudentDropTarget> dropDestinationsForDrag = Arrays.stream(((StudentDropTarget[]) notification.getUserInfo().get(NotificationKeys.StudentDropTargets.getRawValue()))).toList();
@@ -151,7 +180,11 @@ public class IslandPane extends RescalableAnchorPane {
             setActiveBackground(true);
         }
     }
-    
+
+    /**
+     * Sets the background
+     * @param active (type boolean) true id need to be activated
+     */
     private void setActiveBackground(boolean active) {
         if (active) {
             gridPane.highlight(true);
@@ -161,12 +194,19 @@ public class IslandPane extends RescalableAnchorPane {
         }
     }
 
+    /**
+     * Student movement end callback
+     * @param notification (type Notification)
+     */
     private void didReceiveEndStudentMoveNotification(Notification notification) {
         this.allowedDropDestinationsForDrag = new StudentDropTarget[0]; //To reset to the initial default state
         setActiveBackground(false);
     }
 
-
+    /**
+     * {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage}
+     * @param notification (type Notification)
+     */
     public void didReceiveTableState(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof TableStateMessage message) {
             if (message.getIslands().size() - 1 >= idx) {
@@ -179,14 +219,26 @@ public class IslandPane extends RescalableAnchorPane {
         }
     }
 
+    /**
+     * Sets the stop card on this {@code IslandPane}
+     * @param tableStateMessage (type tableStateMessage)
+     */
     private void setStop(TableStateMessage tableStateMessage) {
         stop.setVisible(tableStateMessage.getIslands().get(idx).itHasStopCard());
     }
 
+    /**
+     * Sets the mother nature on this {@code IslandPane}
+     * @param tableStateMessage (type tableStateMessage)
+     */
     private void setMotherNature(TableStateMessage tableStateMessage) {
         motherNature.setVisible(tableStateMessage.getIslands().get(idx).isMotherNaturePresent());
     }
 
+    /**
+     * Sets the {@link it.polimi.ingsw.server.model.Tower Towers} on this {@code IslandPane}
+     * @param tableStateMessage (type tableStateMessage)
+     */
     private void setTowerOnIsland(TableStateMessage tableStateMessage) {
         if (tower != null && tableStateMessage.getIslands().get(idx).getActiveTowerType() != null) {
             switch (tableStateMessage.getIslands().get(idx).getActiveTowerType()) {

@@ -15,7 +15,9 @@ class VictoryMessageTest {
 	void initMessage() {
 		message = new VictoryMessage(new String[]{"Ale"});
 	}
-	
+	/**
+	 * Tests the encoding and decoding process
+	 */
 	@Test
 	void testEncodeDecode() {
 		String encoded = message.serialize();
@@ -24,7 +26,9 @@ class VictoryMessageTest {
 			assertEquals(message, messageDecoded);
 		});
 	}
-	
+	/**
+	 * Tests the case of a wrong decode
+	 */
 	@Test
 	void testWrongDecode() {
 		String encoded = "{\"wrongKey\":2}";

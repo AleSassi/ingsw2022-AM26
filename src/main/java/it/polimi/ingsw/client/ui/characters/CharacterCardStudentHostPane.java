@@ -22,11 +22,19 @@ import javafx.scene.layout.RowConstraints;
 import java.awt.desktop.QuitEvent;
 import java.util.HashMap;
 
+/**
+ * Class {@code CharacterCardStudentHostPane} represent the StudentHosting {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard}
+ */
 public class CharacterCardStudentHostPane extends CharacterCardGenericPane {
 	
 	private Student pickedStudentFromCard = null;
 	private GridPane studentGrid;
-	
+
+	/**
+	 * Constructor creates a new {@code CharacterCardStudentHostPane}
+	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard's} index
+	 * @param cardBean (type CharacterCardBean)
+	 */
 	public CharacterCardStudentHostPane(int cardIndex, CharacterCardBean cardBean) {
 		super(cardIndex, cardBean);
 	}
@@ -36,7 +44,12 @@ public class CharacterCardStudentHostPane extends CharacterCardGenericPane {
 		super.performAdditionalInitializationForCard(cardIndex, cardBean);
 		buildStudentGrid(cardBean.getCharacter(), cardBean.getHostedStudents());
 	}
-	
+
+	/**
+	 * Builds the {@code StudentGrid} depending on the {@link it.polimi.ingsw.server.model.characters.Character Character}
+	 * @param character (type Character)
+	 * @param hostedStudents (type StudentCollection)
+	 */
 	private void buildStudentGrid(Character character, StudentCollection hostedStudents) {
 		if (studentGrid == null) {
 			studentGrid = new GridPane(); //Grid pane MUST be a 2x3 grid, to hold a max of 6 students

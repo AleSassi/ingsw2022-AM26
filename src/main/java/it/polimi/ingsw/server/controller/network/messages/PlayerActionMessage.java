@@ -9,7 +9,9 @@ import it.polimi.ingsw.server.model.student.Student;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-
+/**
+ * Class {@code PlayerActionMessage} represent the PlayerAction message
+ */
 public class PlayerActionMessage extends NetworkMessage {
 	
 	private String nickname;

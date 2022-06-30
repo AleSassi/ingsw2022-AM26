@@ -13,12 +13,19 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Class {@code GameController} represent the controller of the game
+ */
 public class GameController {
 	
 	private final GameServer server;
 	private GameLobby lobby;
 	private MatchManager activeMatchManager;
-	
+
+	/**
+	 * Constructor creates all the observer fot the {@link it.polimi.ingsw.notifications.Notification Notifictions}
+	 * @param server (type GameServer) server to associates this {@code GameController}
+	 */
 	public GameController(@NotNull GameServer server) {
 		this.server = server;
 		
@@ -26,35 +33,64 @@ public class GameController {
 		NotificationCenter.shared().addObserver(this, this::didReceivePlayerActionMessage, NotificationName.ServerDidReceivePlayerActionMessage, this);
 		NotificationCenter.shared().addObserver(this, this::didReceiveTerminationMessage, NotificationName.ServerDidTerminateMatch, this);
 	}
-	
+
+	/**
+	 * Gets the maximum number of {@link it.polimi.ingsw.server.model.Player Players}
+	 * @return (type int) returns the maximum number of {@link it.polimi.ingsw.server.model.Player Players}
+	 */
 	public int getMaxPlayerCount() {
 		if (lobby == null) return 0;
 		return lobby.getMaxPlayerCount();
 	}
-	
+
+	/**
+	 * Terminates the match
+	 * @return (type boolean) returns true when the {@code GameController} is terminated
+	 */
 	public boolean isTerminated() {
 		return lobby == null && activeMatchManager == null;
 	}
-	
+
+	/**
+	 * Gets the {@link it.polimi.ingsw.server.model.match.MatchVariant MatchVariant}
+	 * @return (type MatchVariant) returns the {@code MatchVariant}
+	 */
 	public MatchVariant getMatchVariant() {
 		return lobby.getVariant();
 	}
-	
+
+	/**
+	 * Checks if the {@link it.polimi.ingsw.server.model.match.GameLobby GameLobby} accepts {@link it.polimi.ingsw.server.model.Player Players}
+	 * @return (type boolean) return true if the {@code GameLobby} can accepts {@code Players}
+	 */
 	public boolean acceptsPlayers() {
 		if (lobby == null) return true;
 		return lobby.getCurrentState() == GameLobbyState.FillableWithPlayers;
 	}
-	
+
+	/**
+	 * Check if the new {@link it.polimi.ingsw.server.model.Player Player's} nickname is unique
+	 * @param nickname (type String) nickname to check
+	 * @return (type boolean) return true if the new {@code Player's} nickname is unique
+	 */
 	public boolean containsPlayerWithNickname(String nickname) {
 		if (lobby == null) return false;
 		return Arrays.stream(lobby.getPlayerNicknames()).toList().contains(nickname);
 	}
-	
+
+	/**
+	 * Gets the list of the connected {@link it.polimi.ingsw.server.model.Player Players}
+	 * @return (type list of Player) returns the list of the connected {@link it.polimi.ingsw.server.model.Player Players}
+	 */
 	public String[] getConnectedPlayerNicknames() {
 		if (lobby == null) return new String[0];
 		return lobby.getPlayerNicknames();
 	}
-	
+
+	/**
+	 * Login message callback
+	 * @param notification (type Notification)
+	 */
 	private void didReceiveLoginMessage(Notification notification) {
 		// Before continuing, check that the notification contains the desired message (LoginMessage)
 		if (notification.getUserInfo() != null &&
@@ -97,7 +133,11 @@ public class GameController {
 			}
 		}
 	}
-	
+
+	/**
+	 * Active player message callback
+	 * @param notification (type Notification)
+	 */
 	private void didReceivePlayerActionMessage(Notification notification) {
 		// Before continuing, check that the notification contains the desired message (LoginMessage)
 		if (notification.getUserInfo() != null &&
@@ -165,12 +205,20 @@ public class GameController {
 			}
 		}
 	}
-	
+
+	/**
+	 * Termination message callback
+	 * @param notification (type Notification)
+	 */
 	private void didReceiveTerminationMessage(Notification notification) {
 		//TODO: Find a way to archive the Match here for future reconnections
 		terminateMatch();
 	}
-	
+
+	/**
+	 * Player Victory message callback
+	 * @param notification (type Notification)
+	 */
 	private void didReceivePlayerVictoryNotification(Notification notification) {
 		// Terminate the match and notify the players
 		if (notification.getUserInfo() != null && notification.getUserInfo().containsKey(NotificationKeys.WinnerNickname.getRawValue())) {
@@ -182,7 +230,10 @@ public class GameController {
 			}
 		}
 	}
-	
+
+	/**
+	 * Starts the match
+	 */
 	private void startMatch() {
 		try {
 			activeMatchManager = lobby.startGame();
@@ -196,7 +247,10 @@ public class GameController {
 			terminateMatch();
 		}
 	}
-	
+
+	/**
+	 * Sends the match date to the {@link it.polimi.ingsw.server.model.Player Players}
+	 */
 	private void sendMatchDataToClients() {
 		for (String nickname: lobby.getPlayerNicknames()) {
 			// First we send the Table description
@@ -215,7 +269,10 @@ public class GameController {
 			server.sendMessage(new MatchStateMessage(activeMatchManager.getMatchPhase()), nickname);
 		}
 	}
-	
+
+	/**
+	 * Terminates the match
+	 */
 	private void terminateMatch() {
 		// Terminate the match by destroying the lobby
 		lobby = null;

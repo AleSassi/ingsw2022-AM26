@@ -20,7 +20,10 @@ class NotificationObserverTest {
 			observer = new NotificationObserver(this, observedPlayer, (notification) -> System.out.println("Hello"));
 		});
 	}
-	
+
+	/**
+	 * Tests that {@code getObservedObject} returns the observed object
+	 */
 	@Test
 	void getObservedObject() {
 		assertDoesNotThrow(() -> {
@@ -28,7 +31,10 @@ class NotificationObserverTest {
 			assertEquals(observedPlayer, observer.getObservedObject());
 		});
 	}
-	
+
+	/**
+	 * Tests that {@code getCallback} returns the callback
+	 */
 	@Test
 	void getCallback() {
 		assertNotNull(observer.getCallback());

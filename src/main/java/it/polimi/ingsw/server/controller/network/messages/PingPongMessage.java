@@ -3,7 +3,9 @@ package it.polimi.ingsw.server.controller.network.messages;
 import com.google.gson.*;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
-
+/**
+ * Class {@code PingPongMessage} represent the PingPong message
+ */
 public class PingPongMessage extends NetworkMessage {
 	
 	private Boolean isPing;

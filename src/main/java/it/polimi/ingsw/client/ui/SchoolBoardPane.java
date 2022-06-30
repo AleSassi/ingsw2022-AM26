@@ -22,6 +22,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Class {@code SchoolBoardPane} represent the SchoolBoard
+ */
 public class SchoolBoardPane extends RescalableAnchorPane {
 
     private final String ownerNickname;
@@ -39,6 +42,11 @@ public class SchoolBoardPane extends RescalableAnchorPane {
     private final StudentDropTarget[] defaultDropDestinationsForEntranceStudents = new StudentDropTarget[]{StudentDropTarget.ToDiningRoom, StudentDropTarget.ToIsland, StudentDropTarget.ToCharacterCard};
     private final StudentDropTarget[] defaultDropDestinationsForDiningStudents = null;
 
+    /**
+     * Constructor creates the SchoolBoard AnchorPane
+     * @param isPrimary (type boolean) true if this {@code SchoolBoardPane} is primary
+     * @param ownerNickname (type String) owner's nickname
+     */
     public SchoolBoardPane(boolean isPrimary, String ownerNickname) {
         super();
         this.allowedDropDestinationsForDrag = new StudentDropTarget[0];
@@ -139,14 +147,25 @@ public class SchoolBoardPane extends RescalableAnchorPane {
         }
     }
 
+    /**
+     * Gets the owner of the main {@link it.polimi.ingsw.client.ui.SchoolBoardPane}
+     * @return (type String) return the owner of the main {@link it.polimi.ingsw.client.ui.SchoolBoardPane}
+     */
     protected String getOwnerNickname() {
         return ownerNickname;
     }
-
+    /**
+     * Sets the allowed {@link it.polimi.ingsw.utils.ui.StudentDropTarget StudentDropTargets} depending on the {@link it.polimi.ingsw.server.model.match.MatchPhase MatchPhase}
+     * @param allowedStudentDestinationsForPhase (type StudentDropTarget[])
+     */
     public void setAllowedStudentDestinationsForPhase(StudentDropTarget[] allowedStudentDestinationsForPhase) {
         this.allowedStudentDestinationsForPhase = allowedStudentDestinationsForPhase;
     }
 
+    /**
+     * {@code ActivePlayer} callback
+     * @param notification (type Notification)
+     */
     private void didReceiveActivePlayerNotification(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof ActivePlayerMessage message) {
             // Disable if the Player is not active anymore
@@ -166,6 +185,10 @@ public class SchoolBoardPane extends RescalableAnchorPane {
         }
     }
 
+    /**
+     * {@code PlayerStatus} callback
+     * @param notification (type Notification)
+     */
     protected void didReceivePlayerStatusNotification(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof PlayerStateMessage message && message.getNickname().equals(ownerNickname)) {
             displayEntranceFromMessage(message);
@@ -175,6 +198,10 @@ public class SchoolBoardPane extends RescalableAnchorPane {
         }
     }
 
+    /**
+     * Displays the Entrance from the {@link it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage PlayerStateMessage}
+     * @param message (type PlayerStateMessage)
+     */
     private void displayEntranceFromMessage(PlayerStateMessage message) {
         Platform.runLater(() -> entranceGrid.getChildren().removeAll(entranceGrid.getChildren()));
         int row = 0, col = 1;
@@ -189,6 +216,10 @@ public class SchoolBoardPane extends RescalableAnchorPane {
         entranceGrid.setDisable(false);
     }
 
+    /**
+     * Displays the DiningRoom from the {@link it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage PlayerStateMessage}
+     * @param message (type PlayerStateMessage)
+     */
     private void displayDiningRoomFromMessage(PlayerStateMessage message) {
         Platform.runLater(() -> diningGrid.getChildren().removeAll(diningGrid.getChildren()));
         int row = 0, col = 0;
@@ -203,7 +234,15 @@ public class SchoolBoardPane extends RescalableAnchorPane {
         }
         diningGrid.setDisable(false);
     }
-    
+
+    /**
+     * Sets the {@link it.polimi.ingsw.server.model.student.Student Student} in the Grid
+     * @param row (type int) target {@code Row}
+     * @param col(type int) target {@code Columns}
+     * @param student (type Student) {@code Student} type to place
+     * @param defaultDropDestinationsForDiningStudents (type StudentDropTarget[]) default {@link it.polimi.ingsw.utils.ui.StudentDropTarget StudentDropTarget}
+     * @param diningGrid (type gridPane) DiningRoom gridPane
+     */
     private void setupStudentInGrid(int row, int col, Student student, StudentDropTarget[] defaultDropDestinationsForDiningStudents, GridPane diningGrid) {
         AnchorPane studentButton = GUIUtils.createStudentButton(student, defaultDropDestinationsForDiningStudents);
         Platform.runLater(() -> {
@@ -212,7 +251,11 @@ public class SchoolBoardPane extends RescalableAnchorPane {
             diningGrid.getChildren().add(studentButton);
         });
     }
-    
+
+    /**
+     * Displays the {@link it.polimi.ingsw.server.model.Professor Professors} from the {@link it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage PlayerStateMessage}
+     * @param message (type PlayerStateMessage)
+     */
     private void displayProfessorsFromMessage(PlayerStateMessage message) {
         Platform.runLater(() -> professors.getChildren().removeAll(professors.getChildren()));
         int row = 0;
@@ -230,6 +273,10 @@ public class SchoolBoardPane extends RescalableAnchorPane {
         }
     }
 
+    /**
+     * Displays the {@link it.polimi.ingsw.server.model.Tower Tower} from the {@link it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage PlayerStateMessage}
+     * @param message (type PlayerStateMessage)
+     */
     private void displayTowersFromMessage(PlayerStateMessage message) {
         Platform.runLater(() -> towersGrid.getChildren().removeAll(towersGrid.getChildren()));
         for (int i = 0; i < message.getBoard().getAvailableTowerCount(); i++) {
@@ -244,6 +291,11 @@ public class SchoolBoardPane extends RescalableAnchorPane {
         }
     }
 
+    /**
+     * Sets the possible {@link it.polimi.ingsw.utils.ui.StudentDropTarget StudentDropTarget} after a {@link it.polimi.ingsw.server.model.student.Student Student} starts moving
+     * @param targetPane (type Pane) Pane to move
+     * @param dropTarget (type StudentDropTarget) drop target
+     */
     private void setupMouseClickAfterStudentStartMoving(Pane targetPane, StudentDropTarget dropTarget) {
         if (isPrimary) {
             targetPane.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -262,6 +314,10 @@ public class SchoolBoardPane extends RescalableAnchorPane {
         }
     }
 
+    /**
+     * {@code StartStudentMove} callback
+     * @param notification (type Notification)
+     */
     private void didReceiveStartStudentMoveNotification(Notification notification) {
         if (isPrimary) {
             switch (parameterMode) {
@@ -305,7 +361,12 @@ public class SchoolBoardPane extends RescalableAnchorPane {
             }
         }
     }
-    
+
+    /**
+     * Sets the {@link it.polimi.ingsw.utils.ui.StudentDropTarget StudentDropTarget} depending on the {@link it.polimi.ingsw.server.model.match.MatchPhase MatchPhase}
+     * @param dropTarget (type StudentDropTarget)
+     * @param mutuallyDisablingOtherAreas (type boolean) true if the target is the Entrance
+     */
     private void setEnabledWithDropTarget(StudentDropTarget dropTarget, boolean mutuallyDisablingOtherAreas) {
         switch (dropTarget) {
             case ToEntrance -> {
@@ -326,7 +387,11 @@ public class SchoolBoardPane extends RescalableAnchorPane {
             }
         }
     }
-    
+
+    /**
+     * {@code CharacterCardPlayed} callback
+     * @param notification (type notification)
+     */
     private void didReceiveCharacterCardPlayedNotification(Notification notification) {
         if (notification.getUserInfo() != null && isPrimary) {
             this.allowedDropDestinationsForDrag = new StudentDropTarget[0];
@@ -344,7 +409,12 @@ public class SchoolBoardPane extends RescalableAnchorPane {
             setCardParameterMode(parameterMode, dropTarget);
         }
     }
-    
+
+    /**
+     * Sets the type of {@link it.polimi.ingsw.client.ui.characters.CharacterCardPane CharacterCardPane}
+     * @param newParameterMode (type CardParameterMode)
+     * @param studentSource (type StudentDropTarget)
+     */
     private void setCardParameterMode(CardParameterMode newParameterMode, StudentDropTarget studentSource) {
         this.parameterMode = newParameterMode;
         switch (newParameterMode) {
@@ -392,17 +462,27 @@ public class SchoolBoardPane extends RescalableAnchorPane {
             }
         }
     }
-    
+
+    /**
+     * cleans the style after click
+     */
     private void cleanupStyles() {
         entranceGrid.setStyle("");
         diningGrid.setStyle("");
     }
 
+    /**
+     * {@code EndStudentMove} callback
+     * @param notification (type notification)
+     */
     private void didReceiveEndStudentMoveNotification(Notification notification) {
         this.allowedDropDestinationsForDrag = new StudentDropTarget[0]; //To reset to the initial default state
         cleanupStyles();
     }
-    
+
+    /**
+     * {@code CardParameterMode} enum
+     */
     private enum CardParameterMode {
         Disabled,
         StudentPicker,

@@ -3,8 +3,16 @@ package it.polimi.ingsw.client.ui.characters;
 import it.polimi.ingsw.server.model.characters.Character;
 import it.polimi.ingsw.server.model.characters.CharacterCardBean;
 
+/**
+ * Class {@code CharacterCardPaneBuilder} builds the {@link it.polimi.ingsw.client.ui.characters.CharacterCardPane CharacterCardPane}
+ */
 class CharacterCardPaneBuilder {
-	
+	/**
+	 * Builds a {@link it.polimi.ingsw.client.ui.characters.CharacterCardPane CharacterCardPane}
+	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard's} index
+	 * @param cardBean (type CharacterCardBean) {@code CharacterCard's} data
+	 * @return (type CharacterCardPane) returns a {@code CharacterCardPane}
+	 */
 	protected static CharacterCardPane buildPane(int cardIndex, CharacterCardBean cardBean) {
 		if (cardBean.getHostedStudents() != null && cardBean.getHostedStudents().getTotalCount() > 0) {
 			return new CharacterCardStudentHostPane(cardIndex, cardBean);

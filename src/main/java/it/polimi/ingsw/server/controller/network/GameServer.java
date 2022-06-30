@@ -13,6 +13,9 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.*;
 
+/**
+ * Class {@code GameServer} represent the Game's Server
+ */
 public class GameServer {
 	
 	private final static int pingDelayMS = 0;
@@ -26,7 +29,11 @@ public class GameServer {
 	private boolean isPinging = false;
 	private boolean isFirstPing = true;
 	private List<String> receivedPingsInCurrentTrip, sentPingsInCurrentTrip;
-	
+
+	/**
+	 * Constructor sets the port for the {@code Server's}
+	 * @param desiredPort (type int) {@code Server's} port
+	 */
 	public GameServer(int desiredPort) {
 		this.serverPort = desiredPort;
 		this.connectedClients = new ArrayList<>();
@@ -34,7 +41,11 @@ public class GameServer {
 		this.receivedPingsInCurrentTrip = new ArrayList<>();
 		this.sentPingsInCurrentTrip = new ArrayList<>();
 	}
-	
+
+	/**
+	 * Starts listening to new connection from {@link it.polimi.ingsw.jar.Client Clients}
+	 * @throws UnavailablePortException whenever the chosen port is unavailable
+	 */
 	public void startListeningIncomingConnections() throws UnavailablePortException {
 		ExecutorService executor = Executors.newCachedThreadPool();
 		ServerSocket serverSocket;
@@ -55,15 +66,26 @@ public class GameServer {
 		}
 		executor.shutdown();
 	}
-	
+
+	/**
+	 * Gets the ping delay (in milliseconds)
+	 * @return (type int) returns the ping delay (in milliseconds)
+	 */
 	public static int getPingDelayMS() {
 		return pingDelayMS;
 	}
-	
+
+	/**
+	 * Gets the ping interval (in milliseconds)
+	 * @return (type int) returns the ping interval (in milliseconds)
+	 */
 	public static int getPingIntervalMS() {
 		return pingIntervalMS;
 	}
-	
+
+	/**
+	 * Starts the ping timer
+	 */
 	private synchronized void startPingTimer() {
 		Timer pingTimer = new Timer("PingTimer");
 		pingTimer.scheduleAtFixedRate(new TimerTask() {
@@ -74,14 +96,22 @@ public class GameServer {
 		}, pingDelayMS, pingIntervalMS);
 		isPinging = true;
 	}
-	
+
+	/**
+	 * Creates a new Server-Client connection
+	 * @param clientSocket (type Socket) {@link it.polimi.ingsw.jar.Client Client's} socket
+	 * @param executor (type executor)
+	 */
 	private synchronized void createClientConnection(Socket clientSocket, ExecutorService executor) {
 		connectedClients.add(new VirtualClient(clientSocket, executor, this));
 		if (!isPinging) {
 			startPingTimer();
 		}
 	}
-	
+
+	/**
+	 * Pings the {@link it.polimi.ingsw.jar.Client Clients}
+	 */
 	private synchronized void pingClients() {
 		// Signal disconnection if at least one client did not send the PONG response in time
 		if (!isFirstPing) {
@@ -117,7 +147,12 @@ public class GameServer {
 		sentPingsInCurrentTrip = connectedClients.stream().filter(VirtualClient::isPingable).map(VirtualClient::getNickname).filter(Objects::nonNull).toList();
 		broadcastMessage(pingMessage);
 	}
-	
+
+	/**
+	 * Callback for messages received from {@link it.polimi.ingsw.jar.Client Clients}
+	 * @param message (type NetworkMessage) message received
+	 * @param client (type VirtualClient)
+	 */
 	protected synchronized void didReceiveMessageFromClient(NetworkMessage message, VirtualClient client) {
 		HashMap<String, Object> userInfo = new HashMap<>();
 		userInfo.put(NotificationKeys.IncomingNetworkMessage.getRawValue(), message);
@@ -158,11 +193,21 @@ public class GameServer {
 		}
 		// For any other wrong message types we do nothing
 	}
-	
+
+	/**
+	 * Gets the {@link it.polimi.ingsw.server.controller.GameController GameController} associated with the {@link it.polimi.ingsw.server.model.Player Player's} nickname
+	 * @param nickname (type String) {@code Player's} nickname
+	 * @return (type Optional(GameController)) returns the {@code GameController} associated with the {@code Player's} nickname
+	 */
 	private Optional<GameController> getControllerWithNickname(String nickname) {
 		return activeControllers.stream().filter((controller) -> controller.containsPlayerWithNickname(nickname)).findFirst();
 	}
-	
+
+	/**
+	 * Sends the {@link it.polimi.ingsw.server.controller.network.messages.NetworkMessage NetworkMessage}
+	 * @param message (type NetworkMessage) message to send
+	 * @param playerNickname (type String) {@link it.polimi.ingsw.server.model.Player Player's} nickname to send to
+	 */
 	public synchronized void sendMessage(NetworkMessage message, String playerNickname) {
 		for (VirtualClient client: connectedClients) {
 			if (playerNickname.equals(client.getNickname())) {
@@ -171,7 +216,11 @@ public class GameServer {
 			}
 		}
 	}
-	
+
+	/**
+	 * Sends the message to all {@link it.polimi.ingsw.jar.Client Clients}
+	 * @param message (type NetworkMessage) message to send
+	 */
 	public synchronized void broadcastMessage(NetworkMessage message) {
 		for (VirtualClient client: connectedClients) {
 			if (client.getNickname() != null) {

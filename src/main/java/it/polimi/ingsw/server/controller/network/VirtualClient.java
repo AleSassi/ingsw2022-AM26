@@ -14,6 +14,9 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+/**
+ * Class {@code VirtualClient} represent the {@code Client} from {@code Server's} side
+ */
 public class VirtualClient {
 	
 	private String nickname;
@@ -25,7 +28,13 @@ public class VirtualClient {
 	
 	private BufferedReader bufferedReader;
 	private OutputStreamWriter outputStreamWriter;
-	
+
+	/**
+	 * Constructor sets the {@code VirtualClient's} parameters
+	 * @param socket (type Socket) connection socket
+	 * @param executorService (type executorService)
+	 * @param parentServer (type GameServer) {@link it.polimi.ingsw.server.controller.network.GameServer GameServe} to connect to
+	 */
 	public VirtualClient(Socket socket, ExecutorService executorService, GameServer parentServer) {
 		this.socket = socket;
 		this.decoder = new NetworkMessageDecoder();
@@ -74,7 +83,11 @@ public class VirtualClient {
 			task.cancel(true);
 		}
 	}
-	
+
+	/**
+	 * Gets the {@link it.polimi.ingsw.server.model.Player Player's} nickname
+	 * @return (type String) returns the {@code Player's} nickname
+	 */
 	public String getNickname() {
 		return nickname;
 	}
@@ -82,15 +95,27 @@ public class VirtualClient {
 	public String getIpPortString() {
 		return socket.getRemoteSocketAddress() + ":" + socket.getPort();
 	}
-	
+
+	/**
+	 * Checks if the {@code Client} is pingable
+	 * @return (type boolean) returns true if {@code Client} is pingable
+	 */
 	public boolean isPingable() {
 		return isPingable;
 	}
-	
+
+	/**
+	 * Sets this {@code VirtualClient} to pingable
+	 * @param pingable (type boolean) true if it needs to be pingable
+	 */
 	public void setPingable(boolean pingable) {
 		isPingable = pingable;
 	}
-	
+
+	/**
+	 * Sends the {@link it.polimi.ingsw.server.controller.network.messages.NetworkMessage NetworkMessage}
+	 * @param message (type NetworkMessage) message to send
+	 */
 	public synchronized void sendMessage(NetworkMessage message) {
 		if (socket != null && !socket.isClosed()) {
 			try {
@@ -108,22 +133,37 @@ public class VirtualClient {
 			}
 		}
 	}
-	
+
+	/**
+	 * {@link it.polimi.ingsw.server.controller.network.messages.NetworkMessage NetworkMessage} callback
+	 * @param message (type NetworkMessage) received message
+	 */
 	public synchronized void didReceiveMessage(NetworkMessage message) {
 		if (message instanceof LoginMessage loginMessage) {
 			nickname = loginMessage.getNickname();
 		}
 		parentServer.didReceiveMessageFromClient(message, this);
 	}
-	
+
+	/**
+	 * {@link it.polimi.ingsw.server.controller.network.messages.NetworkMessage NetworkMessage} callback
+	 * @param message (type NetworkMessage) received message
+	 * @return (type boolean) returns true the {@code NetworkMessage} is a termination message
+	 */
 	private boolean isTerminationMessage(NetworkMessage message) {
 		return message instanceof MatchTerminationMessage;
 	}
-	
+
+	/**
+	 * Sends a notification whenever a {@link it.polimi.ingsw.server.model.Player Player} disconnects
+	 */
 	public void notifyPlayerDisconnection() {
 		sendMessage(new MatchTerminationMessage("Another Player disconnected and this Match has ended", true));
 	}
-	
+
+	/**
+	 * Terminates the connection
+	 */
 	public synchronized void terminateConnection() {
 		try {
 			task.cancel(true);

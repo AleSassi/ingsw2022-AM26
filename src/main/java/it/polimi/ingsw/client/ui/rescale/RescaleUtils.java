@@ -4,7 +4,15 @@ import it.polimi.ingsw.client.ui.GUI;
 import it.polimi.ingsw.notifications.Notification;
 import javafx.scene.control.Control;
 
+/**
+ * Class RescaleUtils is a support class for the resize of the {@code Nodes}
+ */
 public class RescaleUtils {
+	/**
+	 * Rescales the {@code Nodes} after the {@link it.polimi.ingsw.notifications.Notification Notification}
+	 * @param notification (type Notification)
+	 * @return (type double) returns the scale factor
+	 */
 	public static Double rescaleAfterNotification(Notification notification) {
 		if (notification.getUserInfo() != null) {
 			if (notification.getUserInfo().containsKey("newWidth")) {
@@ -19,7 +27,14 @@ public class RescaleUtils {
 		}
 		return null;
 	}
-	
+
+
+	/**
+	 * Gets the scale value
+	 * @param newDimensionSize (type double)
+	 * @param isWidth (type boolean) is true when the value is referred to the width
+	 * @return (type double) returns the scale factor
+	 */
 	public static double getScaleValue(double newDimensionSize, boolean isWidth) {
 		double newScale = newDimensionSize / (isWidth ? GUI.referenceWidth : GUI.referenceHeight);
 		double heightScale = GUI.getWindowHeight() / GUI.referenceHeight;

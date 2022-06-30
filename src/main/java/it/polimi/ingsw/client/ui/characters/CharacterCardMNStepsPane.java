@@ -6,8 +6,15 @@ import it.polimi.ingsw.server.model.student.Student;
 import javafx.application.Platform;
 import javafx.scene.control.TextInputDialog;
 
+/**
+ * Class {@code CharacterCardMNStepsPane} represent the mother nature steps {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard}
+ */
 public class CharacterCardMNStepsPane extends CharacterCardPane {
-	
+	/**
+	 * Constructor creates the {@code CharacterCardMNStepsPane}
+	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard's} index
+	 * @param cardBean (type CharacterCardBean)
+	 */
 	public CharacterCardMNStepsPane(int cardIndex, CharacterCardBean cardBean) {
 		super(cardIndex, cardBean);
 	}
