@@ -129,7 +129,6 @@ public class TableManager {
         for (int studentIdx = 0; studentIdx < count; studentIdx++) {
             result.addStudents(studentBag.removeRandom(), 1);
         }
-        result.addStudents(Student.BlueUnicorn, count);
         return result;
     }
 

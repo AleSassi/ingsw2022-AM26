@@ -233,7 +233,6 @@ public class MainBoardController extends CleanableController implements JavaFXRe
 			td.setHeaderText("Enter the number of steps Mother Nature must move by (between 0 and 2)");
 			td.showAndWait().ifPresentOrElse((text) -> {
 				try {
-					showFaderPane();
 					int number = Integer.parseInt(text);
 					if (number < 0) {
 						number = 0;
@@ -241,6 +240,7 @@ public class MainBoardController extends CleanableController implements JavaFXRe
 						number = 2;
 					}
 					//Send the player action
+					showFaderPane();
 					PlayerActionMessage actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidMoveMNBySteps, -1, null, false, -1, number, -1, -1, null);
 					GameClient.shared().sendMessage(actionMessage);
 				} catch (NumberFormatException e) {
