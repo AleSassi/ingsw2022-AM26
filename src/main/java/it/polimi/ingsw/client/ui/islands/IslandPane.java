@@ -230,18 +230,18 @@ public class IslandPane extends RescalableAnchorPane {
         if (tower != null) {
             tower.setPrefSize(60 * scale, 60 * scale);
             towerLabel.setFont(new Font(20 * scale));
-            towerLabel.setLayoutX(105 * scale);
-            towerLabel.setLayoutY(80 * scale);
-            tower.setLayoutX(80 * scale);
-            tower.setLayoutY(70 * scale);
+            towerLabel.setLayoutX(100 * scale);
+            towerLabel.setLayoutY(75 * scale);
+            tower.setLayoutX(75 * scale);
+            tower.setLayoutY(65 * scale);
         }
     
         //rescale Grid && Columns and Rows
         gridPane.getRowConstraints().removeAll(gridPane.getRowConstraints());
         gridPane.getColumnConstraints().removeAll(gridPane.getColumnConstraints());
-        gridPane.setPrefSize(85 * scale, 60 * scale);
-        gridPane.setLayoutX(30 * scale);
-        gridPane.setLayoutY(30 * scale);
+        gridPane.setPrefSize(85 * scale, 85 * scale);
+        gridPane.setLayoutX(25 * scale);
+        gridPane.setLayoutY(25 * scale);
         for (int i = 0; i < 3; i++) {
             ColumnConstraints col = new ColumnConstraints(85.0 / 3 * scale);
             gridPane.getColumnConstraints().add(col);
