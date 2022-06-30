@@ -47,7 +47,7 @@ public class IslandPane extends RescalableAnchorPane {
             case 1 -> address = "images/islands/island2.png";
             case 2 -> address = "images/islands/island3.png";
         }
-        GUIUtils.setStyleWithBackgroundImage(this, "images/islands/island1.png");
+        GUIUtils.setStyleWithBackgroundImage(this, address);
 
         motherNature = GUIUtils.createImageViewWithImageNamed("images/mothernature.png");
         stop = GUIUtils.createImageViewWithImageNamed("images/stop.png");
@@ -155,7 +155,7 @@ public class IslandPane extends RescalableAnchorPane {
         if (active) {
             setStyle(getStyle() + ";\n-fx-background-color: rgba(80,255,80,0.4)");
         } else {
-            setStyle("-fx-background-image: url(" + address + ");\n-fx-background-size: 100% 100%");
+            GUIUtils.setStyleWithBackgroundImage(this, address);
         }
     }
 
