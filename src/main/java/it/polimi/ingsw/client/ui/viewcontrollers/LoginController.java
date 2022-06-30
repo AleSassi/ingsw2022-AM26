@@ -4,6 +4,7 @@ package it.polimi.ingsw.client.ui.viewcontrollers;
 import it.polimi.ingsw.client.controller.network.GameClient;
 import it.polimi.ingsw.client.ui.GUI;
 import it.polimi.ingsw.client.ui.rescale.RescalableController;
+import it.polimi.ingsw.client.ui.rescale.RescaleUtils;
 import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
@@ -33,9 +34,9 @@ import java.util.ResourceBundle;
 public class LoginController extends RescalableController {
 	
 	@FXML
-	public ImageView cranioImg;
+	private ImageView cranioImg;
 	@FXML
-	public ImageView eriantysImg;
+	private ImageView eriantysImg;
 	@FXML
 	private Label nicknameFieldTitleLabel;
 	@FXML
@@ -164,16 +165,20 @@ public class LoginController extends RescalableController {
 	@Override
 	public void rescale(double scale) {
 		//Set everything up so that it is centered
-		rescaleToCenter(nicknameBox, 429, 26, 174, scale);
-		rescaleToCenter(loginButton, 103, 35, 565, scale);
-		rescaleToCenter(gameBox, 429, 26, 423, scale);
-		rescaleToCenter(wizardBox, 429, 26, 339, scale);
-		rescaleToCenter(chosenPlayerCount, 429, 25, 256, scale);
-		rescaleToCenter(nicknameFieldTitleLabel, 429, 17, 154, scale);
-		rescaleToCenter(playerNumberTitleLabel, 429, 17, 236, scale);
-		rescaleToCenter(wizardTitleLabel, 429, 17, 319, scale);
-		rescaleToCenter(matchTypeTitleLabel, 429, 17, 403, scale);
+		RescaleUtils.rescaleToCenter(nicknameBox, 429, 26, 174, scale);
+		RescaleUtils.rescaleToCenter(loginButton, 103, 35, 565, scale);
+		RescaleUtils.rescaleToCenter(gameBox, 429, 26, 423, scale);
+		RescaleUtils.rescaleToCenter(wizardBox, 429, 26, 339, scale);
+		RescaleUtils.rescaleToCenter(chosenPlayerCount, 429, 25, 256, scale);
+		RescaleUtils.rescaleToCenter(nicknameFieldTitleLabel, 429, 17, 154, scale);
+		RescaleUtils.rescaleToCenter(playerNumberTitleLabel, 429, 17, 236, scale);
+		RescaleUtils.rescaleToCenter(wizardTitleLabel, 429, 17, 319, scale);
+		RescaleUtils.rescaleToCenter(matchTypeTitleLabel, 429, 17, 403, scale);
 		
+		layoutEriantysHeader(scale, cranioImg, eriantysImg);
+	}
+	
+	static void layoutEriantysHeader(double scale, ImageView cranioImg, ImageView eriantysImg) {
 		cranioImg.setFitWidth(81 * scale);
 		cranioImg.setFitHeight(90 * scale);
 		cranioImg.setLayoutX((800 - GUI.referenceWidth * 0.5) * scale + GUI.getWindowWidth() * 0.5);
@@ -183,17 +188,5 @@ public class LoginController extends RescalableController {
 		eriantysImg.setFitHeight(89 * scale);
 		eriantysImg.setLayoutX((420 - GUI.referenceWidth * 0.5) * scale + GUI.getWindowWidth() * 0.5);
 		eriantysImg.setLayoutY(42 * scale);
-	}
-	
-	private void rescaleToCenter(Control node, double width, double height, double y, double scale) {
-		node.setLayoutX(getCenterX(width, scale));
-		node.setLayoutY(y * scale);
-		node.setPrefWidth(width * scale);
-		node.setPrefHeight(height * scale);
-		node.setStyle("-fx-font-size: " + (15 * scale));
-	}
-	
-	private double getCenterX(double width, double scale) {
-		return (GUI.getWindowWidth() - (width * scale)) * 0.5;
 	}
 }

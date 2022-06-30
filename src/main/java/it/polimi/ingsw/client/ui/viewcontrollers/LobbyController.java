@@ -1,6 +1,8 @@
 package it.polimi.ingsw.client.ui.viewcontrollers;
 
 import it.polimi.ingsw.client.ui.GUI;
+import it.polimi.ingsw.client.ui.rescale.RescalableController;
+import it.polimi.ingsw.client.ui.rescale.RescaleUtils;
 import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
@@ -14,6 +16,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.text.Font;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,8 +26,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 
-public class LobbyController extends CleanableController implements Initializable {
-
+public class LobbyController extends RescalableController {
 
 	private int numberOfPlayersToFill = 4;
 	private List<Notification> playerStateMessagesQueue; //Used to forward them to the main controller, since it might happen that the main controller is initialized and presented after the notification arrives
@@ -33,6 +36,10 @@ public class LobbyController extends CleanableController implements Initializabl
 	private Label statusLabel;
 	@FXML
 	private Label matchVariantLabel;
+	@FXML
+	private ImageView cranioImg;
+	@FXML
+	private ImageView eriantysImg;
 
 	/**
 	 * Initialize the lobby scene and starting all the notification threads
@@ -41,8 +48,10 @@ public class LobbyController extends CleanableController implements Initializabl
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
+		super.initialize(url, resourceBundle);
 		playerStateMessagesQueue = new ArrayList<>();
 		GUI.registerForDisconnectionEvents();
+		rescale(getCurrentScaleValue());
 		NotificationCenter.shared().addObserver(this, this::otherPlayerLoggedInReceived, NotificationName.ClientDidReceiveLoginResponse, null);
 		NotificationCenter.shared().addObserver(this, (notification) -> {
 			if (numberOfPlayersToFill > 0) {
@@ -76,8 +85,8 @@ public class LobbyController extends CleanableController implements Initializabl
 	public void setInitialData(MatchVariant matchVariant, int remainingNumberOfPlayers) {
 		numberOfPlayersToFill = remainingNumberOfPlayers;
 		Platform.runLater(() -> {
-			matchVariantLabel.setText("Match Variant: " + matchVariant);
-			statusLabel.setText("Waiting for " + remainingNumberOfPlayers + " more players");
+			matchVariantLabel.setText("Match Variant: " + (matchVariant == MatchVariant.BasicRuleSet ? "Basic (simplified rules)" : "Expert (full rules)"));
+			updateStatusLabelText(numberOfPlayersToFill);
 		});
 		if (numberOfPlayersToFill == 0) {
 			moveToGameScene();
@@ -94,16 +103,21 @@ public class LobbyController extends CleanableController implements Initializabl
 		if (!message.getNickname().equals(Client.getNickname()) && message.isLoginAccepted()) {
 			numberOfPlayersToFill = message.getNumberOfPlayersRemainingToFillLobby();
 			Platform.runLater(() -> {
-				if (numberOfPlayersToFill == 0) {
-					statusLabel.setText("The lobby is full. You are now ready to start the game");
-				} else {
-					statusLabel.setText("Waiting for " + numberOfPlayersToFill + " more players");
-				}
+				updateStatusLabelText(numberOfPlayersToFill);
 			});
 			if (numberOfPlayersToFill == 0) {
 				moveToGameScene();
 			}
 		}
+	}
+	
+	private void updateStatusLabelText(int numberOfRemainingPlayers) {
+		if (numberOfRemainingPlayers == 0) {
+			statusLabel.setText("The lobby is full. You are now ready to start the game");
+		} else {
+			statusLabel.setText("Waiting for " + numberOfRemainingPlayers + " more player" + (numberOfRemainingPlayers == 1 ? "" : "s") + " to join your lobby");
+		}
+		statusLabel.setWrapText(true);
 	}
 
 	/**
@@ -171,5 +185,15 @@ public class LobbyController extends CleanableController implements Initializabl
 	
 	@Override
 	protected void cleanupAfterTermination() {
+	}
+	
+	@Override
+	public void rescale(double scale) {
+		RescaleUtils.rescaleToCenter(matchVariantLabel, 570, 20, 315, scale);
+		RescaleUtils.rescaleToCenter(statusLabel, 570, 100, 389, scale);
+		matchVariantLabel.setStyle("-fx-font-size: " + (20 * scale));
+		statusLabel.setStyle("-fx-font-size: " + (35 * scale));
+		
+		LoginController.layoutEriantysHeader(scale, cranioImg, eriantysImg);
 	}
 }

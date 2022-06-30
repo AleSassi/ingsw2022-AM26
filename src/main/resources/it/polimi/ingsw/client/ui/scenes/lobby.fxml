@@ -8,12 +8,12 @@
 
 <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="644.0" prefWidth="792.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.ui.viewcontrollers.LobbyController">
    <children>
-      <ImageView id="EriantysTitle" fitHeight="89.0" fitWidth="308.0" layoutX="218.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView id="EriantysTitle" fx:id="eriantysImg" fitHeight="89.0" fitWidth="308.0" layoutX="218.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/Title_Eriantys.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="98.0" fitWidth="81.0" layoutX="698.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="cranioImg" fitHeight="98.0" fitWidth="81.0" layoutX="698.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/Title_Cranio_Creation.png" />
          </image>
