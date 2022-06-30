@@ -376,10 +376,10 @@ public class MainBoardController extends RescalableController {
 			if (i == 0) {
 				schoolBoardContainers.get(0).relocate(0, 0);
 			} else {
-				schoolBoardContainers.get(i).relocate(0, schoolBoardContainers.get(i - 1).getLayoutY() + schoolBoardContainers.get(i - 1).getPrefHeight() + 10);
+				schoolBoardContainers.get(i).relocate(0, schoolBoardContainers.get(i - 1).getLayoutY() + schoolBoardContainers.get(i - 1).getScaledHeight(scale) + 10);
 			}
 		}
-		cloudsContainer.setLayoutX(GUI.getWindowWidth() - 500 * scale + 70 * scale);
-		cloudsContainer.setLayoutY(250 * scale - 70 * scale * 0.5);
+		cloudsContainer.setLayoutX(GUI.getWindowWidth() - islandContainer.getUnscaledWidth() * scale + 70 * scale);
+		cloudsContainer.setLayoutY(islandContainer.getUnscaledHeight() * 0.5 * scale - 70 * scale * 0.5);
 	}
 }

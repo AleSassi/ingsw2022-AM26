@@ -45,7 +45,17 @@ public class CharacterCardContainer extends RescalableAnchorPane {
 		});
 		rescale(getCurrentScaleValue());
 	}
-
+	
+	@Override
+	public double getUnscaledWidth() {
+		return 390;
+	}
+	
+	@Override
+	public double getUnscaledHeight() {
+		return 180;
+	}
+	
 	/**
 	 * Sets the parent {@code Controller}
 	 * @param controller (type MainBoardController)
@@ -58,17 +68,17 @@ public class CharacterCardContainer extends RescalableAnchorPane {
 	
 	@Override
 	public void rescale(double scale) {
-        setLayoutX(GUI.getWindowWidth() - 390 * scale);
-        setLayoutY(GUI.getWindowHeight() - 180 * scale);
-		setPrefSize(390 * scale, 180 * scale);
+        setLayoutX(GUI.getWindowWidth() - getUnscaledWidth() * scale);
+        setLayoutY(GUI.getWindowHeight() - getUnscaledHeight() * scale);
+		setPrefSize(getUnscaledWidth() * scale, getUnscaledHeight() * scale);
 		characterCardGridPane.getRowConstraints().removeAll(characterCardGridPane.getRowConstraints());
 		characterCardGridPane.getColumnConstraints().removeAll(characterCardGridPane.getColumnConstraints());
         for (int i = 0; i < 1; i++) {
-            RowConstraints row = new RowConstraints(136 * scale);
+            RowConstraints row = new RowConstraints(cards.get(0).getUnscaledHeight() * scale);
             characterCardGridPane.getRowConstraints().add(row);
         }
         for (int i = 0; i < 3; i++) {
-            ColumnConstraints column = new ColumnConstraints(90 * scale);
+            ColumnConstraints column = new ColumnConstraints(cards.get(0).getUnscaledWidth() * scale);
             characterCardGridPane.getColumnConstraints().add(column);
         }
 		characterCardGridPane.setVgap(0);

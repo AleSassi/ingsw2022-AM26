@@ -78,10 +78,20 @@ public class SchoolBoardPane extends RescalableAnchorPane {
         NotificationCenter.shared().addObserver(this, this::didReceiveEndStudentMoveNotification, NotificationName.JavaFXDidEndMovingStudent, null);
         NotificationCenter.shared().addObserver(this, this::didReceiveCharacterCardPlayedNotification, NotificationName.JavaFXDidPlayCharacterCard, null);
     }
-
+    
+    @Override
+    public double getUnscaledWidth() {
+        return 838;
+    }
+    
+    @Override
+    public double getUnscaledHeight() {
+        return 363.5;
+    }
+    
     public void rescale(double scale) {
         //Define the pane size to init
-        setPrefSize(838 * scale, 363.5 * scale);
+        setPrefSize(getUnscaledWidth() * scale, getUnscaledHeight() * scale);
         //Create the grid that handles the Students
         entranceGrid.setPrefSize(88 * scale, 277 * scale);
         entranceGrid.setLayoutX(27 * scale);

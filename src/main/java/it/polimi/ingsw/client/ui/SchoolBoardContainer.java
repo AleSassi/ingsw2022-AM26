@@ -26,6 +26,7 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 	private final String titleTextNoCoins;
 	private final String ownerNickname;
 	private AssistantCardPane pickedAssistantCard;
+	
 	/**
 	 * Constructor creates the {@code SchoolBoardContainer}
 	 * @param isPrimary (type boolean) true if the Cli{@link it.polimi.ingsw.client.ui.SchoolBoardPane SchoolBoardPane}
@@ -42,7 +43,25 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 		getChildren().addAll(this.playerLabel, this.boardPane);
 		NotificationCenter.shared().addObserver(this, this::didReceivePlayerStateNotification, NotificationName.ClientDidReceivePlayerStateMessage, null);
 	}
-
+	
+	@Override
+	public double getUnscaledWidth() {
+		return this.boardPane.getUnscaledWidth() + 10 + (this.pickedAssistantCard == null ? 0 : this.pickedAssistantCard.getUnscaledWidth());
+	}
+	
+	@Override
+	public double getUnscaledHeight() {
+		return this.boardPane.getUnscaledHeight() + getBoardPaneY();
+	}
+	
+	private double getBoardPaneY() {
+		return isPrimary ? 28 : 23;
+	}
+	
+	public double getScaledHeight(double scale) {
+		return (this.boardPane.getUnscaledHeight() * this.boardPane.getScalingValue() + getBoardPaneY()) * scale;
+	}
+	
 	/**
 	 * Gets the owner of the main {@link it.polimi.ingsw.client.ui.SchoolBoardPane}
 	 * @return (type String) return the owner of the main {@link it.polimi.ingsw.client.ui.SchoolBoardPane}
@@ -115,17 +134,19 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 		this.playerLabel.setLayoutY(0);
 		if (isPrimary) {
 			this.playerLabel.setFont(new Font("Avenir", 20 * scale));
-			this.boardPane.setLayoutY(28 * scale);
 		} else {
 			this.playerLabel.setFont(new Font("Avenir", 15 * scale));
-			this.boardPane.setLayoutY(23 * scale);
 		}
+		this.boardPane.setLayoutY(getBoardPaneY() * scale);
 		this.boardPane.setLayoutX(0);
+		double scaledBoardPaneWidth = this.boardPane.getUnscaledWidth() * scale * this.boardPane.getScalingValue();
+		double scaledBoardPaneHeight = this.boardPane.getUnscaledHeight() * scale * this.boardPane.getScalingValue();
 		if (this.pickedAssistantCard != null) {
-			this.pickedAssistantCard.setLayoutX(this.boardPane.getPrefWidth() + (10 * scale));
-			this.pickedAssistantCard.setLayoutY(this.boardPane.getPrefHeight() - pickedAssistantCard.getPrefHeight() + boardPane.getLayoutY());
+			double scaledAssistantHeight = pickedAssistantCard.getUnscaledWidth() * scale;
+			this.pickedAssistantCard.setLayoutX(scaledBoardPaneWidth + (10 * scale));
+			this.pickedAssistantCard.setLayoutY(scaledBoardPaneHeight - scaledAssistantHeight + boardPane.getLayoutY());
 		}
-		this.setPrefSize(this.boardPane.getPrefWidth(), this.boardPane.getPrefHeight() + this.boardPane.getLayoutY());
+		this.setPrefSize(scaledBoardPaneWidth, scaledBoardPaneHeight + getBoardPaneY() * scale);
 	}
 
 	/**

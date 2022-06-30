@@ -52,7 +52,17 @@ public class CloudPane extends RescalableAnchorPane {
         NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
         NotificationCenter.shared().addObserver(this, this:: didReceiveClickOnCloud, NotificationName.JavaFXDidClickOnCloud, null);
     }
-
+    
+    @Override
+    public double getUnscaledWidth() {
+        return 50;
+    }
+    
+    @Override
+    public double getUnscaledHeight() {
+        return 50;
+    }
+    
     /**
      * Click event callback
      * @param notification (type Notification)
@@ -122,7 +132,7 @@ public class CloudPane extends RescalableAnchorPane {
     }
 
     public void rescale(double scale) {
-        setPrefSize(50 * scale, 50 * scale);
+        setPrefSize(getUnscaledWidth() * scale, getUnscaledHeight() * scale);
         gridPane.getRowConstraints().removeAll(gridPane.getRowConstraints());
         gridPane.getColumnConstraints().removeAll(gridPane.getColumnConstraints());
         gridPane.setPrefSize(33 * scale, 33 * scale);

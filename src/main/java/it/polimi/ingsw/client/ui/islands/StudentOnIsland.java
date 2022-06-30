@@ -44,7 +44,17 @@ public class StudentOnIsland extends RescalableAnchorPane {
 
         NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
     }
-
+    
+    @Override
+    public double getUnscaledWidth() {
+        return 30;
+    }
+    
+    @Override
+    public double getUnscaledHeight() {
+        return 30;
+    }
+    
     /**
      * Callback for the {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage}
      * @param notification (type Notification)
@@ -79,8 +89,8 @@ public class StudentOnIsland extends RescalableAnchorPane {
     public void rescale(double scale) {
         studentPane.setLayoutX(0);
         studentLabel.setLayoutX(0);
-        studentPane.setPrefSize(30 * scale , 30 * scale);
-        studentLabel.setPrefSize(30 * scale , 30 * scale);
+        studentPane.setPrefSize(getUnscaledWidth() * scale , getUnscaledHeight() * scale);
+        studentLabel.setPrefSize(getUnscaledWidth() * scale , getUnscaledHeight() * scale);
         studentLabel.setFont(new Font("Avenir", 20 * scale));
     }
 }

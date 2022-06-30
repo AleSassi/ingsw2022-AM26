@@ -91,7 +91,17 @@ public class IslandPane extends RescalableAnchorPane {
         NotificationCenter.shared().addObserver(this, this::didReceiveStartStudentMoveNotification, NotificationName.JavaFXDidStartMovingStudent, null);
         NotificationCenter.shared().addObserver(this, this::didReceiveEndStudentMoveNotification, NotificationName.JavaFXDidEndMovingStudent, null);
     }
-
+    
+    @Override
+    public double getUnscaledWidth() {
+        return 50;
+    }
+    
+    @Override
+    public double getUnscaledHeight() {
+        return 50;
+    }
+    
     /**
      * Sets the allowed {@link it.polimi.ingsw.server.model.student.Student Student's} destination relative to the current {@link it.polimi.ingsw.server.model.match.MatchPhase MatchPhase}
      * @param allowedStudentDestinationsForPhase (type StudentDropTarger[]) allowed {@code Student's} destinations for current {@code MatchPhase}
@@ -273,7 +283,7 @@ public class IslandPane extends RescalableAnchorPane {
 
     public void rescale(double scale) {
         //rescale IslandPane
-        setPrefSize(50 * scale, 50 * scale);
+        setPrefSize(getUnscaledWidth() * scale, getUnscaledHeight() * scale);
     
         //rescale MN
         motherNature.setPrefSize(30 * scale, 30 * scale);

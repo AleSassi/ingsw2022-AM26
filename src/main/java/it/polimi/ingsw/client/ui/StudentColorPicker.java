@@ -75,7 +75,7 @@ public class StudentColorPicker extends ModalPopup {
 	@Override
 	public void rescaleChildren(double scale) {
 		studentGridPane.setLayoutY(50 * scale);
-		studentGridPane.setPrefSize(ModalPopup.getUnscaledWidth() * scale, ModalPopup.getUnscaledHeight() * scale);
+		studentGridPane.setPrefSize(getUnscaledWidth() * scale, getUnscaledHeight() * scale);
 		studentGridPane.setHgap(30 * scale);
 		studentGridPane.setVgap(15 * scale);
 		studentGridPane.getRowConstraints().removeAll(studentGridPane.getRowConstraints());

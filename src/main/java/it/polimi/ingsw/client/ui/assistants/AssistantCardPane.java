@@ -22,7 +22,17 @@ public class AssistantCardPane extends RescalableAnchorPane {
 		setStyle("-fx-background-image: url(" + GUIUtils.getURI("images/assistants/" + card + ".png") + ");\n-fx-background-size: 100% 100%;\n-fx-background-radius: 15px");
 		rescale(getCurrentScaleValue());
 	}
-
+	
+	@Override
+	public double getUnscaledWidth() {
+		return 100;
+	}
+	
+	@Override
+	public double getUnscaledHeight() {
+		return 147;
+	}
+	
 	/**
 	 * Click event handler
 	 * @param selectionHandler (type AssistantCardSelectionHandler) {@link it.polimi.ingsw.client.ui.assistants.AssistantCardSelectionHandler}
@@ -44,6 +54,6 @@ public class AssistantCardPane extends RescalableAnchorPane {
 	
 	@Override
 	public void rescale(double scale) {
-		setPrefSize(100 * scale, 147 * scale);
+		setPrefSize(getUnscaledWidth() * scale, getUnscaledHeight() * scale);
 	}
 }

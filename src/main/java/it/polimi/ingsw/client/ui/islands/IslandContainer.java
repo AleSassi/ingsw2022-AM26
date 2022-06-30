@@ -39,8 +39,17 @@ public class IslandContainer extends RescalableAnchorPane {
         NotificationCenter.shared().addObserver(this, this::didReceiveCharacterCardPlayedNotification, NotificationName.JavaFXDidPlayCharacterCard, null);
         NotificationCenter.shared().addObserver(this, this::cleanupAfterCardControlLoopEnds, NotificationName.JavaFXDidEndCharacterCardLoop, null);
     }
-
-
+    
+    @Override
+    public double getUnscaledWidth() {
+        return 500;
+    }
+    
+    @Override
+    public double getUnscaledHeight() {
+        return 500;
+    }
+    
     /**
      * {@code TableState} notification callback, updates the number of {@link it.polimi.ingsw.client.ui.islands.IslandPane} from the TableState notification
      * @param notification (type Notification)
@@ -94,10 +103,10 @@ public class IslandContainer extends RescalableAnchorPane {
     }
 
     public void rescale(double scale) {
-        setPrefSize(500 * scale, 500 * scale);
-        setLayoutX(GUI.getWindowWidth() - (500 * scale));
+        setPrefSize(getUnscaledWidth() * scale, getUnscaledHeight() * scale);
+        setLayoutX(GUI.getWindowWidth() - (getUnscaledWidth() * scale));
         setLayoutY(0);
-        double radius = 250 * scale;
+        double radius = getUnscaledWidth() * 0.5 * scale;
 
         if (islands.size() == 0) {
             return;

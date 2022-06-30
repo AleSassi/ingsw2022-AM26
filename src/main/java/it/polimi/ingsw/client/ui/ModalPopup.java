@@ -53,7 +53,8 @@ public abstract class ModalPopup extends RescalableAnchorPane {
 	 * Gets the default Width
 	 * @return (type double) returns the default Width
 	 */
-	public static double getUnscaledWidth() {
+	@Override
+	public double getUnscaledWidth() {
 		return 400;
 	}
 
@@ -61,7 +62,8 @@ public abstract class ModalPopup extends RescalableAnchorPane {
 	 * Gets the default Height
 	 * @return (type double) returns the default Height
 	 */
-	public static double getUnscaledHeight() {
+	@Override
+	public double getUnscaledHeight() {
 		return 480;
 	}
 }

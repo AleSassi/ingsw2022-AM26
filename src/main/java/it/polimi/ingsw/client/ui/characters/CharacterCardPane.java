@@ -60,7 +60,17 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 		//Init size
 		rescale(getCurrentScaleValue());
 	}
-
+	
+	@Override
+	public double getUnscaledWidth() {
+		return 90;
+	}
+	
+	@Override
+	public double getUnscaledHeight() {
+		return 136;
+	}
+	
 	/**
 	 * Makes additional setups in a safe manner
 	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard's} index
