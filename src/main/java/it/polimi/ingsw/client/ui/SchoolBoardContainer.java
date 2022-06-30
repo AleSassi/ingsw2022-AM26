@@ -30,7 +30,7 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 		this.boardPane = new SchoolBoardPane(isPrimary, ownerNickname);
 		this.titleTextNoCoins = isPrimary ? "Your School Board" : ownerNickname + "'s School Board";
 		this.playerLabel = new Label(buildTitleWithCoins(coins));
-		rescale(1);
+		rescale(getCurrentScaleValue());
 		getChildren().addAll(this.playerLabel, this.boardPane);
 		NotificationCenter.shared().addObserver(this, this::didReceivePlayerStateNotification, NotificationName.ClientDidReceivePlayerStateMessage, null);
 	}
@@ -65,7 +65,7 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 			}
 			getChildren().add(pickedAssistantCard);
 			this.pickedAssistantCard = pickedAssistantCard;
-			rescale(1);
+			rescale(getCurrentScaleValue());
 		});
 	}
 	

@@ -36,7 +36,7 @@ public class CharacterCardContainer extends RescalableAnchorPane {
 	        characterCardGridPane.getChildren().addAll(cards);
 	        getChildren().add(characterCardGridPane);
 		});
-		rescale(1);
+		rescale(getCurrentScaleValue());
 	}
 	
 	public void setParentController(MainBoardController controller) {

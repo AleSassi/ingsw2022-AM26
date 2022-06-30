@@ -20,7 +20,7 @@ public class CloudsContainer extends RescalableAnchorPane {
             clouds.add(cloud);
             getChildren().add(cloud);
         }
-        rescale(1);
+        rescale(getCurrentScaleValue());
     }
 
     public void setActivateCloudPick(boolean activate) {

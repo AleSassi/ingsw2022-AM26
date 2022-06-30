@@ -11,7 +11,7 @@ public class AssistantCardPickerView extends ModalPopup {
 		super("Choose your Assistant");
 		assistantPickerPane = new AssistantPickerPane(availableAssistantCards);
 		getChildren().add(assistantPickerPane);
-		super.rescale(1);
+		super.rescale(getCurrentScaleValue());
 	}
 	
 	public void setSelectionHandler(AssistantCardSelectionHandler selectionHandler) {

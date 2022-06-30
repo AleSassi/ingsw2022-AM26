@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.ui.rescale;
 
 import it.polimi.ingsw.client.ui.AutoCleanableAnchorPane;
+import it.polimi.ingsw.client.ui.GUI;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationName;
@@ -10,7 +11,7 @@ import javafx.scene.layout.AnchorPane;
 public abstract class RescalableAnchorPane extends AutoCleanableAnchorPane implements JavaFXRescalable {
 	
 	private double scalingValue = 1.0;
-	private double scaleValue = 1.0;
+	private double scaleValue = GUI.getStageScale();
 	
 	public RescalableAnchorPane() {
 		super();
@@ -19,7 +20,11 @@ public abstract class RescalableAnchorPane extends AutoCleanableAnchorPane imple
 	
 	public void setScalingValue(double scalingValue) {
 		this.scalingValue = scalingValue;
-		rescale(scaleValue * scalingValue);
+		rescale(getCurrentScaleValue());
+	}
+	
+	public double getCurrentScaleValue() {
+		return scaleValue * scalingValue;
 	}
 	
 	private void didReceiveWindowResizeNotification(Notification notification) {

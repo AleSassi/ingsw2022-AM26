@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.ui;
 
 import it.polimi.ingsw.client.controller.network.GameClient;
+import it.polimi.ingsw.client.ui.rescale.RescaleUtils;
 import it.polimi.ingsw.client.ui.viewcontrollers.LoginController;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
@@ -22,6 +23,7 @@ public class GUI extends Application {
 	
 	private static Scene scene;
 	private static double stageWidth, stageHeight;
+	private static double stageScale = 1.0;
 	
 	public static final double referenceWidth = 1300;
 	public static final double referenceHeight = 810;
@@ -46,6 +48,7 @@ public class GUI extends Application {
 			userInfo.put("oldWidth", oldValue);
 			userInfo.put("newWidth", newValue);
 			stageWidth = newValue.doubleValue();
+			stageScale = RescaleUtils.getScaleValue(stageWidth, true);
 			NotificationCenter.shared().post(NotificationName.JavaFXWindowDidResize, null, userInfo);
 		});
 		stage.heightProperty().addListener((observable, oldValue, newValue) -> {
@@ -53,6 +56,7 @@ public class GUI extends Application {
 			userInfo.put("oldHeight", oldValue);
 			userInfo.put("newHeight", newValue);
 			stageHeight = newValue.doubleValue();
+			stageScale = RescaleUtils.getScaleValue(stageHeight, true);
 			NotificationCenter.shared().post(NotificationName.JavaFXWindowDidResize, null, userInfo);
 		});
 	}
@@ -63,6 +67,10 @@ public class GUI extends Application {
 	
 	public static double getWindowHeight() {
 		return stageHeight;
+	}
+	
+	public static double getStageScale() {
+		return stageScale;
 	}
 	
 	public static void registerForDisconnectionEvents() {

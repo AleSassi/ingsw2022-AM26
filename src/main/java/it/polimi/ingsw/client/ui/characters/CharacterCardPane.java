@@ -50,7 +50,7 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 		setupBuyButton(cardBean.getTotalPrice());
 		setupActionOnPlay();
 		//Init size
-		rescale(1);
+		rescale(getCurrentScaleValue());
 	}
 	
 	protected abstract void performAdditionalInitializationForCard(int cardIndex, CharacterCardBean cardBean);

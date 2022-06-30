@@ -31,7 +31,7 @@ public class StudentColorPicker extends ModalPopup {
 	public StudentColorPicker(String titleString) {
 		super(titleString);
 		placeStudents();
-		super.rescale(1);
+		super.rescale(getCurrentScaleValue());
 	}
 	
 	private void placeStudents() {

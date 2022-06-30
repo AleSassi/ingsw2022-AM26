@@ -6,6 +6,7 @@ import it.polimi.ingsw.client.ui.assistants.AssistantCardPickerView;
 import it.polimi.ingsw.client.ui.characters.CharacterCardContainer;
 import it.polimi.ingsw.client.ui.islands.IslandContainer;
 import it.polimi.ingsw.client.ui.rescale.JavaFXRescalable;
+import it.polimi.ingsw.client.ui.rescale.RescalableController;
 import it.polimi.ingsw.client.ui.rescale.RescaleUtils;
 import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
@@ -30,7 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainBoardController extends CleanableController implements JavaFXRescalable {
+public class MainBoardController extends RescalableController {
 	
 	@FXML
 	private AnchorPane mainPane;
@@ -48,7 +49,6 @@ public class MainBoardController extends CleanableController implements JavaFXRe
 	
 	public void load() {
 		schoolBoardContainers = new ArrayList<>();
-		NotificationCenter.shared().addObserver(this, this::didReceiveWindowDidResizeNotification, NotificationName.JavaFXWindowDidResize, null);
 		NotificationCenter.shared().addObserver(this, this::didReceivePlayerStatusNotification, NotificationName.ClientDidReceivePlayerStateMessage, null);
 		NotificationCenter.shared().addObserver(this, this::didReceiveActivePlayerMessage, NotificationName.ClientDidReceiveActivePlayerMessage, null);
 		NotificationCenter.shared().addObserver(this, this::didReceiveTableStateMessage, NotificationName.ClientDidReceiveTableStateMessage, null);
@@ -93,19 +93,12 @@ public class MainBoardController extends CleanableController implements JavaFXRe
 				} else {
 					schoolBoardContainers.add(0, newContainer);
 				}
-				rescale(1);
+				rescale(getCurrentScaleValue());
 				//Forward the notification event to the new container
 				newContainer.forwardInitialPlayerStatusNotification(notification);
 			}
 			//Clear pending actions
 			movingStudentColor = null;
-		}
-	}
-	
-	private void didReceiveWindowDidResizeNotification(Notification notification) {
-		Double scaleValue = RescaleUtils.rescaleAfterNotification(notification);
-		if (scaleValue != null) {
-			rescale(scaleValue);
 		}
 	}
 	

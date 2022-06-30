@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.ui.viewcontrollers;
 import it.polimi.ingsw.client.controller.network.GameClient;
 import it.polimi.ingsw.client.ui.GUI;
 import it.polimi.ingsw.client.ui.rescale.JavaFXRescalable;
+import it.polimi.ingsw.client.ui.rescale.RescalableController;
 import it.polimi.ingsw.client.ui.rescale.RescaleUtils;
 import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
@@ -21,7 +22,7 @@ import javafx.scene.control.Label;
 
 import java.io.IOException;
 
-public class EndgameController extends CleanableController implements JavaFXRescalable {
+public class EndgameController extends RescalableController {
  
 	@FXML
 	private Label victoryLabel;
@@ -40,7 +41,6 @@ public class EndgameController extends CleanableController implements JavaFXResc
 	
 	
 	public void endGame(String[] winnerNicknames) throws IOException {
-		NotificationCenter.shared().addObserver(this, this::didReceiveWindowDidResizeNotification, NotificationName.JavaFXWindowDidResize, null);
 		boolean won = false;
 		for (String winnerNickname: winnerNicknames) {
 			if (winnerNickname.equals(Client.getNickname())) {
@@ -106,13 +106,6 @@ public class EndgameController extends CleanableController implements JavaFXResc
 		quitButton.setPrefSize(542 * scale, 128 * scale);
 		quitButton.setLayoutX((windowWidth - quitButton.getPrefWidth()) * 0.5);
 		quitButton.setLayoutY(651 * scale);
-	}
-	
-	private void didReceiveWindowDidResizeNotification(Notification notification) {
-		Double scaleValue = RescaleUtils.rescaleAfterNotification(notification);
-		if (scaleValue != null) {
-			rescale(scaleValue);
-		}
 	}
 	
 	public void quit(ActionEvent actionEvent) {

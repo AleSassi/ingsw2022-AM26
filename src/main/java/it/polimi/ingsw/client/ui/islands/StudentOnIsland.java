@@ -32,7 +32,7 @@ public class StudentOnIsland extends RescalableAnchorPane {
             studentPane.setVisible(false);
         });
         
-        rescale(1);
+        rescale(getCurrentScaleValue());
 
         NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
     }

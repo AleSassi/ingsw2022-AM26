@@ -19,7 +19,7 @@ public class RescaleUtils {
 		return null;
 	}
 	
-	private static double getScaleValue(double newDimensionSize, boolean isWidth) {
+	public static double getScaleValue(double newDimensionSize, boolean isWidth) {
 		double newScale = newDimensionSize / (isWidth ? GUI.referenceWidth : GUI.referenceHeight);
 		double heightScale = GUI.getWindowHeight() / GUI.referenceHeight;
 		double widthScale = GUI.getWindowWidth() / GUI.referenceWidth;

@@ -13,7 +13,7 @@ public class AssistantCardPane extends RescalableAnchorPane {
 		super();
 		this.card = card;
 		setStyle("-fx-background-image: url(" + GUIUtils.getURI("images/assistants/" + card + ".png") + ");\n-fx-background-size: 100% 100%;\n-fx-background-radius: 15px");
-		rescale(1);
+		rescale(getCurrentScaleValue());
 	}
 	
 	public void setSelectionHandler(AssistantCardSelectionHandler selectionHandler) {

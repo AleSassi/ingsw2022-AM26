@@ -38,7 +38,7 @@ public class CloudPane extends RescalableAnchorPane {
 
         setStyle("-fx-background-image: url(" + address + ");\n-fx-background-size: 100% 100%");
         
-        rescale(1);
+        rescale(getCurrentScaleValue());
         clickOnCloud();
         Platform.runLater(() -> getChildren().add(gridPane));
         NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);

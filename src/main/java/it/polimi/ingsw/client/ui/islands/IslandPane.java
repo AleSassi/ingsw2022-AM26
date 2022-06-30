@@ -78,7 +78,7 @@ public class IslandPane extends RescalableAnchorPane {
             }
             studentOnIsland.didReceiveTableState(notification);
         }
-        rescale(1);
+        rescale(getCurrentScaleValue());
         NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
         NotificationCenter.shared().addObserver(this, this::didReceiveStartStudentMoveNotification, NotificationName.JavaFXDidStartMovingStudent, null);
         NotificationCenter.shared().addObserver(this, this::didReceiveEndStudentMoveNotification, NotificationName.JavaFXDidEndMovingStudent, null);

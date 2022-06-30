@@ -43,7 +43,7 @@ public class CharacterCardStudentPickerPane extends CharacterCardPane {
 			}
 			pickedStudentPane = GUIUtils.createStudentButton(pickedStudent, null);
 			Platform.runLater(() -> getChildren().add(1, pickedStudentPane));
-			rescale(1);
+			rescale(getCurrentScaleValue());
 		}
 	}
 	
