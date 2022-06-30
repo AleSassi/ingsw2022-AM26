@@ -267,14 +267,16 @@ public class MainBoardController extends RescalableController {
 	private void showMotherNatureMovementAlert() {
 		Platform.runLater(() -> {
 			TextInputDialog td = new TextInputDialog("Mother Nature Steps");
-			td.setHeaderText("Enter the number of steps Mother Nature must move by (between 0 and 2)");
+			SchoolBoardContainer currentPlayerContainer = schoolBoardContainers.stream().filter(schoolBoardContainer -> schoolBoardContainer.getOwnerNickname().equals(Client.getNickname())).findFirst().get();
+			int maxMNSteps = currentPlayerContainer.getPickedAssistant().getMotherNatureSteps();
+			td.setHeaderText("Enter the number of steps Mother Nature must move by (between 1 and " + maxMNSteps + ")");
 			td.showAndWait().ifPresentOrElse((text) -> {
 				try {
 					int number = Integer.parseInt(text);
-					if (number < 0) {
-						number = 0;
-					} else if (number > 2) {
-						number = 2;
+					if (number < 1) {
+						number = 1;
+					} else if (number > maxMNSteps) {
+						number = maxMNSteps;
 					}
 					//Send the player action
 					showFaderPane();

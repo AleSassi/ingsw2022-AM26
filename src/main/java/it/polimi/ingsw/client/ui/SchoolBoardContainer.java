@@ -50,7 +50,15 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 	public String getOwnerNickname() {
 		return boardPane.getOwnerNickname();
 	}
-
+	
+	/**
+	 * Gets the {@link it.polimi.ingsw.server.model.assistants.AssistantCard} the user has active
+	 * @return the {@link it.polimi.ingsw.server.model.assistants.AssistantCard} of the user which owns this board
+	 */
+	public AssistantCard getPickedAssistant() {
+		return pickedAssistantCard.getCard();
+	}
+	
 	/**
 	 * Forwards the initial {@code PlayerStatusNotification} to the {@code boardPane}
 	 * @param notification (type Notification)

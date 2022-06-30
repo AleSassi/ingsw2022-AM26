@@ -34,6 +34,14 @@ public class AssistantCardPane extends RescalableAnchorPane {
 		});
 	}
 	
+	/**
+	 * Gets the {@link it.polimi.ingsw.server.model.assistants.AssistantCard} displayed by the pane
+	 * @return the {@link it.polimi.ingsw.server.model.assistants.AssistantCard} displayed by the pane
+	 */
+	public AssistantCard getCard() {
+		return card;
+	}
+	
 	@Override
 	public void rescale(double scale) {
 		setPrefSize(100 * scale, 147 * scale);
