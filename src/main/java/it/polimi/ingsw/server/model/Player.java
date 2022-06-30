@@ -34,7 +34,7 @@ public class Player {
 		this.board = new SchoolBoard(towerColor, initialTowerCount);
 		this.availableCardsDeck = new AvailableCardsDeck();
 		this.playedCardDeck = new PlayedCardDeck();
-		this.availableCoins = initialCoins + 77;
+		this.availableCoins = initialCoins;
 		this.assistantCardOrderModifier = 0;
 	}
 	
