@@ -100,7 +100,7 @@ public class SchoolBoardPane extends RescalableAnchorPane {
             RowConstraints row = new RowConstraints(38 * multiplier);
             diningGrid.getRowConstraints().add(row);
         }
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 10; i++) {
             ColumnConstraints col = new ColumnConstraints(38 * multiplier);
             diningGrid.getColumnConstraints().add(col);
         }
