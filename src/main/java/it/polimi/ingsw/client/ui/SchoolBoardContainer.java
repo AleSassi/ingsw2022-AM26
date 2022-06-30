@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.ui;
 
+import it.polimi.ingsw.client.ui.assistants.AssistantCardPane;
 import it.polimi.ingsw.client.ui.rescale.RescalableAnchorPane;
 import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
@@ -7,9 +8,11 @@ import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage;
+import it.polimi.ingsw.server.model.assistants.AssistantCard;
 import it.polimi.ingsw.utils.ui.StudentDropTarget;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 
 public class SchoolBoardContainer extends RescalableAnchorPane {
@@ -19,6 +22,7 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 	private final boolean isPrimary;
 	private final String titleTextNoCoins;
 	private final String ownerNickname;
+	private AssistantCardPane pickedAssistantCard;
 	
 	public SchoolBoardContainer(boolean isPrimary, String ownerNickname, int coins) {
 		this.isPrimary = isPrimary;
@@ -41,10 +45,28 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 	
 	private void didReceivePlayerStateNotification(Notification notification) {
 		if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof PlayerStateMessage message) {
-			if (message.getNickname().equals(ownerNickname) && message.getAvailableCoins() >= 0) {
-				Platform.runLater(() -> playerLabel.setText(buildTitleWithCoins(message.getAvailableCoins())));
+			if (message.getNickname().equals(ownerNickname)) {
+				if (message.getAvailableCoins() >= 0) {
+					Platform.runLater(() -> playerLabel.setText(buildTitleWithCoins(message.getAvailableCoins())));
+				}
+				updatePickedAssistantCard(message.getLastPlayedAssistantCard());
 			}
 		}
+	}
+	
+	private void updatePickedAssistantCard(AssistantCard pickedAssistant) {
+		if (pickedAssistant == null) return;
+		
+		AssistantCardPane pickedAssistantCard = new AssistantCardPane(pickedAssistant);
+		pickedAssistantCard.setScalingValue(0.7);
+		Platform.runLater(() -> {
+			if (this.pickedAssistantCard != null) {
+				getChildren().remove(this.pickedAssistantCard);
+			}
+			getChildren().add(pickedAssistantCard);
+			this.pickedAssistantCard = pickedAssistantCard;
+			rescale(1);
+		});
 	}
 	
 	private String buildTitleWithCoins(int coins) {
@@ -62,6 +84,10 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 			this.boardPane.setLayoutY(23 * scale);
 		}
 		this.boardPane.setLayoutX(0);
+		if (this.pickedAssistantCard != null) {
+			this.pickedAssistantCard.setLayoutX(this.boardPane.getPrefWidth() + (10 * scale));
+			this.pickedAssistantCard.setLayoutY(this.boardPane.getPrefHeight() - pickedAssistantCard.getPrefHeight() + boardPane.getLayoutY());
+		}
 		this.setPrefSize(this.boardPane.getPrefWidth(), this.boardPane.getPrefHeight() + this.boardPane.getLayoutY());
 	}
 	

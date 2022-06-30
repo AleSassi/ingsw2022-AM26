@@ -59,7 +59,8 @@ public class SchoolBoardPane extends RescalableAnchorPane {
         //Create the grid for the Towers
         towersGrid = new GridPane();
         //Rescale the pane
-        rescale(1);
+        double scalingValue = isPrimary ? 0.65 : 0.35;
+        setScalingValue(scalingValue);
         getChildren().addAll(entranceGrid, diningGrid, professors, towersGrid);
         //Register for auto-update notifications
         NotificationCenter.shared().addObserver(this, this::didReceivePlayerStatusNotification, NotificationName.ClientDidReceivePlayerStateMessage, null);
@@ -71,70 +72,69 @@ public class SchoolBoardPane extends RescalableAnchorPane {
     }
 
     public void rescale(double scale) {
-        double multiplier = (isPrimary ? 0.75 : 0.35) * scale;
         //Define the pane size to init
-        setPrefSize(838 * multiplier, 363.5 * multiplier);
+        setPrefSize(838 * scale, 363.5 * scale);
         //Create the grid that handles the Students
-        entranceGrid.setPrefSize(88 * multiplier, 277 * multiplier);
-        entranceGrid.setLayoutX(27 * multiplier);
-        entranceGrid.setLayoutY(44 * multiplier);
-        entranceGrid.setHgap(12 * multiplier);
-        entranceGrid.setVgap(22 * multiplier);
+        entranceGrid.setPrefSize(88 * scale, 277 * scale);
+        entranceGrid.setLayoutX(27 * scale);
+        entranceGrid.setLayoutY(44 * scale);
+        entranceGrid.setHgap(12 * scale);
+        entranceGrid.setVgap(22 * scale);
         entranceGrid.getRowConstraints().removeAll(entranceGrid.getRowConstraints());
         entranceGrid.getColumnConstraints().removeAll(entranceGrid.getColumnConstraints());
         for (int i = 0; i < 4; i++) {
-            RowConstraints row = new RowConstraints(38 * multiplier);
+            RowConstraints row = new RowConstraints(38 * scale);
             entranceGrid.getRowConstraints().add(row);
         }
         for (int i = 0; i < 2; i++) {
-            ColumnConstraints col = new ColumnConstraints(38 * multiplier);
+            ColumnConstraints col = new ColumnConstraints(38 * scale);
             entranceGrid.getColumnConstraints().add(col);
         }
         //Create the grid for the dining room
-        diningGrid.setMinWidth(396 * multiplier);
-        diningGrid.setMinHeight(275 * multiplier);
-        diningGrid.setLayoutX(155 * multiplier);
-        diningGrid.setLayoutY(45 * multiplier);
-        diningGrid.setVgap(22 * multiplier);
-        diningGrid.setHgap(2 * multiplier);
+        diningGrid.setMinWidth(396 * scale);
+        diningGrid.setMinHeight(275 * scale);
+        diningGrid.setLayoutX(155 * scale);
+        diningGrid.setLayoutY(45 * scale);
+        diningGrid.setVgap(22 * scale);
+        diningGrid.setHgap(2 * scale);
         diningGrid.getRowConstraints().removeAll(diningGrid.getRowConstraints());
         diningGrid.getColumnConstraints().removeAll(diningGrid.getColumnConstraints());
         for (int i = 0; i < 5; i++) {
-            RowConstraints row = new RowConstraints(38 * multiplier);
+            RowConstraints row = new RowConstraints(38 * scale);
             diningGrid.getRowConstraints().add(row);
         }
         for (int i = 0; i < 10; i++) {
-            ColumnConstraints col = new ColumnConstraints(38 * multiplier);
+            ColumnConstraints col = new ColumnConstraints(38 * scale);
             diningGrid.getColumnConstraints().add(col);
         }
         //Create the V-Stack for the Professors
-        professors.setMinWidth(37 * multiplier);
-        professors.setMinHeight(285 * multiplier);
-        professors.setLayoutX(592 * multiplier);
-        professors.setLayoutY(37 * multiplier);
-        professors.setVgap(17 * multiplier);
+        professors.setMinWidth(37 * scale);
+        professors.setMinHeight(285 * scale);
+        professors.setLayoutX(592 * scale);
+        professors.setLayoutY(37 * scale);
+        professors.setVgap(17 * scale);
         professors.getRowConstraints().removeAll(professors.getRowConstraints());
         professors.getColumnConstraints().removeAll(professors.getColumnConstraints());
         for (int i = 0; i < 5; i++) {
-            RowConstraints row = new RowConstraints(42 * multiplier);
+            RowConstraints row = new RowConstraints(42 * scale);
             professors.getRowConstraints().add(row);
         }
-        professors.getColumnConstraints().add(new ColumnConstraints(37 * multiplier));
+        professors.getColumnConstraints().add(new ColumnConstraints(37 * scale));
         //Create the grid for the Towers
-        towersGrid.setMinWidth(110 * multiplier);
-        towersGrid.setMinHeight(226 * multiplier);
-        towersGrid.setLayoutX(680 * multiplier);
-        towersGrid.setLayoutY(69 * multiplier);
-        towersGrid.setHgap(18 * multiplier);
-        towersGrid.setVgap(14 * multiplier);
+        towersGrid.setMinWidth(110 * scale);
+        towersGrid.setMinHeight(226 * scale);
+        towersGrid.setLayoutX(680 * scale);
+        towersGrid.setLayoutY(69 * scale);
+        towersGrid.setHgap(18 * scale);
+        towersGrid.setVgap(14 * scale);
         towersGrid.getRowConstraints().removeAll(towersGrid.getRowConstraints());
         towersGrid.getColumnConstraints().removeAll(towersGrid.getColumnConstraints());
         for (int i = 0; i < 4; i++) {
-            RowConstraints row = new RowConstraints(46 * multiplier);
+            RowConstraints row = new RowConstraints(46 * scale);
             towersGrid.getRowConstraints().add(row);
         }
         for (int i = 0; i < 2; i++) {
-            ColumnConstraints col = new ColumnConstraints(46 * multiplier);
+            ColumnConstraints col = new ColumnConstraints(46 * scale);
             towersGrid.getColumnConstraints().add(col);
         }
     }
