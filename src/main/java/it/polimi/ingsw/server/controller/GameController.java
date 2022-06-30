@@ -211,7 +211,6 @@ public class GameController {
 	 * @param notification (type Notification)
 	 */
 	private void didReceiveTerminationMessage(Notification notification) {
-		//TODO: Find a way to archive the Match here for future reconnections
 		terminateMatch();
 	}
 

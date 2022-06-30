@@ -2,6 +2,9 @@ package it.polimi.ingsw.server.controller.network;
 
 import it.polimi.ingsw.server.controller.network.messages.*;
 import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
+import it.polimi.ingsw.utils.cli.ANSIColors;
+import it.polimi.ingsw.utils.cli.StringFormatter;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -167,7 +170,10 @@ public class VirtualClient {
 	public synchronized void terminateConnection() {
 		try {
 			task.cancel(true);
-			bufferedReader.close();
+			if (bufferedReader != null) {
+				bufferedReader.close();
+				bufferedReader = null;
+			}
 			if (outputStreamWriter != null) {
 				outputStreamWriter.close();
 			}

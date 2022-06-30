@@ -7,6 +7,7 @@ import it.polimi.ingsw.notifications.NotificationKeys;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.exceptions.server.UnavailablePortException;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -110,42 +111,52 @@ public class GameServer {
 	}
 
 	/**
-	 * Pings the {@link it.polimi.ingsw.jar.Client Clients}
+	 * Pings the {@link it.polimi.ingsw.server.controller.network.VirtualClient Clients}
 	 */
 	private synchronized void pingClients() {
 		// Signal disconnection if at least one client did not send the PONG response in time
 		if (!isFirstPing) {
 			List<VirtualClient> disconnectedClients = connectedClients.stream().filter((client) -> !receivedPingsInCurrentTrip.contains(client.getNickname()) && sentPingsInCurrentTrip.contains(client.getNickname())).toList();
-			List<VirtualClient> associatedDisconnectedClients = new ArrayList<>();
-			Set<GameController> disconnectedControllers = new HashSet<>();
-			for (VirtualClient disconnectedClient: disconnectedClients) {
-				// Signal the termination
-				Optional<GameController> activeController = activeControllers.stream().filter((controller) -> controller.containsPlayerWithNickname(disconnectedClient.getNickname())).findFirst();
-				if (activeController.isPresent()) {
-					String[] controllerNicknames = activeController.get().getConnectedPlayerNicknames();
-					for (VirtualClient associatedClient: connectedClients) {
-						if (Arrays.stream(controllerNicknames).toList().contains(associatedClient.getNickname())) {
-							associatedClient.notifyPlayerDisconnection();
-							associatedClient.terminateConnection();
-							associatedDisconnectedClients.add(associatedClient);
-						}
-					}
-					NotificationCenter.shared().post(NotificationName.ServerDidTerminateMatch, activeController.get(), null);
-					disconnectedControllers.add(activeController.get());
-				} else {
-					System.out.println("Client disconnected, but not logged in");
-					disconnectedClient.terminateConnection();
-				}
-			}
-			connectedClients.removeAll(disconnectedClients);
-			connectedClients.removeAll(associatedDisconnectedClients);
-			activeControllers.removeAll(disconnectedControllers);
+			findClientsAndDisconnect(disconnectedClients);
 			receivedPingsInCurrentTrip = new ArrayList<>();
 		}
 		isFirstPing = false;
 		PingPongMessage pingMessage = new PingPongMessage(true);
 		sentPingsInCurrentTrip = connectedClients.stream().filter(VirtualClient::isPingable).map(VirtualClient::getNickname).filter(Objects::nonNull).toList();
 		broadcastMessage(pingMessage);
+	}
+	
+	/**
+	 * Given a list of {@link it.polimi.ingsw.server.controller.network.VirtualClient disconnected clients} it finds all matches that contained them and disconnects all players in their same match, cleaning up the leftover state
+	 * @param disconnectedClients The list of clients that have disconnected from the server
+	 */
+	private void findClientsAndDisconnect(List<VirtualClient> disconnectedClients) {
+		List<VirtualClient> associatedDisconnectedClients = new ArrayList<>();
+		Set<GameController> disconnectedControllers = new HashSet<>();
+		for (VirtualClient disconnectedClient: disconnectedClients) {
+			// Signal the termination
+			Optional<GameController> activeController = activeControllers.stream().filter((controller) -> controller.containsPlayerWithNickname(disconnectedClient.getNickname())).findFirst();
+			if (activeController.isPresent()) {
+				String[] controllerNicknames = activeController.get().getConnectedPlayerNicknames();
+				for (VirtualClient associatedClient: connectedClients) {
+					if (Arrays.stream(controllerNicknames).toList().contains(associatedClient.getNickname())) {
+						if (!disconnectedClients.stream().map(VirtualClient::getNickname).toList().contains(associatedClient.getNickname())) {
+							associatedClient.notifyPlayerDisconnection();
+						}
+						associatedClient.terminateConnection();
+						associatedDisconnectedClients.add(associatedClient);
+					}
+				}
+				NotificationCenter.shared().post(NotificationName.ServerDidTerminateMatch, activeController.get(), null);
+				disconnectedControllers.add(activeController.get());
+			} else {
+				System.out.println("Client disconnected, but not logged in");
+				disconnectedClient.terminateConnection();
+			}
+		}
+		connectedClients.removeAll(disconnectedClients);
+		connectedClients.removeAll(associatedDisconnectedClients);
+		activeControllers.removeAll(disconnectedControllers);
 	}
 
 	/**
@@ -186,7 +197,7 @@ public class GameServer {
 			getControllerWithNickname(client.getNickname()).ifPresent((controller) -> NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, controller, userInfo));
 		} else if (message instanceof MatchTerminationMessage) {
 			if (client.isPingable()) {
-				getControllerWithNickname(client.getNickname()).ifPresent((controller) -> NotificationCenter.shared().post(NotificationName.ServerDidTerminateMatch, controller, userInfo));
+				findClientsAndDisconnect(List.of(new VirtualClient[]{client}));
 			}
 		} else if (message instanceof PingPongMessage) {
 			receivedPingsInCurrentTrip.add(client.getNickname());

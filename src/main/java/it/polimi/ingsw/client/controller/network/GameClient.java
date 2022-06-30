@@ -65,7 +65,6 @@ public class GameClient {
         this.outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
         // Decode the JSON to NetworkMessage
         // The message is wrong - we do nothing
-        //TODO: Send an error message (malformed response)
         Thread readThread = new Thread(() -> {
             try {
                 bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
