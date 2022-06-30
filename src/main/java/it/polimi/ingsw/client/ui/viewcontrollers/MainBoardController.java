@@ -135,19 +135,23 @@ public class MainBoardController extends CleanableController implements JavaFXRe
 	
 	private void setDisplaysWaitForTurnFader(boolean displaysWaitForTurnFader) {
 		Platform.runLater(() -> {
-			if (displaysWaitForTurnFader && faderPane == null) {
+			if (displaysWaitForTurnFader) {
 				showFaderPane();
-				waitTurnLabel = new Label(currentlyActivePlayerNickname + " is currently playing their turn. Please wait until it is your turn to play.");
-				waitTurnLabel.setFont(new Font("Avenir", 30));
-				waitTurnLabel.setTextFill(new Color(1, 1, 1, 1));
-				waitTurnLabel.setContentDisplay(ContentDisplay.CENTER);
-				waitTurnLabel.setAlignment(Pos.CENTER);
-				waitTurnLabel.setWrapText(true);
-				AnchorPane.setTopAnchor(waitTurnLabel, 20.0);
-				AnchorPane.setBottomAnchor(waitTurnLabel, 20.0);
-				AnchorPane.setLeftAnchor(waitTurnLabel, 20.0);
-				AnchorPane.setRightAnchor(waitTurnLabel, 20.0);
-				mainPane.getChildren().add(waitTurnLabel);
+				if (waitTurnLabel == null) {
+					waitTurnLabel = new Label(currentlyActivePlayerNickname + " is currently playing their turn. Please wait until it is your turn to play.");
+					waitTurnLabel.setFont(new Font("Avenir", 30));
+					waitTurnLabel.setTextFill(new Color(1, 1, 1, 1));
+					waitTurnLabel.setContentDisplay(ContentDisplay.CENTER);
+					waitTurnLabel.setAlignment(Pos.CENTER);
+					waitTurnLabel.setWrapText(true);
+					AnchorPane.setTopAnchor(waitTurnLabel, 20.0);
+					AnchorPane.setBottomAnchor(waitTurnLabel, 20.0);
+					AnchorPane.setLeftAnchor(waitTurnLabel, 20.0);
+					AnchorPane.setRightAnchor(waitTurnLabel, 20.0);
+					mainPane.getChildren().add(waitTurnLabel);
+				} else {
+					waitTurnLabel.setText(currentlyActivePlayerNickname + " is currently playing their turn. Please wait until it is your turn to play.");
+				}
 			} else if (faderPane != null) {
 				mainPane.getChildren().remove(faderPane);
 				mainPane.getChildren().remove(waitTurnLabel);
@@ -223,8 +227,10 @@ public class MainBoardController extends CleanableController implements JavaFXRe
 	}
 	
 	private void showFaderPane() {
-		faderPane = new FaderPane();
-		mainPane.getChildren().add(faderPane);
+		if (faderPane == null) {
+			faderPane = new FaderPane();
+			mainPane.getChildren().add(faderPane);
+		}
 	}
 	
 	private void showMotherNatureMovementAlert() {
