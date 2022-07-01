@@ -15,6 +15,11 @@ The final version will include:
 * The source code of the game, developed using Java 17;
 * The source code of Unit Tests, developed using JUnit 5.
 
+### Run the project
+You can find the final JARs in the Deliverables/JARs folder.
+To run them use teh command java -jar.
+If you run the JARs without parameters it will present you with a help menu with the options needed to start the game (for example, for the Client you must enter the IP and Port of the server and the game mode, either cli or gui).
+
 ### Implemented Features
 | Feature          |                                                                                         Implementation Status                                                                                          |
 |:-----------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
@@ -22,7 +27,7 @@ The final version will include:
 | Complete ruleset |               [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/server/model)               |
 | Socket & Network |        [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/server/controller/network)         |
 | CLI              |            [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/client/cli/network)            |
-| GUI              |                                                                 [![IMPLEMENTING](https://img.shields.io/badge/-Implementing-yellow)]()                                                                 |
+| GUI              |           [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)]()(https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/client/gui/network)           |
 | Persistence      |                                                           [![To be implemented](https://img.shields.io/badge/-To%20be%20implemented-red)]()                                                            |
 | Multiple Matches |            [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/server/controller)             |
 | All Characters   |         [![IMPLEMENTED](https://img.shields.io/badge/-Implemented-brightgreen)](https://github.com/AleSassi/ingsw2022-AM26/tree/master/src/main/java/it/polimi/ingsw/server/model/characters)          |
