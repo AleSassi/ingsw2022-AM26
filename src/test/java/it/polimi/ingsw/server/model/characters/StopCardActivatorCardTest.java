@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Class StopCardActivatorCardTest tests StopCardActivatorCard.
- * Coverage 100% (Class), 80% (Methods & Lines, even though all methods are being tested)
+ * Coverage 100% (Class), 80% (Methods, Lines, even though all methods are being tested)
  *
  * @author Alessandro Sassi
  * @see StopCardActivatorCard

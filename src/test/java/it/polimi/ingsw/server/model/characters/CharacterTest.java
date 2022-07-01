@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Class CharacterTest tests Character.
- * Coverage 100% (Class & Methods), 81% (Lines, although all possible branches should be covered)
+ * Coverage 100% (Class, Methods), 81% (Lines, although all possible branches should be covered)
  *
  * @author Alessandro Sassi
  * @see Character

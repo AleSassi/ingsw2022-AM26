@@ -566,7 +566,7 @@ public abstract class MatchManager {
 
 	/**
 	 * In case of victory resolves the parity in case of Teams Match and notifies the {@link it.polimi.ingsw.server.model.Player Players}
-	 * @param winningTowers (type List<Tower>) list of winning {@code Towers}
+	 * @param winningTowers (type List Tower) list of winning {@code Towers}
 	 */
 	private void resolveParityAndNotifyWinnerNicknames(List<Tower> winningTowers) {
 		List<Player> activePlayers = getAllPlayers();

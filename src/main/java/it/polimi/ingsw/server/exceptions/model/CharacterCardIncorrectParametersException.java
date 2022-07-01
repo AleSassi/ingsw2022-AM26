@@ -3,7 +3,7 @@ package it.polimi.ingsw.server.exceptions.model;
 import java.security.PrivilegedActionException;
 /**
  this class rapresent an exception that is thrown when we send incorrect character card parameter
- @Author Alessandro Sassi
+ @author Alessandro Sassi
  @see java.lang.Exception
  */
 public class CharacterCardIncorrectParametersException extends Exception {

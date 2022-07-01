@@ -8,7 +8,7 @@ import it.polimi.ingsw.server.model.student.StudentHost;
  *
  * This class lets <code>CharacterCard</code>'s <code>useCard</code> method know what the user has selected (e.g.: the Student color that has to be moved, the additional Mother Nature steps) in order to perform the card action.
  * Although it is recommended to initialize every field of the set, most of the cards do not need every parameter to perform their work. Therefore, the caller can initialize only the parameters required by the invoked card.
- * This set is an abstraction over a more general <code>HashMap<String, Object></code>, specializing its limiting it to the necessary values.
+ * This set is an abstraction over a more general <code>HashMap String, Object</code>, specializing its limiting it to the necessary values.
  */
 public class CharacterCardParamSet {
     /**

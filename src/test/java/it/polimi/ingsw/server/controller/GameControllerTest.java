@@ -35,7 +35,7 @@ class GameControllerTest {
 	private List<NetworkMessage> sentMessages;
 	
 	/**
-	 * Test setup & initialization for mocking the server & writing messages to a list
+	 * Test setup and initialization for mocking the server and writing messages to a list
 	 */
 	@BeforeEach
 	void setup() {

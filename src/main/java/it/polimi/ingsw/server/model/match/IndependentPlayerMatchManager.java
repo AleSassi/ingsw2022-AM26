@@ -51,7 +51,7 @@ public class IndependentPlayerMatchManager extends MatchManager {
 
     /**
      * Gets all the {@link it.polimi.ingsw.server.model.Player Players} of the {@code Match}
-     * @return (type List<Player>) returns all the {@code Players}
+     * @return (type List Player) returns all the {@code Players}
      */
     @Override
     public List<Player> getAllPlayers() {
@@ -61,7 +61,7 @@ public class IndependentPlayerMatchManager extends MatchManager {
 
     /**
      * Gets just the {@link it.polimi.ingsw.server.model.Player Players} with {@link it.polimi.ingsw.server.model.Tower Tower}
-     * @return (type List<Player>) returns all the {@code Players}
+     * @return (type List Player) returns all the {@code Players}
      */
     @Override
     protected List<Player> getPlayersWithTowers() {

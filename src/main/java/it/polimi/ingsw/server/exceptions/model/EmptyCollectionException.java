@@ -1,7 +1,7 @@
 package it.polimi.ingsw.server.exceptions.model;
 /**
  this class represents an exception that is thrown when the player tries to take an element from an empty collection
- @Author Alessandro Sassi
+ @author Alessandro Sassi
  @see java.lang.Exception
  */
 public class EmptyCollectionException extends Exception {

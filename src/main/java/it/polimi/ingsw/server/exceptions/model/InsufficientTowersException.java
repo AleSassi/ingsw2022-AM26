@@ -1,7 +1,7 @@
 package it.polimi.ingsw.server.exceptions.model;
 /**
  this class represents an exception that is thrown when player tries to place more towers than what are available
- @Author Alessandro Sassi
+ @author Alessandro Sassi
  @see java.lang.Exception
  */
 public class InsufficientTowersException extends Exception {

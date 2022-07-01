@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Class StudentHostingCardTest tests StudentHostingCard.
- * Coverage 100% (Class & Methods), 74% (Lines, some exceptions are being handled but since they will never be executed (neither after deployment) they will not be covered)
+ * Coverage 100% (Class, Methods), 74% (Lines, some exceptions are being handled but since they will never be executed (neither after deployment) they will not be covered)
  *
  * @author Alessandro Sassi
  * @see StudentHostingCard

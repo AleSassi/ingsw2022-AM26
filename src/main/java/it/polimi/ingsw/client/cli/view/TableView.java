@@ -131,7 +131,7 @@ public class TableView extends TerminalView {
 	
 	/**
 	 * Builds the formatted string for Clouds
-	 * @param hosts (type List<{@link it.polimi.ingsw.server.model.student.Cloud Cloud}>) The list of Clouds on the table to print
+	 * @param hosts (type List {@link it.polimi.ingsw.server.model.student.Cloud Cloud}) The list of Clouds on the table to print
 	 * @return (type StringBuilder) the String with the list of Clouds on the table
 	 */
 	private StringBuilder buildStringForClouds(List<Cloud> hosts) {
@@ -146,7 +146,7 @@ public class TableView extends TerminalView {
 	
 	/**
 	 * Builds the formatted string for Islands
-	 * @param hosts (type List<{@link it.polimi.ingsw.server.model.student.Island Island}>) The list of Islands on the table to print
+	 * @param hosts (type List {@link it.polimi.ingsw.server.model.student.Island Island}) The list of Islands on the table to print
 	 * @return (type StringBuilder) the String with the list of Islands on the table
 	 */
 	private StringBuilder buildStringForIslands(List<Island> hosts) {
