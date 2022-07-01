@@ -250,34 +250,41 @@ public class IslandPane extends RescalableAnchorPane {
      * @param tableStateMessage (type tableStateMessage)
      */
     private void setTowerOnIsland(TableStateMessage tableStateMessage) {
-        if (tower != null && tableStateMessage.getIslands().get(idx).getActiveTowerType() != null) {
-            switch (tableStateMessage.getIslands().get(idx).getActiveTowerType()) {
-                case Gray -> {
-                    tower.setVisible(true);
-                    towerLabel.setTextFill(Color.color(0, 0, 0));
-                    tower.setStyle("-fx-background-image: url(" + GUIUtils.getURI("images/towers/Grey.png") + ");\n-fx-background-size: 100% 100%");
+        if (tower != null) {
+            if (tableStateMessage.getIslands().get(idx).getActiveTowerType() == null) {
+                //Remove the tower!
+                Platform.runLater(() -> {
+                    tower.setVisible(false);
+                    towerLabel.setVisible(false);
+                    towerLabel.setText("0");
+                });
+            } else {
+                switch (tableStateMessage.getIslands().get(idx).getActiveTowerType()) {
+                    case Gray -> {
+                        tower.setVisible(true);
+                        towerLabel.setTextFill(Color.color(0, 0, 0));
+                        tower.setStyle("-fx-background-image: url(" + GUIUtils.getURI("images/towers/Grey.png") + ");\n-fx-background-size: 100% 100%");
+                    }
+                    case Black -> {
+                        tower.setVisible(true);
+                        towerLabel.setTextFill(Color.color(1, 1, 1));
+                        tower.setStyle("-fx-background-image: url(" + GUIUtils.getURI("images/towers/Black.png") + ");\n-fx-background-size: 100% 100%");
+                    }
+                    case White -> {
+                        tower.setVisible(true);
+                        towerLabel.setTextFill(Color.color(0, 0, 0));
+                        tower.setStyle("-fx-background-image: url(" + GUIUtils.getURI("images/towers/White.png") + ");\n-fx-background-size: 100% 100%");
+                    }
+                    default -> {
+                        return;
+                    }
                 }
-                case Black -> {
-                    tower.setVisible(true);
-                    towerLabel.setTextFill(Color.color(1, 1, 1));
-                    tower.setStyle("-fx-background-image: url(" + GUIUtils.getURI("images/towers/Black.png") + ");\n-fx-background-size: 100% 100%");
-                }
-                case White -> {
-                    tower.setVisible(true);
-                    towerLabel.setTextFill(Color.color(0, 0, 0));
-                    tower.setStyle("-fx-background-image: url(" + GUIUtils.getURI("images/towers/White.png") + ");\n-fx-background-size: 100% 100%");
-                }
-                default -> {
-                    return;
-                }
+                Platform.runLater(() -> {
+                    int count = tableStateMessage.getIslands().get(idx).getTowerCount();
+                    towerLabel.setVisible(count > 1);
+                    towerLabel.setText("" + count);
+                });
             }
-            Platform.runLater(() -> {
-                int count = tableStateMessage.getIslands().get(idx).getTowerCount();
-                if(count > 1) {
-                    towerLabel.setVisible(true);
-                }
-                towerLabel.setText("" + count);
-            });
         }
     }
 

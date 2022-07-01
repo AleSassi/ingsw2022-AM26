@@ -33,7 +33,7 @@ public class IslandContainer extends RescalableAnchorPane {
             Platform.runLater(() -> getChildren().add(island));
         }
 
-        rescale(1);
+        rescale(getCurrentScaleValue());
 
         NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
         NotificationCenter.shared().addObserver(this, this::didReceiveCharacterCardPlayedNotification, NotificationName.JavaFXDidPlayCharacterCard, null);
@@ -62,7 +62,7 @@ public class IslandContainer extends RescalableAnchorPane {
                 getChildren().remove(getChildren().size() - 1);
                 islands.remove(islands.size() - 1);
             }
-            rescale(1);
+            rescale(getCurrentScaleValue());
         });
     }
 
