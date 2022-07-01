@@ -148,64 +148,23 @@
                             <goal>single</goal>
                         </goals>
                     </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>false</overWriteSnapshots>
-                            <overWriteIfNewer>true</overWriteIfNewer>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.2</version>
-                <executions>
-                    <execution>
-                        <id>default-jar</id>
-                        <phase>none</phase>
-                    </execution>
                     <execution>
                         <id>Server</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <addClasspath>true</addClasspath>
-                                    <classpathPrefix>lib/</classpathPrefix>
-                                    <mainClass>it.polimi.ingsw.jar.Server</mainClass>
+                                    <mainClass>it.polimi.ingsw.jar.Client</mainClass>
                                 </manifest>
                             </archive>
-                            <excludes>
-                                <exclude>**/**/*.png</exclude>
-                                <exclude>**/*.png</exclude>
-                                <exclude>*.png</exclude>
-                                <exclude>**/**/*.fxml</exclude>
-                                <exclude>**/*.fxml</exclude>
-                                <exclude>*.fxml</exclude>
-                                <exclude>**/Client.java</exclude>
-                                <exclude>**/client</exclude>
-                                <exclude>**/utils/cli</exclude>
-                                <exclude>**/utils/ui</exclude>
-                            </excludes>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
                             <finalName>Server</finalName>
                         </configuration>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
