@@ -82,7 +82,8 @@ public class PlayerStateView extends TerminalView {
 		PlayerStateMessage playerStateMessage = (PlayerStateMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
 		boolean isForCLIPlayer = playerStateMessage.getNickname().equals(Client.getNickname());
 		if (isForCLIPlayer) {
-			System.out.println(StringFormatter.formatWithColor("Your Board (Tower Color: " + playerStateMessage.getBoard().getTowerType() + "):", ANSIColors.Green));
+			String teamString = playerStateMessage.getTeamName() == null ? "" : " - " + playerStateMessage.getTeamName();
+			System.out.println(StringFormatter.formatWithColor("Your Board (Tower Color: " + playerStateMessage.getBoard().getTowerType() + ")" + teamString + ":", ANSIColors.Green));
 			numberOfCards = playerStateMessage.getAvailableCardsDeck().length;
 			if (playerStateMessage.getLastPlayedAssistantCard() != null) {
 				maxMNSteps = playerStateMessage.getLastPlayedAssistantCard().getMotherNatureSteps();
@@ -92,7 +93,8 @@ public class PlayerStateView extends TerminalView {
 			table = playerStateMessage.getBoard().getDiningRoom();
 		} else {
 			// Show the redux version for tactical purposes
-			System.out.println(StringFormatter.formatWithColor(playerStateMessage.getNickname() + "'s Board (Tower Color: " + playerStateMessage.getBoard().getTowerType() + "):", ANSIColors.Yellow));
+			String teamString = playerStateMessage.getTeamName() == null ? "" : " - " + playerStateMessage.getTeamName();
+			System.out.println(StringFormatter.formatWithColor(playerStateMessage.getNickname() + "'s Board (Tower Color: " + playerStateMessage.getBoard().getTowerType() + ")" + teamString + ":", ANSIColors.Yellow));
 		}
 		System.out.println(buildStringForSchoolBoard(playerStateMessage));
 		if (isForCLIPlayer) {

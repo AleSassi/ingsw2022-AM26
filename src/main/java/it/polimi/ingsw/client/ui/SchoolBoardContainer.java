@@ -2,7 +2,6 @@ package it.polimi.ingsw.client.ui;
 
 import it.polimi.ingsw.client.ui.assistants.AssistantCardPane;
 import it.polimi.ingsw.client.ui.rescale.RescalableAnchorPane;
-import it.polimi.ingsw.jar.Client;
 import it.polimi.ingsw.notifications.Notification;
 import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationKeys;
@@ -12,7 +11,6 @@ import it.polimi.ingsw.server.model.assistants.AssistantCard;
 import it.polimi.ingsw.utils.ui.StudentDropTarget;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 
 /**
@@ -31,14 +29,15 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 	 * Constructor creates the {@code SchoolBoardContainer}
 	 * @param isPrimary (type boolean) true if the Cli{@link it.polimi.ingsw.client.ui.SchoolBoardPane SchoolBoardPane}
 	 * @param ownerNickname (type String) owner's nickname
+	 * @param teamName (type String) the player's team name, or null if no team exists
 	 * @param coins (type int) {@link it.polimi.ingsw.server.model.Player Player's} coins
 	 */
-	public SchoolBoardContainer(boolean isPrimary, String ownerNickname, int coins) {
+	public SchoolBoardContainer(boolean isPrimary, String ownerNickname, String teamName, int coins) {
 		this.isPrimary = isPrimary;
 		this.ownerNickname = ownerNickname;
 		this.boardPane = new SchoolBoardPane(isPrimary, ownerNickname);
 		this.titleTextNoCoins = isPrimary ? "Your School Board" : ownerNickname + "'s School Board";
-		this.playerLabel = new Label(buildTitleWithCoins(coins));
+		this.playerLabel = new Label(buildTitleWithCoinsAndTeam(coins, teamName));
 		rescale(getCurrentScaleValue());
 		getChildren().addAll(this.playerLabel, this.boardPane);
 		NotificationCenter.shared().addObserver(this, this::didReceivePlayerStateNotification, NotificationName.ClientDidReceivePlayerStateMessage, null);
@@ -94,7 +93,7 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 		if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof PlayerStateMessage message) {
 			if (message.getNickname().equals(ownerNickname)) {
 				if (message.getAvailableCoins() >= 0) {
-					Platform.runLater(() -> playerLabel.setText(buildTitleWithCoins(message.getAvailableCoins())));
+					Platform.runLater(() -> playerLabel.setText(buildTitleWithCoinsAndTeam(message.getAvailableCoins(), message.getTeamName())));
 				}
 				updatePickedAssistantCard(message.getLastPlayedAssistantCard());
 			}
@@ -122,11 +121,13 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 
 	/**
 	 * Builds the title {@code Label} with the {@link it.polimi.ingsw.server.model.Player Player's} coins
-	 * @param coins (type int)
+	 * @param coins (type int) The number of Coins belonging to the Player
+	 * @param teamName (type String) the name of the team the Player belongs to
 	 * @return (type String) returns the title {@code Label} with the {@link it.polimi.ingsw.server.model.Player Player's} coins
 	 */
-	private String buildTitleWithCoins(int coins) {
-		return coins >= 0 ? titleTextNoCoins + " (Coins: " + coins + ")" : titleTextNoCoins; //Interpret negative values as Coins not available
+	private String buildTitleWithCoinsAndTeam(int coins, String teamName) {
+		String teamString = teamName == null ? "" : " - " + teamName;
+		return (coins >= 0 ? titleTextNoCoins + " (Coins: " + coins + ")" : titleTextNoCoins) + teamString; //Interpret negative values as Coins not available
 	}
 	
 	public void rescale(double scale) {

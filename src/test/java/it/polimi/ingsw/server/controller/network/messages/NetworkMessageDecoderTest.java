@@ -43,7 +43,7 @@ class NetworkMessageDecoderTest {
 			assertEquals(message, decoder.decodeMessage(message.serialize()));
 			message = new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPlayAssistantCard, true, "");
 			assertEquals(message, decoder.decodeMessage(message.serialize()));
-			message = new PlayerStateMessage("Ale", null, new ArrayList<>(), AssistantCard.LION, new SchoolBoard(Tower.White, 8), 0, Wizard.Wizard1);
+			message = new PlayerStateMessage("Ale", null, new ArrayList<>(), AssistantCard.LION, new SchoolBoard(Tower.White, 8), 0, Wizard.Wizard1, null);
 			assertEquals(message, decoder.decodeMessage(message.serialize()));
 			message = new TableStateMessage(Arrays.stream(Professor.values()).toList(), new ArrayList<>(), new StudentHost(), new ArrayList<>(), new ArrayList<>());
 			assertEquals(message, decoder.decodeMessage(message.serialize()));

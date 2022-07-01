@@ -105,4 +105,16 @@ public class TeamMatchManager extends MatchManager {
 		}
 		return totalTeamInfluence;
 	}
+	
+	@Override
+	protected String getPlayerTeamName(Player player) {
+		int teamIndex = 0;
+		for (PlayerTeam team: teams) {
+			if (team.getAllPlayers().contains(player)) {
+				break;
+			}
+			teamIndex += 1;
+		}
+		return "Team " + (teamIndex + 1);
+	}
 }

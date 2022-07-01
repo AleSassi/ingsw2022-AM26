@@ -88,4 +88,9 @@ public class IndependentPlayerMatchManager extends MatchManager {
         }
         return null;
     }
+    
+    @Override
+    protected String getPlayerTeamName(Player player) {
+        return null;
+    }
 }

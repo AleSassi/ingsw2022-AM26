@@ -19,7 +19,7 @@ class PlayerStateMessageTest {
 	void initMessage() {
 		assertDoesNotThrow(() -> {
 			dummyPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8, 1);
-			message = new PlayerStateMessage(dummyPlayer.getNickname(), null, dummyPlayer.getAvailableAssistantCards(), null, dummyPlayer.getBoard(), dummyPlayer.getAvailableCoins(), dummyPlayer.getWizard());
+			message = new PlayerStateMessage(dummyPlayer.getNickname(), null, dummyPlayer.getAvailableAssistantCards(), null, dummyPlayer.getBoard(), dummyPlayer.getAvailableCoins(), dummyPlayer.getWizard(), null);
 		});
 	}
 	/**

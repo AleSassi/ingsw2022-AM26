@@ -25,6 +25,7 @@ import java.util.Objects;
 public class PlayerStateMessage extends NetworkMessage {
 	
 	private String nickname;
+	private String teamName;
 	private Integer activeCharacterCardIdx;
 	private AssistantCard[] availableCardsDeck;
 	private AssistantCard lastPlayedAssistantCard;
@@ -32,7 +33,7 @@ public class PlayerStateMessage extends NetworkMessage {
 	private Integer availableCoins;
 	private Wizard wizard;
 	
-	public PlayerStateMessage(@NotNull String nickname, Integer activeCharacterCardIdx, @NotNull List<AssistantCard> availableCardsDeck, AssistantCard lastPlayedAssistantCard, @NotNull SchoolBoard board, int availableCoins, @NotNull Wizard wizard) {
+	public PlayerStateMessage(@NotNull String nickname, Integer activeCharacterCardIdx, @NotNull List<AssistantCard> availableCardsDeck, AssistantCard lastPlayedAssistantCard, @NotNull SchoolBoard board, int availableCoins, @NotNull Wizard wizard, String teamName) {
 		this.nickname = nickname;
 		this.activeCharacterCardIdx = activeCharacterCardIdx;
 		this.availableCardsDeck = new AssistantCard[availableCardsDeck.size()];
@@ -41,6 +42,7 @@ public class PlayerStateMessage extends NetworkMessage {
 		this.board = board;
 		this.availableCoins = availableCoins;
 		this.wizard = wizard;
+		this.teamName = teamName;
 	}
 	
 	public PlayerStateMessage(String serializedString) throws MessageDecodeException {
@@ -49,6 +51,10 @@ public class PlayerStateMessage extends NetworkMessage {
 	
 	public String getNickname() {
 		return nickname;
+	}
+	
+	public String getTeamName() {
+		return teamName;
 	}
 	
 	public Integer getActiveCharacterCardIdx() {
@@ -87,6 +93,7 @@ public class PlayerStateMessage extends NetworkMessage {
 		try {
 			PlayerStateMessage decoded = gson.fromJson(serializedString, PlayerStateMessage.class);
 			nickname = decoded.nickname;
+			teamName = decoded.teamName;
 			activeCharacterCardIdx = decoded.activeCharacterCardIdx;
 			availableCardsDeck = decoded.availableCardsDeck;
 			lastPlayedAssistantCard = decoded.lastPlayedAssistantCard;
@@ -115,6 +122,8 @@ public class PlayerStateMessage extends NetworkMessage {
 		PlayerStateMessage that = (PlayerStateMessage) o;
 		
 		if (!nickname.equals(that.nickname)) return false;
+		if (!Objects.equals(teamName, that.teamName))
+			return false;
 		if (!Objects.equals(activeCharacterCardIdx, that.activeCharacterCardIdx))
 			return false;
 		// Probably incorrect - comparing Object[] arrays with Arrays.equals

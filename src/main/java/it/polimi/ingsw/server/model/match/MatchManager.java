@@ -328,6 +328,13 @@ public abstract class MatchManager {
 	 * @return (type List of Player) returns all the {@code Players}
 	 */
 	protected abstract List<Player> getPlayersWithTowers();
+	
+	/**
+	 * Retrieves the team name for a Player, in case the Match is team based
+	 * @param player The Player for which to find the team name
+	 * @return <code>null</code> if the Match is not team-based, else the name of the team the Player belongs to
+	 */
+	protected abstract String getPlayerTeamName(Player player);
 	//endregion
 
 	//region Private methods & Game Phase methods
@@ -618,7 +625,7 @@ public abstract class MatchManager {
 						break;
 					}
 				}
-				return new PlayerStateMessage(player.getNickname(), activeCharacterCardIdx, player.getAvailableAssistantCards(), player.getLastPlayedAssistantCard(), player.getBoard(), player.getAvailableCoins(), player.getWizard());
+				return new PlayerStateMessage(player.getNickname(), activeCharacterCardIdx, player.getAvailableAssistantCards(), player.getLastPlayedAssistantCard(), player.getBoard(), player.getAvailableCoins(), player.getWizard(), getPlayerTeamName(player));
 			}
 		}
 		return null;

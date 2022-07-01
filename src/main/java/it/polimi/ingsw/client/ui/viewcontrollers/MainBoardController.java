@@ -100,7 +100,7 @@ public class MainBoardController extends RescalableController {
 			}
 			if (!schoolBoardContainers.stream().map(SchoolBoardContainer::getOwnerNickname).toList().contains(message.getNickname())) {
 				//Create the new container
-				SchoolBoardContainer newContainer = new SchoolBoardContainer(message.getNickname().equals(Client.getNickname()), message.getNickname(), message.getAvailableCoins());
+				SchoolBoardContainer newContainer = new SchoolBoardContainer(message.getNickname().equals(Client.getNickname()), message.getNickname(), message.getTeamName(), message.getAvailableCoins());
 				Platform.runLater(() -> mainPane.getChildren().add(newContainer));
 				if (newContainer.getOwnerNickname().equals(Client.getNickname())) {
 					schoolBoardContainers.add(newContainer);
