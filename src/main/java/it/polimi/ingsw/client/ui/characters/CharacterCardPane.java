@@ -132,21 +132,23 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 	 */
 	private void setupBuyButton(int cardPrice) {
 		if (!purchased) {
-			if (buyButton == null) {
-				buyButton = new Label("Buy: " + cardPrice);
-				buyButton.setStyle("-fx-background-color: white");
-				buyButton.setPickOnBounds(true);
-				buyButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
-					event.consume();
-					//Send the Buy message to the server
-					PlayerActionMessage actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidPurchaseCharacterCard, -1, null, false, -1, -1, -1, characterCardIndexInTableList, null);
-					GameClient.shared().sendMessage(actionMessage);
-				});
-				Platform.runLater(() -> getChildren().add(buyButton));
-			} else {
-				//Update
-				Platform.runLater(() -> buyButton.setText("Buy: " + cardPrice));
-			}
+			Platform.runLater(() -> {
+				if (buyButton == null) {
+					buyButton = new Label("Buy: " + cardPrice);
+					buyButton.setStyle("-fx-background-color: white");
+					buyButton.setPickOnBounds(true);
+					buyButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
+						event.consume();
+						//Send the Buy message to the server
+						PlayerActionMessage actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidPurchaseCharacterCard, -1, null, false, -1, -1, -1, characterCardIndexInTableList, null);
+						GameClient.shared().sendMessage(actionMessage);
+					});
+					getChildren().add(buyButton);
+				} else {
+					//Update
+					buyButton.setText("Buy: " + cardPrice);
+				}
+			});
 		}
 	}
 

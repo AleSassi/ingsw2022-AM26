@@ -347,6 +347,7 @@ public class SchoolBoardPane extends RescalableAnchorPane {
                     cleanupStyles();
                     setDisabled(true);
                     setDisable(true); //We wait fo the response before enabling
+                    setCardParameterMode(CardParameterMode.Disabled, null);
                     HashMap<String, Object> userInfo = new HashMap<>();
                     userInfo.put(NotificationKeys.JavaFXPlayedCharacter.getRawValue(), activeCharacter);
                     userInfo.put(NotificationKeys.CharacterCardDestinationStudent.getRawValue(), notification.getUserInfo().get(NotificationKeys.ClickedStudentColor.getRawValue()));
@@ -361,6 +362,7 @@ public class SchoolBoardPane extends RescalableAnchorPane {
                         cleanupStyles();
                         setDisabled(true);
                         setDisable(true); //We wait fo the response before enabling
+                        setCardParameterMode(CardParameterMode.Disabled, null);
                         HashMap<String, Object> userInfo = new HashMap<>();
                         userInfo.put(NotificationKeys.JavaFXPlayedCharacter.getRawValue(), activeCharacter);
                         userInfo.put(NotificationKeys.CharacterCardSourceStudent.getRawValue(), pickedSrcStudentForSwap);
@@ -454,8 +456,7 @@ public class SchoolBoardPane extends RescalableAnchorPane {
             }
             case StudentSwap -> {
                 //Enable both drop targets - will disable one of them after a click
-                setEnabledWithDropTarget(StudentDropTarget.ToEntrance, false);
-                setEnabledWithDropTarget(StudentDropTarget.ToDiningRoom, false);
+                setEnabledWithDropTarget(StudentDropTarget.ToEntrance, true);
                 //Add additional actions to students so that when we click on them we also disable the source area to have only 1 area active at any given time
                 Platform.runLater(() -> {
                     entranceGrid.getChildren().forEach((node) -> {
@@ -466,7 +467,6 @@ public class SchoolBoardPane extends RescalableAnchorPane {
                     diningGrid.getChildren().forEach((node) -> {
                         StudentPane studentPane = (StudentPane) node;
                         studentPane.configureClickForDropTargets(new StudentDropTarget[]{StudentDropTarget.ToEntrance});
-                        node.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> setEnabledWithDropTarget(StudentDropTarget.ToEntrance, true));
                     });
                 });
             }
