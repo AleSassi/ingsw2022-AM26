@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AssistantCardTest {
-	
+	/**
+	 create  class with all value of{@link it.polimi.ingsw.server.model.assistants.AssistantCard assistantcard}, and for each one verify return the correct Priority number
+	 */
 	@Test
 	void getPriorityNumber() {
 		AssistantCard class1 = AssistantCard.TURTLE;
@@ -30,7 +32,9 @@ class AssistantCardTest {
 		assertEquals(class9.getPriorityNumber(), 9);
 		assertEquals(class10.getPriorityNumber(), 10);
 	}
-	
+	/**
+	 create  class with all value of{@link it.polimi.ingsw.server.model.assistants.AssistantCard assistantcard}, and for each one verify return the correct Mother Nature Step
+	 */
 	@Test
 	void getMotherNatureSteps() {
 		AssistantCard class1 = AssistantCard.TURTLE;

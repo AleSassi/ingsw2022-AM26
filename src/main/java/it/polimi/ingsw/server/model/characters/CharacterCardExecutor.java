@@ -8,8 +8,14 @@ import it.polimi.ingsw.server.model.TableManager;
 import java.util.List;
 
 @FunctionalInterface
+/**
+ * This Interface represent the {@code CharacterCardExecutor}
+ * @author Alessandro Sassi
+ */
 public interface CharacterCardExecutor {
-
+    /**
+     abstract method
+     */
     int performAction(TableManager t, List<Player> players, Player currentPlayer, CharacterCardParamSet userInfo) throws CharacterCardIncorrectParametersException, CharacterCardNoMoreUsesAvailableException;
 
 }
