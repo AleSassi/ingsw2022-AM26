@@ -1,13 +1,18 @@
 package it.polimi.ingsw.server.model.assistants;
 
 import java.util.ArrayList;
-
+/**
+ * This Class represent the {@code PlayedCardDeck}
+ * @author Leonardo Betti
+ */
 public class PlayedCardDeck {
-	
+	/**
+	 * initialize {@code PlayedCardDeck}
+	 */
 	private final ArrayList<AssistantCard> assistantCardsDeck = new ArrayList<>();
 	
 	/**
-	 * Gets and returns the last <code>AssistantCard</code> that has been played by the Player that owns this deck.
+	 * Gets and returns the last <code>AssistantCard</code>{@link it.polimi.ingsw.server.model.assistants.AssistantCard Assistantcard} that has been played by the Player that owns this deck.
 	 *
 	 * @return The last <code>AssistantCard</code> that the Player owning this Deck has played. This card sits on top of the currently visible Deck.
 	 */
@@ -28,7 +33,11 @@ public class PlayedCardDeck {
 	public void addCardOnTop(AssistantCard card) {
 		assistantCardsDeck.add(card);
 	}
-	
+
+	/**verify if this class is equal to
+	 * @param(type Object)
+	 * @return (type bool) true if class are equal, false otherwise
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

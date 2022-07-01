@@ -1,16 +1,19 @@
 package it.polimi.ingsw.server.model;
 
-import it.polimi.ingsw.server.exceptions.model.CollectionUnderflowError;
-import it.polimi.ingsw.server.exceptions.model.IncorrectConstructorParametersException;
-import it.polimi.ingsw.server.exceptions.model.InsufficientTowersException;
-import it.polimi.ingsw.server.exceptions.model.TooManyTowersException;
+import it.polimi.ingsw.server.exceptions.model.*;
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.server.model.student.StudentHost;
 
 import java.util.*;
-
+/**
+ * This Class represent the {@code SchoolBoard}
+ * @author Leonardo Betti
+ */
 public class SchoolBoard {
 
+    /**
+     * initialize{@code SchoolBoard}
+     */
     private final int maxTowerCount;
     private int availableTowerCount;
     private final Tower towerType;
@@ -18,7 +21,10 @@ public class SchoolBoard {
     private StudentHost entrance;
     private boolean[] controlledProfessors;
     /**
-     * constructor
+     * Constructs and sets up the Schoolboard
+     * @param tower (type Tower) type of player tower
+     * @param initialTowerCount (type List of int) number of tower
+     * @throws IncorrectConstructorParametersException whenever the {@code Parameters} of the constructor aren't correct
      */
     public SchoolBoard(Tower tower, int initialTowerCount) throws IncorrectConstructorParametersException {
         if (tower == null || initialTowerCount < 0 || initialTowerCount > 8) throw new IncorrectConstructorParametersException();
@@ -31,30 +37,39 @@ public class SchoolBoard {
         maxTowerCount = initialTowerCount;
     }
     /**
-     * return the number  of student that has type s present in the diningroom
+     * return number of  {@link it.polimi.ingsw.server.model.student.Student student}, that has type
+     * @param s (type of student)
      */
     public int getCountAtTable(Student s) {
         return diningRoom.getCount(s);
     }
-    
+    /**
+     * getter
+     */
     public StudentHost getEntrance() {
         return entrance.copy();
     }
-    
+    /**
+     * getter
+     */
     public StudentHost getDiningRoom() {
         return diningRoom.copy();
     }
-    
+    /**
+     * getter
+     */
     public int getAvailableTowerCount() {
         return availableTowerCount;
     }
-
+    /**
+     * getter
+     */
     public Tower getTowerType() {
         return towerType;
     }
 
     /**
-     * return the nuumber of professor
+     * return a list of the controlled {@link it.polimi.ingsw.server.model.Professor professor}
      */
     public ArrayList<Professor> getControlledProfessors() {
         ArrayList<Professor> result = new ArrayList<>();
@@ -65,7 +80,10 @@ public class SchoolBoard {
         }
         return result;
     }
-
+    /**
+     * set the index of a list of {@link it.polimi.ingsw.server.model.Professor professor}to true, where the index, is the index of
+     * @param professor (type of professor) chosen {@code Professor}
+     */
     public void setControlledProfessor(Professor professor) {
         if (professor == null) return;
         
@@ -73,6 +91,10 @@ public class SchoolBoard {
         controlledProfessors[profIndex] = true;
     }
 
+    /**
+     * set the index of a list of {@link it.polimi.ingsw.server.model.Professor professor}to false, where the index, is the index of
+     * @param professor (type of professor) chosen {@code Professor}
+     */
     public void removeProfessorControl(Professor professor) {
         if (professor == null) return;
         
@@ -80,7 +102,8 @@ public class SchoolBoard {
         controlledProfessors[profIndex] = false;
     }
     /**
-     * insert a student with type s to the entrance
+     * add a {@link it.polimi.ingsw.server.model.student.Student student}, that has type
+     * @param s (type of student) chosen {@code Student}, to the entrance
      */
     public void addStudentToEntrance(Student s) {
         entrance.placeStudents(s, 1);
@@ -88,33 +111,38 @@ public class SchoolBoard {
 
 
     /**
-     * remove a student with type s from the entrance
+     * remove a {@link it.polimi.ingsw.server.model.student.Student student}, that has type
+     * @param s (type of student) chosen {@code Student}, to the entrance
      */
     public void removeStudentFromEntrance(Student s) throws CollectionUnderflowError {
         entrance.removeStudents(s, 1);
     }
     /**
-     * insert a student with type s to the dining room
+     * add a {@link it.polimi.ingsw.server.model.student.Student student}, that has type
+     * @param s (type of student) chosen {@code Student}, to the dining room
      */
     public void addStudentToTable(Student s) {
         diningRoom.placeStudents(s, 1);
     }
 
     /**
-     * remove a student with type s from the dining room
+     * remove a {@link it.polimi.ingsw.server.model.student.Student student}, that has type
+     * @param s (type of student) chosen {@code Student}, to the dining room
      */
     public void removeStudentFromTable(Student s) throws CollectionUnderflowError {
         diningRoom.removeStudents(s, 1);
     }
     /**
-     * increment the number of avaible tower
+     * increment the counter(int) of tower
+     @throws TooManyTowersException whenever the number of tower has max value
      */
     public void gainTower() throws TooManyTowersException {
         if (availableTowerCount == maxTowerCount) {throw new TooManyTowersException();}
         availableTowerCount += 1;
     }
     /**
-     * return the color of tower and decrement the towercounter on schoolboard
+     * decrment the counter of tower and return the type of {@link it.polimi.ingsw.server.model.Tower tower} that schoolboard have
+     * @throws InsufficientTowersException whenever the number of tower  doen't have sufficent tower
      */
     public Tower pickAndRemoveTower() throws InsufficientTowersException {
         if (this.availableTowerCount == 0) throw new InsufficientTowersException();

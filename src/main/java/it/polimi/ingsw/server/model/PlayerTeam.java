@@ -3,13 +3,16 @@ package it.polimi.ingsw.server.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * This Class represent the {@code PlayerTeam}
+ * @author Leonardo Betti
+ */
 public class PlayerTeam {
 
     private final ArrayList<Player> players = new ArrayList<>();
     private int leadPlayerIndex;
-    /**
-     * add player to the team
+    /** add the
+     *@param player (type {@link it.polimi.ingsw.server.model.Player player}) to the (@Code Playteam)
      */
     public void addPlayer(Player player) {
         players.add(player);
@@ -19,21 +22,21 @@ public class PlayerTeam {
     }
 
     /**
-     * return the list of player belonging to the team
+     * getter, return all the {@link it.polimi.ingsw.server.model.Player player} inside team
      */
     public List<Player> getAllPlayers() {
         // We should copy the Players list to avoid object modifications
         return new ArrayList<>(players);
     }
-    /**
-     * the method take a player like parameter and check if this player is inside the team
+    /** @return (type Bool) if
+     *@param player (type {@link it.polimi.ingsw.server.model.Player player}) is inside the team
      */
     public boolean containsPlayer(Player player) {
         return players.contains(player);
     }
 
     /**
-     * return the player that have the tower
+     getter, return the{@link it.polimi.ingsw.server.model.Player player} who is the leader
      */
     public Player getLeadPlayer() {
         return players.get(leadPlayerIndex);
