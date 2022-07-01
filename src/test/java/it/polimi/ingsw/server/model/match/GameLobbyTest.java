@@ -12,6 +12,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests related to the lobby
+ * @see GameLobby
+ */
 class GameLobbyTest {
 
     /**

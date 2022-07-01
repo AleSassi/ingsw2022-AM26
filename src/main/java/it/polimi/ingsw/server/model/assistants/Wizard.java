@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server.model.assistants;
 /**
- * This Class represent the {@code Wizard}
+ * This Class represents the {@code Wizard}
  * @author Leonardo Betti
  */
 public enum Wizard {

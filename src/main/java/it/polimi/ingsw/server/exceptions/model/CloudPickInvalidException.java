@@ -1,7 +1,8 @@
 package it.polimi.ingsw.server.exceptions.model;
 /**
- this class rapresent an exception that is thrown when the player choose an empty cloud unless the Bag is also empty
+ This class represents an exception that is thrown when the player chooses an empty cloud, unless the Bag is also empty
  @Author Alessandro Sassi
+ @see java.lang.Exception
  */
 public class CloudPickInvalidException extends Exception {
 	/**
@@ -10,5 +11,6 @@ public class CloudPickInvalidException extends Exception {
 	 * call to {@link #initCause}.
 	 */
 	public CloudPickInvalidException() {
+		super();
 	}
 }

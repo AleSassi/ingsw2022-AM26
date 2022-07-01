@@ -13,11 +13,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * {@code TeamMatchManagerTest} class tests {@link it.polimi.ingsw.server.model.match.TeamMatchManager TeamMatchManager}
+ * @see TeamMatchManager
  */
 class TeamMatchManagerTest {
 
     private TeamMatchManager matchManager ;
-
+    
+    /**
+     * Common test initialization
+     */
     @BeforeEach
     void initIndependentPlayerMatchManager() {
         matchManager = new TeamMatchManager();

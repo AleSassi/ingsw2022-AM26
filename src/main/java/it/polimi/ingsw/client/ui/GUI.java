@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- * Class {@code GUI} represent the controller for the JavaFX window
+ * Class {@code GUI} represent the main class for the JavaFX window
  */
 public class GUI extends Application {
 	
@@ -125,7 +125,7 @@ public class GUI extends Application {
 
 	/**
 	 * {@code NetworkTimeout} callback
-	 * @param notification (type Notification)
+	 * @param notification (type Notification) The network timeout notification
 	 */
 	private static void didReceiveNetworkTimeoutNotification(Notification notification) {
 		// Present an alert

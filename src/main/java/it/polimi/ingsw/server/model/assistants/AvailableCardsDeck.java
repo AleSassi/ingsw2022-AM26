@@ -4,16 +4,15 @@ import it.polimi.ingsw.server.exceptions.model.CollectionUnderflowError;
 
 import java.util.ArrayList;
 /**
- * This Class represent the {@code AssistantCard}
+ * This Class represents the {@code AssistantCard}
  * @author Leonardo Betti
  */
 public class AvailableCardsDeck {
-	/**
-	 * initialize {@code AssistantCard}
-	 */
+	
 	private final ArrayList<AssistantCard> cardDeck = new ArrayList<>();
+	
 	/**
-	 * constructor, prepare the deck with all the card
+	 * Constructor, prepares the deck with all the cards
 	 */
 	public AvailableCardsDeck() {
 		cardDeck.add(AssistantCard.TURTLE);
@@ -29,34 +28,34 @@ public class AvailableCardsDeck {
 	}
     
     /**
-     * getter
-     * @return (type int)The number of cards that are still available in the deck
+     * Extracts the total size of the deck
+     * @return (type int) The number of cards that are still available in the deck
      */
 	public int getCount() {
 		return cardDeck.size();
 	}
+	
 	/**
-	 * getter
-	 *  @param index (type int) index of card to take
-	 * @return (type Assistant card) {@link it.polimi.ingsw.server.model.assistants.AssistantCard Assistantcard}
+	 * Extracts a card at the given index
+	 * @param index (type int) Index of card to take
+	 * @return (type AssistantCard) The {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} at the specified index
 	 */
 	public AssistantCard getCard(int index) {
 		return cardDeck.get(index);
 	}
+	
 	/**
-	 * remove card {@link it.polimi.ingsw.server.model.assistants.AssistantCard Assistantcard} with
-	 *  @param index (type int) from deck
-	 * @return (type int)The number of cards that are still available in the deck
+	 * Removes the {@link it.polimi.ingsw.server.model.assistants.AssistantCard card} at the specified index
+	 * @param index (type int) The index of the card to remove
+	 * @return (type int) The number of cards that are still available in the deck
+	 * @throws CollectionUnderflowError If the deck is already empty
 	 */
 	public AssistantCard removeCard(int index) throws CollectionUnderflowError {
 		if (cardDeck.isEmpty()) throw new CollectionUnderflowError();
 		
 		return cardDeck.remove(index);
 	}
-	/**verify if this class is equal to
-	 * @param(type Object)
-	 * @return (type bool) true if class are equal, false otherwise
-	 */
+	
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

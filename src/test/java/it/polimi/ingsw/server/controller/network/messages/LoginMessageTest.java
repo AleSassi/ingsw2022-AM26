@@ -9,10 +9,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests related to the LoginMessage class
+ * @see LoginMessage
+ */
 class LoginMessageTest {
 	
 	private LoginMessage message;
 	
+	/**
+	 * Common test initialization
+	 */
 	@BeforeEach
 	void initMessage() {
 		message = new LoginMessage("Ale", 3, MatchVariant.BasicRuleSet, Wizard.Wizard1);
@@ -29,6 +36,7 @@ class LoginMessageTest {
 			assertEquals(message, messageDecoded);
 		});
 	}
+	
 	/**
 	 * Tests the case of a wrong decode
 	 */
@@ -40,6 +48,9 @@ class LoginMessageTest {
 		});
 	}
 	
+	/**
+	 * Test getters
+	 */
 	@Test
 	void testGetters() {
 		assertEquals("Ale", message.getNickname());

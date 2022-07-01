@@ -6,8 +6,15 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test the CharacterCardBean
+ * @see CharacterCardBean
+ */
 class CharacterCardBeanTest {
 	
+	/**
+	 * Tests all getters
+	 */
 	@Test
 	void testGetters() {
 		StudentCollection hostedStudents = new StudentCollection();

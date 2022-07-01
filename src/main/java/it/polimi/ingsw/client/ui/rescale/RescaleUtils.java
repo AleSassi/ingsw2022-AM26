@@ -5,11 +5,11 @@ import it.polimi.ingsw.notifications.Notification;
 import javafx.scene.control.Control;
 
 /**
- * Class RescaleUtils is a support class for the resize of the {@code Nodes}
+ * Class RescaleUtils is a support class for the resize of the {@code Panes}
  */
 public class RescaleUtils {
 	/**
-	 * Rescales the {@code Nodes} after the {@link it.polimi.ingsw.notifications.Notification Notification}
+	 * Gets the scale value for the {@code Nodes} after the {@link it.polimi.ingsw.notifications.Notification Notification}
 	 * @param notification (type Notification)
 	 * @return (type double) returns the scale factor
 	 */
@@ -31,7 +31,7 @@ public class RescaleUtils {
 
 	/**
 	 * Gets the scale value
-	 * @param newDimensionSize (type double)
+	 * @param newDimensionSize (type double) The new dimension value
 	 * @param isWidth (type boolean) is true when the value is referred to the width
 	 * @return (type double) returns the scale factor
 	 */
@@ -42,6 +42,14 @@ public class RescaleUtils {
 		return Math.min(newScale, isWidth ? heightScale : widthScale);
 	}
 	
+	/**
+	 * Rescales a Control to always be at the center of the screen
+	 * @param node The node to rescale
+	 * @param width The width of the node, unscaled
+	 * @param height The height of the node, unscaled
+	 * @param y The Y coordinate of the node, unscaled
+	 * @param scale The scale to apply
+	 */
 	public static void rescaleToCenter(Control node, double width, double height, double y, double scale) {
 		node.setLayoutX(getCenterX(width, scale));
 		node.setLayoutY(y * scale);
@@ -50,6 +58,12 @@ public class RescaleUtils {
 		node.setStyle("-fx-font-size: " + (15 * scale));
 	}
 	
+	/**
+	 * Finds the X coordinate that centers an object
+	 * @param width The object width, unscaled
+	 * @param scale The scale to apply
+	 * @return The X coordinate that centers the object
+	 */
 	private static double getCenterX(double width, double scale) {
 		return (GUI.getWindowWidth() - (width * scale)) * 0.5;
 	}

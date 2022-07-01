@@ -13,7 +13,7 @@ import javafx.scene.layout.RowConstraints;
 import java.util.ArrayList;
 
 /**
- * Class {@code CharacterCardContainer} represent the container fot the {@link it.polimi.ingsw.client.ui.characters.CharacterCardPane CharacterCardPane}
+ * A rescalable container for holding a set of 3 {@link it.polimi.ingsw.client.ui.characters.CharacterCardPane CharacterCardPane}s
  */
 public class CharacterCardContainer extends RescalableAnchorPane {
  
@@ -22,7 +22,7 @@ public class CharacterCardContainer extends RescalableAnchorPane {
 
 	/**
 	 * Constructor creates the {@code CharacterCardContainer} from the {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage}
-	 * @param initialMessage (type TableStateMessage)
+	 * @param initialMessage (type TableStateMessage) The message for the table state, used to get the list of available character cards
 	 */
 	public CharacterCardContainer(TableStateMessage initialMessage) {
 		for (int i = 0; i < 3; i++) {
@@ -58,7 +58,7 @@ public class CharacterCardContainer extends RescalableAnchorPane {
 	
 	/**
 	 * Sets the parent {@code Controller}
-	 * @param controller (type MainBoardController)
+	 * @param controller (type MainBoardController) the parent controller
 	 */
 	public void setParentController(MainBoardController controller) {
 		for (CharacterCardPane cardPane: cards) {

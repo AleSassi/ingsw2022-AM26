@@ -1,7 +1,8 @@
 package it.polimi.ingsw.server.exceptions.model;
 /**
- this class rapresent an exception that is thrown when the player try to take a number of  student from an object that doesen't cointain required number of Students
+ this class represents an exception that is thrown when the player try to take a number of students from an object that doesn't contain the required number of Students
  @Author Alessandro Sassi
+ @see java.lang.Exception
  */
 public class CollectionUnderflowError extends Exception {
     /**
@@ -10,6 +11,7 @@ public class CollectionUnderflowError extends Exception {
      * call to {@link #initCause}.
      */
     public CollectionUnderflowError() {
+        super();
     }
     /**
      * Constructs a new exception with the specified detail message.  The

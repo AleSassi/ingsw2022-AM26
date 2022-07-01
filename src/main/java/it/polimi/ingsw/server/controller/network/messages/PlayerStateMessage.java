@@ -5,6 +5,7 @@ import com.google.gson.JsonParseException;
 import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.exceptions.model.CollectionUnderflowError;
 import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
+import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Professor;
 import it.polimi.ingsw.server.model.SchoolBoard;
 import it.polimi.ingsw.server.model.assistants.AssistantCard;
@@ -20,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 /**
- * Class {@code PlayerStateMessage} represent the PlayerState message
+ * Class {@code PlayerStateMessage} represent the message containing a full description of the Player and its data
  */
 public class PlayerStateMessage extends NetworkMessage {
 	
@@ -33,50 +34,92 @@ public class PlayerStateMessage extends NetworkMessage {
 	private Integer availableCoins;
 	private Wizard wizard;
 	
-	public PlayerStateMessage(@NotNull String nickname, Integer activeCharacterCardIdx, @NotNull List<AssistantCard> availableCardsDeck, AssistantCard lastPlayedAssistantCard, @NotNull SchoolBoard board, int availableCoins, @NotNull Wizard wizard, String teamName) {
-		this.nickname = nickname;
+	/**
+	 * Constructs a message from its raw data
+	 * @param player The Player
+	 * @param activeCharacterCardIdx the active Character card index (<code>null</code> if no card is active)
+	 * @param teamName The Player Team name
+	 */
+	public PlayerStateMessage(@NotNull Player player, Integer activeCharacterCardIdx, String teamName) {
+		this.nickname = player.getNickname();
 		this.activeCharacterCardIdx = activeCharacterCardIdx;
-		this.availableCardsDeck = new AssistantCard[availableCardsDeck.size()];
-		availableCardsDeck.toArray(this.availableCardsDeck);
-		this.lastPlayedAssistantCard = lastPlayedAssistantCard;
-		this.board = board;
-		this.availableCoins = availableCoins;
-		this.wizard = wizard;
+		this.availableCardsDeck = player.getAvailableAssistantCards().toArray(new AssistantCard[0]);
+		this.lastPlayedAssistantCard = player.getLastPlayedAssistantCard();
+		this.board = player.getBoard();
+		this.availableCoins = player.getAvailableCoins();
+		this.wizard = player.getWizard();
 		this.teamName = teamName;
 	}
 	
+	/**
+	 * Decodes a JSON serialized string into a message
+	 * @param serializedString The serialized string
+	 * @throws MessageDecodeException If the decode fails
+	 */
 	public PlayerStateMessage(String serializedString) throws MessageDecodeException {
 		super(serializedString);
 	}
 	
+	/**
+	 * Extracts the player nickname
+	 * @return The player nickname
+	 */
 	public String getNickname() {
 		return nickname;
 	}
 	
+	/**
+	 * Extracts the player team name
+	 * @return The player team name
+	 */
 	public String getTeamName() {
 		return teamName;
 	}
 	
+	/**
+	 * Extracts the active character chard index
+	 * @return The active character card index
+	 */
 	public Integer getActiveCharacterCardIdx() {
 		return activeCharacterCardIdx;
 	}
 	
+	/**
+	 * Extracts the list of available assistant cards
+	 * @return The list of available assistant cards
+	 */
 	public AssistantCard[] getAvailableCardsDeck() {
 		return availableCardsDeck;
 	}
 	
+	/**
+	 * Extracts the last played assistant card
+	 * @return The last played assistant card
+	 */
 	public AssistantCard getLastPlayedAssistantCard() {
 		return lastPlayedAssistantCard;
 	}
 	
+	/**
+	 * Extracts the School Board
+	 * @return The School Board
+	 */
 	public SchoolBoard getBoard() {
 		return board;
 	}
 	
+	/**
+	 * Extracts the number of coins
+	 * @return The number of coins
+	 */
 	public int getAvailableCoins() {
 		return availableCoins;
 	}
 	
+	/**
+	 * Extracts the wizard
+	 * @return The wizard
+	 */
 	public Wizard getWizard() {
 		return wizard;
 	}

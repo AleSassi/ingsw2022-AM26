@@ -3,7 +3,7 @@ package it.polimi.ingsw.notifications;
 import java.util.*;
 
 /**
- * Class {@code NotificationCenter} manages all the {@link Notification Notifications} between {@code Objects}
+ * A notification dispatch mechanism that enables the broadcast of information to registered observers.
  */
 public class NotificationCenter {
 	
@@ -19,8 +19,8 @@ public class NotificationCenter {
 	}
 
 	/**
-	 * Gets this instance of {@code NotificationCenter}
-	 * @return (type NotificationCenter) return this {@code NotificationCenter}
+	 * Gets the common instance of {@code NotificationCenter} with the Singleton pattern
+	 * @return (type NotificationCenter) the shared instance of {@code NotificationCenter}
 	 */
 	public synchronized static NotificationCenter shared() {
 		if (shared == null) {
@@ -31,10 +31,10 @@ public class NotificationCenter {
 
 	/**
 	 * Creates and adds the {@code Observer}
-	 * @param observer (type Object)
-	 * @param callback (type NotificationCallback) {@link NotificationCallback} of the observer
-	 * @param name (type NotificationName) {@link NotificationName Notification's name}
-	 * @param observedObject (type Object)
+	 * @param observer (type Object) a new notification observer
+	 * @param callback (type NotificationCallback) The {@link NotificationCallback} of the observer, which will be invoked when the notification is posted
+	 * @param name (type NotificationName) The {@link NotificationName name} of the notification linked to this callback
+	 * @param observedObject (type Object) If null, the observer receives all notifications with the same name posted with any value of observed object. If specified, the callback will be invoked only if the <code>ObservedObject</code> parameter of the <code>post</code> method matches this value
 	 */
 	public synchronized void addObserver(Object observer, NotificationCallback callback, NotificationName name, Object observedObject) {
 		// If the map already contains at least 1 observer for the same notification, we append the observer to the list. Otherwise, we create a new one
@@ -49,7 +49,7 @@ public class NotificationCenter {
 	}
 
 	/**
-	 * Removes and deletes the {@code Observer}
+	 * Removes and deletes the {@code Observer} from the notification queue
 	 * @param observer (type Object) {@code Observer} to delete
 	 */
 	public synchronized void removeObserver(Object observer) {
@@ -61,10 +61,10 @@ public class NotificationCenter {
 	}
 
 	/**
-	 * Posts the {@link Notification}
-	 * @param name (type NotificationName) {@link NotificationName Notification's name}
-	 * @param observedObject (type Object)
-	 * @param userInfo (type HasMap(String, Object) content of the {@code Notification}
+	 * Posts a {@link Notification}
+	 * @param name (type NotificationName) The {@link NotificationName name} of the notification to post
+	 * @param observedObject (type Object) The object with which observers must have registered their notifications in order to receive them
+	 * @param userInfo (type HashMap(String, Object) The optional data posted with the {@code Notification}
 	 */
 	public synchronized void post(NotificationName name, Object observedObject, HashMap<String, Object> userInfo) {
 		if (notificationToObserversMap.containsKey(name)) {

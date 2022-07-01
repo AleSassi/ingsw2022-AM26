@@ -8,20 +8,34 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 /**
- * Class {@code MatchTerminationMessage} represent the messages of the termination of the match
+ * Class {@code MatchTerminationMessage} is the message used to tell that a Match must forcibly end
  */
 public class MatchTerminationMessage extends NetworkMessage {
 	
 	private String terminationReason;
 	
+	/**
+	 * Constructs a new response message with the raw data
+	 * @param terminationReason The termination reason
+	 * @param ignored A string param used to distinguish the constructor from the auto-decode one
+	 */
 	public MatchTerminationMessage(@NotNull String terminationReason, boolean ignored) {
 		this.terminationReason = terminationReason;
 	}
 	
+	/**
+	 * Constructs a new response message by deserializing a JSON string
+	 * @param serializedString The JSON string to decode
+	 * @throws MessageDecodeException If the string couldn't be decoded into this message
+	 */
 	public MatchTerminationMessage(String serializedString) throws MessageDecodeException {
 		super(serializedString);
 	}
 	
+	/**
+	 * Finds the termination reason
+	 * @return The termination reason
+	 */
 	public String getTerminationReason() {
 		return terminationReason;
 	}

@@ -7,10 +7,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests related to the PingPongMessage class
+ * @see PingPongMessage
+ */
 class PingPongMessageTest {
 	
 	private PingPongMessage message;
 	
+	/**
+	 * Common test initialization
+	 */
 	@BeforeEach
 	void initMessage() {
 		message = new PingPongMessage(true);
@@ -37,6 +44,9 @@ class PingPongMessageTest {
 		});
 	}
 	
+	/**
+	 * Test getters
+	 */
 	@Test
 	void testGetters() {
 		assertTrue(message.isPing());

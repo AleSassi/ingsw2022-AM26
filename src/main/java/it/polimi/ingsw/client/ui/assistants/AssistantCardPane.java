@@ -6,15 +6,15 @@ import it.polimi.ingsw.utils.ui.GUIUtils;
 import javafx.scene.input.MouseEvent;
 
 /**
- * Class {@code AssistantCardPane} represent the {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard's} pane
+ * A rescalable anchor pane that displays assistant cards, with support for clicks
  */
 public class AssistantCardPane extends RescalableAnchorPane {
 	
 	private final AssistantCard card;
 
 	/**
-	 * Creates the {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard's} pane
-	 * @param card (type AssistantCard)
+	 * Creates the {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} pane
+	 * @param card (type AssistantCard) The card to display
 	 */
 	public AssistantCardPane(AssistantCard card) {
 		super();
@@ -34,8 +34,8 @@ public class AssistantCardPane extends RescalableAnchorPane {
 	}
 	
 	/**
-	 * Click event handler
-	 * @param selectionHandler (type AssistantCardSelectionHandler) {@link it.polimi.ingsw.client.ui.assistants.AssistantCardSelectionHandler}
+	 * Sets up the click event with the specified handler function
+	 * @param selectionHandler (type AssistantCardSelectionHandler) {@link it.polimi.ingsw.client.ui.assistants.AssistantCardSelectionHandler} The click handler function, called when the user clicks on the card
 	 */
 	public void setSelectionHandler(AssistantCardSelectionHandler selectionHandler) {
 		addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {

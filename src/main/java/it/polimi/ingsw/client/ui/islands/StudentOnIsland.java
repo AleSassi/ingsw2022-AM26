@@ -56,8 +56,8 @@ public class StudentOnIsland extends RescalableAnchorPane {
     }
     
     /**
-     * Callback for the {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage}
-     * @param notification (type Notification)
+     * Callback for the {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage} received
+     * @param notification (type Notification) The notification for the message received
      */
     public void didReceiveTableState(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof TableStateMessage message) {
@@ -85,7 +85,8 @@ public class StudentOnIsland extends RescalableAnchorPane {
     public void deleteStudent() {
         new Thread(() -> NotificationCenter.shared().removeObserver(this)).start();
     }
-
+    
+    @Override
     public void rescale(double scale) {
         studentPane.setLayoutX(0);
         studentLabel.setLayoutX(0);

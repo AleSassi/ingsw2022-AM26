@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class {@code AssistantPickerPane} represent the {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard's} picker Pane
+ * A pane representing a group of available and clickable assistant cards, arranged in a grid layout
  */
 public class AssistantPickerPane extends GridPane {
 	/**
@@ -17,8 +17,8 @@ public class AssistantPickerPane extends GridPane {
 	private final List<AssistantCardPane> assistantCardPanes;
 
 	/**
-	 * Constructor creates {@code AssistantPickerPane}
-	 * @param availableAssistants (type AssistantCard[])
+	 * Constructor creates the {@code AssistantPickerPane} with the list of available assistants
+	 * @param availableAssistants (type AssistantCard[]) with the list of available assistants
 	 */
 	public AssistantPickerPane(AssistantCard[] availableAssistants) {
 		super();
@@ -42,8 +42,8 @@ public class AssistantPickerPane extends GridPane {
 	}
 
 	/**
-	 * Handles the click events
-	 * @param selectionHandler (type AssistantCardSelectionHandler)
+	 * Sets up the handler for the click events
+	 * @param selectionHandler (type AssistantCardSelectionHandler) The handler for the click events
 	 */
 	public void setSelectionHandler(AssistantCardSelectionHandler selectionHandler) {
 		for (AssistantCardPane cardPane: assistantCardPanes) {

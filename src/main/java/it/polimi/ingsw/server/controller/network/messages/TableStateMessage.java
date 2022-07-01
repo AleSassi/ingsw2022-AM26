@@ -14,7 +14,7 @@ import it.polimi.ingsw.server.model.student.StudentHost;
 import java.util.List;
 import java.util.Objects;
 /**
- * Class {@code TableStateMessage} represent the TableState message
+ * Class {@code TableStateMessage} is a message which represents the state of the Table
  */
 public class TableStateMessage extends NetworkMessage {
 	
@@ -24,6 +24,14 @@ public class TableStateMessage extends NetworkMessage {
 	private List<Cloud> managedClouds;
 	private List<CharacterCardBean> playableCharacterCards;
 	
+	/**
+	 * Constructs the message with its raw data
+	 * @param availableProfessors The list of available professors
+	 * @param islands The list of Islands on the table
+	 * @param studentBag The Bag from which students are extracted
+	 * @param managedClouds The list of Clouds
+	 * @param playableCharacterCards The list of playable characters
+	 */
 	public TableStateMessage(List<Professor> availableProfessors, List<Island> islands, StudentHost studentBag, List<Cloud> managedClouds, List<CharacterCardBean> playableCharacterCards) {
 		this.availableProfessors = availableProfessors;
 		this.islands = islands;
@@ -32,26 +40,51 @@ public class TableStateMessage extends NetworkMessage {
 		this.playableCharacterCards = playableCharacterCards;
 	}
 	
+	/**
+	 * Decodes a JSON serialized string into a message
+	 * @param serializedString The serialized string
+	 * @throws MessageDecodeException If the decode fails
+	 */
 	public TableStateMessage(String serializedString) throws MessageDecodeException {
 		super(serializedString);
 	}
 	
+	/**
+	 * Extracts the list of available professors
+	 * @return The list of available professors
+	 */
 	public List<Professor> getAvailableProfessors() {
 		return availableProfessors;
 	}
 	
+	/**
+	 * Extracts the list of islands
+	 * @return The list of islands
+	 */
 	public List<Island> getIslands() {
 		return islands;
 	}
 	
+	/**
+	 * Extracts the bag
+	 * @return The bag
+	 */
 	public StudentHost getStudentBag() {
 		return studentBag;
 	}
 	
+	/**
+	 * Extracts the list of clouds
+	 * @return The list of clouds
+	 */
 	public List<Cloud> getManagedClouds() {
 		return managedClouds;
 	}
 	
+	/**
+	 * Extracts the list of character cards
+	 * @return The list of character cards
+	 */
 	public List<CharacterCardBean> getPlayableCharacterCards() {
 		return playableCharacterCards;
 	}

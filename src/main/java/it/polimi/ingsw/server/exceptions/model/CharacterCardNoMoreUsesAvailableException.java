@@ -1,8 +1,9 @@
 package it.polimi.ingsw.server.exceptions.model;
+
 /**
- this class rapresent an exception that is thrown when player try tu use a character card
- which has no more uses available
+ this class represents an exception that is thrown when player tries to use a character card which has no more uses available
  @Author Alessandro Sassi
+ @see java.lang.Exception
  */
 public class CharacterCardNoMoreUsesAvailableException extends Exception {
     /**
@@ -11,6 +12,7 @@ public class CharacterCardNoMoreUsesAvailableException extends Exception {
      * call to {@link #initCause}.
      */
     public CharacterCardNoMoreUsesAvailableException() {
+        super();
     }
 
     /**

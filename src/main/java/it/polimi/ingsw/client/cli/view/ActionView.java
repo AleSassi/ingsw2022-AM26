@@ -18,7 +18,7 @@ import it.polimi.ingsw.utils.cli.client.ClientActionCommand;
 
 import java.util.Arrays;
 /**
- * This Class represent the {@code TerminalView}
+ * This Class represent the {@code TerminalView} that parses an input command from the user
  * @author Alessandro Sassi
  */
 public class ActionView extends TerminalView {
@@ -30,8 +30,9 @@ public class ActionView extends TerminalView {
 	private final MatchVariant variant;
 	
 	private boolean shouldEndMatch = false;
+	
 	/**constructor
-	 * set variant of match
+	 * Creates a new vie object with the set variant of match
 	 * @param variant (type {@link it.polimi.ingsw.server.model.match.MatchVariant}) type of match
 	 */
 	public ActionView(MatchVariant variant) {
@@ -39,8 +40,7 @@ public class ActionView extends TerminalView {
 	}
 
 	/**
-	 * create a thread and add observers(one for each type of {@link it.polimi.ingsw.notifications.Notification Notification} we need) on  {@link it.polimi.ingsw.notifications.NotificationCenter Center} type of match
-	 * for every (@Code Nofication) that arrive call a differrent method of class according to the name of (@Code Nofication)
+	 * Starts the View loop by subscribing the object to all relevant notifications and starts listening for an incoming input command
 	 */
 	@Override
 	public void run() {
@@ -61,7 +61,7 @@ public class ActionView extends TerminalView {
 		parseInputCommands();
 	}
 	/**
-	 This method parse the action from the command line, check parameter and type of action, if are correct send a{@link it.polimi.ingsw.server.controller.network.messages.PlayerActionMessage Message} that contain the infomation of action
+	 This method parses the action from the command line, checks the parameters and type of action, and if they are correct it sends a {@link it.polimi.ingsw.server.controller.network.messages.PlayerActionMessage Message} containing the action data
 	 */
 	private void parseInputCommands() {
 		while (!shouldEndMatch) {
@@ -208,10 +208,11 @@ public class ActionView extends TerminalView {
 			}
 		}
 	}
+	
 	/**
-	 * method called whan arrive a {@link it.polimi.ingsw.notifications.Notification Notification}with name ActionResponse
-	 *the method print  the outcome of action recived
-	 * @param notification (@code Notification) that contain the information of event
+	 * Callback for a {@link it.polimi.ingsw.notifications.Notification Notification} with name ActionResponse
+	 * The method prints the outcome of the performed action, and an error message if it fails
+	 * @param notification (@code Notification) with the data of the event
 	 */
 	private void didReceiveActionResponse(Notification notification) {
 		PlayerActionResponse response = (PlayerActionResponse) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
@@ -227,10 +228,11 @@ public class ActionView extends TerminalView {
 			printCaret();
 		}
 	}
+	
 	/**
-	 * method called when arrive a {@link it.polimi.ingsw.notifications.Notification Notification}with name ActivePlayer
-	 *the method print  the name of active player
-	 * @param notification (@code Notification) that contain the information of event
+	 * Callback for a {@link it.polimi.ingsw.notifications.Notification Notification} with name ActivePlayer
+	 * The method prints a "waiting" message if the Player has to wait for their turn before issuing a command
+	 * @param notification (@code Notification) with the data of the event
 	 */
 	private void didReceiveActivePlayer(Notification notification) {
 		ActivePlayerMessage message = (ActivePlayerMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
@@ -239,19 +241,21 @@ public class ActionView extends TerminalView {
 		}
 		isPlayerActive = message.getActiveNickname().equals(Client.getNickname());
 	}
+	
 	/**
-	 * method called whan arrive a {@link it.polimi.ingsw.notifications.Notification Notification}with name MatchPhase
-	 *the method print tha name of phase we are playing
-	 * @param notification (@code Notification) that contain the information of event
+	 * Callback for a {@link it.polimi.ingsw.notifications.Notification Notification} with name MatchPhase
+	 * The method prints the list of commands that are available for the current match phase
+	 * @param notification (@code Notification) with the data of the event
 	 */
 	private void didReceiveMatchPhase(Notification notification) {
 		this.phase = ((MatchStateMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue())).getCurrentMatchPhase();
 		printAvailableCommands();
 	}
+	
 	/**
-	 * method called whan arrive a {@link it.polimi.ingsw.notifications.Notification Notification}with name Victory
-	 *the method print tha name of winner
-	 * @param notification (@code Notification) that contain the information of event
+	 * Callback for a {@link it.polimi.ingsw.notifications.Notification Notification} with name Victory
+	 * The method prints the name of winner player and terminates the execution (since the match ended)
+	 * @param notification (@code Notification) with the data of the event
 	 */
 	private void didReceiveVictory(Notification notification) {
 		VictoryMessage victoryMessage = (VictoryMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
@@ -264,25 +268,27 @@ public class ActionView extends TerminalView {
 	}
 
 	/**
-	 * method called when arrive a {@link it.polimi.ingsw.notifications.Notification Notification}with name NetworkTimeoutNotification
-	 *the method call the endgame method
-	 * @param notification (@code Notification) that contain the information of event
+	 * Callback for a {@link it.polimi.ingsw.notifications.Notification Notification} with name NetworkTimeoutNotification
+	 * The method prints an error message that describes the timeout error and terminates the execution of the program
+	 * @param notification (@code Notification) with the data of the event
 	 */
 	@Override
 	protected void didReceiveNetworkTimeoutNotification(Notification notification) {
 		System.out.println(StringFormatter.formatWithColor("The Client encountered an error. Reason: Timeout. The network connection with the Server might have been interrupted, or the Server might be too busy to respond", ANSIColors.Red));
 		endMatch();
 	}
+	
 	/**
-	 *the method close the client
+	 * Method to terminate the match and close the program
 	 */
 	private void endMatch() {
 		GameClient.shared().terminate();
 		shouldEndMatch = true;
 		System.exit(0);
 	}
+	
 	/**
-	 *the method print on command line  the avaibles command that player can perform
+	 * Pretty-prints the list of commands available for the current match phase, with a description of the parameters required
 	 */
 	private void printAvailableCommands() {
 		if (isPlayerActive) {
@@ -306,7 +312,7 @@ public class ActionView extends TerminalView {
 		}
 	}
 	/**
-	 *the method print on command line the Caret
+	 * Prints the indicator with the player nickname and a ">"
 	 */
 	private void printCaret() {
 		System.out.print(Client.getNickname() + " > ");

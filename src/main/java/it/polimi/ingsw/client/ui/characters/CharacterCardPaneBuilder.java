@@ -4,14 +4,15 @@ import it.polimi.ingsw.server.model.characters.Character;
 import it.polimi.ingsw.server.model.characters.CharacterCardBean;
 
 /**
- * Class {@code CharacterCardPaneBuilder} builds the {@link it.polimi.ingsw.client.ui.characters.CharacterCardPane CharacterCardPane}
+ * A factory for {@link it.polimi.ingsw.client.ui.characters.CharacterCardPane CharacterCardPanes}
  */
 class CharacterCardPaneBuilder {
+	
 	/**
 	 * Builds a {@link it.polimi.ingsw.client.ui.characters.CharacterCardPane CharacterCardPane}
-	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard's} index
+	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard's} index in the table list
 	 * @param cardBean (type CharacterCardBean) {@code CharacterCard's} data
-	 * @return (type CharacterCardPane) returns a {@code CharacterCardPane}
+	 * @return (type CharacterCardPane) returns a {@code CharacterCardPane} concrete subclass
 	 */
 	protected static CharacterCardPane buildPane(int cardIndex, CharacterCardBean cardBean) {
 		if (cardBean.getHostedStudents() != null && cardBean.getHostedStudents().getTotalCount() > 0) {

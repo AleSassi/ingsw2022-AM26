@@ -4,7 +4,7 @@ import it.polimi.ingsw.notifications.NotificationName;
 import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
 
 /**
- * Abstract class representing the network's messages
+ * Abstract class representing the network messages
  */
 public abstract class NetworkMessage {
 	
@@ -20,15 +20,15 @@ public abstract class NetworkMessage {
 	}
 
 	/**
-	 * Constructor creates a message with all the data
+	 * Constructor creates an empty message with the classType field filled, to enable decode
 	 */
 	NetworkMessage() {
 		classType = getClass().getSimpleName();
 	}
 
 	/**
-	 * Serializes the string so that could be sent
-	 * * @return (type String) string to serialize
+	 * Serializes the string so that it can be sent
+	 * @return (type String) serialized string
 	 */
 	public abstract String serialize();
 

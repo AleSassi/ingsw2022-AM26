@@ -21,14 +21,14 @@ public class IndependentPlayerMatchManager extends MatchManager {
     private final List<Player> players;
 
     /**
-     * Initializes the list of {@link it.polimi.ingsw.server.model.Player Players}
+     * Initializes an empty match
      */
     public IndependentPlayerMatchManager() {
         players = new ArrayList<>();
     }
 
     /**
-     * Initialize the {@link it.polimi.ingsw.server.model.Player Player} with all the parameters and adds it to the list
+     * Initialize the {@link it.polimi.ingsw.server.model.Player Player} with all the parameters and adds it to the match
      * @param nickname (type String) {@code Player's} nickname
      * @param wiz (type Wizard) chosen {@code Wizard}
      * @param maxTowerCount (type int) max number of {@link it.polimi.ingsw.server.model.Tower Tower}

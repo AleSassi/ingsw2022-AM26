@@ -20,7 +20,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class CloudTest {
 
     private Cloud cloud;
-
+    
+    /**
+     * Test initialization
+     */
     @BeforeEach
     void initCloud() {
         cloud = new Cloud();

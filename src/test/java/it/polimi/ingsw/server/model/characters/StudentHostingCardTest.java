@@ -30,9 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @see StudentHostingCard
  */
 class StudentHostingCardTest {
-
-    //TODO: Rerun tests after Player has been fully implemented to get the correct coverage and to make the remaining tests pass
-
+    
     private StudentHostingCard card;
     private TableManager tableManager;
     private Player player;

@@ -5,9 +5,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests assistant cards
+ * @see AssistantCard
+ */
 class AssistantCardTest {
+	
 	/**
-	 create  class with all value of{@link it.polimi.ingsw.server.model.assistants.AssistantCard assistantcard}, and for each one verify return the correct Priority number
+	 * create variables with all values of {@link it.polimi.ingsw.server.model.assistants.AssistantCard assistantcard}, and for each one verify return the correct Priority number
 	 */
 	@Test
 	void getPriorityNumber() {
@@ -33,7 +38,7 @@ class AssistantCardTest {
 		assertEquals(class10.getPriorityNumber(), 10);
 	}
 	/**
-	 create  class with all value of{@link it.polimi.ingsw.server.model.assistants.AssistantCard assistantcard}, and for each one verify return the correct Mother Nature Step
+	 create variables with all values o f{@link it.polimi.ingsw.server.model.assistants.AssistantCard assistantcard}, and for each one verify return the correct Mother Nature Step
 	 */
 	@Test
 	void getMotherNatureSteps() {

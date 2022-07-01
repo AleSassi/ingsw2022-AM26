@@ -10,12 +10,13 @@ import it.polimi.ingsw.server.model.match.MatchVariant;
 import it.polimi.ingsw.utils.cli.ANSIColors;
 import it.polimi.ingsw.utils.cli.StringFormatter;
 /**
- * This Class represent the {@code LoginView}
+ * This Class represent the {@code LoginView}, which handles the initial input for logging the player into a Lobby and connecting to the server
  * @author Alessandro Sassi
  */
 public class LoginView extends TerminalView {
+	
 	/**
-	 * create a thread and Ask to the player all the information about the match, until he insert valid infomation, than send a {@link it.polimi.ingsw.server.controller.network.messages.LoginMessage Message}, at the call the {@link it.polimi.ingsw.client.cli.view.LoginWaitingRoom Message}
+	 * Asks the player their login data, validates them and then sends a {@link it.polimi.ingsw.server.controller.network.messages.LoginMessage message} to the server to log the Player in. Finally, if the login was successful it redirects to the {@link it.polimi.ingsw.client.cli.view.LoginWaitingRoom waiting room}
 	 */
 	@Override
 	public void run() {
@@ -73,9 +74,9 @@ public class LoginView extends TerminalView {
 	}
 
 	/**
-	 * method called whan arrive a {@link it.polimi.ingsw.notifications.Notification Notification}with name NetworkTimeoutNotification
-	 *the method endgame
-	 * @param notification (@code Notification) that contain the information of event
+	 * Callback for a {@link it.polimi.ingsw.notifications.Notification Notification} with name NetworkTimeoutNotification
+	 * Terminates the program after a network timeout
+	 * @param notification (@code Notification) the event data
 	 */
 	@Override
 	protected void didReceiveNetworkTimeoutNotification(Notification notification) {

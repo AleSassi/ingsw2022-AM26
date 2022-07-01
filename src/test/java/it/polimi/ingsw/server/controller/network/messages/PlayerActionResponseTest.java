@@ -8,10 +8,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests related to the PlayerActionResponse class
+ * @see PlayerActionResponse
+ */
 class PlayerActionResponseTest {
 	
 	private PlayerActionResponse message;
 	
+	/**
+	 * Common test initialization
+	 */
 	@BeforeEach
 	void initMessage() {
 		message = new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPlayAssistantCard, false, "A random error message");
@@ -38,6 +45,9 @@ class PlayerActionResponseTest {
 		});
 	}
 	
+	/**
+	 * Tests all getters
+	 */
 	@Test
 	void testGetters() {
 		assertEquals("Ale", message.getNickname());

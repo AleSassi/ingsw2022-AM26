@@ -7,9 +7,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Test the PlayedCardDeck
+ * @see PlayedCardDeck
+ */
 class PlayedCardDeckTest {
-	/**try add a test card{@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} on top of empty deck{@link it.polimi.ingsw.server.model.assistants.PlayedCardDeck PlayedCardDeck} and verify
-	 the card on top is the (@code card) added
+	/**
+	 * try to add a test card{@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} on top of empty deck{@link it.polimi.ingsw.server.model.assistants.PlayedCardDeck PlayedCardDeck} and verify that the card on top is the (@code card) added
 	 */
 	@Test
 	void addCardOnTop() {
@@ -18,8 +22,9 @@ class PlayedCardDeckTest {
 		testDeck.addCardOnTop(test);
 		assertEquals(testDeck.topCard(), test);
 	}
-	/**try to  add the test card{@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} on top of two empty deck{@link it.polimi.ingsw.server.model.assistants.PlayedCardDeck PlayedCardDeck} and verify
-	 the deck are the same
+	
+	/**
+	 * try to add the test card{@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} on top of two empty deck{@link it.polimi.ingsw.server.model.assistants.PlayedCardDeck PlayedCardDeck} and verify the deck are the same
 	 */
 	@Test
 	void testEquals() {

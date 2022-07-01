@@ -13,7 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import java.util.HashMap;
 
 /**
- * Class {@code StudentPane} represent the {@link it.polimi.ingsw.server.model.student.Student Student} pawns
+ * Class {@code StudentPane} represent the {@link it.polimi.ingsw.server.model.student.Student Student} tile, with optional clickable behavior
  */
 public class StudentPane extends AnchorPane {
 	
@@ -21,8 +21,8 @@ public class StudentPane extends AnchorPane {
 	private EventHandler<MouseEvent> clickEventHandler;
 
 	/**
-	 * Constructor creates the {@code AnchorPane}
-	 * @param student (type Student) the {@link it.polimi.ingsw.server.model.student.Student Student} type to set
+	 * Constructor creates the {@code AnchorPane} which displays a Student tile
+	 * @param student (type Student) the {@link it.polimi.ingsw.server.model.student.Student Student} type to display
 	 */
 	public StudentPane(Student student) {
 		super();
@@ -32,8 +32,8 @@ public class StudentPane extends AnchorPane {
 	}
 
 	/**
-	 * Configures the {@link it.polimi.ingsw.utils.ui.StudentDropTarget StudentDropTargets} of this {@code StudentPane}
-	 * @param validDropTargets (type StudentDropTarget[])
+	 * Configures the {@link it.polimi.ingsw.utils.ui.StudentDropTarget StudentDropTargets} of this {@code StudentPane} and adds the click event handlers
+	 * @param validDropTargets (type StudentDropTarget[]) The list of drop targets where the Student can be moved
 	 */
 	public void configureClickForDropTargets(StudentDropTarget[] validDropTargets) {
 		if (clickEventHandler != null) {

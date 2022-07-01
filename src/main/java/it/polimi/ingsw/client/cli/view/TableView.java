@@ -17,7 +17,7 @@ import it.polimi.ingsw.utils.cli.StringFormatter;
 
 import java.util.List;
 /**
- * This Class represent the {@code TableView}
+ * This Class represent the {@code TableView}, which displays the object on the Table
  * @author Alessandro Sassi
  */
 public class TableView extends TerminalView {
@@ -25,56 +25,60 @@ public class TableView extends TerminalView {
 	private int numberOfIslands;
 	private int numberOfClouds;
 	private List<CharacterCardBean> cardBeans;
-	/**getter
-	 * @return (type int)numer of Island{@link it.polimi.ingsw.server.model.student.Island Island}
+	
+	/** Gets the number of Island tiles on the Table
+	 * @return (type int) number of {@link it.polimi.ingsw.server.model.student.Island island tiles} on the Table
 	 */
 	public int getNumberOfIslands() {
 		return numberOfIslands;
 	}
-	/**getter
-	 * @return (type int)numer of Cloud{@link it.polimi.ingsw.server.model.student.Cloud Cloud}
+	
+	/** Gets the number of Cloud tiles on the Table
+	 * @return (type int) number of {@link it.polimi.ingsw.server.model.student.Cloud cloud tiles} on the Table
 	 */
 	public int getNumberOfClouds() {
 		return numberOfClouds;
 	}
-	/**getter
-	 * @return (type int)number of Cards{@link it.polimi.ingsw.server.model.characters.Character Character}
+	
+	/** Gets the number of Character Cards on the Table
+	 * @return (type int) number of {@link it.polimi.ingsw.server.model.characters.CharacterCard character cards} on the Table
 	 */
 	public int getNumberOfCards() {
 		return cardBeans.size();
 	}
-	/**getter
-	 * @param characterIndex (type int)number of Cards{@link it.polimi.ingsw.server.model.characters.Character} index of card
-	 * @return (type Character) card choosen
+	
+	/** Gets the character on the Table at the specified index
+	 * @param characterIndex (type int) the index of the {@link it.polimi.ingsw.server.model.characters.Character character} to get
+	 * @return (type Character) The character at the specified index
 	 */
 	public Character getCharacterAtIndex(int characterIndex) {
 		return cardBeans.get(characterIndex).getCharacter();
 	}
+	
 	/**
-	 * return the student hosted by the card at index
-	 * @param characterIndex (type int) number of Cards{@link it.polimi.ingsw.server.model.characters.Character} index of card
-	 * @return (type StudentCollection) {@link it.polimi.ingsw.server.model.student.StudentCollection StudentCollection}
-
+	 * Gets the set of Students hosted by a Character card
+	 * @param characterIndex (type int) The index of the {@link it.polimi.ingsw.server.model.characters.CharacterCard character card}
+	 * @return (type StudentCollection) The {@link it.polimi.ingsw.server.model.student.StudentCollection collection} of Students in a Character card
 	 */
 	public StudentCollection getStudentsInCardAtIndex(int characterIndex) {
 		return cardBeans.get(characterIndex).getHostedStudents();
 	}
+	
 	/**
-	 * create a thread and add observers(one for each type of {@link it.polimi.ingsw.notifications.Notification Notification} we need) on  {@link it.polimi.ingsw.notifications.NotificationCenter Center} type of match
-	 * for every (@Code Nofication) that arrive call a differrent method of class according to the name of (@Code Nofication)
+	 * Subscribes to the Table State Message Received notification in order to auto-update
 	 */
 	@Override
 	public void run() {
 		NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
 	}
+	
 	/**
-	 * method called when arrive a {@link it.polimi.ingsw.notifications.Notification Notification}with name ActivePlayer
-	 *the method print all yhe information about the table
-	 * @param notification (@code Notification) that contain the information of event
+	 * Callback for the {@link it.polimi.ingsw.notifications.Notification notification} with name ClientDidReceiveTableStateMessage
+	 * It pretty-prints the data of the table (e.g. Islands, Character Cards)
+	 * @param notification (@code Notification) with the vent data
 	 */
 	private void didReceiveTableState(Notification notification) {
 		TableStateMessage tableStateMessage = (TableStateMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
-		//TODO: Complete with ASCII Art Table Representation
 		System.out.println(getAvailableProfessorsString(tableStateMessage));
 		System.out.println(getCloudsString(tableStateMessage));
 		System.out.println(getIslandsString(tableStateMessage));
@@ -83,11 +87,11 @@ public class TableView extends TerminalView {
 		numberOfClouds = tableStateMessage.getManagedClouds().size();
 		cardBeans = tableStateMessage.getPlayableCharacterCards();
 	}
+	
 	/**
-	 use the information in
-	 * @param tableStateMessage {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage tableStateMessage}contain information of player
-	 to know the playable character{@link it.polimi.ingsw.server.model.characters.Character Character} and insert them in a
-	 * @return(type stringbuilder)the string builded with all the  cards
+	 * Builds a String with the list of available character cards
+	 * @param tableStateMessage The {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage table message} with the table data
+	 * @return (type StringBuilder) the String with the list of available character cards
 	 */
 	private StringBuilder getCharacterCardsString(TableStateMessage tableStateMessage) {
 		StringBuilder formattedString = new StringBuilder();
@@ -102,33 +106,33 @@ public class TableView extends TerminalView {
 		}
 		return formattedString;
 	}
+	
 	/**
-	 use the information in
-	 * @param tableStateMessage {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage tableStateMessage}contain information of player
-	to know the island remaining{@link it.polimi.ingsw.server.model.student.Island Island} and insert them in a
-	 * @return(type stringbuilder)the string builded with all the islands
+	 * Builds a String with the list of islands on the table
+	 * @param tableStateMessage The {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage table message} with the table data
+	 * @return (type StringBuilder) the String with the list of islands
 	 */
 	private StringBuilder getIslandsString(TableStateMessage tableStateMessage) {
 		StringBuilder formattedString = new StringBuilder("Islands:");
 		formattedString.append(buildStringForIslands(tableStateMessage.getIslands()));
 		return formattedString;
 	}
+	
 	/**
-	 use the information in
-	 * @param tableStateMessage {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage tableStateMessage}contain information of player
-	to know the Cloud{@link it.polimi.ingsw.server.model.student.Cloud Cloud} and insert them in a
-	 * @return(type stringbuilder)the string builded with all the Cloud
+	 * Builds a String with the list of Clouds on the table
+	 * @param tableStateMessage The {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage table message} with the table data
+	 * @return (type StringBuilder) the String with the list of Clouds on the table
 	 */
-
 	private StringBuilder getCloudsString(TableStateMessage tableStateMessage) {
 		StringBuilder formattedString = new StringBuilder("Clouds:");
 		formattedString.append(buildStringForClouds(tableStateMessage.getManagedClouds()));
 		return formattedString;
 	}
+	
 	/**
-	 take the
-	 * @param hosts (type list of {@link it.polimi.ingsw.server.model.student.Cloud Cloud} and insert them in a
-	 * @return(type stringbuilder)the string builded with all the Cloud
+	 * Builds the formatted string for Clouds
+	 * @param hosts (type List<{@link it.polimi.ingsw.server.model.student.Cloud Cloud}>) The list of Clouds on the table to print
+	 * @return (type StringBuilder) the String with the list of Clouds on the table
 	 */
 	private StringBuilder buildStringForClouds(List<Cloud> hosts) {
 		StringBuilder formattedString = new StringBuilder();
@@ -139,10 +143,11 @@ public class TableView extends TerminalView {
 		}
 		return formattedString;
 	}
+	
 	/**
-	 take the
-	 * @param hosts (type list of {@link it.polimi.ingsw.server.model.student.Island Island} and their information, and insert them in a
-	 * @return(type stringbuilder)the string builded with all the Island
+	 * Builds the formatted string for Islands
+	 * @param hosts (type List<{@link it.polimi.ingsw.server.model.student.Island Island}>) The list of Islands on the table to print
+	 * @return (type StringBuilder) the String with the list of Islands on the table
 	 */
 	private StringBuilder buildStringForIslands(List<Island> hosts) {
 		StringBuilder formattedString = new StringBuilder();
@@ -162,12 +167,12 @@ public class TableView extends TerminalView {
 		}
 		return formattedString;
 	}
+	
 	/**
-	 take the
-	 * @param hostIndex (type {@link it.polimi.ingsw.server.model.student.StudentHost hostIndex}) index of studenthost
-	 *and start to build the(@code stringbuilder) with index inside brackets, then complete the (@code stringbuilder) calling method(@code formatStringForStudentHost()) passing him the
-	 * @param host (type {@link it.polimi.ingsw.server.model.student.StudentHost host} and take the result
-	 * @return(type stringbuilder)the string builded with all the student host and the index
+	 * Builds the formatted string for a generic Student Host, found at an index when part of a list
+	 * @param host (type {@link it.polimi.ingsw.server.model.student.StudentHost StudentHost}) The Student Host to print
+	 * @param hostIndex (type int) The index of the host in the parent list
+	 * @return (type StringBuilder) the String with the student host data on the table
 	 */
 	private StringBuilder buildStringForStudentHost(StudentHost host, int hostIndex) {
 		StringBuilder formattedString = new StringBuilder();
@@ -177,11 +182,11 @@ public class TableView extends TerminalView {
 		formattedString.append(ModelFormatter.formatStringForStudentHost(host));
 		return formattedString;
 	}
+	
 	/**
-	 use the information in
-	 * @param tableStateMessage {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage tableStateMessage}contain information of player
-	 *to know all the avaible{@link it.polimi.ingsw.server.model.Professor professor} and insert them in a
-	 * @return(type stringbuilder)the string builded with all avaible professors
+	 * Builds a String with the list of available Professors on the table
+	 * @param tableStateMessage The {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage table message} with the table data
+	 * @return (type StringBuilder) the String with the list of available Professors on the table
 	 */
 	private StringBuilder getAvailableProfessorsString(TableStateMessage tableStateMessage) {
 		StringBuilder formattedString = new StringBuilder("Available Professors: ");

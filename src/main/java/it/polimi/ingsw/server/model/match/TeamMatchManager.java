@@ -17,6 +17,9 @@ public class TeamMatchManager extends MatchManager {
 	
 	List<PlayerTeam> teams;
 	
+	/**
+	 * Initializes a new, empty team match
+	 */
 	public TeamMatchManager() {
 		teams = new ArrayList<>();
 	}
@@ -98,6 +101,12 @@ public class TeamMatchManager extends MatchManager {
 		return null;
 	}
 	
+	/**
+	 * Gets the influence of a Team on an Island
+	 * @param playerTeam The team to get the influence of
+	 * @return The influence of the team
+	 * @throws IslandSkippedInfluenceForStopCardException If the island was skipped because there was a stop card on it
+	 */
 	private int getTeamInfluenceOnIsland(PlayerTeam playerTeam) throws IslandSkippedInfluenceForStopCardException {
 		int totalTeamInfluence = 0;
 		for (Player player: playerTeam.getAllPlayers()) {

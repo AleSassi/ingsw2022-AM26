@@ -99,7 +99,10 @@ class StudentHostTest {
         assertThrows(CollectionUnderflowError.class, () -> studentHost.removeStudents(Student.GreenFrog, 1));
         assertDoesNotThrow(() -> studentHost.removeStudents(Student.PinkFair, 0));
     }
-
+    
+    /**
+     * tests methods with null params
+     */
     @Test
     void nullTest() {
         StudentHost studentHost = new StudentHost();

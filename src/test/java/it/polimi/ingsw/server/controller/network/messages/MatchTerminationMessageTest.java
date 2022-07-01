@@ -7,10 +7,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests related to the MatchTerminationMessage class
+ * @see MatchTerminationMessage
+ */
 class MatchTerminationMessageTest {
 	
 	private MatchTerminationMessage message;
 	
+	/**
+	 * Common test initialization
+	 */
 	@BeforeEach
 	void initMessage() {
 		message = new MatchTerminationMessage("A random termination reason, visible to the user", false);
@@ -37,6 +44,9 @@ class MatchTerminationMessageTest {
 		});
 	}
 	
+	/**
+	 * Test all getters
+	 */
 	@Test
 	void testGetters() {
 		assertEquals("A random termination reason, visible to the user", message.getTerminationReason());

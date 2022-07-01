@@ -8,10 +8,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests related to the MatchStateMessage class
+ * @see MatchStateMessage
+ */
 class MatchStateMessageTest {
 	
 	private MatchStateMessage message;
 	
+	/**
+	 * Common test initialization
+	 */
 	@BeforeEach
 	void initMessage() {
 		message = new MatchStateMessage(MatchPhase.ActionPhaseStepOne);
@@ -38,6 +45,9 @@ class MatchStateMessageTest {
 		});
 	}
 	
+	/**
+	 * Test getters
+	 */
 	@Test
 	void testGetters() {
 		assertEquals(MatchPhase.ActionPhaseStepOne, message.getCurrentMatchPhase());

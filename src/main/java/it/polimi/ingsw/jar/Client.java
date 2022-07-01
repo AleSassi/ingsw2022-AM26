@@ -1,6 +1,7 @@
 package it.polimi.ingsw.jar;
 
-import it.polimi.ingsw.client.cli.CLIManager;
+import it.polimi.ingsw.client.cli.view.LoginView;
+import it.polimi.ingsw.client.cli.view.TerminalView;
 import it.polimi.ingsw.client.controller.network.GameClient;
 import it.polimi.ingsw.client.ui.GUI;
 import it.polimi.ingsw.utils.cli.ANSIColors;
@@ -9,8 +10,6 @@ import it.polimi.ingsw.utils.cli.client.ClientCommandTag;
 import it.polimi.ingsw.server.exceptions.server.UnrecognizedCommandException;
 
 import java.io.IOException;
-import java.net.ConnectException;
-import java.net.SocketException;
 import java.util.regex.Pattern;
 
 /**
@@ -26,7 +25,7 @@ public class Client {
 
 	/**
 	 * Initialize the Client with the chosen parameters and starts it
-	 * @param args (type String[])
+	 * @param args (type String[]) The Command Line Arguments
 	 */
 	public static void main(String[] args) {
 		
@@ -100,7 +99,8 @@ public class Client {
 						GameClient.shared().connectToServer();
 						System.out.println(StringFormatter.formatWithColor("Connected to " + serverIP_fromCLI + ":" + serverPort_fromCLI, ANSIColors.Green));
 						// Start the CLI
-						CLIManager.shared().startGameLoop();
+						// Ask the Player to log in, send to the server
+						(new LoginView()).run();
 					} catch (IOException e) {
 						System.out.println(StringFormatter.formatWithColor("ERROR: Could not connect to the server. Please connect to the Internet, ensure that the IP and Port values are correct and try again", ANSIColors.Red));
 					}
@@ -113,7 +113,7 @@ public class Client {
 	}
 
 	/**
-	 * Prints all the possible commands relative to this {@code Client}
+	 * Prints all the possible parameters relative to this {@code Client}
 	 */
 	private static void printHelpMenu() {
 		System.out.println(StringFormatter.formatWithColor("Eriantys AM26 Client - Help Menu", ANSIColors.Yellow));

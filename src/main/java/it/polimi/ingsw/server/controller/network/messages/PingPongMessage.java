@@ -10,15 +10,28 @@ public class PingPongMessage extends NetworkMessage {
 	
 	private Boolean isPing;
 	
+	/**
+	 * Creates a message with the Ping value
+	 * @param isPing <code>true</code> if the message is a PING, <code>false</code> if it's a PONG
+	 */
 	public PingPongMessage(boolean isPing) {
 		super();
 		this.isPing = isPing;
 	}
 	
+	/**
+	 * Decodes a JSON serialized string into a PingPong message
+	 * @param serializedString The serialized string
+	 * @throws MessageDecodeException If the decode fails
+	 */
 	public PingPongMessage(String serializedString) throws MessageDecodeException {
 		super(serializedString);
 	}
 	
+	/**
+	 * Finds out whether the message is PING or PONG
+	 * @return Whether the message is PING or PONG
+	 */
 	public boolean isPing() {
 		return isPing;
 	}

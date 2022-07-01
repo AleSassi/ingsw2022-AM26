@@ -21,10 +21,15 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests related to the Player
+ * @see Player
+ */
 class PlayerTest {
     
     private Player test;
-    /**try the constructor
+    /**
+     * try the constructor
      */
     @BeforeEach
     void initPlayer() {
@@ -33,14 +38,16 @@ class PlayerTest {
         });
     }
 
-    /**try the getter of nickname
+    /**
+     * try the getter of nickname
      */
     @Test
     void getNicknameTest() {
         assertEquals("giovanni", test.getNickname());
     }
 
-    /**verify tha all the card {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} are in the {@link it.polimi.ingsw.server.model.assistants.AvailableCardsDeck AvailableCardsDeck}
+    /**
+     * verify tha all the card {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} are in the {@link it.polimi.ingsw.server.model.assistants.AvailableCardsDeck AvailableCardsDeck}
      */
     @Test
     void testAvailableAssistantCards() {
@@ -51,7 +58,8 @@ class PlayerTest {
             assertEquals(myCards.get(i), testDeck.getCard(i));
         }
     }
-    /**verify that the last played card {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} of {@link it.polimi.ingsw.server.model.assistants.AvailableCardsDeck AvailableCardsDeck} is correct
+    /**
+     * verify that the last played card {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} of {@link it.polimi.ingsw.server.model.assistants.AvailableCardsDeck AvailableCardsDeck} is correct
      */
     @Test
     void getLastPlayedAssistantCardTest() {
@@ -62,8 +70,9 @@ class PlayerTest {
         ArrayList<AssistantCard> newDeck = test.getAvailableAssistantCards();
         assertFalse(newDeck.contains(card));
     }
-    /**try to add some professor {@link it.polimi.ingsw.server.model.Professor Professor} and than verify that (@Code professor)are
-     effectively in the list */
+    /**
+     * try to add some professor {@link it.polimi.ingsw.server.model.Professor Professor} and than verify that (@Code professor)are effectively in the list
+     */
     @Test
     void getControlledProfessorsTest() {
         test.addProfessor(Professor.GreenFrog);
@@ -77,8 +86,11 @@ class PlayerTest {
         assertFalse(prof.contains(Professor.RedDragon));
         assertFalse(prof.contains(Professor.YellowElf));
     }
-    /**try to add some student  {@link it.polimi.ingsw.server.model.student.Student Student} and than verify that method (@Code getCountAtTable)return
-     the correct number of (@code Student) inserted */
+    
+    /**
+     * try to add some student  {@link it.polimi.ingsw.server.model.student.Student Student} and then verify that method (@Code getCountAtTable) return the correct number of (@code Student) inserted
+     *
+     */
     @Test
     void getCountAtTableAndPlaceStudent() {
         TableManager tableManager = new TableManager(2, false);
@@ -92,7 +104,9 @@ class PlayerTest {
             assertEquals(test.getCountAtTable(Student.BlueUnicorn), 3);
         });
     }
-    /**try create, play and than deactivate a character card  {@link it.polimi.ingsw.server.model.characters.CharacterCard Character} and  verify that method does not throw exception*/
+    /**
+     * try to create, play and then deactivate a character card  {@link it.polimi.ingsw.server.model.characters.CharacterCard Character} and  verify that method does not throw exception
+     */
     @Test
     void testCharacterCard() {
         TableManager tableManager = new TableManager(2, false);
@@ -112,7 +126,9 @@ class PlayerTest {
         assertNull(test.getActiveCharacterCard());
     }
 
-    /**try to add and remove some student  {@link it.polimi.ingsw.server.model.student.Student Student}from entrance of {@link it.polimi.ingsw.server.model.student.Student Student} and verify does not throw exception*/
+    /**
+     * try to add and remove some student  {@link it.polimi.ingsw.server.model.student.Student Student}from entrance of {@link it.polimi.ingsw.server.model.student.Student Student} and verify does not throw exception
+     */
     @Test
     void addAndRemoveStudentToEntrance() {
         test.addStudentToEntrance(Student.BlueUnicorn);
@@ -124,8 +140,9 @@ class PlayerTest {
         assertThrows(CollectionUnderflowError.class, () -> test.removeStudentFromEntrance(Student.BlueUnicorn));
     }
 
-    /**try to add and remove some Professor {@link it.polimi.ingsw.server.model.Professor Professor}from  {@link it.polimi.ingsw.server.model.student.Student Student}*/
-
+    /**
+     * try to add and remove some Professors {@link it.polimi.ingsw.server.model.Professor Professor} the controlled
+     */
     @Test
     void addRemoveProfessor() {
         test.addProfessor(Professor.GreenFrog);
@@ -134,13 +151,17 @@ class PlayerTest {
         assertFalse(test.getControlledProfessors().contains(Professor.GreenFrog));
     }
 
-    /**try the getter of  Tower {@link it.polimi.ingsw.server.model.Tower Tower}*/
-
+    /**
+     * try the getter of Tower {@link it.polimi.ingsw.server.model.Tower Tower}
+     */
     @Test
     void getTowerType() {
         assertEquals(test.getTowerType(), Tower.Black);
     }
-    /**try to take some Tower {@link it.polimi.ingsw.server.model.Tower Tower} and verify the remaining counter is correct*/
+    
+    /**
+     * try to take some Tower {@link it.polimi.ingsw.server.model.Tower Tower} and verify the remaining counter is correct
+     */
     @Test
     void testTowerPickAndRemove() {
         assertThrows(TooManyTowersException.class, test::gainTower);
@@ -150,8 +171,10 @@ class PlayerTest {
         });
         assertEquals(6, test.getAvailableTowerCount());
     }
-    /**try to add and remove a studentcollection  {@link it.polimi.ingsw.server.model.student.StudentCollection Student}to the entrance of {@link it.polimi.ingsw.server.model.student.Student Student} and verify  throw exception only when entrance is empty*/
-
+    
+    /**
+     * try to add and remove a studentcollection  {@link it.polimi.ingsw.server.model.student.StudentCollection Student}to the entrance of {@link it.polimi.ingsw.server.model.student.Student Student} and verify  throw exception only when entrance is empty
+     */
     @Test
     void addAllStudentsToEntrance() {
         StudentCollection sc = new StudentCollection();
@@ -165,9 +188,10 @@ class PlayerTest {
         });
         assertThrows(CollectionUnderflowError.class, () -> test.removeStudentFromEntrance(Student.BlueUnicorn));
     }
-    /**verify that if player add more than 10 Student {@link it.polimi.ingsw.server.model.student.Student Student}to entrance of {@link it.polimi.ingsw.server.model.student.Student Student}
-     @throws TableFullException */
-
+    
+    /**
+     * verify that if player add more than 10 Student {@link it.polimi.ingsw.server.model.student.Student Student}to entrance of {@link it.polimi.ingsw.server.model.student.Student Student} it throws TableFullException
+     */
     @Test
     void testMoreThan10StudentsAtTable() {
         TableManager tableManager = new TableManager(2, false);
@@ -179,8 +203,9 @@ class PlayerTest {
         assertThrows(TableFullException.class, () -> test.placeStudentAtTableAndGetCoin(Student.BlueUnicorn, tableManager));
     }
 
-    /**verify that if player try to play a (@code card)when the deck{@link it.polimi.ingsw.server.model.assistants.PlayedCardDeck Deck}is empty
-     @throws CollectionUnderflowError */
+    /**
+     * verify that if player try to play a (@code card) when the deck {@link it.polimi.ingsw.server.model.assistants.PlayedCardDeck Deck} is empty it throws CollectionUnderflowError
+     */
     @Test
     void testEmptyAssistantCardDeck() {
         assertDoesNotThrow(() -> {
@@ -190,8 +215,10 @@ class PlayerTest {
         });
         assertThrows(CollectionUnderflowError.class, () -> test.playAssistantCardAtIndex(0));
     }
-    /**try to keep add  student  {@link it.polimi.ingsw.server.model.student.Student Student}to dining of {@link it.polimi.ingsw.server.model.student.Student Student} until whe reach the max number of coin and verify than we no more obtain coin*/
-
+    
+    /**
+     * try to keep add  student  {@link it.polimi.ingsw.server.model.student.Student Student}to dining of {@link it.polimi.ingsw.server.model.student.Student Student} until whe reach the max number of coin and verify than we no more obtain coin
+     */
     @Test
     void testReachedMaxCollectableCoins() {
         TableManager tableManager = new TableManager(2, false);
@@ -247,6 +274,7 @@ class PlayerTest {
             assertEquals(4, test2.getAvailableCoins());
         });
     }
+    
     /**try use null parameter with method and verify no exception are thrown*/
     @Test
     void nullTest() {

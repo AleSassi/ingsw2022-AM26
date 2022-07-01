@@ -12,7 +12,7 @@ import it.polimi.ingsw.server.model.match.MatchVariant;
 import it.polimi.ingsw.utils.cli.ANSIColors;
 import it.polimi.ingsw.utils.cli.StringFormatter;
 /**
- * This Class represent the {@code TerminalView}
+ * This Class represent the {@code TerminalView} which displays a waiting message with the number of Players remaining to fill the lobby
  * @author Alessandro Sassi
  */
 public class LoginWaitingRoom extends TerminalView {
@@ -20,36 +20,43 @@ public class LoginWaitingRoom extends TerminalView {
 	private int numberOfPlayersToFill = 4;
 	private boolean shouldQuit = false;
 	private final MatchVariant chosenVariant;
-	/**constructor
-	 * set variant of match
-	 * @param chosenVariant (type {@link it.polimi.ingsw.server.model.match.MatchVariant}) type of match
+	
+	/** Initializes the view with the chosen match variant (basic or expert)
+	 * @param chosenVariant (type {@link it.polimi.ingsw.server.model.match.MatchVariant}) The Match variant
 	 */
 	public LoginWaitingRoom(MatchVariant chosenVariant) {
 		this.chosenVariant = chosenVariant;
 	}
+	
 	/**
-	 * create a thread and add observers(one for each type of {@link it.polimi.ingsw.notifications.Notification Notification} we need) on  {@link it.polimi.ingsw.notifications.NotificationCenter Center} type of match
-	 * for every (@Code Nofication) that arrive call a differrent method of class according to the name of (@Code Nofication)
-	 if recive a (@Code Notification) with name ClientDidReceiveMatchTerminationMessage, end client otherwise call method (@code waitForPlayers() )
+	 * Subscribes to the required {@link it.polimi.ingsw.notifications.Notification notifications} for getting event callbacks and starts waiting for the lobby to fill
 	 */
 	@Override
 	public void run() {
 		NotificationCenter.shared().addObserver(this, (notification) -> (new Thread(() -> otherPlayerLoggedInReceived(notification))).start(), NotificationName.ClientDidReceiveLoginResponse, null);
-		NotificationCenter.shared().addObserver(this, (notification) -> {
-			shouldQuit = true;
-			if (numberOfPlayersToFill > 0) {
-				MatchTerminationMessage message = (MatchTerminationMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
-				System.out.println(StringFormatter.formatWithColor("The server ended the match. Reason: \"" + message.getTerminationReason() + "\"", ANSIColors.Red));
-				GameClient.shared().terminate();
-			}
-			synchronized (this) {
-				notify();
-			}
-		}, NotificationName.ClientDidReceiveMatchTerminationMessage, null);
+		NotificationCenter.shared().addObserver(this, this::didReceiveMatchTerminationMessage, NotificationName.ClientDidReceiveMatchTerminationMessage, null);
 		waitForPlayers();
 	}
+	
 	/**
-	 *the method stand-by the client view until the as long as enough players have joined, if variable shouldQuit=1 end the client
+	 * Callback for a Match termination notification
+	 * Terminates the match and exits from the program
+	 * @param notification The notification with the event data
+	 */
+	private void didReceiveMatchTerminationMessage(Notification notification) {
+		shouldQuit = true;
+		if (numberOfPlayersToFill > 0) {
+			MatchTerminationMessage message = (MatchTerminationMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
+			System.out.println(StringFormatter.formatWithColor("The server ended the match. Reason: \"" + message.getTerminationReason() + "\"", ANSIColors.Red));
+			GameClient.shared().terminate();
+		}
+		synchronized (this) {
+			notify();
+		}
+	}
+	
+	/**
+	 * Waits until all Players have filled a lobby, and prints a waiting message telling the user how many Players need to join the Lobby before starting a game
 	 */
 	private void waitForPlayers() {
 		synchronized (this) {
@@ -70,9 +77,9 @@ public class LoginWaitingRoom extends TerminalView {
 			GameClient.shared().terminate();
 		}
 	}
+	
 	/**
-	 * method called whan arrive a {@link it.polimi.ingsw.notifications.Notification Notification}with name otherPlayerLoggedInReceived
-	 *the method print if the login is accepted and if this true,  the remaining number of player to, that need to start the game
+	 * Callback for the {@link it.polimi.ingsw.notifications.Notification Notification} for a new player login. It checks whether the game can start or if it needs to keep waiting and print the message
 	 * @param notification (@code Notification) that contain the information of event
 	 */
 	private synchronized void otherPlayerLoggedInReceived(Notification notification) {
@@ -92,10 +99,11 @@ public class LoginWaitingRoom extends TerminalView {
 			notify();
 		}
 	}
+	
 	/**
-	 * method called when arrive a {@link it.polimi.ingsw.notifications.Notification Notification}with name NetworkTimeoutNotification
-	 *the method end the client
-	 * @param notification (@code Notification) that contain the information of event
+	 * Callback for a {@link it.polimi.ingsw.notifications.Notification Notification} with name NetworkTimeoutNotification
+	 * Exits from the program
+	 * @param notification (@code Notification) with the event data
 	 */
 	@Override
 	protected void didReceiveNetworkTimeoutNotification(Notification notification) {

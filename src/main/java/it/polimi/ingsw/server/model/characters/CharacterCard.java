@@ -7,22 +7,19 @@ import it.polimi.ingsw.server.model.TableManager;
 
 import java.util.*;
 /**
- * This Class represent the {@code CharacterCard}
+ * This Class is the abstract base class representing the {@code CharacterCard}s
  * @author Alessandro Sassi
  */
 public abstract class CharacterCard {
-    /**
-     * Initialize {@code CharacterCard}
-     */
+    
     private Character character;
     private int priceIncrement = 0;
     private int timesUsedInCurrentTurn = 0;
-    //TODO: When implementing state preservation make sure to have some way to recreate the executors (e.g. at first use if null run the constructor?)
     protected transient CharacterCardExecutor executor; //Make transient to avoid serialization
 
     /**
-     * Constructor
-     * @param character (type  {@link it.polimi.ingsw.server.model.characters.CharacterCard charactercard}) that card rapresent
+     * Constructor, creates the Character ard with the related Character
+     * @param character (type {@link it.polimi.ingsw.server.model.characters.Character Character}) The Character that the card represents
      */
     public CharacterCard(Character character) {
         this.character = character;
@@ -30,7 +27,7 @@ public abstract class CharacterCard {
     }
 
     /**
-     * this method is used to purchase the card, it increment the price and set the uses to 0
+     * Purchase the card, incrementing its price if needed and resetting the number of times used in the same turn
      */
     public void purchase() {
         if (priceIncrement == 0) {
@@ -40,7 +37,7 @@ public abstract class CharacterCard {
     }
 
     /**
-     * this method is used to mark as used a card with his variable
+     * Marks a card as used in the current turn
      */
     protected void markCardAsUsedInTurn() {
         timesUsedInCurrentTurn += 1;
@@ -48,54 +45,68 @@ public abstract class CharacterCard {
 
     //region Abstract methods that are implemented by concrete subclasses to provide the card functionality
     /**
-     * abstract method
+     * Sets up the card data, optionally taking some data from the table
+     * @param t The Table Manager object which might be used to get data (such as Students)
      */
     public abstract void setupWithTable(TableManager t);
+    
     /**
-     * abstract method
+     * Uses a Character Card effect
+     * @param t The Table Manager object which might be used to get data (such as Students)
+     * @param players The List of Players in the match
+     * @param currentPlayer The current Player who used the card
+     * @param userInfo Additional card parameters for the action
+     * @return an integer holding the numeric result of the effect
+     * @throws CharacterCardIncorrectParametersException If the parameters are incorrect
+     * @throws CharacterCardNoMoreUsesAvailableException If the card cannot be used anymore in the same turn
      */
     public abstract int useCard(TableManager t, List<Player> players, Player currentPlayer, CharacterCardParamSet userInfo) throws CharacterCardIncorrectParametersException, CharacterCardNoMoreUsesAvailableException;
+    
     /**
-     * abstract method
+     * Gets the collection of Students hosted by the Card
+     * @return The collection of Students hosted by the card
      */
     public abstract StudentCollection getHostedStudents();
+    
     /**
-     * abstract method
+     * Builds the Bean of the card, a representation suited to be sent over the network
+     * @return The Bean of the card, a representation suited to be sent over the network
      */
     public abstract CharacterCardBean beanify();
+    
     /**
-     * abstract method
+     * Deactivates the card, cleaning up its internal transient state
      */
     public abstract void deactivate();
     //endregion
 
     //region Getters for private properties
     /**
-     * getter
-     * @return (type {@link it.polimi.ingsw.server.model.characters.CharacterCard charactercard}) that card rapresent
+     * Gets the Character associated with the Card
+     * @return (type Character) The Character associated with the Card
      */
     public Character getCharacter() {
         return character;
     }
 
     /**
-     * getter
-     * @return (type int) the increment of price
+     * Gets the card's price increment
+     * @return (type int) The card's price increment
      */
     public int getPriceIncrement() {
         return priceIncrement;
     }
 
     /**
-     * getter
-     * @return (type int) the increment of price
+     * Gets the card's total price
+     * @return (type int) The card's total price
      */
     public int getPrice() {
         return getCharacter().getInitialPrice() + getPriceIncrement();
     }
 
     /**
-     * getter
+     * Gets the number of times the card has been used in the current turn
      * @return (type int) the increment of price
      */
     public int getTimesUsedInCurrentTurn() {
@@ -104,8 +115,8 @@ public abstract class CharacterCard {
     //endregion
 
     /**
-     * this method create a copy of card to
-     * @param dstCard (type {@link it.polimi.ingsw.server.model.characters.CharacterCard charactercard})
+     * Creates a shallow clone of the Card
+     * @param dstCard (type {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard}) The card where the method copies the object
      */
     protected void copyTo(CharacterCard dstCard) {
         dstCard.character = character;

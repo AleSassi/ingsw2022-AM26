@@ -11,15 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class {@code CloudsContainer} represent the JavaFX controller for the {@link it.polimi.ingsw.client.ui.CloudPane CloudPanes} container
+ * Class {@code CloudsContainer} represent the JavaFX container for the {@link it.polimi.ingsw.client.ui.CloudPane CloudPanes}, managing their position
  */
 public class CloudsContainer extends RescalableAnchorPane {
 
     private final List<CloudPane> clouds;
 
     /**
-     * Constructor creates a new {@code CloudsContainer}
-     * @param notification (type Notification)
+     * Constructor creates a new {@code CloudsContainer} from a Table message
+     * @param notification (type Notification) The Table STate notification
      */
     public CloudsContainer(Notification notification) {
         TableStateMessage tableStateMessage = (TableStateMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
@@ -65,7 +65,8 @@ public class CloudsContainer extends RescalableAnchorPane {
     private void didReceivePlayedCharacterCardNotification(Notification notification) {
         setActivateCloudPick(false);
     }
-
+    
+    @Override
     public void rescale(double scale) {
         setPrefSize(getUnscaledWidth() * scale, getUnscaledHeight() * scale);
         double radius = getUnscaledWidth() * scale;

@@ -27,12 +27,16 @@ import static org.mockito.Mockito.*;
 
 /**
  * Class {@code GameControllerTest} tests {@link it.polimi.ingsw.server.controller.GameController}
+ * @see GameControllerTest
  */
 class GameControllerTest {
 	
 	private GameController controller;
 	private List<NetworkMessage> sentMessages;
 	
+	/**
+	 * Test setup & initialization for mocking the server & writing messages to a list
+	 */
 	@BeforeEach
 	void setup() {
 		GameServer server = mock(GameServer.class);
@@ -83,7 +87,7 @@ class GameControllerTest {
 	}
 
 	/**
-	 * Tests multiple logins
+	 * Tests multiple logins on different threads
 	 */
 	@Test
 	void testMultiLogin() {
@@ -288,7 +292,7 @@ class GameControllerTest {
 	}
 
 	/**
-	 * Tests the {@link it.polimi.ingsw.server.model.student.Student Student} move to the diningroom message
+	 * Tests the {@link it.polimi.ingsw.server.model.student.Student Student} move to the dining room message
 	 */
 	@RepeatedTest(5)
 	void testReceiveStudToTableMessage() {
@@ -348,7 +352,7 @@ class GameControllerTest {
 	}
 
 	/**
-	 * Tests the {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard's} purchase message
+	 * Tests the {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard's} purchase message but without coins
 	 */
 	@RepeatedTest(10)
 	void testReceivePurchaseCharacterCardWithoutCoins() {
@@ -370,7 +374,7 @@ class GameControllerTest {
 	}
 
 	/**
-	 * Tests
+	 * Tests sending a message for purchasing a card with out of bounds index
 	 */
 	@Test
 	void testReceivePurchaseCharacterCardOutOfBounds() {
@@ -380,6 +384,7 @@ class GameControllerTest {
 		NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, controller, userInfo);
 		assertEquals(new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPurchaseCharacterCard, false, "Invalid action: the Character Card index you sent was incorrect"), sentMessages.get(35));
 	}
+	
 	/**
 	 * Tests the case of an already purchased {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard}
 	 */
@@ -551,7 +556,7 @@ class GameControllerTest {
 	}
 
 	/**
-	 * Test the case of multiple {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard} uses
+	 * Test the case of multiple {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard} uses which exceed the card limit
 	 */
 	@RepeatedTest(20)
 	void testTooManyCardUses() {
@@ -642,7 +647,7 @@ class GameControllerTest {
 	}
 
 	/**
-	 * Test the case of an empty {@link it.polimi.ingsw.server.model.student.Cloud Cloud} choosen
+	 * Test the case of an empty {@link it.polimi.ingsw.server.model.student.Cloud Cloud} chosen
 	 */
 	@Test
 	void testEmptyCloudPick() {
@@ -751,7 +756,7 @@ class GameControllerTest {
 	}
 
 	/**
-	 * Test the seconf plan phase
+	 * Test the second plan phase
 	 */
 	@RepeatedTest(10)
 	void testSecondPlanPhase() {

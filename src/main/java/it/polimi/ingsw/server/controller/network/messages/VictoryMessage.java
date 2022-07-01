@@ -14,10 +14,19 @@ public class VictoryMessage extends NetworkMessage {
 	
 	private String[] winners;
 	
+	/**
+	 * Constructs a Victory message with its raw data
+	 * @param winners The list of winner nicknames
+	 */
 	public VictoryMessage(@NotNull String[] winners) {
 		this.winners = winners;
 	}
 	
+	/**
+	 * Decodes a JSON serialized string into a message
+	 * @param serializedString The serialized string
+	 * @throws MessageDecodeException If the decode fails
+	 */
 	public VictoryMessage(String serializedString) throws MessageDecodeException {
 		super(serializedString);
 	}

@@ -3,10 +3,9 @@ package it.polimi.ingsw.server.model.student;
 import it.polimi.ingsw.server.exceptions.model.CollectionUnderflowError;
 
 /**
- * Cloud class represent the cloud on which are the {@link  Student}
+ * Cloud class represent the cloud on which are the {@link Student}
  * @author Federico Albertini
  */
-
 public class Cloud extends StudentHost {
 
     /**

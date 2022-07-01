@@ -4,10 +4,6 @@ import it.polimi.ingsw.server.controller.network.messages.CharacterCardNetworkPa
 import it.polimi.ingsw.server.model.student.Student;
 import it.polimi.ingsw.server.model.student.StudentHost;
 /**
- * This Class represent the {@code CharacterCardParamSet}
- * @author Alessandro Sassi
- */
-/**
  * An object that encapsulates all optional parameters required by CharacterCard to perform its action
  *
  * This class lets <code>CharacterCard</code>'s <code>useCard</code> method know what the user has selected (e.g.: the Student color that has to be moved, the additional Mother Nature steps) in order to perform the card action.
@@ -53,16 +49,16 @@ public class CharacterCardParamSet {
     private final StopCardMovementMode stopCardMovementMode;
 
     /**
-     * constructor, set the parameter
-     * @param srcStudentColor  (type Student) {@link it.polimi.ingsw.server.model.student.Student Student} the source color student where the movement start
-     * @param dstStudentColor  (type Student) {@code student} the destionation student color where the movement end
-     * @param sourceStudentHost  (type host){@link it.polimi.ingsw.server.model.student.StudentHost host}  the source destination where the movement start
-     * @param destinationStudentHost  (type host) the end destination where the movement end
-     * @param studentDestinationIsSelf (type boolean) true if source and the end destination are the same
-     * @param chosenMotherNatureAdditionalSteps    (type int) number of more step MN can do
-     * @param sourceIslandIndex  (type int) {@link it.polimi.ingsw.server.model.student.Island Island's} idx of island source
-     * @param targetIslandIndex (type int) {@code island} idx of island target
-     * @param stopCardMovementMode  (type StopCardMovementMode) type of movement
+     * Constructor, intializes the parameter set with the correct values
+     * @param srcStudentColor  (type {@link it.polimi.ingsw.server.model.student.Student Student}) The student color that needs to be moved, or the student that will be ignored when computing the Influence
+     * @param dstStudentColor  (type Student) The student color that needs to be swapped with srcStudentColor
+     * @param sourceStudentHost  (type StudentHost) the source for student movements
+     * @param destinationStudentHost  (type StudentHost) the destination for student movements
+     * @param studentDestinationIsSelf (type boolean) Whether the student destination is the card itself
+     * @param chosenMotherNatureAdditionalSteps    (type int) The number of additional stems MN has to move (set when the player first chooses it). Set it to -1 to signal a nil stepCount
+     * @param sourceIslandIndex  (type int) The index of the Island where we want to get the StopCard back. Set it to -1 to signal a nil island
+     * @param targetIslandIndex (type int) The index of the Island where we want to set the StopCard. Set it to -1 to signal a nil island
+     * @param stopCardMovementMode  (type StopCardMovementMode) The direction the StopCard has to move
      */
     public CharacterCardParamSet(Student srcStudentColor, Student dstStudentColor, StudentHost sourceStudentHost, StudentHost destinationStudentHost, boolean studentDestinationIsSelf, int chosenMotherNatureAdditionalSteps, int sourceIslandIndex, int targetIslandIndex, StopCardMovementMode stopCardMovementMode) {
         this.srcStudentColor = srcStudentColor;
@@ -75,72 +71,81 @@ public class CharacterCardParamSet {
         this.targetIslandIndex = targetIslandIndex;
         this.stopCardMovementMode = stopCardMovementMode;
     }
+    
     /**
-     * getter
-     * @return ((type Student) {@link it.polimi.ingsw.server.model.student.Student Student} the source color student where the switch start
+     * Gets the student color that needs to be moved, or the student that will be ignored when computing the Influence
+     * @return The student color that needs to be moved, or the student that will be ignored when computing the Influence
       */
     protected Student getSrcStudentColor() {
         return srcStudentColor;
     }
+    
     /**
-     * getter
-     * @return ((type Student) {@link it.polimi.ingsw.server.model.student.Student Student} the destionation color student where the switch start
+     * Gets the student color that needs to be swapped with srcStudentColor
+     * @return The student color that needs to be swapped with srcStudentColor
      */
     protected Student getDstStudentColor() {
         return dstStudentColor;
     }
+    
     /**
-     * getter
-     * (type host){@link it.polimi.ingsw.server.model.student.StudentHost host}  the source destination where the switch start
+     * Gets the source for student movements
+     * @return The source for student movements
      */
     protected StudentHost getSourceStudentHost() {
         return sourceStudentHost;
     }
+    
     /**
-     * getter
-     * (type host){@link it.polimi.ingsw.server.model.student.StudentHost host}  the end destination where the switch end
+     * Gets the destination for student movements
+     * @return the destination for student movements
      */
     protected StudentHost getDestinationStudentHost() {
         return destinationStudentHost;
     }
+    
     /**
-     * getter
-     * (type boolean) true if source and the end destination are the same
+     * Gets whether the student destination is the card itself
+     * @return Whether the student destination is the card itself
      */
     protected boolean isStudentDestinationIsSelf() {
         return studentDestinationIsSelf;
     }
+    
     /**
-     * getter
-     * (type host)(type int) number of more step MN can do
+     * Gets the number of additional stems MN has to move (set when the player first chooses it).
+     * @return The number of additional stems MN has to move (set when the player first chooses it).
      */
     protected int getChosenMotherNatureAdditionalSteps() {
         return chosenMotherNatureAdditionalSteps;
     }
+    
     /**
-     * getter
-     * (type int) {@link it.polimi.ingsw.server.model.student.Island Island's} idx of island source
+     * Gets the index of the Island where we want to get the StopCard back.
+     * @return The index of the Island where we want to get the StopCard back.
      */
     protected int getSourceIslandIndex() {
         return sourceIslandIndex;
     }
+    
     /**
-     * getter
-     * (type int) {@link it.polimi.ingsw.server.model.student.Island Island's} idx of island destination
+     * Gets the index of the Island where we want to set the StopCard
+     * @return The index of the Island where we want to set the StopCard
      */
     protected int getTargetIslandIndex() {
         return targetIslandIndex;
     }
+    
     /**
-     * getter
-     * (type StopCardMovementMode) type of stop card movement
+     * Gets the direction the StopCard has to move
+     * @return The direction the StopCard has to move
      * */
     public StopCardMovementMode getStopCardMovementMode() {
         return stopCardMovementMode;
     }
 
     /**
-     * This Class represent the {@code StopCardMovementMode}
+     * An enum with the possible Stop Card movements, either to the Card or to an Island
      */
     public enum StopCardMovementMode {
         ToCard,

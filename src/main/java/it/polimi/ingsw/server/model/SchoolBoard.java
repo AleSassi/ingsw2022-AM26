@@ -6,24 +6,22 @@ import it.polimi.ingsw.server.model.student.StudentHost;
 
 import java.util.*;
 /**
- * This Class represent the {@code SchoolBoard}
+ * This Class represent the {@code SchoolBoard}, the space where a Player has their students, controlled professors and towers
  * @author Leonardo Betti
  */
 public class SchoolBoard {
 
-    /**
-     * initialize{@code SchoolBoard}
-     */
     private final int maxTowerCount;
     private int availableTowerCount;
     private final Tower towerType;
     private StudentHost diningRoom;
     private StudentHost entrance;
     private boolean[] controlledProfessors;
+    
     /**
-     * Constructs and sets up the Schoolboard
+     * Constructs and sets up the School Board
      * @param tower (type Tower) type of player tower
-     * @param initialTowerCount (type List of int) number of tower
+     * @param initialTowerCount (type List of int) initial number of towers
      * @throws IncorrectConstructorParametersException whenever the {@code Parameters} of the constructor aren't correct
      */
     public SchoolBoard(Tower tower, int initialTowerCount) throws IncorrectConstructorParametersException {
@@ -36,40 +34,51 @@ public class SchoolBoard {
         entrance = new StudentHost();
         maxTowerCount = initialTowerCount;
     }
+    
     /**
-     * return number of  {@link it.polimi.ingsw.server.model.student.Student student}, that has type
-     * @param s (type of student)
+     * Gets the number of {@link it.polimi.ingsw.server.model.student.Student students} of the same type in the dining room
+     * @param s The student in the dining room
+     * @return The number of students with the same color in the dining room
      */
     public int getCountAtTable(Student s) {
         return diningRoom.getCount(s);
     }
+    
     /**
-     * getter
+     * Gets the collection of students that are in the entrance space
+     * @return The collection of students that are in the entrance space
      */
     public StudentHost getEntrance() {
         return entrance.copy();
     }
+    
     /**
-     * getter
+     * Gets the collection of students that are in the Dining room space
+     * @return The collection of students that are in the dining room space
      */
     public StudentHost getDiningRoom() {
         return diningRoom.copy();
     }
+    
     /**
-     * getter
+     * Gets the number of available towers
+     * @return The number of available towers
      */
     public int getAvailableTowerCount() {
         return availableTowerCount;
     }
+    
     /**
-     * getter
+     * Gets the tower color
+     * @return The tower color
      */
     public Tower getTowerType() {
         return towerType;
     }
 
     /**
-     * return a list of the controlled {@link it.polimi.ingsw.server.model.Professor professor}
+     * Gets the list of controlled {@link it.polimi.ingsw.server.model.Professor professors}
+     * @return The list of controlled {@link it.polimi.ingsw.server.model.Professor professors}
      */
     public ArrayList<Professor> getControlledProfessors() {
         ArrayList<Professor> result = new ArrayList<>();
@@ -80,9 +89,10 @@ public class SchoolBoard {
         }
         return result;
     }
+    
     /**
-     * set the index of a list of {@link it.polimi.ingsw.server.model.Professor professor}to true, where the index, is the index of
-     * @param professor (type of professor) chosen {@code Professor}
+     * Sets a Professor as controlled by the Player owning this board
+     * @param professor The professor owned by the board
      */
     public void setControlledProfessor(Professor professor) {
         if (professor == null) return;
@@ -90,10 +100,10 @@ public class SchoolBoard {
         int profIndex = Arrays.asList(Professor.values()).indexOf(professor);
         controlledProfessors[profIndex] = true;
     }
-
+    
     /**
-     * set the index of a list of {@link it.polimi.ingsw.server.model.Professor professor}to false, where the index, is the index of
-     * @param professor (type of professor) chosen {@code Professor}
+     * Removes a Professor previously controlled by the Player owning this board
+     * @param professor The professor owned by the board
      */
     public void removeProfessorControl(Professor professor) {
         if (professor == null) return;
@@ -101,48 +111,53 @@ public class SchoolBoard {
         int profIndex = Arrays.asList(Professor.values()).indexOf(professor);
         controlledProfessors[profIndex] = false;
     }
+    
     /**
-     * add a {@link it.polimi.ingsw.server.model.student.Student student}, that has type
-     * @param s (type of student) chosen {@code Student}, to the entrance
+     * Adds a {@link it.polimi.ingsw.server.model.student.Student student} to the entrance space
+     * @param s The student to add
      */
     public void addStudentToEntrance(Student s) {
         entrance.placeStudents(s, 1);
     }
-
-
+    
+    
     /**
-     * remove a {@link it.polimi.ingsw.server.model.student.Student student}, that has type
-     * @param s (type of student) chosen {@code Student}, to the entrance
+     * Removes a {@link it.polimi.ingsw.server.model.student.Student student} from the entrance space
+     * @param s The student to remove
      */
     public void removeStudentFromEntrance(Student s) throws CollectionUnderflowError {
         entrance.removeStudents(s, 1);
     }
+    
     /**
-     * add a {@link it.polimi.ingsw.server.model.student.Student student}, that has type
-     * @param s (type of student) chosen {@code Student}, to the dining room
+     * Adds a {@link it.polimi.ingsw.server.model.student.Student student} to the dining room
+     * @param s The student to add
      */
     public void addStudentToTable(Student s) {
         diningRoom.placeStudents(s, 1);
     }
-
+    
     /**
-     * remove a {@link it.polimi.ingsw.server.model.student.Student student}, that has type
-     * @param s (type of student) chosen {@code Student}, to the dining room
+     * Removes a {@link it.polimi.ingsw.server.model.student.Student student} from the dining room
+     * @param s The student to remove
      */
     public void removeStudentFromTable(Student s) throws CollectionUnderflowError {
         diningRoom.removeStudents(s, 1);
     }
+    
     /**
-     * increment the counter(int) of tower
-     @throws TooManyTowersException whenever the number of tower has max value
+     * Makes the board gain a tower
+     * @throws TooManyTowersException whenever the number of tower has max value
      */
     public void gainTower() throws TooManyTowersException {
         if (availableTowerCount == maxTowerCount) {throw new TooManyTowersException();}
         availableTowerCount += 1;
     }
+    
     /**
-     * decrment the counter of tower and return the type of {@link it.polimi.ingsw.server.model.Tower tower} that schoolboard have
-     * @throws InsufficientTowersException whenever the number of tower  doen't have sufficent tower
+     * Picks a tower from the board, removing it from the available towers
+     * @return The picked tower color
+     * @throws InsufficientTowersException whenever the board doesn't have enough towers (victory condition)
      */
     public Tower pickAndRemoveTower() throws InsufficientTowersException {
         if (this.availableTowerCount == 1) throw new InsufficientTowersException();
@@ -150,8 +165,10 @@ public class SchoolBoard {
         this.availableTowerCount -= 1;
         return towerType;
     }
+    
     /**
-     * create a copy of school board
+     * Creates a copy of school board
+     * @return A copy of the board
      */
     public SchoolBoard copy() {
         try {
@@ -167,9 +184,10 @@ public class SchoolBoard {
             return this;
         }
     }
-
+    
     /**
-     * This method is used just for the test
+     * Gets the number of students in the entrance space
+     * @return The number of students in the entrance space
      */
     public int getNumberOfStudentsInEntrance() {
         int result = 0;
@@ -179,6 +197,7 @@ public class SchoolBoard {
 
         return result;
     }
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

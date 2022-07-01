@@ -9,14 +9,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Class {@code ModalPopup} represent a support {@code AnchorPane}
+ * Class {@code ModalPopup} represent an {@code AnchorPane} that can be presented modally by the controller
  */
 public abstract class ModalPopup extends RescalableAnchorPane {
 	
 	private final Label title;
 
 	/**
-	 * Constructor creates this {@code ModalPopup}
+	 * Constructor creates this {@code ModalPopup} with a title label
 	 * @param titleText (type String) title for the label
 	 */
 	public ModalPopup(String titleText) {

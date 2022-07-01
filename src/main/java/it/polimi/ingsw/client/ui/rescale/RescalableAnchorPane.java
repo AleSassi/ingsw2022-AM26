@@ -7,15 +7,22 @@ import it.polimi.ingsw.notifications.NotificationCenter;
 import it.polimi.ingsw.notifications.NotificationName;
 import javafx.scene.layout.AnchorPane;
 /**
- * Abstract class representing a rescalable {@code Pane}
+ * Abstract class representing a rescalable {@code AnchorPane}
  */
 public abstract class RescalableAnchorPane extends AutoCleanableAnchorPane implements JavaFXRescalable {
-
+	
+	/**
+	 * The additional scaling multiplier to be applied to the object
+	 */
 	private double scalingValue = 1.0;
+	
+	/**
+	 * The cached, unmultiplied scale value
+	 */
 	private double scaleValue = GUI.getStageScale();
 	
 	/**
-	 * Constructor creates the rescalable {@code Pane}
+	 * Constructor creates the rescalable {@code AnchorPane}
 	 */
 	public RescalableAnchorPane() {
 		super();

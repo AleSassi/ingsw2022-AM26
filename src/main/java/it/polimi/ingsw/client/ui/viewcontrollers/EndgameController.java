@@ -43,9 +43,9 @@ public class EndgameController extends RescalableController {
 	private Button quitButton;
 
 	/**
-	 * this method display a different page according to the result of the game for the actual player
-	 * @param winnerNicknames (type list of String) nickname of winner players, if this parameter contains the nickname of actual player, winner page will be diplayed otherwise the lose page will be diplayed with the winner nicknames
-	 * @throws IOException whenever there are problem with the output
+	 * this method displays a different page according to the result of the game for the actual player
+	 * @param winnerNicknames (type list of String) nickname of winner players, if this parameter contains the nickname of actual player, winner page will be displayed otherwise the lose page will be displayed with the winner nicknames
+	 * @throws IOException whenever there are problem with getting the fxml
 	 */
 	public void endGame(String[] winnerNicknames) throws IOException {
 		boolean won = false;
@@ -91,9 +91,10 @@ public class EndgameController extends RescalableController {
 			});
 		}
 	}
+	
 	/**
-	 * this method change the size of object inside the GUI interface naccording to
-	 * @param scale (type double) that rapresent the ratio from the old size og GUI window and the new dimension after resize
+	 * this method change the size of object inside the GUI interface according to the scale factor
+	 * @param scale (type double) that represents the ratio from the old size og GUI window and the new dimension after resize
 	 */
 	@Override
 	public void rescale(double scale) {
@@ -117,24 +118,24 @@ public class EndgameController extends RescalableController {
 		quitButton.setLayoutX((windowWidth - quitButton.getPrefWidth()) * 0.5);
 		quitButton.setLayoutY(651 * scale);
 	}
+	
 	/**
-	 * this method mangae the click on the "new game button", display login page
+	 * this method mangae the click on the "quit button", closing the interface
 	 * @param actionEvent(type action event) click of mouse that start the action
 	 */
 	public void quit(ActionEvent actionEvent) {
 		GameClient.shared().terminate();
 	}
+	
 	/**
-	 * this method mangae the click on the "quit button", closing the interface
+	 * this method manages the click on the "new game button", display login page
 	 * @param actionEvent(type action event) click of mouse that start the action
 	 */
 	public void newGame(ActionEvent actionEvent) throws IOException {
 		GUI.setRoot("scenes/LoginPage");
 		NotificationCenter.shared().removeObserver(this);
 	}
-	/**
-	abstract
-	 */
+	
 	@Override
 	protected void cleanupAfterTermination() {
 	}

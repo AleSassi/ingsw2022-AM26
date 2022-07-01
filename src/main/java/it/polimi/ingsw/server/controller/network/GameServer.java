@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 /**
- * Class {@code GameServer} represent the Game's Server
+ * Class {@code GameServer} represent the Game Server
  */
 public class GameServer {
 	
@@ -32,8 +32,8 @@ public class GameServer {
 	private List<String> receivedPingsInCurrentTrip, sentPingsInCurrentTrip;
 
 	/**
-	 * Constructor sets the port for the {@code Server's}
-	 * @param desiredPort (type int) {@code Server's} port
+	 * Constructor sets up the server on the specified port
+	 * @param desiredPort (type int) The server port
 	 */
 	public GameServer(int desiredPort) {
 		this.serverPort = desiredPort;
@@ -44,7 +44,7 @@ public class GameServer {
 	}
 
 	/**
-	 * Starts listening to new connection from {@link it.polimi.ingsw.jar.Client Clients}
+	 * Starts listening to new connections from {@link it.polimi.ingsw.jar.Client Clients}
 	 * @throws UnavailablePortException whenever the chosen port is unavailable
 	 */
 	public void startListeningIncomingConnections() throws UnavailablePortException {
@@ -101,7 +101,7 @@ public class GameServer {
 	/**
 	 * Creates a new Server-Client connection
 	 * @param clientSocket (type Socket) {@link it.polimi.ingsw.jar.Client Client's} socket
-	 * @param executor (type executor)
+	 * @param executor (type executor) The executor used to schedule client threads on
 	 */
 	private synchronized void createClientConnection(Socket clientSocket, ExecutorService executor) {
 		connectedClients.add(new VirtualClient(clientSocket, executor, this));
@@ -161,38 +161,14 @@ public class GameServer {
 
 	/**
 	 * Callback for messages received from {@link it.polimi.ingsw.jar.Client Clients}
-	 * @param message (type NetworkMessage) message received
-	 * @param client (type VirtualClient)
+	 * @param message (type NetworkMessage) the received message
+	 * @param client (type VirtualClient) The client which sent the message
 	 */
 	protected synchronized void didReceiveMessageFromClient(NetworkMessage message, VirtualClient client) {
 		HashMap<String, Object> userInfo = new HashMap<>();
 		userInfo.put(NotificationKeys.IncomingNetworkMessage.getRawValue(), message);
 		if (message instanceof LoginMessage login) {
-			System.out.println("Received login message: nickname " + login.getNickname());
-			Optional<GameController> matchingController = Optional.empty();
-			for (GameController controller: activeControllers) {
-				if (controller.getMatchVariant() == login.getMatchVariant() && controller.getMaxPlayerCount() == login.getDesiredNumberOfPlayers() && controller.acceptsPlayers()) {
-					matchingController = Optional.of(controller);
-					break;
-				}
-			}
-			if (getControllerWithNickname(login.getNickname()).isEmpty()) {
-				GameController availableController = matchingController.orElse(new GameController(this));
-				NotificationCenter.shared().post(NotificationName.ServerDidReceiveLoginMessage, availableController, userInfo);
-				if (matchingController.isEmpty()) {
-					activeControllers.add(availableController);
-				}
-				client.setPingable(true);
-			} else {
-				System.out.println("Sending nickname error");
-				NetworkMessage errorMessage = new LoginResponse(login.getNickname(), false, Integer.MAX_VALUE, "The nickname you entered is not unique. Please choose another nickname");
-				client.sendMessage(errorMessage);
-				// Disconnect immediately
-				//TODO: Can we avoid disconnecting the Client?
-				client.sendMessage(new MatchTerminationMessage("The nickname you entered is not unique. Please choose another nickname", false));
-				client.terminateConnection();
-				connectedClients.remove(client);
-			}
+			handleLoginReceived(login, client, userInfo);
 		} else if (message instanceof PlayerActionMessage) {
 			getControllerWithNickname(client.getNickname()).ifPresent((controller) -> NotificationCenter.shared().post(NotificationName.ServerDidReceivePlayerActionMessage, controller, userInfo));
 		} else if (message instanceof MatchTerminationMessage) {
@@ -203,6 +179,39 @@ public class GameServer {
 			receivedPingsInCurrentTrip.add(client.getNickname());
 		}
 		// For any other wrong message types we do nothing
+	}
+	
+	/**
+	 * Handles the login event of a client
+	 * @param login The login message from the Client
+	 * @param client The client that wants to log in
+	 * @param userInfo The data to send with the server notification used to tell game controllers that a login has happened
+	 */
+	private void handleLoginReceived(LoginMessage login, VirtualClient client, HashMap<String, Object> userInfo) {
+		System.out.println("Received login message: nickname " + login.getNickname());
+		Optional<GameController> matchingController = Optional.empty();
+		for (GameController controller: activeControllers) {
+			if (controller.getMatchVariant() == login.getMatchVariant() && controller.getMaxPlayerCount() == login.getDesiredNumberOfPlayers() && controller.acceptsPlayers()) {
+				matchingController = Optional.of(controller);
+				break;
+			}
+		}
+		if (getControllerWithNickname(login.getNickname()).isEmpty()) {
+			GameController availableController = matchingController.orElse(new GameController(this));
+			NotificationCenter.shared().post(NotificationName.ServerDidReceiveLoginMessage, availableController, userInfo);
+			if (matchingController.isEmpty()) {
+				activeControllers.add(availableController);
+			}
+			client.setPingable(true);
+		} else {
+			System.out.println("Sending nickname error");
+			NetworkMessage errorMessage = new LoginResponse(login.getNickname(), false, Integer.MAX_VALUE, "The nickname you entered is not unique. Please choose another nickname");
+			client.sendMessage(errorMessage);
+			// Disconnect immediately
+			client.sendMessage(new MatchTerminationMessage("The nickname you entered is not unique. Please choose another nickname", false));
+			client.terminateConnection();
+			connectedClients.remove(client);
+		}
 	}
 
 	/**

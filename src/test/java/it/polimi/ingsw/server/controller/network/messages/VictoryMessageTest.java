@@ -7,10 +7,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests related to the VictoryMessage class
+ * @see VictoryMessage
+ */
 class VictoryMessageTest {
 	
 	private VictoryMessage message;
 	
+	/**
+	 * Common test initialization
+	 */
 	@BeforeEach
 	void initMessage() {
 		message = new VictoryMessage(new String[]{"Ale"});
@@ -37,6 +44,9 @@ class VictoryMessageTest {
 		});
 	}
 	
+	/**
+	 * Tests all getters
+	 */
 	@Test
 	void testGetters() {
 		assertArrayEquals(new String[]{"Ale"}, message.getWinners());

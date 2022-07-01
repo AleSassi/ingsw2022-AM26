@@ -11,11 +11,17 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests related to the Player Team
+ * @see  PlayerTeam
+ */
 class PlayerTeamTest {
     
     private PlayerTeam testTeam;
     private Player player1, player2;
-    /**try to add Player{@link it.polimi.ingsw.server.model.Player Player}to the team and verify no exception are thrown
+    
+    /**
+     * try to add Player{@link it.polimi.ingsw.server.model.Player Player}to the team and verify no exception are thrown
      */
     @BeforeEach
     void initTeam() {
@@ -27,7 +33,8 @@ class PlayerTeamTest {
             testTeam.addPlayer(player2);
         });
     }
-    /**verify the returned list contain all the  Player{@link it.polimi.ingsw.server.model.Player Player} of team
+    /**
+     * verify the returned list contain all the  Player{@link it.polimi.ingsw.server.model.Player Player} of team
      */
     @Test
     void getAllPlayers() {
@@ -35,14 +42,16 @@ class PlayerTeamTest {
         assertTrue(playerList.contains(player1));
         assertTrue(playerList.contains(player2));
     }
-    /**verify the team contain Player{@link it.polimi.ingsw.server.model.Player Player}
+    /**
+     * verify the team contain Player{@link it.polimi.ingsw.server.model.Player Player}
      */
     @Test
     void containsPlayer() {
         assertTrue(testTeam.containsPlayer(player1));
         assertTrue(testTeam.containsPlayer(player2));
     }
-    /**verify the  Player{@link it.polimi.ingsw.server.model.Player Player} returned is the leader
+    /**
+     * verify the  Player{@link it.polimi.ingsw.server.model.Player Player} returned is the leader
      */
     @Test
     void getLeadPlayer() {

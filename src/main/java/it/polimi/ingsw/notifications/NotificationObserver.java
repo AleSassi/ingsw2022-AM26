@@ -3,7 +3,7 @@ package it.polimi.ingsw.notifications;
 import java.util.Objects;
 
 /**
- * Class {@code NotificationObserver} represent the {@code Observer} who listen to the {@link Notification Notifications}
+ * Class {@code NotificationObserver} represent the {@code Observer} who listens to the {@link Notification Notifications}
  */
 class NotificationObserver {
 
@@ -12,10 +12,10 @@ class NotificationObserver {
 	private final NotificationCallback callback;
 
 	/**
-	 * Constructor that initializes the {@code observedObject, callback, observer}
-	 * @param observer	(type Object) observer
-	 * @param observedObject (type Object) object to observe for the {@code Notifications}
-	 * @param callback (type NotificationCallback) callback of the {@link  NotificationCallback}
+	 * Constructor that initializes the observer with a specific callback
+	 * @param observer	(type Object) The observer object
+	 * @param observedObject (type Object) The object to observe for {@code Notifications}
+	 * @param callback (type {@link NotificationCallback}) The callback of the notification for this observer
 	 */
 	public NotificationObserver(Object observer, Object observedObject, NotificationCallback callback) {
 		this.observedObject = observedObject;

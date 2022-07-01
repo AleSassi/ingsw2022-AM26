@@ -17,6 +17,13 @@ public class LoginResponse extends NetworkMessage {
 	private Integer numberOfPlayersRemainingToFillLobby; //If 0 the match is about to start -> client prepares the UI for the match
 	private String rejectionReason;
 	
+	/**
+	 * Constructs a new response message with the raw data
+	 * @param nickname The nickname of the PLayer that attempted to log in
+	 * @param loginAccepted Whether the login was successful
+	 * @param numberOfPlayersRemainingToFillLobby The number of players remaining before the lobby is full
+	 * @param rejectionReason The reason why the login was rejected
+	 */
 	public LoginResponse(@NotNull String nickname, boolean loginAccepted, int numberOfPlayersRemainingToFillLobby, String rejectionReason) {
 		this.nickname = nickname;
 		this.loginAccepted = loginAccepted;
@@ -24,22 +31,43 @@ public class LoginResponse extends NetworkMessage {
 		this.rejectionReason = rejectionReason;
 	}
 	
+	/**
+	 * Constructs a new response message by deserializing a JSON string
+	 * @param serializedString The JSON string to decode
+	 * @throws MessageDecodeException If the sctring couldn't be decoded into this message
+	 */
 	public LoginResponse(String serializedString) throws MessageDecodeException {
 		super(serializedString);
 	}
 	
+	/**
+	 * Finds the nickname of the Player contained in the response
+ 	 * @return The nickname of the Player contained in the response
+	 */
 	public String getNickname() {
 		return nickname;
 	}
 	
+	/**
+	 * Finds whether the login was accepted or not
+	 * @return Whether the login was accepted or not
+	 */
 	public boolean isLoginAccepted() {
 		return loginAccepted;
 	}
 	
+	/**
+	 * Finds the number of players remaining to fill the lobby
+	 * @return The number of players remaining to fill the lobby
+	 */
 	public int getNumberOfPlayersRemainingToFillLobby() {
 		return numberOfPlayersRemainingToFillLobby;
 	}
 	
+	/**
+	 * Finds the rejection reason
+	 * @return The rejection reason
+	 */
 	public String getRejectionReason() {
 		return rejectionReason;
 	}

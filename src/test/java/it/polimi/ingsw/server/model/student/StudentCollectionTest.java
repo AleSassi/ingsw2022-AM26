@@ -140,7 +140,10 @@ class StudentCollectionTest {
         assertThrows(CollectionUnderflowError.class, () -> collection.removeStudents(Student.GreenFrog, 1));
         assertDoesNotThrow(() -> collection.removeStudents(Student.PinkFair, 0));
     }
-
+    
+    /**
+     * Tests methods with null params
+     */
     @Test
     void nullTest() {
         StudentCollection collection = new StudentCollection();
@@ -150,6 +153,9 @@ class StudentCollectionTest {
         collection.getCount(null);
     }
     
+    /**
+     * Tests the copy method
+     */
     @Test
     void copyTest() {
         collection.addStudents(Student.BlueUnicorn, 10);

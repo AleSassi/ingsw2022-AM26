@@ -12,6 +12,10 @@ import it.polimi.ingsw.server.model.student.*;
 
 import java.util.*;
 
+/**
+ * The class that manages the table and associated objects
+ * @author Alessandro Sassi
+ */
 public class TableManager {
 
     private List<Professor> availableProfessors;
@@ -22,27 +26,57 @@ public class TableManager {
     private int coinReserve = 20;
 
     private int islandIndexWithJustRemovedStopCard = -1;
-
+    
+    /**
+     * Creates a new Table Manager object
+     * @param cloudTileCount The number of cloud tiles
+     * @param allowsCharacterCards Whether the match allows character cards
+     */
     public TableManager(int cloudTileCount, boolean allowsCharacterCards) {
         //ASSUMPTION: CloudTileCount === PlayerCount
         playableCharacterCards = new ArrayList<>();
         if (allowsCharacterCards) {
-            CharacterCardExtractor cardExtractor = new CharacterCardExtractor();
-            try {
-                for (int repetition = 0; repetition < 3; repetition++) {
-                    playableCharacterCards.add(cardExtractor.pickRandom());
-                }
-            } catch (UnavailableCardException e) {
-                e.printStackTrace();
-                //Create an empty deck
-                playableCharacterCards.removeIf((card) -> true);
-            }
+            initCharacterCards();
         }
         availableProfessors = new ArrayList<>(Arrays.asList(Professor.values()));
         StudentHost initialBag = new StudentHost();
         for (Student s: Student.values()) {
             initialBag.placeStudents(s, 2);
         }
+        initIslands(initialBag);
+        // Initialize the Bag
+        initBag();
+        //Initialize the Cloud tiles
+        initClouds(cloudTileCount);
+        if (allowsCharacterCards) {
+            //Set up the Character cards
+            for (CharacterCard card: playableCharacterCards) {
+                card.setupWithTable(this);
+            }
+        }
+    }
+    
+    /**
+     * Initializes character cards
+     */
+    private void initCharacterCards() {
+        CharacterCardExtractor cardExtractor = new CharacterCardExtractor();
+        try {
+            for (int repetition = 0; repetition < 3; repetition++) {
+                playableCharacterCards.add(cardExtractor.pickRandom());
+            }
+        } catch (UnavailableCardException e) {
+            e.printStackTrace();
+            //Create an empty deck
+            playableCharacterCards.removeIf((card) -> true);
+        }
+    }
+    
+    /**
+     * Initializes the islands
+     * @param initialBag Th ebag used to extract students for islands
+     */
+    private void initIslands(StudentHost initialBag) {
         islands = new ArrayList<>();
         //Randomize an index between 0 and 11 to get the island when Mother nature is
         int numberOfIslands = 12;
@@ -60,32 +94,49 @@ public class TableManager {
         } catch (CollectionUnderflowError e) {
             e.printStackTrace();
         }
-        // Initialize the Bag
+    }
+    
+    /**
+     * Creates the bag
+     */
+    private void initBag() {
         studentBag = new StudentHost();
         for (Student s: Student.values()) {
             studentBag.placeStudents(s, 24);
         }
-        //Initialize the Cloud tiles
+    }
+    
+    /**
+     * Creates the cloud tiles
+     * @param cloudTileCount The number of clouds
+     */
+    private void initClouds(int cloudTileCount) {
         managedClouds = new ArrayList<>();
         for (int cloudIdx = 0; cloudIdx < cloudTileCount; cloudIdx++) {
             managedClouds.add(new Cloud());
         }
-        if (allowsCharacterCards) {
-            //Set up the Character cards
-            for (CharacterCard card: playableCharacterCards) {
-                card.setupWithTable(this);
-            }
-        }
     }
-
+    
+    /**
+     * Gets the number of clouds
+     * @return The number of clouds
+     */
     public int getNumberOfClouds() {
         return managedClouds.size();
     }
-
+    
+    /**
+     * Gets the number of islands
+     * @return The number of islands
+     */
     public int getNumberOfIslands() {
         return islands.size();
     }
     
+    /**
+     * Gets the index of the island with Mother Nature
+     * @return The index oif the island with Mother Nature
+     */
     public int getCurrentIslandIndex() {
         for (int islandIdx = 0; islandIdx < islands.size(); islandIdx++) {
             if (islands.get(islandIdx).isMotherNaturePresent()) {
@@ -95,35 +146,67 @@ public class TableManager {
         //Will never be executed
         return 0;
     }
-
+    
+    /**
+     * Gets the island with Mother Nature
+     * @return The island with Mother Nature
+     */
     public Island getCurrentIsland() {
         return islands.get(getCurrentIslandIndex());
     }
-
+    
+    /**
+     * Gets the island at a specific index
+     * @param islandIndex The index of the island
+     * @return The island at the index
+     */
     public Island getIslandAtIndex(int islandIndex) {
         if (islandIndex < 0 || islandIndex > islands.size()) return null;
 
         return islands.get(islandIndex);
     }
     
+    /**
+     * Checks if a Professor is available for pickup
+     * @param professor The professor to check
+     * @return Whether a Professor is available for pickup
+     */
     public boolean isProfessorAvailable(Professor professor) {
         return availableProfessors.contains(professor);
     }
     
+    /**
+     * Checks if the Bag is empty
+     * @return Whether the Bag is empty
+     */
     public boolean isBagEmpty() {
         return studentBag.isEmpty();
     }
     
+    /**
+     * Removes a Professor from the list of free ones
+     * @param professor The professor to remove
+     */
     public void removeProfessor(Professor professor) {
         availableProfessors.remove(professor);
     }
     
+    /**
+     * Picks a coin from the coin reserve
+     * @return 1 if the coin was picked, 0 otherwise (empty reserve)
+     */
     public int getCoinFromReserve() {
         int result = coinReserve > 0 ? 1 : 0;
         coinReserve -= 1;
         return result;
     }
-
+    
+    /**
+     * Picks a number of students from the bag
+     * @param count The number of students to pick
+     * @return The collection of picked students
+     * @throws CollectionUnderflowError When the bag does not contain enough students
+     */
     public StudentCollection pickStudentsFromBag(int count) throws CollectionUnderflowError {
         StudentCollection result = new StudentCollection();
         for (int studentIdx = 0; studentIdx < count; studentIdx++) {
@@ -131,11 +214,21 @@ public class TableManager {
         }
         return result;
     }
-
+    
+    /**
+     * Puts a student in the bag
+     * @param s The student to add to the bag
+     */
     public void putStudentInBag(Student s) {
         studentBag.placeStudents(s, 1);
     }
-
+    
+    /**
+     * Picks the students on a cloud
+     * @param cloudIdx The index of the cloud to pick students from
+     * @return The collection of picked students
+     * @throws CollectionUnderflowError If the cloud is empty
+     */
     public StudentCollection pickStudentsFromCloud(int cloudIdx) throws CollectionUnderflowError {
         StudentCollection pickedCollection = managedClouds.get(cloudIdx).extractAllStudentsAndRemove();
         if (!studentBag.isEmpty() && pickedCollection.getTotalCount() == 0) {
@@ -143,19 +236,36 @@ public class TableManager {
         }
         return pickedCollection;
     }
-
+    
+    /**
+     * Places students on a cloud
+     * @param s The student to place on the cloud
+     * @param cloudIdx The index of the cloud
+     * @param count The number of students to place
+     * @throws IndexOutOfBoundsException If the cloud index is out of range
+     */
     public void placeStudentOnCloud(Student s, int cloudIdx, int count) throws IndexOutOfBoundsException {
         if (cloudIdx < 0 || cloudIdx > managedClouds.size()) throw new IndexOutOfBoundsException();
 
         managedClouds.get(cloudIdx).placeStudents(s, count);
     }
-
+    
+    /**
+     * Places students on an island
+     * @param s The student to place on the island
+     * @param islandIdx The index of the island
+     * @throws IndexOutOfBoundsException If the cloud index is out of range
+     */
     public void placeStudentOnIsland(Student s, int islandIdx) throws IndexOutOfBoundsException {
         if (islandIdx < 0 || islandIdx > islands.size()) throw new IndexOutOfBoundsException();
 
         islands.get(islandIdx).placeStudents(s, 1);
     }
-
+    
+    /**
+     * Moves Mother Nature by a set number of steps, applying the effect of stop cards
+     * @param steps The number of steps Mother Nature should move by
+     */
     public void moveMotherNature(int steps) {
         int currentIslandIdx = getCurrentIslandIndex();
         int newIslandIdx = circularWrap(currentIslandIdx + steps, islands.size());
@@ -175,14 +285,23 @@ public class TableManager {
             islandIndexWithJustRemovedStopCard = -1;
         }
     }
-    public Cloud getCloud(int idx) {
-        return managedClouds.get(idx);
-    }
-
+    
+    /**
+     * Gets the character card at an index
+     * @param cardIndex The index if the card
+     * @return The character card at the specified index
+     * @throws IndexOutOfBoundsException Whenever the index falls out of the range of the character card array, or if there are no character cards available (empty list)
+     */
     public CharacterCard getCardAtIndex(int cardIndex) throws IndexOutOfBoundsException {
         return playableCharacterCards.get(cardIndex);
     }
-
+    
+    /**
+     * Gets the influence of a Player on the current island
+     * @param p The player to check influence of
+     * @return the influence of the player
+     * @throws IslandSkippedInfluenceForStopCardException If there was a Stop card and we could not compute the influence
+     */
     public int getInfluenceOnCurrentIsland(Player p) throws IslandSkippedInfluenceForStopCardException {
         if (getCurrentIslandIndex() == islandIndexWithJustRemovedStopCard) throw new IslandSkippedInfluenceForStopCardException();
 
@@ -231,7 +350,10 @@ public class TableManager {
             e.printStackTrace();
         }
     }
-
+    
+    /**
+     * Performs island unification
+     */
     private void unifyCurrentIslandWithAdjacentIfPossible() {
         // The adjacent islands are the ones at index +1 and -1
         int currentIslandIndex = getCurrentIslandIndex();
@@ -256,7 +378,10 @@ public class TableManager {
             notifyMatchEnd();
         }
     }
-
+    
+    /**
+     * Notifies that the match ended with a winner
+     */
     private void notifyMatchEnd() {
         //This will notify the MatchManager that somebody has won the Match. The Match manager will then get the winning players based on which Players have the Tower indicated by the notification, and resolve parity if needed
         //Send the notification
@@ -265,6 +390,10 @@ public class TableManager {
         NotificationCenter.shared().post(NotificationName.PlayerVictory, this, userInfo);
     }
     
+    /**
+     * Finds the list of towers of the winning players
+     * @return The list of towers of the winning players
+     */
     public List<Tower> getWinningTowers() {
         int[] towerCounts = new int[Tower.values().length];
         for (Island island: islands) {
@@ -286,7 +415,11 @@ public class TableManager {
         }
         return candidateWinners;
     }
-
+    
+    /**
+     * Checks for the victory condition and pushes the notification if needed
+     * @return Whether the victory condition is met
+     */
     public boolean checkAndNotifyMatchEnd() {
         if (studentBag.isEmpty()) {
             notifyMatchEnd();
@@ -295,6 +428,10 @@ public class TableManager {
         return false;
     }
     
+    /**
+     * Generates a Table message
+     * @return A constructed Tabel state message
+     */
     public TableStateMessage getStateMessage() {
         return new TableStateMessage(availableProfessors, islands, studentBag, managedClouds, playableCharacterCards.stream().map(CharacterCard::beanify).toList());
     }
@@ -308,11 +445,19 @@ public class TableManager {
     public static int circularWrap(int left, int right) {
         return ((left % right) + right) % right;
     }
-
+    
+    /**
+     * Finds the list of playable character cards
+     * @return The list of playable character cards
+     */
     public List<CharacterCard> getPlayableCharacterCards() {
         return playableCharacterCards;
     }
     
+    /**
+     * Copies the data of a table manager object to another one
+     * @param copyDst The destination of the copy
+     */
     public void copyTo(TableManager copyDst) {
         copyDst.playableCharacterCards = playableCharacterCards;
         copyDst.managedClouds = managedClouds;

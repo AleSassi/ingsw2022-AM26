@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Class {@code StudentColorPicker} represent the {@link it.polimi.ingsw.server.model.student.Student Student} picker for the {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard}
+ * Class {@code StudentColorPicker} represent the {@link it.polimi.ingsw.server.model.student.Student Student} picker for the {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard}
  */
 public class StudentColorPicker extends ModalPopup {
 	
@@ -31,6 +31,10 @@ public class StudentColorPicker extends ModalPopup {
 	private final GridPane studentGridPane = new GridPane();
 	private final List<AnchorPane> studentPanes = new ArrayList<>();
 	
+	/**
+	 * Constructs a Color Picker with a title string
+	 * @param titleString The title string
+	 */
 	public StudentColorPicker(String titleString) {
 		super(titleString);
 		placeStudents();
@@ -38,7 +42,7 @@ public class StudentColorPicker extends ModalPopup {
 	}
 
 	/**
-	 * Places the {@link it.polimi.ingsw.client.ui.StudentPane StudentPane} on this {@code StudentColorPicker}
+	 * Places the {@link it.polimi.ingsw.client.ui.StudentPane StudentPane}s on this {@code StudentColorPicker} in a grid, so that the user can pick one of them
 	 */
 	private void placeStudents() {
 		int row = 1, col = 1;
@@ -65,8 +69,8 @@ public class StudentColorPicker extends ModalPopup {
 	}
 
 	/**
-	 * Sets the {@code EventHandler}
-	 * @param completionHandler (type StudentColorPickerHandler)
+	 * Sets the {@code StudentColorPickerHandler} to be invoked when the user clicks on a student
+	 * @param completionHandler (type StudentColorPickerHandler) The handler t invoke when the user clicks on a student
 	 */
 	public void setCompletionHandler(StudentColorPickerHandler completionHandler) {
 		this.completionHandler = completionHandler;

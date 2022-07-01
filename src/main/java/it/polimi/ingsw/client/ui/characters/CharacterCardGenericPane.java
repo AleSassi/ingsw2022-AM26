@@ -9,13 +9,14 @@ import it.polimi.ingsw.server.model.student.Student;
 import java.util.HashMap;
 
 /**
- * Class {@code CharacterCardGenericPane} represent the generic {@link it.polimi.ingsw.client.ui.characters.CharacterCardPane CharacterCardPane}
+ * Class {@code CharacterCardGenericPane} represent the generic {@link it.polimi.ingsw.client.ui.characters.CharacterCardPane CharacterCardPane}, for a generic-type character card
  */
 public class CharacterCardGenericPane extends CharacterCardPane {
+	
 	/**
 	 * Constructor creates the {@code CharacterCardGenericPane}
-	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard's} index
-	 * @param cardBean (type CharacterCardBean)
+	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard's} index in the table list
+	 * @param cardBean (type CharacterCardBean) The card bean with the card data
 	 */
 	public CharacterCardGenericPane(int cardIndex, CharacterCardBean cardBean) {
 		super(cardIndex, cardBean);

@@ -21,7 +21,7 @@ import javafx.scene.layout.GridPane;
 import java.util.HashMap;
 
 /**
- * Class {@code CharacterCardStudentPickerPane} represent the StudentPicker {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard}
+ * Class {@code CharacterCardStudentPickerPane} represent the {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard} that allows the user to pick a student
  */
 public class CharacterCardStudentPickerPane extends CharacterCardPane {
 	
@@ -29,8 +29,8 @@ public class CharacterCardStudentPickerPane extends CharacterCardPane {
 
 	/**
 	 * Constructor creates a new {@code CharacterCardStudentPickerPane}
-	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard's} index
-	 * @param cardBean (type CharacterCardBean)
+	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard's} index in table list
+	 * @param cardBean (type CharacterCardBean) The card data
 	 */
 	public CharacterCardStudentPickerPane(int cardIndex, CharacterCardBean cardBean) {
 		super(cardIndex, cardBean);
@@ -42,8 +42,8 @@ public class CharacterCardStudentPickerPane extends CharacterCardPane {
 	}
 
 	/**
-	 * Sets up the picked {@link it.polimi.ingsw.client.ui.StudentPane StudentPane}
-	 * @param pickedStudent (type Student)
+	 * Sets up the picked {@link it.polimi.ingsw.client.ui.StudentPane StudentPane} for displaying the picked student
+	 * @param pickedStudent (type Student) The picked Student
 	 */
 	private void setupPickedStudentPane(Student pickedStudent) {
 		if (pickedStudent != null) {

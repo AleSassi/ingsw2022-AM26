@@ -296,6 +296,9 @@ class GenericModifierCardTest {
         assertEquals(code, card.hashCode());
     }
     
+    /**
+     * Tests card purchase and use with invalid parameters
+     */
     @RepeatedTest(100)
     void testInvalidParameters() {
         Character[] characters = {Character.Ambassador, Character.Magician, Character.Centaurus, Character.Mushroom};

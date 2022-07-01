@@ -9,10 +9,17 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The tests for the NotificationCenter class
+ * @see NotificationCenter
+ */
 class NotificationCenterTest {
 	
 	private List<Boolean> callbacksCalled;
 	
+	/**
+	 * Common test initialization, so that when the notification is called it fires up to 4 callbacks depending on the Post params
+	 */
 	@BeforeEach
 	void init() {
 		callbacksCalled = new ArrayList<>();
@@ -24,7 +31,7 @@ class NotificationCenterTest {
 	}
 
 	/**
-	 * Tests that all the callback are called correctly
+	 * Tests that all the callbacks are called correctly
 	 */
 	@Test
 	void testAllCallbacksCalled() {
@@ -48,7 +55,7 @@ class NotificationCenterTest {
 	}
 
 	/**
-	 * Tests that the callback is not called when it doesn't supposed to be called
+	 * Tests that the callback is not called when it isn't supposed to be called (no observed object found)
 	 */
 	@Test
 	void testNoCallbacksCalled() {

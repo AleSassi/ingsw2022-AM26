@@ -51,7 +51,7 @@ public class MainBoardController extends RescalableController {
 	private CharacterCardContainer characterCardContainer;
 
 	/**
-	 * Creates all the observers for the {@link it.polimi.ingsw.notifications.Notification Notifications }
+	 * Starts the controller and creates all the observers for the {@link it.polimi.ingsw.notifications.Notification Notifications}
 	 */
 	public void load() {
 		schoolBoardContainers = new ArrayList<>();
@@ -68,12 +68,16 @@ public class MainBoardController extends RescalableController {
 
 	/**
 	 * {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard} played callback
-	 * @param notification (type Notification)
+	 * @param notification (type Notification) The Character card played notification
 	 */
 	private void didReceivePlayedCard(Notification notification) {
 		movingStudentColor = null; //To interrupt pending actions
 	}
 	
+	/**
+	 * Displays a modal popup
+	 * @param popup The popup to display
+	 */
 	public void showModalPopup(ModalPopup popup) {
 		Platform.runLater(() -> {
 			showFaderPane();
@@ -81,6 +85,10 @@ public class MainBoardController extends RescalableController {
 		});
 	}
 	
+	/**
+	 * Dismisses a modal popup
+	 * @param popup The popup to dismiss
+	 */
 	public void dismissModalPopup(ModalPopup popup) {
 		Platform.runLater(() -> {
 			mainPane.getChildren().remove(faderPane);
@@ -90,8 +98,8 @@ public class MainBoardController extends RescalableController {
 	}
 
 	/**
-	 * {@code PlayerStatus} callback
-	 * @param notification (type Notification)
+	 * {@code PlayerStatus} callback, used to initialize the layout of the subviews
+	 * @param notification (type Notification) The Player state notification
 	 */
 	protected void didReceivePlayerStatusNotification(Notification notification) {
 		if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof PlayerStateMessage message) {
@@ -115,9 +123,10 @@ public class MainBoardController extends RescalableController {
 			movingStudentColor = null;
 		}
 	}
+	
 	/**
-	 * {@code TableState} callback
-	 * @param notification (type Notification)
+	 * {@code TableState} callback, used to initialize the table panes
+	 * @param notification (type Notification) The table state notification
 	 */
 	protected void didReceiveTableStateMessage(Notification notification) {
 		if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof TableStateMessage message) {
@@ -136,9 +145,10 @@ public class MainBoardController extends RescalableController {
 			}
 		}
 	}
+	
 	/**
-	 * {@code ActivePlayer} callback
-	 * @param notification (type Notification)
+	 * {@code ActivePlayer} callback, used to show/hide a fader pane with the Waiting message
+	 * @param notification (type Notification) The Active Player Notification
 	 */
 	protected void didReceiveActivePlayerMessage(Notification notification) {
 		if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof ActivePlayerMessage message) {
@@ -147,7 +157,11 @@ public class MainBoardController extends RescalableController {
 			setDisplaysWaitForTurnFader(!currentlyActivePlayerNickname.equals(Client.getNickname()));
 		}
 	}
-
+	
+	/**
+	 * Shows/hides the Wait for your Turn fader pane
+	 * @param displaysWaitForTurnFader Whether to show or hide the pane
+	 */
 	private void setDisplaysWaitForTurnFader(boolean displaysWaitForTurnFader) {
 		Platform.runLater(() -> {
 			if (displaysWaitForTurnFader) {
@@ -175,9 +189,10 @@ public class MainBoardController extends RescalableController {
 			}
 		});
 	}
+	
 	/**
-	 * {@code MatchState} callback
-	 * @param notification (type Notification)
+	 * {@code MatchState} callback, used to prepare for the match phase
+	 * @param notification (type Notification) The match state notification
 	 */
 	protected void didReceiveMatchStateMessage(Notification notification) {
 		if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof MatchStateMessage message && currentlyActivePlayerNickname.equals(Client.getNickname())) {
@@ -187,7 +202,7 @@ public class MainBoardController extends RescalableController {
 
 	/**
 	 * Prepares the {@code MainBoard} depending on the {@link it.polimi.ingsw.server.model.match.MatchPhase MatchPhase}
-	 * @param matchPhase (type MatchPhase)
+	 * @param matchPhase (type MatchPhase) The current match phase
 	 */
 	private void prepareForMatchPhase(MatchPhase matchPhase) {
 		// Update the list of allowed moves
@@ -232,7 +247,7 @@ public class MainBoardController extends RescalableController {
 	}
 
 	/**
-	 * Shows the {@link it.polimi.ingsw.client.ui.assistants.AssistantCardPane AssistantCardPane}
+	 * Shows the {@link it.polimi.ingsw.client.ui.assistants.AssistantCardPane AssistantCardPane} picker modal window
 	 */
 	private void showAssistantCardModalWindow() {
 		AssistantCardPickerView cardPickerView = new AssistantCardPickerView(stateMessage.getAvailableCardsDeck());
@@ -291,15 +306,15 @@ public class MainBoardController extends RescalableController {
 
 	/**
 	 * {@code StudentMovementStart} callback
-	 * @param notification (type Notification)
+	 * @param notification (type Notification) The movement notification
 	 */
 	private void didReceiveStudentMovementStart(Notification notification) {
 		//Cache the parameters so that at the student movement end we can validate it and send a message to the server
 		movingStudentColor = (Student) notification.getUserInfo().get(NotificationKeys.ClickedStudentColor.getRawValue());
 	}
 	/**
-	 * {@code StudentMovementEnd} callback
-	 * @param notification (type Notification)
+	 * {@code StudentMovementEnd} callback, used to send movement data to the server
+	 * @param notification (type Notification) The movement notification
 	 */
 	private void didReceiveStudentMovementEnd(Notification notification) {
 		//Use the cached parameter to perform the student movement (to island - to dining room)
@@ -317,8 +332,8 @@ public class MainBoardController extends RescalableController {
 		}
 	}
 	/**
-	 * {@code PlayerActionResponse} callback
-	 * @param notification (type Notification)
+	 * {@code PlayerActionResponse} callback, used to send an alert if the action is unsuccessful
+	 * @param notification (type Notification) The action response notification
 	 */
 	private void didReceivePlayerActionResponse(Notification notification) {
 		PlayerActionResponse response = (PlayerActionResponse) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
@@ -335,7 +350,7 @@ public class MainBoardController extends RescalableController {
 	}
 	/**
 	 * {@code Victory} callback
-	 * @param notification (type Notification)
+	 * @param notification (type Notification) The victory notification
 	 */
 	private void didReceiveVictoryNotification(Notification notification) {
 		if (notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof VictoryMessage message) {
@@ -351,6 +366,7 @@ public class MainBoardController extends RescalableController {
 		}
 	}
 	
+	@Override
 	protected void cleanupAfterTermination() {
 		for (SchoolBoardContainer schoolBoardContainer: schoolBoardContainers) {
 			schoolBoardContainer.cleanupBeforeDisappear();

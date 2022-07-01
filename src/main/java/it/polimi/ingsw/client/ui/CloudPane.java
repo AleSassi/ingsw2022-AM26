@@ -21,7 +21,7 @@ import javafx.scene.layout.RowConstraints;
 import java.util.Objects;
 
 /**
- * Class {@code CloudPane} represent the JavaFX controller for the {@link it.polimi.ingsw.server.model.student.Cloud Cloud}
+ * Class {@code CloudPane} represent the JavaFX pane for the {@link it.polimi.ingsw.server.model.student.Cloud Cloud}
  */
 public class CloudPane extends RescalableAnchorPane {
     
@@ -32,8 +32,8 @@ public class CloudPane extends RescalableAnchorPane {
 
     /**
      * Constructor creates a new {@code CloudPane}
-     * @param idx (type int) {@link it.polimi.ingsw.server.model.student.Cloud Cloud's} index
-     * @param notification (type Notification)
+     * @param idx (type int) {@link it.polimi.ingsw.server.model.student.Cloud Cloud's} index in the table
+     * @param notification (type Notification) The table state notification used to initialize the Clouds
      */
     public CloudPane(int idx, Notification notification) {
         this.idx = idx;
@@ -50,7 +50,6 @@ public class CloudPane extends RescalableAnchorPane {
         clickOnCloud();
         Platform.runLater(() -> getChildren().add(gridPane));
         NotificationCenter.shared().addObserver(this, this::didReceiveTableState, NotificationName.ClientDidReceiveTableStateMessage, null);
-        NotificationCenter.shared().addObserver(this, this:: didReceiveClickOnCloud, NotificationName.JavaFXDidClickOnCloud, null);
     }
     
     @Override
@@ -65,16 +64,15 @@ public class CloudPane extends RescalableAnchorPane {
     
     /**
      * Click event callback
-     * @param notification (type Notification)
      */
-    private void didReceiveClickOnCloud(Notification notification) {
+    private void didReceiveClickOnCloud() {
         gridPane.highlight(false);
         setStyle("-fx-background-image: url(" + address + ");\n-fx-background-size: 100% 100%");
     }
 
     /**
-     * {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage}
-     * @param notification (type Notification)
+     * The callback called when a Table message arrives to the client, used to update the clouds
+     * @param notification (type Notification) The notification with the {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage}
      */
     private void didReceiveTableState(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof TableStateMessage message) {
@@ -85,7 +83,7 @@ public class CloudPane extends RescalableAnchorPane {
     }
 
     /**
-     * Shows a transparent pane
+     * Shows a transparent pane to highlight the area
      */
     public void showSelection() {
         if(gridPane.getChildren().size() != 0) {
@@ -95,7 +93,7 @@ public class CloudPane extends RescalableAnchorPane {
 
     /**
      * Sets the {@link it.polimi.ingsw.server.model.student.Student Students} on this {@code CloudPane}
-     * @param message (type TableStateMessage) {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage}
+     * @param message (type TableStateMessage) {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage} used to get students to display
      */
     private void setStudentOnCloud(TableStateMessage message) {
         int c = 0;
@@ -126,11 +124,12 @@ public class CloudPane extends RescalableAnchorPane {
                 PlayerActionMessage actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidChooseCloudIsland, -1, null, true, -1, -1, idx, -1, null);
                 GameClient.shared().sendMessage(actionMessage);
             }
-            NotificationCenter.shared().post(NotificationName.JavaFXDidClickOnCloud, null, null);
+            didReceiveClickOnCloud();
             event.consume();
         });
     }
-
+    
+    @Override
     public void rescale(double scale) {
         setPrefSize(getUnscaledWidth() * scale, getUnscaledHeight() * scale);
         gridPane.getRowConstraints().removeAll(gridPane.getRowConstraints());

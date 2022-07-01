@@ -9,12 +9,23 @@ import it.polimi.ingsw.server.exceptions.model.MessageDecodeException;
  */
 public class NetworkMessageDecoder {
 	
+	/**
+	 * A dummy message which only contains the class type and which mirrors the abstract class, so that we can identify the encoded class and decode the right message
+	 */
 	private static class DummyMessage extends NetworkMessage {
 		
+		/**
+		 * Creates a message from a serialized string
+		 * @param serializedString The JSON serialized string
+		 * @throws MessageDecodeException If the deserialization process fails
+		 */
 		public DummyMessage(String serializedString) throws MessageDecodeException {
 			super(serializedString);
 		}
 		
+		/**
+		 * Creates an empty dummy message
+		 */
 		public DummyMessage() {
 			super();
 		}
@@ -41,6 +52,12 @@ public class NetworkMessageDecoder {
 		}
 	}
 	
+	/**
+	 * Factory method that decodes a JSON string into the appropriate message object
+	 * @param serializedString The serialized JSON string
+	 * @return The appropriate message object
+	 * @throws MessageDecodeException If the decode process fails to find a message object
+	 */
 	public NetworkMessage decodeMessage(String serializedString) throws MessageDecodeException {
 		DummyMessage dummyMessage = new DummyMessage(serializedString);
 		switch (dummyMessage.getClassType()) {

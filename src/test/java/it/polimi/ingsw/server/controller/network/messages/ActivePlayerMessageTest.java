@@ -10,10 +10,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests related to the ActivePlayerMessage
+ * @see ActivePlayerMessage
+ */
 class ActivePlayerMessageTest {
 	
 	private ActivePlayerMessage message;
 	
+	/**
+	 * Common initialization of the test message
+	 */
 	@BeforeEach
 	void initMessage() {
 		assertDoesNotThrow(() -> {
@@ -45,6 +52,9 @@ class ActivePlayerMessageTest {
 		});
 	}
 	
+	/**
+	 * Tests that the active nickname is returned correctly
+	 */
 	@Test
 	void testGetter() {
 		assertEquals("Ale", message.getActiveNickname());

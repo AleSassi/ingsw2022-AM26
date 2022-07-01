@@ -9,7 +9,7 @@ import it.polimi.ingsw.server.model.match.MatchVariant;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Class {@code LoginMessage} represent the messages of a new login
+ * Class {@code LoginMessage} represents the message of a new login
  */
 public class LoginMessage extends NetworkMessage {
 	

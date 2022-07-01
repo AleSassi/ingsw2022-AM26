@@ -32,6 +32,19 @@ public class PlayerActionMessage extends NetworkMessage {
 	private Integer chosenCharacterIndex;
 	private CharacterCardNetworkParamSet characterCardParameters;
 	
+	/**
+	 * Constructs a Player Action message with the raw data
+	 * @param nickname The nickname of the Player that performed the action
+	 * @param playerActionType The action type
+	 * @param assistantIndex The chosen assistant card index
+	 * @param movedStudent The chosen Student to move
+	 * @param movesToIsland Whether the student moves to an Island or to the Dining Room
+	 * @param destinationIslandIndex The destination island index
+	 * @param chosenMNBaseSteps The number of steps Mother Nature must move by
+	 * @param chosenCloudTileIndex The chosen cloud tile index
+	 * @param chosenCharacterIndex The chosen character card index
+	 * @param characterCardParameters The chosen character card parameters
+	 */
 	public PlayerActionMessage(@NotNull String nickname, @NotNull ActionType playerActionType, int assistantIndex, Student movedStudent, boolean movesToIsland, int destinationIslandIndex, int chosenMNBaseSteps, int chosenCloudTileIndex, int chosenCharacterIndex, CharacterCardNetworkParamSet characterCardParameters) {
 		this.nickname = nickname;
 		this.playerActionType = playerActionType;
@@ -45,46 +58,91 @@ public class PlayerActionMessage extends NetworkMessage {
 		this.characterCardParameters = characterCardParameters;
 	}
 	
+	/**
+	 * Decodes a JSON serialized string into a message
+	 * @param serializedString The serialized string
+	 * @throws MessageDecodeException If the decode fails
+	 */
 	public PlayerActionMessage(String serializedString) throws MessageDecodeException {
 		super(serializedString);
 	}
 	
+	/**
+	 * Extracts the nickname of the Player that performed the action
+	 * @return The nickname of the Player that performed the action
+	 */
 	public String getNickname() {
 		return nickname;
 	}
 	
+	/**
+	 * Extracts the performed action type
+	 * @return The performed action type
+	 */
 	public ActionType getPlayerActionType() {
 		return playerActionType;
 	}
 	
+	/**
+	 * Extracts the chosen assistant index
+	 * @return The chosen assistant index
+	 */
 	public int getAssistantIndex() {
 		return assistantIndex;
 	}
 	
+	/**
+	 * Extracts the moved student
+	 * @return The moved student
+	 */
 	public Student getMovedStudent() {
 		return movedStudent;
 	}
 	
+	/**
+	 * Finds whether the student must move to an Island or to the Dining room
+	 * @return Whether the student must move to an Island or to the Dining room
+	 */
 	public boolean isMovesToIsland() {
 		return movesToIsland;
 	}
 	
+	/**
+	 * Extracts the destination island index
+	 * @return The destination island index
+	 */
 	public int getDestinationIslandIndex() {
 		return destinationIslandIndex;
 	}
 	
+	/**
+	 * Extracts the chosen Mother Nature steps
+	 * @return The chosen Mother Nature steps
+	 */
 	public int getChosenMNBaseSteps() {
 		return chosenMNBaseSteps;
 	}
 	
+	/**
+	 * Extracts the chosen Cloud tile index
+	 * @return The chosen Cloud tile index
+	 */
 	public int getChosenCloudTileIndex() {
 		return chosenCloudTileIndex;
 	}
 	
+	/**
+	 * Extracts the chosen Character card index
+	 * @return The chosen Character card index
+	 */
 	public int getChosenCharacterIndex() {
 		return chosenCharacterIndex;
 	}
 	
+	/**
+	 * Extracts the Character card usage parameters
+	 * @return The Character card usage parameters
+	 */
 	public CharacterCardNetworkParamSet getCharacterCardParameters() {
 		return characterCardParameters;
 	}
@@ -143,6 +201,9 @@ public class PlayerActionMessage extends NetworkMessage {
 		return Objects.equals(characterCardParameters, that.characterCardParameters);
 	}
 	
+	/**
+	 * An enum containing a list of possible action types
+	 */
 	public enum ActionType {
 		DidPlayAssistantCard,
 		DidMoveStudent,
@@ -151,6 +212,11 @@ public class PlayerActionMessage extends NetworkMessage {
 		DidPurchaseCharacterCard,
 		DidPlayCharacterCard;
 		
+		/**
+		 * Finds out whether an action type is considered as valid for a given match phase
+		 * @param matchPhase The match phase used to check the action type
+		 * @return Whether an action type is considered as valid for a given match phase
+		 */
 		public boolean isValidForMatchPhase(MatchPhase matchPhase) {
 			switch (matchPhase) {
 				case PlanPhaseStepOne -> {

@@ -5,6 +5,9 @@ import it.polimi.ingsw.server.model.match.MatchVariant;
 import it.polimi.ingsw.utils.cli.ANSIColors;
 import it.polimi.ingsw.utils.cli.StringFormatter;
 
+/**
+ * The enum holds a list of constants representing possible CLI commands
+ */
 public enum ClientActionCommand {
 	
 	ChooseAssistant("pickAssistant", "Picks and plays an Assistant card. Must be followed by the index of the card to play"),
@@ -18,19 +21,38 @@ public enum ClientActionCommand {
 	private final String rawValue;
 	private final String description;
 	
+	/**
+	 * Creates a constant for a CLI command
+	 * @param rawValue The command ID
+	 * @param description The command description
+	 */
 	ClientActionCommand(String rawValue, String description) {
 		this.rawValue = rawValue;
 		this.description = description;
 	}
 	
+	/**
+	 * Gets the command ID
+	 * @return The command ID
+	 */
 	public String getRawValue() {
 		return rawValue;
 	}
 	
+	/**
+	 * Gets the command description
+	 * @return The command description
+	 */
 	public String getDescription() {
 		return description;
 	}
 	
+	/**
+	 * Checks if the command is valid for the current match phase and variant
+	 * @param phase The match phase
+	 * @param variant The match variant
+	 * @return Whether the command is valid for the current match phase and variant
+	 */
 	public boolean isValidForPhaseAndVariant(MatchPhase phase, MatchVariant variant) {
 		switch (this) {
 			case ChooseAssistant -> {
@@ -52,6 +74,10 @@ public enum ClientActionCommand {
 		return false;
 	}
 	
+	/**
+	 * Prints the command
+	 * @param usingPrint Whether it should use print or println
+	 */
 	public void printHelp(boolean usingPrint) {
 		String helpStr = StringFormatter.formatWithColor(getRawValue(), ANSIColors.Yellow) + "\t" + StringFormatter.formatWithColor(getDescription(), ANSIColors.Green);
 		if (usingPrint) {

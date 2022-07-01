@@ -22,7 +22,7 @@ import javafx.scene.input.MouseEvent;
 import java.util.Objects;
 
 /**
- * Class {@code CharacterCardPane} represent the graphical asset for the {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCards}
+ * Class {@code CharacterCardPane} represent the base abstract class for the rescalable pane used to display and use {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCards}
  */
 public abstract class CharacterCardPane extends RescalableAnchorPane {
 	
@@ -38,7 +38,7 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 
 	/**
 	 * Constructor creates the {@code CharacterCardPane} from the parameters
-	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard's} index
+	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard's} index in the table list
 	 * @param cardBean (type CharacterCardBean) {@code CharacterCard's} data
 	 */
 	public CharacterCardPane(int cardIndex, CharacterCardBean cardBean) {
@@ -72,8 +72,8 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 	}
 	
 	/**
-	 * Makes additional setups in a safe manner
-	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard's} index
+	 * Allows subclasses to perform custom asset initialization safely
+	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard's} index in the table list
 	 * @param cardBean (type CharacterCardBean) {@code CharacterCard's} data
 	 */
 	protected abstract void performAdditionalInitializationForCard(int cardIndex, CharacterCardBean cardBean);
@@ -95,16 +95,16 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 	}
 
 	/**
-	 * Gets the zero {@code Fader's} position
-	 * @return (type int) returns the zero {@code Fader's} position
+	 * Gets the {@code Fader's} z-position as a child of the card, so that all elements appear below it
+	 * @return (type int) returns the {@code Fader's} z-position as a child of the card
 	 */
 	protected int getFaderZPosition() {
 		return 0;
 	}
 
 	/**
-	 * Returns true if this {@code CharacterCardPane} si purchased
-	 * @return (type boolean) returns true if this {@code CharacterCardPane} si purchased
+	 * Returns true if this {@code CharacterCardPane} is purchased
+	 * @return (type boolean) returns true if this {@code CharacterCardPane} is purchased
 	 */
 	public boolean isPurchased() {
 		return purchased;
@@ -127,7 +127,7 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 	}
 
 	/**
-	 * Sets the {@code BuyButton}
+	 * Sets up the {@code BuyButton} used to buy a card, or updates it if it is already active
 	 * @param cardPrice (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard's} price
 	 */
 	private void setupBuyButton(int cardPrice) {
@@ -182,8 +182,8 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 	protected abstract void executeActionOnClick();
 
 	/**
-	 * {@code PlayerAction} callback
-	 * @param notification (type Notification)
+	 * Callback for {@code PlayerAction} notifications, used to report if the card failed to execute
+	 * @param notification (type Notification) The notification with the event data
 	 */
 	private void didReceivePlayerActionResponse(Notification notification) {
 		if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof PlayerActionResponse message) {
@@ -199,7 +199,7 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 	}
 
 	/**
-	 * {@code CharacterCardLoopClosed} callback
+	 * Callback for the {@code CharacterCardLoopClosed} notification, use dto intercept when the card needs to send its parameters to the server
 	 * @param notification (type Notification)
 	 */
 	private void didReceiveCharacterCardLoopClosed(Notification notification) {
@@ -226,7 +226,7 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 	protected abstract void adaptStudentsForControlLoopClosed(Student[] clickedStudents);
 
 	/**
-	 * Ends the {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard's} control loop
+	 * Ends the {@link it.polimi.ingsw.server.model.characters.CharacterCard  CharacterCard's} control loop and sends data to the server
 	 * @param paramSet (type CharacterCardNetworkParamSet) sets of {@code CharacterCard's} parameters
 	 */
 	void closeCardControlLoop(CharacterCardNetworkParamSet paramSet) {
@@ -266,8 +266,8 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 	}
 
 	/**
-	 * {@code TableState} callback
-	 * @param notification (type Notification)
+	 * Callback for {@code TableState} notifications, used to update the card
+	 * @param notification (type Notification) The notification with data
 	 */
 	protected void didReceiveTableStateNotification(Notification notification) {
 		if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof TableStateMessage tableStateMessage) {
@@ -278,9 +278,10 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 			updateState(false, true);
 		}
 	}
+	
 	/**
-	 * {@code PlayerState} callback
-	 * @param notification (type Notification)
+	 * Callback for {@code PlayerState} notifications, used to update the card ownership
+	 * @param notification (type Notification) The notification with data
 	 */
 	private void didReceivePlayerStateMessage(Notification notification) {
 		if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof PlayerStateMessage playerStateMessage) {
@@ -292,9 +293,10 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 			}
 		}
 	}
+	
 	/**
-	 * {@code ActivePlayer} callback
-	 * @param notification (type Notification)
+	 * Callback for {@code ActivePlayer} notifications, used to update the number of times used in this turn
+	 * @param notification (type Notification) The notification with data
 	 */
 	private void didReceiveActivePlayerMessage(Notification notification) {
 		if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof ActivePlayerMessage activePlayerMessage) {
@@ -309,7 +311,7 @@ public abstract class CharacterCardPane extends RescalableAnchorPane {
 	}
 
 	/**
-	 * Returns true if a {@link it.polimi.ingsw.server.model.characters.Character Character} is passive
+	 * Returns true if a {@link it.polimi.ingsw.server.model.characters.Character Character} is passive (requires no action after purchase)
 	 * @param character (type Character) {@code Character} to check
 	 * @return (type boolean) returns true if a {@link it.polimi.ingsw.server.model.characters.Character Character} is passive
 	 */

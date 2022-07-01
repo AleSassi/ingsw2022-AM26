@@ -20,7 +20,7 @@ import javafx.scene.text.Font;
 import java.util.*;
 
 /**
- * Class {@code IslandPane} represent the JavaFX controller fot the {@link it.polimi.ingsw.server.model.student.Island Islands}
+ * Class {@code IslandPane} represent the rescalable pane for an {@link it.polimi.ingsw.server.model.student.Island Island}
  */
 public class IslandPane extends RescalableAnchorPane {
     
@@ -38,9 +38,9 @@ public class IslandPane extends RescalableAnchorPane {
     private StudentDropTarget[] allowedDropDestinationsForDrag, allowedStudentDestinationsForPhase;
 
     /**
-     * Constructor creates an {@code IslandPane}
+     * Constructor creates an {@code IslandPane} from an initial table message
      * @param idx (type int) {@link it.polimi.ingsw.server.model.student.Island Island's} index
-     * @param notification (type Notification)
+     * @param notification (type Notification) The initial notification
      */
     public IslandPane(int idx, Notification notification) {
         this.allowedDropDestinationsForDrag = new StudentDropTarget[0];
@@ -143,9 +143,9 @@ public class IslandPane extends RescalableAnchorPane {
     }
 
     /**
-     * Sets the {@link it.polimi.ingsw.client.ui.characters.CharacterCardPane CharacterCardPane} to destination mode
+     * Sets the {@link it.polimi.ingsw.client.ui.characters.CharacterCardPane CharacterCardPane} to destination mode for Character cards
      * @param isCardDestinationMode (type boolean) true if needs to be set to destination mode
-     * @param sourceNotificationInfo (typ HashMap(String, Object) {@code sourceNotificationInfo}
+     * @param sourceNotificationInfo (type HashMap(String, Object) {@code sourceNotificationInfo} The user info from the source notification
      */
     protected void setCardDestinationMode(boolean isCardDestinationMode, HashMap<String, Object> sourceNotificationInfo) {
         //We use the sourceNotificationInfo param to forward it when we close the control loop
@@ -178,8 +178,8 @@ public class IslandPane extends RescalableAnchorPane {
     }
 
     /**
-     * Student movement callback
-     * @param notification (type Notification)
+     * Student movement start callback
+     * @param notification (type Notification) The movement notification
      */
     private void didReceiveStartStudentMoveNotification(Notification notification) {
         List<StudentDropTarget> allowableDefaultMovements = Arrays.stream(allowedStudentDestinationsForPhase).toList();
@@ -192,8 +192,8 @@ public class IslandPane extends RescalableAnchorPane {
     }
 
     /**
-     * Sets the background
-     * @param active (type boolean) true id need to be activated
+     * Sets the background to the active or inactive style
+     * @param active (type boolean) true if it needs to be activated
      */
     private void setActiveBackground(boolean active) {
         if (active) {
@@ -205,8 +205,8 @@ public class IslandPane extends RescalableAnchorPane {
     }
 
     /**
-     * Student movement end callback
-     * @param notification (type Notification)
+     * Student movement end callback, used to remove the Active appearance
+     * @param notification (type Notification) Th estudent movement notification
      */
     private void didReceiveEndStudentMoveNotification(Notification notification) {
         this.allowedDropDestinationsForDrag = new StudentDropTarget[0]; //To reset to the initial default state
@@ -214,8 +214,8 @@ public class IslandPane extends RescalableAnchorPane {
     }
 
     /**
-     * {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage}
-     * @param notification (type Notification)
+     * {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage} received callback, used to update the island state
+     * @param notification (type Notification) The notification for the table message
      */
     public void didReceiveTableState(Notification notification) {
         if (notification.getUserInfo() != null && notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue()) instanceof TableStateMessage message) {
@@ -231,7 +231,7 @@ public class IslandPane extends RescalableAnchorPane {
 
     /**
      * Sets the stop card on this {@code IslandPane}
-     * @param tableStateMessage (type tableStateMessage)
+     * @param tableStateMessage (type tableStateMessage) The table state message used to configure the stop card
      */
     private void setStop(TableStateMessage tableStateMessage) {
         stop.setVisible(tableStateMessage.getIslands().get(idx).itHasStopCard());
@@ -239,7 +239,7 @@ public class IslandPane extends RescalableAnchorPane {
 
     /**
      * Sets the mother nature on this {@code IslandPane}
-     * @param tableStateMessage (type tableStateMessage)
+     * @param tableStateMessage (type tableStateMessage) The table state message used to configure Mother Nature
      */
     private void setMotherNature(TableStateMessage tableStateMessage) {
         motherNature.setVisible(tableStateMessage.getIslands().get(idx).isMotherNaturePresent());
@@ -247,7 +247,7 @@ public class IslandPane extends RescalableAnchorPane {
 
     /**
      * Sets the {@link it.polimi.ingsw.server.model.Tower Towers} on this {@code IslandPane}
-     * @param tableStateMessage (type tableStateMessage)
+     * @param tableStateMessage (type tableStateMessage) The table state message used to configure the towers
      */
     private void setTowerOnIsland(TableStateMessage tableStateMessage) {
         if (tower != null) {
@@ -287,7 +287,8 @@ public class IslandPane extends RescalableAnchorPane {
             }
         }
     }
-
+    
+    @Override
     public void rescale(double scale) {
         //rescale IslandPane
         setPrefSize(getUnscaledWidth() * scale, getUnscaledHeight() * scale);

@@ -1,13 +1,11 @@
 package it.polimi.ingsw.server.model.characters;
 
 /**
- * This Class represent the {@code Character}
+ * This Class represents the {@code Character} used for Character cards
  * @author Alessandro Sassi
  */
 public enum Character {
-    /**
-     initialize value of enum
-     */
+    
     Abbot(1, 4),
     CheeseMan(2),
     Ambassador(3),
@@ -20,17 +18,15 @@ public enum Character {
     Musician(1),
     Queen(2, 4),
     Thief(3);
-    /**
-     initialize {@code Character}
-     */
+    
     private final int initialPrice;
     private final int hostedStudentsCount;
 
 
     /**
-     * Constructor
-     * @param initialPrice (type int) price of the card at the start
-     * @param hostedStudentsCount (type int) number of {@link it.polimi.ingsw.server.model.student.Student Student} on the card
+     * Constructor, creates the Character with the specified parameters
+     * @param initialPrice (type int) The price of the card at the start of the match
+     * @param hostedStudentsCount (type int) The number of {@link it.polimi.ingsw.server.model.student.Student Students} on the card
      */
     Character(int initialPrice, int hostedStudentsCount) {
         this.initialPrice = initialPrice;
@@ -38,29 +34,33 @@ public enum Character {
     }
 
     /**
-     * Constructor
-     * @param initialPrice (type int) price of the card at the start
+     * Constructor, creates the Character with the specified parameters and 0 hosted students
+     * @param initialPrice (type int) The price of the card at the start of the match
      */
     Character(int initialPrice) {
         this(initialPrice, 0);
     }
 
     /**
-     * Getter
-     * @return (type int) the price of card
+     * Extracts the initial price of the card
+     * @return (type int) the initial price of card
      */
     public int getInitialPrice() {
         return initialPrice;
     }
 
     /**
-     * Getter
-     * @return (type int) counter of {@link it.polimi.ingsw.server.model.student.Student Student} on the card
+     * Extracts the number of hosted Students
+     * @return (type int) number of {@link it.polimi.ingsw.server.model.student.Student Student} on the card
      */
     public int getHostedStudentsCount() {
         return hostedStudentsCount;
     }
-
+    
+    /**
+     * Finds the maximum number of times the card can be used by the same player in the same turn
+     * @return The maximum number of times the card can be used by the same player in the same turn
+     */
     public int getMaxNumberOfUsesInTurn() {
         switch (this) {
             case Circus -> {
@@ -76,8 +76,8 @@ public enum Character {
     }
 
     /**
-     * Getter
-     * @return (type bool) if the influence is changed or not
+     * Finds whether the card effect is related to changing the influence count
+     * @return (type bool) If the card effect is related to changing the influence count
      */
     public boolean getChangesInfluence() {
         switch (this) {
@@ -91,20 +91,24 @@ public enum Character {
     }
 
     /**
-     * Getter
-     * @return (type boolean) if the MNstep are changed
+     * Finds whether the card effect is related to changing the number of Mother Nature steps
+     * @return (type boolean) If the card effect is related to changing the number of Mother Nature steps
      */
     public boolean getChangesMNSteps() {
         return this == Character.Magician;
     }
 
     /**
-     * Getter
-     * @return (type boolean) if the MNstep are changed
+     * Finds whether the card effect is related to changing the Professor control
+     * @return (type boolean) If the card effect is related to changing the Professor control
      */
     public boolean getChangesProfControl() {
         return this == Character.CheeseMan;
     }
     
+    /**
+     * Finds whether the card effect is related to hosting Stop Cards
+     * @return (type boolean) If the card effect is related to hosting Stop Cards
+     */
     public boolean getHostsStopCards() { return this == Herbalist; };
 }

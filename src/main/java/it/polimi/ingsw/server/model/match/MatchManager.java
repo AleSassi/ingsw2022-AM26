@@ -28,9 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author Alessandro Sassi, Federico Albertini
  */
 public abstract class MatchManager {
-	/**
-	 * Initialize {@code MatchManager}
-	 */
+	
 	private List<Player> playersSortedByCurrentTurnOrder;
 	private int currentLeadPlayer;
 	private MatchPhase matchPhase;
@@ -41,7 +39,6 @@ public abstract class MatchManager {
 	private List<AssistantCard> playedAssistantsInRound = new ArrayList<>();
 	
 	//region Public methods (used by the Controller to run actions)
-
 
 	/**
 	 * Constructs and sets up the match by adding all {@link it.polimi.ingsw.server.model.Player Players}, initializing the {@link it.polimi.ingsw.server.model.TableManager TableManager} and initializing the entrance for each {@code Player}
@@ -85,12 +82,16 @@ public abstract class MatchManager {
 		}
 	}
 	
+	/**
+	 * Gets the match variant
+	 * @return The match variant
+	 */
 	public MatchVariant getMatchVariant() {
 		return matchVariant;
 	}
 	
 	/**
-	 * Manages the course of the game depending on the {@link  MatchPhase}
+	 * Manages the course of the game depending on the {@link  MatchPhase}, executing a player action
 	 *
 	 * @param AssistantCardIndex (type int) Index of the {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} to play
 	 * @param studentToMove      (type Student) {@link it.polimi.ingsw.server.model.student.Student Student} type to move
@@ -187,7 +188,7 @@ public abstract class MatchManager {
 	/**
 	 * Sorts the {@link it.polimi.ingsw.server.model.Player Players} by the {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} priority number (the lowest first) for the next round
 	 *
-	 * @return (type List of Player)the list of ordered {@code Players}
+	 * @return (type List of Player) the list of ordered {@code Players}
 	 */
 	public List<Player> getPlayersSortedByRoundTurnOrder() {
 		//TODO: Need to alter the sorting lambda to account for when the Player has the same priority number
@@ -195,8 +196,11 @@ public abstract class MatchManager {
 		result.sort(Comparator.comparingInt(playerA -> (playerA.getLastPlayedAssistantCard().getPriorityNumber() + playerA.getAssistantCardOrderModifier())));
 		return result;
 	}
-
-
+	
+	/**
+	 * Gets the list of players sorted by clockwise order
+	 * @return The list of players sorted by clockwise order
+	 */
 	private List<Player> getPlayersSortedByClockwiseOrder() {
 		List<Player> result = new ArrayList<>();
 		//Rearrange moving to the end all players until you find the one with the lowest card
@@ -242,7 +246,7 @@ public abstract class MatchManager {
 	}
 	
 	/**
-	 * Checks if the {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} is playable by checking the card that has been played by the last {@link it.polimi.ingsw.server.model.Player Player} is the same as the one he wants to play
+	 * Checks if the {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} is playable by checking the card that has been played by the last {@link it.polimi.ingsw.server.model.Player Players} is the same as the one he wants to play
 	 * @param cardIdxForCurrentPlayer (type int) {@code AssistantCard's} index to check
 	 * @return (type boolean) returns true if the {@code AssistantCard} is playable
 	 */
@@ -370,7 +374,7 @@ public abstract class MatchManager {
 	/**
 	 * Check if the {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} is playable and plays it
 	 * @param cardIndex (type int) {@code AssistantCard's} index
-	 * @throws AssistantCardNotPlayableException whenever the {@code AssistantCard} is not aloud to be played
+	 * @throws AssistantCardNotPlayableException whenever the {@code AssistantCard} is not allowed to be played
 	 */
 	private void PP_PlayAssistantCard(int cardIndex) throws AssistantCardNotPlayableException {
 		if (!isAssistantCardPlayable(cardIndex)) throw new AssistantCardNotPlayableException();
@@ -625,7 +629,7 @@ public abstract class MatchManager {
 						break;
 					}
 				}
-				return new PlayerStateMessage(player.getNickname(), activeCharacterCardIdx, player.getAvailableAssistantCards(), player.getLastPlayedAssistantCard(), player.getBoard(), player.getAvailableCoins(), player.getWizard(), getPlayerTeamName(player));
+				return new PlayerStateMessage(player, activeCharacterCardIdx, getPlayerTeamName(player));
 			}
 		}
 		return null;

@@ -9,10 +9,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests for the NotificationObserver class
+ * @see NotificationObserver
+ */
 class NotificationObserverTest {
 	
 	private NotificationObserver observer;
 	
+	/**
+	 * Common test initialization that creates an observer for the Player
+	 */
 	@BeforeEach
 	void initObserver() {
 		assertDoesNotThrow(() -> {

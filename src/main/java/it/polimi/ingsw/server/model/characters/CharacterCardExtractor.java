@@ -4,17 +4,16 @@ import it.polimi.ingsw.server.exceptions.model.UnavailableCardException;
 
 import java.util.*;
 /**
- * This Interface represent the {@code CharacterCardExtractor}
+ * The class used to randomly extract Character Cards for a match
  * @author Alessandro Sassi
  */
 public class CharacterCardExtractor {
-    /**
-     * initialize {@code CharacterCardExtractor}
-     */
+    
     private final List<Character> availableCharacters;
     private final Random randomizer;
+    
     /**
-     * costruct the class with a new randomize and an empty list of (type {@link it.polimi.ingsw.server.model.characters.CharacterCard charactercard})
+     * Creates a new extractor object by initializing the internal list of cards
      */
     public CharacterCardExtractor() {
         this.randomizer = new Random();
@@ -22,11 +21,9 @@ public class CharacterCardExtractor {
     }
 
     /**
-     * @throws UnavailableCardException when try to pick a {@link it.polimi.ingsw.server.model.characters.CharacterCard charactercard} but avaiblecard is empty
-     * the class pick a (@code charactercard) and have different return according to the card pick
-     * @return  character (type {@link it.polimi.ingsw.server.model.characters.CharacterCard character})
-     * @return  character (type {@link it.polimi.ingsw.server.model.characters.StopCardActivatorCard)
-     * @return  character (type {@link it.polimi.ingsw.server.model.characters.GenericModifierCard})
+     * Picks a random card from the list of available cards, and removes it from such list so that future calls will never pick the same card again
+     * @return a randomly chosen and initialized character card
+     * @throws UnavailableCardException if the list of available cards is empty
      */
     public CharacterCard pickRandom() throws UnavailableCardException {
         if (availableCharacters.isEmpty()) throw new UnavailableCardException();

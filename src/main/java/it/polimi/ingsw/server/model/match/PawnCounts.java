@@ -2,6 +2,9 @@ package it.polimi.ingsw.server.model.match;
 
 import it.polimi.ingsw.server.exceptions.model.InvalidPlayerCountException;
 
+/**
+ * A class representing a set of possible values for the ,multiplicity of tiles
+ */
 class PawnCounts {
 	
 	private final int playerCount;

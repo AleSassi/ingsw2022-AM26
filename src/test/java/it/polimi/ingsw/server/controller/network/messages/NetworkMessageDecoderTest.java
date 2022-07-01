@@ -18,6 +18,10 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests related to the NetworkMessageDecoder class
+ * @see NetworkMessageDecoder
+ */
 class NetworkMessageDecoderTest {
 	/**
 	 * Tests the decoding of a message
@@ -43,7 +47,8 @@ class NetworkMessageDecoderTest {
 			assertEquals(message, decoder.decodeMessage(message.serialize()));
 			message = new PlayerActionResponse("Ale", PlayerActionMessage.ActionType.DidPlayAssistantCard, true, "");
 			assertEquals(message, decoder.decodeMessage(message.serialize()));
-			message = new PlayerStateMessage("Ale", null, new ArrayList<>(), AssistantCard.LION, new SchoolBoard(Tower.White, 8), 0, Wizard.Wizard1, null);
+			Player player = new Player("Ale", Wizard.Wizard1, Tower.Black, 8, 0);
+			message = new PlayerStateMessage(player, null, null);
 			assertEquals(message, decoder.decodeMessage(message.serialize()));
 			message = new TableStateMessage(Arrays.stream(Professor.values()).toList(), new ArrayList<>(), new StudentHost(), new ArrayList<>(), new ArrayList<>());
 			assertEquals(message, decoder.decodeMessage(message.serialize()));

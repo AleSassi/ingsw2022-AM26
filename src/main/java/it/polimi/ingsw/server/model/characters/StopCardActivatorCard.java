@@ -9,38 +9,27 @@ import it.polimi.ingsw.server.model.student.StudentCollection;
 
 import java.util.List;
 /**
- * This Class represent the {@code StopCardActivatorCard}
+ * This Class represent the {@code StopCardActivatorCard}, a card that holds some Stop cards and can place them on Islands
  * @author Alessandro Sassi
  */
 public class StopCardActivatorCard extends CharacterCard {
 
     private int availableStopCards;
+    
     /**
-     * constructor
-     * @param character (type {@link it.polimi.ingsw.server.model.characters.CharacterCard charactercard}) character that card represent
+     * Creates the Card by initializing its character
+     * @param character The character represented by the card
+     * @see CharacterCard#CharacterCard(Character)
      */
     public StopCardActivatorCard(Character character) {
         super(character);
     }
-
-    /**
-     * setup parameter of table
-     * @param t (type {@link it.polimi.ingsw.server.model.TableManager Table}) link to access the Table
-     */
+    
     @Override
     public void setupWithTable(TableManager t) {
         availableStopCards = 4;
     }
-
-    /**
-     * this method is used to to activate the effect of card, setting the correct variable
-     * @param t (type {@link it.polimi.ingsw.server.model.TableManager Table}) link to access the manager
-     * @param players      (type list of Player){@link it.polimi.ingsw.server.model.Player Player} list of the player
-     * @param currentPlayer    (type Player) {@code Player} the player which are playing
-     * @param userInfo (type CharacterCardParamSet){@link it.polimi.ingsw.server.model.characters.CharacterCardParamSet CharacterCardParamSet}
-        @throws CharacterCardIncorrectParametersException if the parameter of the effect of card are incorrect
-     @throws  CharacterCardNoMoreUsesAvailableException player finished the uses of card
-     */
+    
     @Override
     public int useCard(TableManager t, List<Player> players, Player currentPlayer, CharacterCardParamSet userInfo) throws CharacterCardIncorrectParametersException, CharacterCardNoMoreUsesAvailableException {
         if (userInfo.getStopCardMovementMode() == null) throw new CharacterCardIncorrectParametersException("StopCardActivatorCard ERROR: stopCardMovementMode must be set in UserInfo!");
@@ -69,18 +58,15 @@ public class StopCardActivatorCard extends CharacterCard {
         }
         return availableStopCards;
     }
-    /**
-     * getter
-     * @return (type collection){@link it.polimi.ingsw.server.model.student.StudentCollection collection} of student hosted by the card
-     */
+    
     @Override
     public StudentCollection getHostedStudents() {
         return new StudentCollection();
     }
 
     /**
-     *decrement the number of stop card
-     @throws UnavailableStopCardsException if stop card are 0
+     * Removes a Stop card from the card
+     * @throws UnavailableStopCardsException if there are no more Stop Cards on the card
      */
      private void removeStopCard() throws UnavailableStopCardsException {
         if (availableStopCards == 0) throw new UnavailableStopCardsException("StopCardActivatorCard ERROR: to remove a StopCard you need to have more than 1 available card");
@@ -88,40 +74,27 @@ public class StopCardActivatorCard extends CharacterCard {
     }
 
     /**
-     *increment the number of stop card
+     * Adds a Stop Card to the card
      */
     private void restoreStopCard() {
         availableStopCards += 1;
     }
     
     @Override
-    /**
-     *delete effect of the card
-     */
     public void deactivate() {
     }
     
     @Override
-    /**
-     * create a CharacterCardBean from the parameter of this class
-     * @return (type CharacterCardBean) {@link it.polimi.ingsw.server.model.characters.CharacterCardBean CharacterCardBean}) that card rapresent
-     */
     public CharacterCardBean beanify() {
         return new CharacterCardBean(getCharacter(), getPrice(), null, -1, availableStopCards, null);
     }
-    /**
-     * create a CharacterCardBean from the parameter of this class
-     * @return (type CharacterCardBean) {@link it.polimi.ingsw.server.model.characters.CharacterCardBean CharacterCardBean}) that card rapresent
-     */
+    
     @Override
     protected void copyTo(CharacterCard dstCard) {
         super.copyTo(dstCard);
         ((StopCardActivatorCard)dstCard).availableStopCards = availableStopCards;
     }
-    /**verify if this class is equal to
-     * @param(type Object)
-     * @return (type bool) true if class are equal, false otherwise
-     */
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -28,7 +28,6 @@ import java.util.ResourceBundle;
 /**
  * Class {@code LobbyController} represent the JavaFX controller for the Lobby
  */
-
 public class LobbyController extends RescalableController {
 
 	private int numberOfPlayersToFill = 4;
@@ -83,7 +82,7 @@ public class LobbyController extends RescalableController {
 	/**
 	 * Sets the {@link it.polimi.ingsw.server.model.match.MatchVariant MatchVariant} and the remainingNumberOfPlayers label
 	 * @param matchVariant (type MatchVariant) {@code MatchVariant} to sets to
-	 * @param remainingNumberOfPlayers (type int)
+	 * @param remainingNumberOfPlayers (type int) The remaining number of players to fill the lobby
 	 */
 	public void setInitialData(MatchVariant matchVariant, int remainingNumberOfPlayers) {
 		numberOfPlayersToFill = remainingNumberOfPlayers;
@@ -97,8 +96,8 @@ public class LobbyController extends RescalableController {
 	}
 
 	/**
-	 * Updates and display the number of remaining {@link it.polimi.ingsw.server.model.Player Players} from the {@link it.polimi.ingsw.notifications.Notification Notification}
-	 * @param notification (type Notification)
+	 * Updates and display the number of remaining {@link it.polimi.ingsw.server.model.Player Players} from the {@link it.polimi.ingsw.notifications.Notification Notification}, or starts the game if the lobby is full
+	 * @param notification (type Notification) The login notification
 	 */
 	private void otherPlayerLoggedInReceived(Notification notification) {
 		LoginResponse message = (LoginResponse) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
@@ -114,6 +113,10 @@ public class LobbyController extends RescalableController {
 		}
 	}
 	
+	/**
+	 * Updates the text of the status label
+	 * @param numberOfRemainingPlayers The remaining number of players to fill the lobby
+	 */
 	private void updateStatusLabelText(int numberOfRemainingPlayers) {
 		if (numberOfRemainingPlayers == 0) {
 			statusLabel.setText("The lobby is full. You are now ready to start the game");
@@ -125,38 +128,38 @@ public class LobbyController extends RescalableController {
 
 	/**
 	 * PlayerStateMessage callback, adds the message to the queue
-	 * @param notification (type Notification)
+	 * @param notification (type Notification) The player state notification
 	 */
 	private void didReceivePlayerStateMessage(Notification notification) {
 		playerStateMessagesQueue.add(notification);
 	}
 
 	/**
-	 * {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage's} callBack
-	 * @param notification (type Notification)
+	 * {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage's} callBack, adds the message to the queue
+	 * @param notification (type Notification) The table state notification
 	 */
 	private void didReceiveTableStateMessage(Notification notification) {
 		tableMessage = notification;
 	}
 
 	/**
-	 * {@link it.polimi.ingsw.server.controller.network.messages.ActivePlayerMessage ActivePlayerMessage's} callback
-	 * @param notification (type Notification)
+	 * {@link it.polimi.ingsw.server.controller.network.messages.ActivePlayerMessage ActivePlayerMessage's} callback, adds the message to the queue
+	 * @param notification (type Notification) The active player notification
 	 */
 	private void didReceiveActivePlayerMessage(Notification notification) {
 		activePlayerMessage = notification;
 	}
 
 	/**
-	 * {@link it.polimi.ingsw.server.controller.network.messages.MatchStateMessage MatchStateMessage's} callback
-	 * @param notification (type Notification)
+	 * {@link it.polimi.ingsw.server.controller.network.messages.MatchStateMessage MatchStateMessage's} callback, adds the message to the queue
+	 * @param notification (type Notification) The match phase notification
 	 */
 	private void didReceiveMatchPhaseMessage(Notification notification) {
 		matchStateMessage = notification;
 	}
 
 	/**
-	 * Moves to the main scene and forward all the initial network messages to the next scene
+	 * Moves to the main scene and forwards all the initial network messages to the next scene
 	 */
 	private void moveToGameScene() {
 		try {

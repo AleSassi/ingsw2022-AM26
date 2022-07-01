@@ -17,7 +17,7 @@ import it.polimi.ingsw.utils.cli.ModelFormatter;
 import it.polimi.ingsw.utils.cli.StringFormatter;
 import org.jetbrains.annotations.Nullable;
 /**
- * This Class represent the {@code PlayerStateView}
+ * This Class represents the {@code PlayerStateView} that shows a textual representation of the Player's School Board and assistant cards
  * @author Alessandro Sassi
  */
 public class PlayerStateView extends TerminalView {
@@ -27,56 +27,62 @@ public class PlayerStateView extends TerminalView {
 	private Integer purchasedCharacterCard;
 	private StudentHost entrance, table;
 	private final MatchVariant variant;
-	/**constructor
-	 * set variant of match
-	 * @param variant (type {@link it.polimi.ingsw.server.model.match.MatchVariant}) type of match
+	
+	/** Initializes the view with the match variant
+	 * @param variant (type {@link it.polimi.ingsw.server.model.match.MatchVariant}) The match variant
 	 */
 	public PlayerStateView(MatchVariant variant) {
 		super();
 		this.variant = variant;
 	}
-	/**getter
-	 * @return (type int)numer of card{@link it.polimi.ingsw.server.model.assistants.AssistantCard assistantcard}
+	
+	/** Gets the number of assistant cards that the Player can still play
+	 * @return (type int) number of {@link it.polimi.ingsw.server.model.assistants.AssistantCard assistant cards} that the Player can still play
 	 */
 	public int getNumberOfCards() {
 		return numberOfCards;
 	}
-	/**getter
-	 * @return (type int)numer of max MStep
+	
+	/** Gets the max number of steps that Mother Nature can move by (as per the played Assistant Card)
+	 * @return (type int) max number of steps that Mother Nature can move by
 	 */
 	public int getMaxMNSteps() {
 		return maxMNSteps;
 	}
-	/**getter
-	 * @return (type int)numer of card{@link it.polimi.ingsw.server.model.characters.Character charactercard} character the player purchased
+	
+	/** Gets the index of the purchased Character Card, or <code>null</code> if no card was purchased
+	 * @return (type Integer) index of the {@link it.polimi.ingsw.server.model.characters.CharacterCard character card} purchased by the Player
 	 */
 	public Integer getPurchasedCharacterCard() {
 		return purchasedCharacterCard;
 	}
-	/**getter
-	 * @return (type int)numer of card{@link it.polimi.ingsw.server.model.student.StudentHost StudentHost} the entrance
+	
+	/** Gets the entrance space data
+	 * @return (type StudentHost) the {@link it.polimi.ingsw.server.model.student.StudentHost entrance data}
 	 */
 	public StudentHost getEntrance() {
 		return entrance;
 	}
-	/**getter
-	 * @return (type int)numer of card{@link it.polimi.ingsw.server.model.student.StudentHost StudentHost} the dining room
+	
+	/** Gets the dining room space data
+	 * @return (type StudentHost) the {@link it.polimi.ingsw.server.model.student.StudentHost dining room data}
 	 */
 	public StudentHost getTable() {
 		return table;
 	}
+	
 	/**
-	 * create a thread and add observers(one for each type of {@link it.polimi.ingsw.notifications.Notification Notification} we need) on  {@link it.polimi.ingsw.notifications.NotificationCenter Center} type of match
-	 * for every (@Code Nofication) that arrive call a differrent method of class according to the name of (@Code Nofication)
+	 * Subscribes to the Notification called when the Client receives a Player State message, so that the vie wcan update itself
 	 */
 	@Override
 	public void run() {
 		NotificationCenter.shared().addObserver(this, this::didReceivePlayerState, NotificationName.ClientDidReceivePlayerStateMessage, null);
 	}
+	
 	/**
-	 * method called whan arrive a {@link it.polimi.ingsw.notifications.Notification Notification}with name didReceivePlayerState
-	 display the information about the player
-	 * @param notification (@code Notification) that contain the information of player
+	 * Callback for the {@link it.polimi.ingsw.notifications.Notification notification} with name ClientDidReceivePlayerStateMessage
+	 * It pretty-prints an ASCII art-based description of the School Board owned by the Player
+	 * @param notification (type Notification) with the event data
 	 */
 	private void didReceivePlayerState(Notification notification) {
 		PlayerStateMessage playerStateMessage = (PlayerStateMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
@@ -102,9 +108,10 @@ public class PlayerStateView extends TerminalView {
 		}
 		System.out.println(getControlledCardString(playerStateMessage));
 	}
+	
 	/**
-	 display the information about the active {@link it.polimi.ingsw.server.model.characters.Character charactercard}
-	 * @param playerStateMessage {@link it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage}contain information of player
+	 * Displays the data of the active {@link it.polimi.ingsw.server.model.characters.CharacterCard character card}
+	 * @param playerStateMessage {@link it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage} the message with the Player data
 	 */
 	private StringBuilder getControlledCardString(PlayerStateMessage playerStateMessage) {
 		StringBuilder formattedString = new StringBuilder();
@@ -114,8 +121,8 @@ public class PlayerStateView extends TerminalView {
 		return formattedString;
 	}
 	/**
-	 create the string for display the information of schoolboard {@link it.polimi.ingsw.server.model.SchoolBoard SchoolBoard}
-	 * @param playerStateMessage {@link it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage}contain information of player
+	 * Displays the data of the Player's {@link it.polimi.ingsw.server.model.SchoolBoard school board} using ASCII art
+	 * @param playerStateMessage {@link it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage} the message with the Player data
 	 */
 	private StringBuilder buildStringForSchoolBoard(PlayerStateMessage playerStateMessage) {
 		StringBuilder formattedString = new StringBuilder();
@@ -128,10 +135,11 @@ public class PlayerStateView extends TerminalView {
 		}
 		return formattedString;
 	}
+	
 	/**
-	 create the structure of the draw(in command line using string)  about{@link it.polimi.ingsw.server.model.SchoolBoard SchoolBoard}
-	 * @param playerStateMessage {@link it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage}contain information of player
-	 * @return(type stringbuilder)the builded string
+	 * Creates the the ASCII art representation of the {@link it.polimi.ingsw.server.model.SchoolBoard school board}
+	 * @param playerStateMessage {@link it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage} the message with the Player data
+	 * @return (type StringBuilder) the String with the complete ASCII art
 	 */
 	private StringBuilder getSchoolBoardASCIIArt(PlayerStateMessage playerStateMessage) {
 		StringBuilder stringBuilder = new StringBuilder();
@@ -188,13 +196,12 @@ public class PlayerStateView extends TerminalView {
 		}
 		return stringBuilder;
 	}
+	
 	/**
-	 print in
-	 * @param stringBuilder (type stringBuilder)the string builder actually in construction
-	the student of type
-	 * @param lockedStudent (type{@link it.polimi.ingsw.server.model.student.StudentHost Student})
-	 * if there is it in
-	 * @param entrance (type{@link it.polimi.ingsw.server.model.student.StudentHost SHost})
+	 * Prints a Student using an ASCII art representation, with color-matched SS characters, or "__" if the space is empty
+	 * @param stringBuilder (type StringBuilder) the builder where the method should write the strings
+	 * @param entrance (type {@link it.polimi.ingsw.server.model.student.StudentHost StudentHost}) the student host object which we need to print the students of
+	 * @param lockedStudent (type{@link it.polimi.ingsw.server.model.student.StudentHost Student}) if specified, we only print this student. Otherwise, we print the entire contents of the host
 	 */
 	private void extractAndPrintStudent(StringBuilder stringBuilder, StudentHost entrance, @Nullable Student lockedStudent) {
 		boolean hasPrintedStudent = false;
@@ -222,9 +229,11 @@ public class PlayerStateView extends TerminalView {
 			stringBuilder.append("__");
 		}
 	}
+	
 	/**
-	 create the string for display the information of assistant card {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard}
-	 * @param playerStateMessage {@link it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage}contain information of player
+	 * Builds the String for displaying the list of available {@link it.polimi.ingsw.server.model.assistants.AssistantCard assistant cards}
+	 * @param playerStateMessage {@link it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage} the message with the Player data
+	 * @return (type StringBuilder) the formatted String with the list of available assistants
 	 */
 	private StringBuilder buildStringForAssistantCards(PlayerStateMessage playerStateMessage) {
 		StringBuilder formattedString = new StringBuilder("Assistant Cards available: ");

@@ -21,7 +21,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class IslandTest {
 
     private Island island;
-
+    
+    /**
+     * Test initialization
+     */
     @BeforeEach
     void initIsland() {
         island = new Island();
@@ -178,7 +181,10 @@ class IslandTest {
             assertEquals(island.getCount(s), 15);
         }
     }
-
+    
+    /**
+     * Tests methods with null parameters
+     */
     @Test
     void nullTest() {
         assertEquals(0, island.getInfluence(null));

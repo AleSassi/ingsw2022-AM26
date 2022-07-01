@@ -30,7 +30,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
+/**
+ * The JavaFX controller handling the initial login page
+ */
 public class LoginController extends RescalableController {
 	
 	@FXML
@@ -75,6 +77,9 @@ public class LoginController extends RescalableController {
 		rescale(getCurrentScaleValue());
 	}
 	
+	/**
+	 * Callback called when the Send button is clicked, to send all login data to the server
+	 */
 	public void sendFormValuesToServer() {
 		chosenUsername = nicknameBox.getText();
 		if (chosenUsername == null || chosenUsername.length() == 0 || chosenUsername.contains(" ")) {
@@ -126,6 +131,10 @@ public class LoginController extends RescalableController {
 		}
 	}
 	
+	/**
+	 * Callback for the Login Response notification, used to display the Lobby controller or an alert for failures
+	 * @param notification The Login Response notification
+	 */
 	private void didReceiveLoginResponse(Notification notification) {
 		LoginResponse message = (LoginResponse) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
 		boolean messageIsForPlayer = message.getNickname().equals(chosenUsername);
@@ -178,6 +187,12 @@ public class LoginController extends RescalableController {
 		layoutEriantysHeader(scale, cranioImg, eriantysImg);
 	}
 	
+	/**
+	 * Lays out the common Eriantys header
+	 * @param scale The scaling factor to apply
+	 * @param cranioImg The Cranio Creations logo pane
+	 * @param eriantysImg The Eriantys logo pane
+	 */
 	static void layoutEriantysHeader(double scale, ImageView cranioImg, ImageView eriantysImg) {
 		cranioImg.setFitWidth(81 * scale);
 		cranioImg.setFitHeight(90 * scale);

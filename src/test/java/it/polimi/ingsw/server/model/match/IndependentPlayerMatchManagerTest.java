@@ -24,11 +24,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * {@code IndependentPlayerMatchManagerTest} class tests {@link it.polimi.ingsw.server.model.match.IndependentPlayerMatchManager IndependentPlayerMatchManager}
+ * @see IndependentPlayerMatchManager
  */
 class IndependentPlayerMatchManagerTest {
 
     private IndependentPlayerMatchManager matchManager;
-
+    
+    /**
+     * Common test initialization
+     */
     @BeforeEach
     void initIndependentPlayerMatchManager() {
         matchManager = new IndependentPlayerMatchManager();
@@ -104,6 +108,9 @@ class IndependentPlayerMatchManagerTest {
         });
     }
     
+    /**
+     * Tests the case with an unplayable assistant card
+     */
     @Test
     void testForcedUnplayableAssistant() {
         planPhaseTwoTest();
@@ -122,6 +129,9 @@ class IndependentPlayerMatchManagerTest {
         assertEquals("Fede", matchManager.getCurrentPlayer().getNickname());
     }
     
+    /**
+     * Tests that if we don't have available assistants an exception is raised
+     */
     @Test
     void testExceptionWithEmptyAssistants() {
         planPhaseTwoTest();
@@ -161,6 +171,9 @@ class IndependentPlayerMatchManagerTest {
         assertEquals("Fede", matchManager.getCurrentPlayer().getNickname());
     }
     
+    /**
+     * Tests an invalid student movement
+     */
     @RepeatedTest(20)
     void testUnmovableStudent() {
         assertDoesNotThrow(() -> {
@@ -185,6 +198,9 @@ class IndependentPlayerMatchManagerTest {
         }
     }
     
+    /**
+     * Tests that the planning phase and the first action phase step work
+     */
     @RepeatedTest(10)
     void actionPhaseOneFillRoomTest() {
         assertDoesNotThrow(() -> {
@@ -338,6 +354,18 @@ class IndependentPlayerMatchManagerTest {
         assertEquals("Ale", matchManager.getPlayersWithTowers().get(1).getNickname());
     }
     
+    /**
+     * Method that executes a match phase and performs the related checks
+     * @param phase The match phase to run
+     * @param AssistantCardIndex The assistant card index to choose
+     * @param islandDestination The destination island for students
+     * @param moveToIsland Whether it moves to an island or to the dining room
+     * @param motherNatureSteps The number of mother Nature steps
+     * @param cloudIdx The picked cloud index
+     * @throws StudentMovementInvalidException If the student movement is invalid
+     * @throws AssistantCardNotPlayableException If the assistant card cannot be played
+     * @throws CloudPickInvalidException If the cloud cannot be picked
+     */
     private void runPhase(MatchPhase phase, int AssistantCardIndex, int islandDestination, boolean moveToIsland, int motherNatureSteps, int cloudIdx) throws StudentMovementInvalidException, AssistantCardNotPlayableException, CloudPickInvalidException {
         switch (phase) {
             case PlanPhaseStepTwo -> {
@@ -461,7 +489,7 @@ class IndependentPlayerMatchManagerTest {
     }
 
     /**
-     * Tests CollectionUnderflowError
+     * Tests CollectionUnderflowError when picking from an empty cloud
      */
     @Test
     void testPickFromEmptyCloudTest() {
@@ -581,6 +609,9 @@ class IndependentPlayerMatchManagerTest {
         }
     }
     
+    /**
+     * Tests the purchase of a card with wrong parameters
+     */
     @Test
     void testWrongCardPurchase() {
         planPhaseTwoTest();
@@ -589,6 +620,9 @@ class IndependentPlayerMatchManagerTest {
         assertThrows(CharacterCardIncorrectParametersException.class, () -> matchManager.purchaseCharacterCards(33));
     }
     
+    /**
+     * tests the character card use without purchase
+     */
     @RepeatedTest(10)
     void testWithoutCardPurchase() {
         planPhaseTwoTest();
@@ -597,6 +631,9 @@ class IndependentPlayerMatchManagerTest {
         assertThrows(CharacterCardNotPurchasedException.class, () -> matchManager.useCharacterCard(new CharacterCardNetworkParamSet(Student.BlueUnicorn, Student.RedDragon, true, 0, 0, 0, CharacterCardParamSet.StopCardMovementMode.ToIsland)));
     }
     
+    /**
+     * Tests a roud with a character effect
+     */
     @RepeatedTest(20)
     void testRoundWithCharacter() {
         testCharacterCardUse();
@@ -644,6 +681,9 @@ class IndependentPlayerMatchManagerTest {
         assertEquals("Ale", matchManager.getCurrentPlayer().getNickname());
     }
     
+    /**
+     * Checks that the match reacts to the victory notification
+     */
     @Test
     void testReactVictoryNotification() {
         testCharacterCardUse();
@@ -694,6 +734,9 @@ class IndependentPlayerMatchManagerTest {
         matchManager.getCurrentPlayer().notifyVictory();
     }
     
+    /**
+     * Tests the victory notification when no assistants are playable
+     */
     @RepeatedTest(20)
     void testVictoryNotificationNoMoreAssistants() {
         testSimpleTurn();

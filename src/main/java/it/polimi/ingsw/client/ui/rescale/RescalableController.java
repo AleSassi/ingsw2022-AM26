@@ -9,6 +9,9 @@ import it.polimi.ingsw.notifications.NotificationName;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * An abstract controller which supports the Rescale feature
+ */
 public abstract class RescalableController extends CleanableController implements JavaFXRescalable {
 	
 	private double scaleValue = GUI.getStageScale();
@@ -24,6 +27,10 @@ public abstract class RescalableController extends CleanableController implement
 		return scaleValue;
 	}
 	
+	/**
+	 * A callback called when a Resize notification is posted by the GUI
+	 * @param notification the resize notification
+	 */
 	private void didReceiveWindowDidResizeNotification(Notification notification) {
 		Double scaleValue = RescaleUtils.rescaleAfterNotification(notification);
 		if (scaleValue != null) {
@@ -32,5 +39,6 @@ public abstract class RescalableController extends CleanableController implement
 		}
 	}
 	
+	@Override
 	public abstract void rescale(double scale);
 }

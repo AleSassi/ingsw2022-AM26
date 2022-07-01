@@ -10,16 +10,23 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests related to the PlayerStateMessage class
+ * @see PlayerStateMessage
+ */
 class PlayerStateMessageTest {
 	
 	private Player dummyPlayer;
 	private PlayerStateMessage message;
 	
+	/**
+	 * Common test initialization
+	 */
 	@BeforeEach
 	void initMessage() {
 		assertDoesNotThrow(() -> {
 			dummyPlayer = new Player("Ale", Wizard.Wizard1, Tower.Black, 8, 1);
-			message = new PlayerStateMessage(dummyPlayer.getNickname(), null, dummyPlayer.getAvailableAssistantCards(), null, dummyPlayer.getBoard(), dummyPlayer.getAvailableCoins(), dummyPlayer.getWizard(), null);
+			message = new PlayerStateMessage(dummyPlayer, null, null);
 		});
 	}
 	/**
@@ -44,6 +51,9 @@ class PlayerStateMessageTest {
 		});
 	}
 	
+	/**
+	 * Tests all getters
+	 */
 	@Test
 	void testGetters() {
 		assertEquals("Ale", message.getNickname());

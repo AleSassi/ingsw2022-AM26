@@ -23,7 +23,7 @@ import java.awt.desktop.QuitEvent;
 import java.util.HashMap;
 
 /**
- * Class {@code CharacterCardStudentHostPane} represent the StudentHosting {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard}
+ * Class {@code CharacterCardStudentHostPane} represent the {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard}s hosting Students
  */
 public class CharacterCardStudentHostPane extends CharacterCardGenericPane {
 	
@@ -32,8 +32,8 @@ public class CharacterCardStudentHostPane extends CharacterCardGenericPane {
 
 	/**
 	 * Constructor creates a new {@code CharacterCardStudentHostPane}
-	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard's} index
-	 * @param cardBean (type CharacterCardBean)
+	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard's} index in table list
+	 * @param cardBean (type CharacterCardBean) The card data
 	 */
 	public CharacterCardStudentHostPane(int cardIndex, CharacterCardBean cardBean) {
 		super(cardIndex, cardBean);
@@ -46,9 +46,9 @@ public class CharacterCardStudentHostPane extends CharacterCardGenericPane {
 	}
 
 	/**
-	 * Builds the {@code StudentGrid} depending on the {@link it.polimi.ingsw.server.model.characters.Character Character}
-	 * @param character (type Character)
-	 * @param hostedStudents (type StudentCollection)
+	 * Builds the {@code Student grid} depending on the {@link it.polimi.ingsw.server.model.characters.Character Character}
+	 * @param character (type Character) The card character
+	 * @param hostedStudents (type StudentCollection) The hosted students
 	 */
 	private void buildStudentGrid(Character character, StudentCollection hostedStudents) {
 		if (studentGrid == null) {

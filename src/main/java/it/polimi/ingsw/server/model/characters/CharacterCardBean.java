@@ -6,13 +6,12 @@ import it.polimi.ingsw.utils.cli.ModelFormatter;
 
 import java.util.Objects;
 /**
- * This Class represent the {@code CharacterCardBean}
+ * This Class represents a data object that snapshots a Character card, so that it can be sent over the network to Clients
  * @author Alessandro Sassi
+ * @see CharacterCard
  */
 public class CharacterCardBean {
-	/**
-	 * initialize {@code CharacterCardBean}
-	 */
+	
 	private final Character character;
 	private final int totalPrice;
 	private final Student excludedStudent;
@@ -21,13 +20,13 @@ public class CharacterCardBean {
 	private final StudentCollection hostedStudents;
 
 	/**
-	 * constructor
-	 * @param character (type {@link it.polimi.ingsw.server.model.characters.CharacterCard charactercard}) character of the card
-	 * @param totalPrice      (type int) price of the card
-	 * @param excludedStudent    (type Student) {@link it.polimi.ingsw.server.model.student.Student Student} student not to consider in count of influence
-	 * @param memorizedModifier (type int) modifier that card apply
-	 * @param availableStopCards    (type int) number of stop card that are avaible
-	 * @param hostedStudents  (type student collection){@link it.polimi.ingsw.server.model.student.StudentCollection collection} student that the card gost for its effect
+	 * Constructor, initializes the bean with the card data
+	 * @param character (type {@link it.polimi.ingsw.server.model.characters.Character Character}) The Character of the card
+	 * @param totalPrice      (type int) The price of the card
+	 * @param excludedStudent    (type Student) The {@link it.polimi.ingsw.server.model.student.Student Student} not to consider when computing the influence
+	 * @param memorizedModifier (type int) The modifier that the card memorized
+	 * @param availableStopCards    (type int) The number of stop cards that are available
+	 * @param hostedStudents  (type StudentCollection) A {@link it.polimi.ingsw.server.model.student.StudentCollection collection} of students that the card hosts for its effect
 	 */
 	public CharacterCardBean(Character character, int totalPrice, Student excludedStudent, int memorizedModifier, int availableStopCards, StudentCollection hostedStudents) {
 		this.character = character;
@@ -37,44 +36,50 @@ public class CharacterCardBean {
 		this.availableStopCards = availableStopCards;
 		this.hostedStudents = hostedStudents;
 	}
+	
 	/**
-	 * getter
-	 * @return (type {@link it.polimi.ingsw.server.model.characters.CharacterCard charactercard}) that card rapresent
+	 * Gets the character of the card
+	 * @return (type Character) the character of the card
 	 */
 	public Character getCharacter() {
 		return character;
 	}
+	
 	/**
-	 * getter
-	 * @return (type int) the price of card
+	 * Get the total price of the card
+	 * @return (type int) the total price of the card
 	 */
 	public int getTotalPrice() {
 		return totalPrice;
 	}
+	
 	/**
-	 * getter
-	 * @return (type int){@link it.polimi.ingsw.server.model.student.Student Student} student not to consider in count of influence
+	 * Get the students excluded from the Influence count
+	 * @return (type int) The student not to consider when computing the influence
 	 */
 	public Student getExcludedStudent() {
 		return excludedStudent;
 	}
+	
 	/**
-	 * getter
-	 * @return (type int) value of modifier memorized
+	 * Gets the memorized modifier
+	 * @return (type int) The memorized modifier
 	 */
 	public int getMemorizedModifier() {
 		return memorizedModifier;
 	}
+	
 	/**
-	 * getter
+	 * Gets the number of Stop Cards available on the card
 	 * @return (type int) number of stop card
 	 */
 	public int getAvailableStopCards() {
 		return availableStopCards;
 	}
+	
 	/**
-	 * getter
-	 * @return (type collection){@link it.polimi.ingsw.server.model.student.StudentCollection collection} of student hosted by the card
+	 * Gets the collection of Students hosted in the card
+	 * @return (type StudentCollection) The collection of Students hosted by the card
 	 */
 	public StudentCollection getHostedStudents() {
 		return hostedStudents;

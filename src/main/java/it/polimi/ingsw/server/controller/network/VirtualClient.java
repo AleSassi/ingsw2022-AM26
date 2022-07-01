@@ -47,6 +47,9 @@ public class VirtualClient {
 		task = executorService.submit(this::readMessagesFromSocket);
 	}
 	
+	/**
+	 * Reads a message arriving from the Socket, decodes it and notifies the Server about it
+	 */
 	private void readMessagesFromSocket() {
 		try {
 			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -94,10 +97,6 @@ public class VirtualClient {
 	public String getNickname() {
 		return nickname;
 	}
-	
-	public String getIpPortString() {
-		return socket.getRemoteSocketAddress() + ":" + socket.getPort();
-	}
 
 	/**
 	 * Checks if the {@code Client} is pingable
@@ -116,7 +115,7 @@ public class VirtualClient {
 	}
 
 	/**
-	 * Sends the {@link it.polimi.ingsw.server.controller.network.messages.NetworkMessage NetworkMessage}
+	 * Sends the {@link it.polimi.ingsw.server.controller.network.messages.NetworkMessage NetworkMessage} to the Client
 	 * @param message (type NetworkMessage) message to send
 	 */
 	public synchronized void sendMessage(NetworkMessage message) {
@@ -138,7 +137,7 @@ public class VirtualClient {
 	}
 
 	/**
-	 * {@link it.polimi.ingsw.server.controller.network.messages.NetworkMessage NetworkMessage} callback
+	 * {@link it.polimi.ingsw.server.controller.network.messages.NetworkMessage NetworkMessage} received callback, used to notify the server that a message was received by this client
 	 * @param message (type NetworkMessage) received message
 	 */
 	public synchronized void didReceiveMessage(NetworkMessage message) {
@@ -149,7 +148,7 @@ public class VirtualClient {
 	}
 
 	/**
-	 * {@link it.polimi.ingsw.server.controller.network.messages.NetworkMessage NetworkMessage} callback
+	 * Checks if a message is a Termination message
 	 * @param message (type NetworkMessage) received message
 	 * @return (type boolean) returns true the {@code NetworkMessage} is a termination message
 	 */
@@ -158,7 +157,7 @@ public class VirtualClient {
 	}
 
 	/**
-	 * Sends a notification whenever a {@link it.polimi.ingsw.server.model.Player Player} disconnects
+	 * Sends to the Client the termination message for when a Player disconnected from the match
 	 */
 	public void notifyPlayerDisconnection() {
 		sendMessage(new MatchTerminationMessage("Another Player disconnected and this Match has ended", true));

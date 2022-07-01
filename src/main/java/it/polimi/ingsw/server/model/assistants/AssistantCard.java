@@ -4,13 +4,10 @@ import it.polimi.ingsw.server.exceptions.model.CharacterCardIncorrectParametersE
 import it.polimi.ingsw.utils.cli.ANSIColors;
 import it.polimi.ingsw.utils.cli.StringFormatter;
 /**
- * This Class represent the {@code AssistantCard}
+ * This Class represents the {@code AssistantCard}
  * @author Leonardo Betti
  */
 public enum AssistantCard {
-	/**
-	 * initialize {@code AssistantCard}
-	 */
 	TURTLE(1, 1),
 	ELEPHANT(2, 1),
 	DOG(3, 2),
@@ -21,27 +18,30 @@ public enum AssistantCard {
 	CAT(8, 4),
 	PEAFOWL(9, 5),
 	LION(10, 5);
+	
 	private final int priorityNumber;
 	private final int motherNatureSteps;
 
 	/**
-	 * constructor, set the parameter of the card according to
-	 * @param priorityNumber (type int) number of priority of card
-	 * @param motherNatureSteps (type int) number of mother nature step
+	 * Constructor, sets the parameters of the card
+	 * @param priorityNumber (type int) The card's priority number
+	 * @param motherNatureSteps (type int) The number of Mother Nature steps
 	 */
 	AssistantCard(int priorityNumber, int motherNatureSteps) {
 		this.priorityNumber = priorityNumber;
 		this.motherNatureSteps = motherNatureSteps;
 	}
+	
 	/**
-	 * getter
+	 * Extracts the priority number
 	 * @return (type int) priorityNumber, number of priority of card
 	 */
 	public int getPriorityNumber() {
 		return priorityNumber;
 	}
+	
 	/**
-	 * getter
+	 * Extracts the Mother Nature step count
 	 * @return motherNatureSteps (type int) number of mother nature step
 	 */
 	public int getMotherNatureSteps() {

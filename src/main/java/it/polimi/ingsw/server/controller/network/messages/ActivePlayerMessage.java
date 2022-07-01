@@ -10,25 +10,33 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 /**
- * Class {@code ActivePlayerMessage} represent the messages of the current playing {@link it.polimi.ingsw.server.model.Player Player}
+ * Class {@code ActivePlayerMessage} represent the message with the name of the current playing {@link it.polimi.ingsw.server.model.Player Player}
  */
 public class ActivePlayerMessage extends NetworkMessage {
 	
 	private String activeNickname;
-
-
+	
+	/**
+	 * Creates a message from the active {@link it.polimi.ingsw.server.model.Player Player}
+	 * @param activePlayer The active {@link it.polimi.ingsw.server.model.Player Player}
+	 */
 	public ActivePlayerMessage(@NotNull Player activePlayer) {
 		super();
 		this.activeNickname = activePlayer.getNickname();
 	}
 	
+	/**
+	 * Creates a message by deserializing a JSON string
+	 * @param serializedString The serialized JSON string
+	 * @throws MessageDecodeException If the string could not be decoded into this message
+	 */
 	public ActivePlayerMessage(String serializedString) throws MessageDecodeException {
 		super(serializedString);
 	}
 
 	/**
-	 * Gets the current playing {@link it.polimi.ingsw.server.model.Player Player's} nickname
-	 * @return (type String) returns the current playing {@link it.polimi.ingsw.server.model.Player Player's} nickname
+	 * Gets the active {@link it.polimi.ingsw.server.model.Player Player} nickname saved in the message
+	 * @return (type String) returns the {@link it.polimi.ingsw.server.model.Player Player} nickname saved in the message
 	 */
 	public String getActiveNickname() {
 		return activeNickname;

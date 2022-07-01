@@ -33,7 +33,7 @@ public class Server {
 
 	/**
 	 * Initializes the Server with all the chosen parameter and starts it
-	 * @param args (type String[])
+	 * @param args (type String[]) The Command Line Arguments
 	 */
 	public static void main(String[] args) {
 		if (args.length == 0) {
@@ -82,7 +82,7 @@ public class Server {
 	}
 
 	/**
-	 * Prints all the command relative to this {@code Server}
+	 * Prints all the parameters relative to this {@code Server}
 	 */
 	private static void printHelpMenu() {
 		System.out.println(StringFormatter.formatWithColor("Eriantys AM26 Server - Help Menu", ANSIColors.Yellow));

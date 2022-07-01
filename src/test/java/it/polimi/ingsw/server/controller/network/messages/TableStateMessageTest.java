@@ -8,11 +8,18 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests related to the TableStateMessage class
+ * @see TableStateMessage
+ */
 class TableStateMessageTest {
 	
 	private TableManager dummyTable;
 	private TableStateMessage message;
 	
+	/**
+	 * Common test initialization
+	 */
 	@BeforeEach
 	void initMessage() {
 		assertDoesNotThrow(() -> {

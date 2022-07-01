@@ -7,6 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests related to the LoginResponse class
+ * @see LoginResponse
+ */
 class LoginResponseTest {
 	
 	private LoginResponse message;
@@ -15,6 +19,7 @@ class LoginResponseTest {
 	void initMessage() {
 		message = new LoginResponse("Ale", true, 2, null);
 	}
+	
 	/**
 	 * Tests the encoding and decoding process
 	 */
@@ -37,6 +42,9 @@ class LoginResponseTest {
 		});
 	}
 	
+	/**
+	 * Test getters
+	 */
 	@Test
 	void testGetters() {
 		assertEquals("Ale", message.getNickname());

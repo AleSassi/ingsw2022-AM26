@@ -11,11 +11,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Class {@code NotificationTest} tests {@link it.polimi.ingsw.notifications.Notification Notification}
+ * @see Notification
  */
 class NotificationTest {
 	
 	private Notification notification;
 	
+	/**
+	 * Common test initialization for the notification
+	 */
 	@BeforeEach
 	void initNotification() {
 		HashMap<String, Object> userInfo = new HashMap<>();
@@ -33,7 +37,7 @@ class NotificationTest {
 	}
 
 	/**
-	 * Test that {@code getUserInfo} returns the right User's infos
+	 * Test that {@code getUserInfo} returns the right user info
 	 */
 	@Test
 	void testGetUserInfo() {
