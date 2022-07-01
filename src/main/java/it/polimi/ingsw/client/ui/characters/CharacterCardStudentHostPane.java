@@ -29,7 +29,8 @@ public class CharacterCardStudentHostPane extends CharacterCardGenericPane {
 	
 	private Student pickedStudentFromCard = null;
 	private GridPane studentGrid;
-
+	private final double rowConstraint = 42;
+	private final double columnConstraint = 42;
 	/**
 	 * Constructor creates a new {@code CharacterCardStudentHostPane}
 	 * @param cardIndex (type int) {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard's} index
@@ -139,11 +140,11 @@ public class CharacterCardStudentHostPane extends CharacterCardGenericPane {
 		studentGrid.getRowConstraints().removeAll(studentGrid.getRowConstraints());
 		studentGrid.getColumnConstraints().removeAll(studentGrid.getColumnConstraints());
 		for (int i = 0; i < 3; i++) {
-			RowConstraints row = new RowConstraints(42 * scale);
+			RowConstraints row = new RowConstraints(rowConstraint * scale);
 			studentGrid.getRowConstraints().add(row);
 		}
 		for (int i = 0; i < 2; i++) {
-			ColumnConstraints col = new ColumnConstraints(42 * scale);
+			ColumnConstraints col = new ColumnConstraints(columnConstraint * scale);
 			studentGrid.getColumnConstraints().add(col);
 		}
 	}

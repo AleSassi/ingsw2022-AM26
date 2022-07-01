@@ -34,6 +34,21 @@ public class IslandPane extends RescalableAnchorPane {
     private final Label towerLabel = new Label("0");
     private String address = null;
     private AnchorPane destinationModeInterceptor;
+    private final double defaultMNWidth = 30;
+    private final double defaultMNHeight = 30;
+    private final double defaultTowerWidth = 60;
+    private final double defaultTowerHeight = 60;
+    private final double defaultLabelFont = 20;
+    private final double defaultLabelLayoutX = 100;
+    private final double defaultLabelLayoutY = 75;
+    private final double defaultTowerLayoutX = 75;
+    private final double defaultTowerLayoutY = 65;
+    private final double defaultGridWidth = 85;
+    private final double defaultGridHeight = 85;
+    private final double defaultGridLayoutX = 25;
+    private final double defaultGridLayoutY = 25;
+    private final double defaultRowConstraints = 85.0;
+    private final double defaultColumnConstraints = 85.0;
 
     private StudentDropTarget[] allowedDropDestinationsForDrag, allowedStudentDestinationsForPhase;
 
@@ -293,30 +308,30 @@ public class IslandPane extends RescalableAnchorPane {
         setPrefSize(getUnscaledWidth() * scale, getUnscaledHeight() * scale);
     
         //rescale MN
-        motherNature.setPrefSize(30 * scale, 30 * scale);
+        motherNature.setPrefSize(defaultMNWidth * scale, defaultMNHeight * scale);
     
         //rescale Tower
         if (tower != null) {
-            tower.setPrefSize(60 * scale, 60 * scale);
-            towerLabel.setFont(new Font(20 * scale));
-            towerLabel.setLayoutX(100 * scale);
-            towerLabel.setLayoutY(75 * scale);
-            tower.setLayoutX(75 * scale);
-            tower.setLayoutY(65 * scale);
+            tower.setPrefSize(defaultTowerWidth * scale, defaultTowerHeight * scale);
+            towerLabel.setFont(new Font(defaultLabelFont * scale));
+            towerLabel.setLayoutX(defaultLabelLayoutX * scale);
+            towerLabel.setLayoutY(defaultLabelLayoutY * scale);
+            tower.setLayoutX(defaultTowerLayoutX * scale);
+            tower.setLayoutY(defaultTowerLayoutY * scale);
         }
     
         //rescale Grid && Columns and Rows
         gridPane.getRowConstraints().removeAll(gridPane.getRowConstraints());
         gridPane.getColumnConstraints().removeAll(gridPane.getColumnConstraints());
-        gridPane.setPrefSize(85 * scale, 85 * scale);
-        gridPane.setLayoutX(25 * scale);
-        gridPane.setLayoutY(25 * scale);
+        gridPane.setPrefSize(defaultGridWidth * scale, defaultGridHeight * scale);
+        gridPane.setLayoutX(defaultGridLayoutX * scale);
+        gridPane.setLayoutY(defaultGridLayoutY * scale);
         for (int i = 0; i < 3; i++) {
-            ColumnConstraints col = new ColumnConstraints(85.0 / 3 * scale);
+            ColumnConstraints col = new ColumnConstraints(defaultRowConstraints / 3 * scale);
             gridPane.getColumnConstraints().add(col);
         }
         for (int i = 0; i < 3; i++) {
-            RowConstraints row = new RowConstraints(85.0 / 3 * scale);
+            RowConstraints row = new RowConstraints(defaultRowConstraints / 3 * scale);
             gridPane.getRowConstraints().add(row);
         }
     }

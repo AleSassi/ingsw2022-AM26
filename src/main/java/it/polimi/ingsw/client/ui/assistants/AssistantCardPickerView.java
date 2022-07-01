@@ -9,7 +9,8 @@ import it.polimi.ingsw.server.model.assistants.AssistantCard;
 public class AssistantCardPickerView extends ModalPopup {
 	
 	private final AssistantPickerPane assistantPickerPane;
-
+	private final double defaultLayoutX = 10;
+	private final double defaultLayoutY = 50;
 	/**
 	 * Constructor creates the view
 	 * @param availableAssistantCards (type AssistantCard[])
@@ -31,7 +32,7 @@ public class AssistantCardPickerView extends ModalPopup {
 	
 	@Override
 	public void rescaleChildren(double scale) {
-		assistantPickerPane.setLayoutX(10 * scale);
-		assistantPickerPane.setLayoutY(50 * scale);
+		assistantPickerPane.setLayoutX(defaultLayoutX * scale);
+		assistantPickerPane.setLayoutY(defaultLayoutY * scale);
 	}
 }

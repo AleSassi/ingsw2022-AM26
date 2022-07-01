@@ -24,6 +24,8 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 	private final String titleTextNoCoins;
 	private final String ownerNickname;
 	private AssistantCardPane pickedAssistantCard;
+	private final double playerLabelFont1 = 20;
+	private final double playerLabelFont2 = 15;
 	
 	/**
 	 * Constructor creates the {@code SchoolBoardContainer}
@@ -129,14 +131,16 @@ public class SchoolBoardContainer extends RescalableAnchorPane {
 		String teamString = teamName == null ? "" : " - " + teamName;
 		return (coins >= 0 ? titleTextNoCoins + " (Coins: " + coins + ")" : titleTextNoCoins) + teamString; //Interpret negative values as Coins not available
 	}
-	
+
+
+
 	public void rescale(double scale) {
 		this.playerLabel.setLayoutX(5 * scale);
 		this.playerLabel.setLayoutY(0);
 		if (isPrimary) {
-			this.playerLabel.setFont(new Font("Avenir", 20 * scale));
+			this.playerLabel.setFont(new Font("Avenir", playerLabelFont1 * scale));
 		} else {
-			this.playerLabel.setFont(new Font("Avenir", 15 * scale));
+			this.playerLabel.setFont(new Font("Avenir", playerLabelFont2 * scale));
 		}
 		this.boardPane.setLayoutY(getBoardPaneY() * scale);
 		this.boardPane.setLayoutX(0);

@@ -19,7 +19,8 @@ public class CharacterCardContainer extends RescalableAnchorPane {
  
 	private final GridPane characterCardGridPane = new GridPane();
     private final ArrayList<CharacterCardPane> cards = new ArrayList<>();
-
+	private final double defaultVgap = 0;
+	private final double defaultHgap = 8;
 	/**
 	 * Constructor creates the {@code CharacterCardContainer} from the {@link it.polimi.ingsw.server.controller.network.messages.TableStateMessage TableStateMessage}
 	 * @param initialMessage (type TableStateMessage)
@@ -81,7 +82,7 @@ public class CharacterCardContainer extends RescalableAnchorPane {
             ColumnConstraints column = new ColumnConstraints(cards.get(0).getUnscaledWidth() * scale);
             characterCardGridPane.getColumnConstraints().add(column);
         }
-		characterCardGridPane.setVgap(0);
-		characterCardGridPane.setHgap(8 * scale);
+		characterCardGridPane.setVgap(defaultVgap);
+		characterCardGridPane.setHgap(defaultHgap * scale);
 	}
 }

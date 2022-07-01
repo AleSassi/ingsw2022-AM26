@@ -29,6 +29,10 @@ public class CloudPane extends RescalableAnchorPane {
     private String address = null;
     private final boolean selectable = true;
     private final HighlightableGridPane gridPane = new HighlightableGridPane();
+    private final double gridWidth = 33;
+    private final double gridHeight = 33;
+    private final double gridRowConstraints = 33;
+    private final double gridColumnConstraints = 33;
 
     /**
      * Constructor creates a new {@code CloudPane}
@@ -131,18 +135,21 @@ public class CloudPane extends RescalableAnchorPane {
         });
     }
 
+
+
+
     public void rescale(double scale) {
         setPrefSize(getUnscaledWidth() * scale, getUnscaledHeight() * scale);
         gridPane.getRowConstraints().removeAll(gridPane.getRowConstraints());
         gridPane.getColumnConstraints().removeAll(gridPane.getColumnConstraints());
-        gridPane.setPrefSize(33 * scale, 33 * scale);
+        gridPane.setPrefSize(gridWidth * scale, gridHeight * scale);
         
         for (int i = 0; i < 2; i++) {
-            ColumnConstraints col = new ColumnConstraints(33 * scale);
+            ColumnConstraints col = new ColumnConstraints(gridColumnConstraints * scale);
             gridPane.getColumnConstraints().add(col);
         }
         for (int i = 0; i < 2; i++) {
-            RowConstraints row = new RowConstraints(33 * scale);
+            RowConstraints row = new RowConstraints(gridRowConstraints * scale);
             gridPane.getRowConstraints().add(row);
         }
     }

@@ -49,7 +49,15 @@ public class MainBoardController extends RescalableController {
 	private IslandContainer islandContainer;
 	private CloudsContainer cloudsContainer;
 	private CharacterCardContainer characterCardContainer;
-
+	//region Rescale variables
+	private final double cloudsContainerX = 70;
+	private final double cloudsContainerY = 70;
+	private final double waitTurnLabelFont = 30;
+	private final double waitTurnLabelTopAnchor = 20;
+	private final double waitTurnLabelBottonAnchor = 20;
+	private final double waitTurnLabelRightAnchor = 20;
+	private final double waitTurnLabelLeftAnchor = 20;
+	//endregion
 	/**
 	 * Creates all the observers for the {@link it.polimi.ingsw.notifications.Notification Notifications }
 	 */
@@ -154,15 +162,15 @@ public class MainBoardController extends RescalableController {
 				showFaderPane();
 				if (waitTurnLabel == null) {
 					waitTurnLabel = new Label(currentlyActivePlayerNickname + " is currently playing their turn. Please wait until it is your turn to play.");
-					waitTurnLabel.setFont(new Font("Avenir", 30));
+					waitTurnLabel.setFont(new Font("Avenir", waitTurnLabelFont));
 					waitTurnLabel.setTextFill(new Color(1, 1, 1, 1));
 					waitTurnLabel.setContentDisplay(ContentDisplay.CENTER);
 					waitTurnLabel.setAlignment(Pos.CENTER);
 					waitTurnLabel.setWrapText(true);
-					AnchorPane.setTopAnchor(waitTurnLabel, 20.0);
-					AnchorPane.setBottomAnchor(waitTurnLabel, 20.0);
-					AnchorPane.setLeftAnchor(waitTurnLabel, 20.0);
-					AnchorPane.setRightAnchor(waitTurnLabel, 20.0);
+					AnchorPane.setTopAnchor(waitTurnLabel, waitTurnLabelTopAnchor);
+					AnchorPane.setBottomAnchor(waitTurnLabel, waitTurnLabelBottonAnchor);
+					AnchorPane.setLeftAnchor(waitTurnLabel, waitTurnLabelLeftAnchor);
+					AnchorPane.setRightAnchor(waitTurnLabel, waitTurnLabelRightAnchor);
 					mainPane.getChildren().add(waitTurnLabel);
 				} else {
 					waitTurnLabel.setText(currentlyActivePlayerNickname + " is currently playing their turn. Please wait until it is your turn to play.");
@@ -369,7 +377,8 @@ public class MainBoardController extends RescalableController {
 			characterCardContainer = null;
 		}
 	}
-	
+
+
 	@Override
 	public void rescale(double scale) {
 		for (int i = 0; i < schoolBoardContainers.size(); i++) {
@@ -379,7 +388,7 @@ public class MainBoardController extends RescalableController {
 				schoolBoardContainers.get(i).relocate(0, schoolBoardContainers.get(i - 1).getLayoutY() + schoolBoardContainers.get(i - 1).getScaledHeight(scale) + 10);
 			}
 		}
-		cloudsContainer.setLayoutX(GUI.getWindowWidth() - islandContainer.getUnscaledWidth() * scale + 70 * scale);
-		cloudsContainer.setLayoutY(islandContainer.getUnscaledHeight() * 0.5 * scale - 70 * scale * 0.5);
+		cloudsContainer.setLayoutX(GUI.getWindowWidth() - islandContainer.getUnscaledWidth() * scale + cloudsContainerX * scale);
+		cloudsContainer.setLayoutY(islandContainer.getUnscaledHeight() * 0.5 * scale - cloudsContainerY * scale * 0.5);
 	}
 }

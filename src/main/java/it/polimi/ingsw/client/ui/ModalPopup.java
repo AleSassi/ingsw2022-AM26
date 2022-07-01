@@ -14,6 +14,12 @@ import javafx.scene.text.Font;
 public abstract class ModalPopup extends RescalableAnchorPane {
 	
 	private final Label title;
+	private final double titleFont = 30;
+	private final double width = 400;
+	private final double height = 480;
+	private final double layoutX = 400;
+	private final double layoutY = 480;
+	private final double titleHeight = 35;
 
 	/**
 	 * Constructor creates this {@code ModalPopup}
@@ -21,7 +27,7 @@ public abstract class ModalPopup extends RescalableAnchorPane {
 	 */
 	public ModalPopup(String titleText) {
 		title = new Label(titleText);
-		title.setFont(new Font("Avenir", 30));
+		title.setFont(new Font("Avenir", titleFont));
 		title.setTextFill(new Color(0, 0, 0, 1));
 		title.setContentDisplay(ContentDisplay.CENTER);
 		title.setAlignment(Pos.CENTER);
@@ -31,14 +37,15 @@ public abstract class ModalPopup extends RescalableAnchorPane {
 		AnchorPane.setRightAnchor(title, 0.0);
 		getChildren().add(title);
 	}
-	
+
+
 	@Override
 	public void rescale(double scale) {
-		setPrefSize(400 * scale, 480 * scale);
-		setLayoutX((GUI.getWindowWidth() - (400 * scale * 1.2)) * 0.5);
-		setLayoutY((GUI.getWindowHeight() - (480 * scale * 1.2)) * 0.5);
-		title.setFont(new Font("Avenir", 30 * scale));
-		title.setPrefHeight(35 * scale);
+		setPrefSize(width * scale, height * scale);
+		setLayoutX((GUI.getWindowWidth() - (layoutX * scale * 1.2)) * 0.5);
+		setLayoutY((GUI.getWindowHeight() - (layoutX * scale * 1.2)) * 0.5);
+		title.setFont(new Font("Avenir", titleFont * scale));
+		title.setPrefHeight(titleHeight * scale);
 		setStyle("-fx-background-color: #fafafa;\n-fx-background-radius: " + 20 * scale);
 		rescaleChildren(scale);
 	}

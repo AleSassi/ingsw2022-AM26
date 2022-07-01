@@ -59,10 +59,51 @@ public class LoginController extends RescalableController {
 	private final ObservableList<String> wizardChoices = FXCollections.observableArrayList("Wizard 1", "Wizard 2", "Wizard 3", "Wizard 4");
 	private final ObservableList<String> gameChoices = FXCollections.observableArrayList("Basic (simplified rules)", "Expert (full rules for more action)");
 	private final ObservableList<String> chosenNumberOfPlayers = FXCollections.observableArrayList("2", "3", "4");
-	
+	//region Rescale variables
 	private String chosenUsername;
 	private MatchVariant selectedMatchType;
-	
+	private static final double cranioFitWidth = 81;
+	private static final double cranioFitHeight = 90;
+	private static final double cranioX = 800;
+	private static final double cranioY = 42;
+	private static final double eriantysFitWidth = 308;
+	private static final double eriantysFitHeight = 89;
+	private static final double eriantysX = 420;
+	private static final double eriantysY = 42;
+
+	private final double nicknameBoxWidth = 429;
+	private final double nicknameBoxHeight = 26;
+	private final double nicknameBoxY = 174;
+	private final double loginButtonWidth = 103;
+	private final double loginButtonHeight = 35;
+	private final double loginButtonY = 565;
+	private final double gameBoxWidth = 429;
+	private final double gameBoxHeight = 26;
+	private final double gameBoxY = 423;
+	private final double wizardBoxWidth = 429;
+	private final double wizardBoxHeight = 26;
+	private final double wizardBoxY = 339;
+	private final double chosenPlayerCountWidth = 429;
+	private final double chosenPlayerCountHeight = 25;
+	private final double chosenPlayerCountY = 256;
+	private final double nicknameFieldTitleLabelWidth = 429;
+	private final double nicknameFieldTitleLabelHeight = 17;
+	private final double nicknameFieldTitleLabelY = 154;
+	private final double playerNumberTitleLabelWidth = 429;
+	private final double playerNumberTitleLabelHeight = 17;
+	private final double playerNumberTitleLabelY = 236;
+	private final double wizardTitleLabelWidth = 429;
+	private final double wizardTitleLabelHeigth = 17;
+	private final double wizardTitleLabelY = 319;
+	private final double matchTypeTitleLabelWidth = 429;
+	private final double matchTypeTitleLabelHeight = 17;
+	private final double matchTypeTitleLabelY = 403;
+
+	//endregion
+
+
+
+
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		super.initialize(url, resourceBundle);
@@ -165,28 +206,30 @@ public class LoginController extends RescalableController {
 	@Override
 	public void rescale(double scale) {
 		//Set everything up so that it is centered
-		RescaleUtils.rescaleToCenter(nicknameBox, 429, 26, 174, scale);
-		RescaleUtils.rescaleToCenter(loginButton, 103, 35, 565, scale);
-		RescaleUtils.rescaleToCenter(gameBox, 429, 26, 423, scale);
-		RescaleUtils.rescaleToCenter(wizardBox, 429, 26, 339, scale);
-		RescaleUtils.rescaleToCenter(chosenPlayerCount, 429, 25, 256, scale);
-		RescaleUtils.rescaleToCenter(nicknameFieldTitleLabel, 429, 17, 154, scale);
-		RescaleUtils.rescaleToCenter(playerNumberTitleLabel, 429, 17, 236, scale);
-		RescaleUtils.rescaleToCenter(wizardTitleLabel, 429, 17, 319, scale);
-		RescaleUtils.rescaleToCenter(matchTypeTitleLabel, 429, 17, 403, scale);
+		RescaleUtils.rescaleToCenter(nicknameBox, nicknameBoxWidth, nicknameBoxHeight, nicknameBoxY, scale);
+		RescaleUtils.rescaleToCenter(loginButton, loginButtonWidth, loginButtonHeight, loginButtonY, scale);
+		RescaleUtils.rescaleToCenter(gameBox, loginButtonWidth, loginButtonHeight, loginButtonY, scale);
+		RescaleUtils.rescaleToCenter(wizardBox, wizardBoxWidth, wizardBoxHeight, wizardBoxY, scale);
+		RescaleUtils.rescaleToCenter(chosenPlayerCount, chosenPlayerCountWidth, chosenPlayerCountHeight, chosenPlayerCountY, scale);
+		RescaleUtils.rescaleToCenter(nicknameFieldTitleLabel, nicknameFieldTitleLabelWidth, nicknameFieldTitleLabelHeight, nicknameFieldTitleLabelY, scale);
+		RescaleUtils.rescaleToCenter(playerNumberTitleLabel, playerNumberTitleLabelWidth, playerNumberTitleLabelHeight, playerNumberTitleLabelY, scale);
+		RescaleUtils.rescaleToCenter(wizardTitleLabel, wizardTitleLabelWidth, wizardTitleLabelHeigth, wizardTitleLabelY, scale);
+		RescaleUtils.rescaleToCenter(matchTypeTitleLabel, matchTypeTitleLabelWidth, matchTypeTitleLabelHeight, matchTypeTitleLabelY, scale);
 		
 		layoutEriantysHeader(scale, cranioImg, eriantysImg);
 	}
-	
+
+
+
 	static void layoutEriantysHeader(double scale, ImageView cranioImg, ImageView eriantysImg) {
-		cranioImg.setFitWidth(81 * scale);
-		cranioImg.setFitHeight(90 * scale);
-		cranioImg.setLayoutX((800 - GUI.referenceWidth * 0.5) * scale + GUI.getWindowWidth() * 0.5);
-		cranioImg.setLayoutY(42 * scale);
+		cranioImg.setFitWidth(cranioFitWidth * scale);
+		cranioImg.setFitHeight(cranioFitHeight * scale);
+		cranioImg.setLayoutX((cranioX - GUI.referenceWidth * 0.5) * scale + GUI.getWindowWidth() * 0.5);
+		cranioImg.setLayoutY(cranioY * scale);
 		
-		eriantysImg.setFitWidth(308 * scale);
-		eriantysImg.setFitHeight(89 * scale);
-		eriantysImg.setLayoutX((420 - GUI.referenceWidth * 0.5) * scale + GUI.getWindowWidth() * 0.5);
-		eriantysImg.setLayoutY(42 * scale);
+		eriantysImg.setFitWidth(eriantysFitWidth * scale);
+		eriantysImg.setFitHeight(eriantysFitHeight * scale);
+		eriantysImg.setLayoutX((eriantysX - GUI.referenceWidth * 0.5) * scale + GUI.getWindowWidth() * 0.5);
+		eriantysImg.setLayoutY(eriantysY * scale);
 	}
 }
