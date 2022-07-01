@@ -6,6 +6,7 @@ import it.polimi.ingsw.server.controller.network.messages.CharacterCardNetworkPa
 import it.polimi.ingsw.server.controller.network.messages.NetworkMessage;
 import it.polimi.ingsw.server.controller.network.messages.PlayerActionMessage;
 import it.polimi.ingsw.server.exceptions.client.CharacterCardActionInvalidException;
+import it.polimi.ingsw.server.exceptions.model.CharacterCardIncorrectParametersException;
 import it.polimi.ingsw.server.model.characters.Character;
 import it.polimi.ingsw.server.model.characters.CharacterCardParamSet;
 import it.polimi.ingsw.server.model.student.Student;
@@ -14,23 +15,39 @@ import it.polimi.ingsw.utils.cli.StringFormatter;
 
 import java.io.InputStreamReader;
 import java.util.Scanner;
-
+/**
+ * This Class represent the {@code CharacterCardInputView}
+ * @author Alessandro Sassi
+ */
 public class CharacterCardInputView {
-	
+	/**
+	 * initialize {@code CharacterCardInputView}
+	 */
 	private final Scanner terminalScanner;
 	private final TableView tableView;
 	private final PlayerStateView playerStateView;
-	
+	/**
+	 * constructor, set the parameter according to
+	 * @param tableView (type {@link it.polimi.ingsw.client.cli.view.TableView}) table view
+	 * @param playerStateView (type {@link it.polimi.ingsw.client.cli.view.PlayerStateView}) Playerstateview
+	 */
 	public CharacterCardInputView(TableView tableView, PlayerStateView playerStateView) {
 		this.tableView = tableView;
 		this.playerStateView = playerStateView;
 		this.terminalScanner = new Scanner((new InputStreamReader(System.in)));
 	}
-	
+	/**
+	 getter
+	 @return (type terminalScanner)
+	 */
 	private Scanner getTerminalScanner() {
 		return terminalScanner;
 	}
-	
+	/**
+	 this method create a thread, when the player play a  {@link it.polimi.ingsw.server.model.characters.CharacterCard charactercard} ask for the parameter(according to the played card) to apply the effect of the card
+	 received the parameter from player prepare a{@link it.polimi.ingsw.server.controller.network.messages.CharacterCardNetworkParamSet Message}
+	 @throws CharacterCardActionInvalidException if there are error in the parameter
+	 */
 	public CharacterCardNetworkParamSet run() throws CharacterCardActionInvalidException {
 		Character character = tableView.getCharacterAtIndex(playerStateView.getPurchasedCharacterCard());
 		boolean isCommandValid = false;
@@ -157,7 +174,11 @@ public class CharacterCardInputView {
 			throw new CharacterCardActionInvalidException();
 		}
 	}
-	
+	/**
+	 this method ask what type of {@link it.polimi.ingsw.server.model.student.Student Student} want to use on effect of card
+	 @param descriptiveMessage(type string) coint the request for the player according type of card
+	 @return (type Student) type of student player choose
+	 */
 	private Student askPickStudentColor(String descriptiveMessage) {
 		System.out.println(StringFormatter.formatWithColor(descriptiveMessage, ANSIColors.Yellow));
 		String studentColor = getTerminalScanner().nextLine();
@@ -170,7 +191,12 @@ public class CharacterCardInputView {
 		}
 		return chosenStudent;
 	}
-	
+
+	/**
+	 * method called whan arrive a {@link it.polimi.ingsw.notifications.Notification Notification}with name NetworkTimeoutNotification
+	 *the method endgame
+	 * @param notification (@code Notification) that contain the information of event
+	 */
 	protected void didReceiveNetworkTimeoutNotification(Notification notification) {
 	}
 }
