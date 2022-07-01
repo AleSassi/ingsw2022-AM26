@@ -19,18 +19,25 @@ import it.polimi.ingsw.utils.cli.StringFormatter;
 
 import java.io.InputStreamReader;
 import java.util.Scanner;
-
+/**
+ * This Class represent the {@code CLIManager}
+ * @author Alessandro Sassi
+ */
 public class CLIManager {
 	
 	private static CLIManager instance;
-	
+	/**
+	 constructor of a singleton
+	 */
 	public static CLIManager shared() {
 		if (instance == null) {
 			instance = new CLIManager();
 		}
 		return instance;
 	}
-	
+	/**
+	 start the game with Cli running {@link it.polimi.ingsw.client.cli.view.LoginView})
+	 */
 	public void startGameLoop() {
 		// Ask the Player to log in, send to the server
 		TerminalView activeView = new LoginView();

@@ -14,7 +14,10 @@ import it.polimi.ingsw.server.model.student.StudentCollection;
 import javafx.scene.control.Tab;
 
 import java.util.*;
-
+/**
+ * This Class rapresent the {@code Player}
+ * @author Leonardo Betti
+ */
 public class Player {
 	
 	private final String nickname;
@@ -25,7 +28,14 @@ public class Player {
 	private int availableCoins;
 	private final Wizard wizard;
 	private int assistantCardOrderModifier;
-	
+	/**
+	 * Constructs and sets up the player
+	 * @param nickname (type String) nickname of player
+	 * @param towerColor (type Tower) type of player tower
+	 * @param initialTowerCount (type List of int) number of tower
+	 * @param wiz (type List of Wizard) chosen {@code Wizards}
+	 * @throws IncorrectConstructorParametersException whenever the {@code Parameters} of the constructor aren't correct
+	 */
 	public Player(String nickname, Wizard wiz, Tower towerColor, int initialTowerCount, int initialCoins) throws IncorrectConstructorParametersException {
 		if (nickname == null || wiz == null) throw new IncorrectConstructorParametersException();
 		
@@ -37,24 +47,33 @@ public class Player {
 		this.availableCoins = initialCoins;
 		this.assistantCardOrderModifier = 0;
 	}
-	
+	/**
+	 getter
+	 @retun (type int)the modifier of order of assistant card
+	 */
 	public int getAssistantCardOrderModifier() {
 		return assistantCardOrderModifier;
 	}
-	
+	/**
+	 setter
+	 @param assistantCardOrderModifier (type int)the modifier of order of assistant card
+	 */
+
 	public void setAssistantCardOrderModifier(int assistantCardOrderModifier) {
 		this.assistantCardOrderModifier = assistantCardOrderModifier;
 	}
-	
+
 	/**
-	 * return nickname of player
+	 getter
+	 @retun (type string)the nickname
 	 */
 	public String getNickname() {
 		return nickname;
 	}
-	
+
 	/**
-	 * return list of card that player can use
+	 getter
+	 @retun (type list of AssistantCard) {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} the avaible (@code AssistantCard)
 	 */
 	public ArrayList<AssistantCard> getAvailableAssistantCards() {
 		ArrayList<AssistantCard> cards = new ArrayList<>();
@@ -63,70 +82,92 @@ public class Player {
 		}
 		return cards;
 	}
-	
+
 	/**
-	 * return played assistant card
+	 getter
+	 @retun (type AssistantCard) {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard}last played (@code AssistantCard)
 	 */
 	public AssistantCard getLastPlayedAssistantCard() {
 		return playedCardDeck.topCard();
 	}
-	
+	/**
+	 getter
+	 @retun (type list of Professors) {@link it.polimi.ingsw.server.model.Professor Professor}all controlled (@code Professor)
+	 */
 	public ArrayList<Professor> getControlledProfessors() {
 		return board.getControlledProfessors();
 	}
-	
+
 	/**
-	 * return number of student(with type S) in the dining room
+	 * @return number of  {@link it.polimi.ingsw.server.model.student.Student student}, that has type
+	 * @param s (type of student) chosen {@code Student}
 	 */
 	public int getCountAtTable(Student s) {
 		return board.getCountAtTable(s);
 	}
-	
+
 	/**
-	 * return the active characther card
+	 getter
+	 @retun (type CharacterCard) {@link it.polimi.ingsw.server.model.characters.CharacterCard CharacterCard}active(@code CharacterCard)
 	 */
-	
 	public CharacterCard getActiveCharacterCard() {
 		return playedCard;
 	}
-	
+	/**
+	 getter
+	 @retun (type SchoolBoard) {@link it.polimi.ingsw.server.model.SchoolBoard SchoolBoard}the board (@code SchoolBoard)
+	 */
 	public SchoolBoard getBoard() {
 		return board.copy();
 	}
-	
+	/**
+	 getter
+	 @retun (type int) the number of coin
+	 */
 	public int getAvailableCoins() {
 		return availableCoins;
 	}
-	
+	/**
+	 getter
+	 @retun (type Wizard) {@link it.polimi.ingsw.server.model.assistants.Wizard Wizard}the Wizard (@code Wizard)
+	 */
 	public Wizard getWizard() {
 		return wizard;
 	}
-	
+
 	/**
-	 * allow player to use card from avaible deck of assistant
+	 * remove the  {@link it.polimi.ingsw.server.model.characters.Character}, that has index
+	 * @param cardIndex (int) index of card from {@code PlayerCardDeck}
+	 * @throws CollectionUnderflowError whenever {@code PlayerCardDeck} hasn't sufficent element
 	 */
 	
 	public void playAssistantCardAtIndex(int cardIndex) throws CollectionUnderflowError {
 		playedCardDeck.addCardOnTop(availableCardsDeck.removeCard(cardIndex));
 		assistantCardOrderModifier = 0;
 	}
-	
+
 	/**
-	 * add a student of type s to entance
+	 * add a {@link it.polimi.ingsw.server.model.student.Student student}, that has type
+	 * @param s (type of student) chosen {@code Student} to {@link it.polimi.ingsw.server.model.SchoolBoard board}
 	 */
 	public void addStudentToEntrance(Student s) {
 		board.addStudentToEntrance(s);
 	}
-	
+
 	/**
-	 * remove a student of type s from entance
+	 * remove a {@link it.polimi.ingsw.server.model.student.Student student}, that has type
+	 * @param s (type of student) chosen {@code Student} to {@link it.polimi.ingsw.server.model.SchoolBoard board}
 	 */
 	public void removeStudentFromEntrance(Student s) throws CollectionUnderflowError {
 		board.removeStudentFromEntrance(s);
 	}
-	
+
 	/**
-	 * add a student to dining room e give a coin if it is the third student added
+	 * add a {@link it.polimi.ingsw.server.model.student.Student student}, that has type
+	 * @param s (type of student) chosen {@code Student}, to the dining room of {@link it.polimi.ingsw.server.model.SchoolBoard board}
+	 * if is the third card added increment the coin of player
+	 * @param tableManager link to the {@link it.polimi.ingsw.server.model.TableManager},
+	 * @throws TableFullException whenever {@link it.polimi.ingsw.server.model.SchoolBoard board} is full
 	 */
 	public void placeStudentAtTableAndGetCoin(Student s, TableManager tableManager) throws TableFullException {
 		if (s == null) return;
@@ -137,46 +178,60 @@ public class Player {
 			this.availableCoins += tableManager.getCoinFromReserve();
 		}
 	}
-	
+
 	/**
-	 * remove a student of type s from diningroom
+	 * remove a {@link it.polimi.ingsw.server.model.student.Student student}, that has type
+	 * @param s (type of student) chosen {@code Student}, to the dining room of {@link it.polimi.ingsw.server.model.SchoolBoard board}
+	 * @throws TableFullException whenever {@link it.polimi.ingsw.server.model.SchoolBoard board} doesn't have sufficent student of type s
 	 */
 	public void removeStudentFromTable(Student s) throws CollectionUnderflowError {
 		board.removeStudentFromTable(s);
 	}
-
+	/**
+	 * add a {@link it.polimi.ingsw.server.model.Professor professor}, that has type
+	 * @param p (type of professor) chosen {@code Professor}, to the dining room of {@link it.polimi.ingsw.server.model.SchoolBoard board}
+	 */
 	public void addProfessor(Professor p) {
 		board.setControlledProfessor(p);
 	}
 	/**
-	 * remove a professor
+	 * remove a {@link it.polimi.ingsw.server.model.Professor professor}, that has type
+	 * @param p (type of professor) chosen {@code Professor}, to the dining room of {@link it.polimi.ingsw.server.model.SchoolBoard board}
 	 */
 	public void removeProfessor(Professor p) {
 		board.removeProfessorControl(p);
 	}
-	
+	/**
+	 getter
+	 @retun (type tower) {@link it.polimi.ingsw.server.model.Tower Tower}the type of (@code Tower)
+	 */
 	public Tower getTowerType() {
 		return board.getTowerType();
 	}
 	/**
-	 * remove a professor from table
+	 * increment the counter of tower of {@link it.polimi.ingsw.server.model.SchoolBoard board}
+	 @throws TooManyTowersException whenever the number of tower of {@link it.polimi.ingsw.server.model.SchoolBoard board} has max value
 	 */
 	public void gainTower() throws TooManyTowersException {
 		board.gainTower();
 	}
-	
+	/**
+	 getter
+	 @retun (type int) number of avaible {@link it.polimi.ingsw.server.model.Tower Tower}
+	 */
 	public int getAvailableTowerCount() {
 		return board.getAvailableTowerCount();
 	}
 	/**
-	 * return the color of tower and decrement the towercounter on schoolboard
+	 * decrment the counter of tower of {@link it.polimi.ingsw.server.model.SchoolBoard board} calling is method
+	 @throws InsufficientTowersException whenever the number of tower of {@link it.polimi.ingsw.server.model.SchoolBoard board} doen't have sufficent tower
 	 */
 	public Tower pickAndRemoveTower() throws InsufficientTowersException {
 		return board.pickAndRemoveTower();
 	}
 	/**
-	 * the method have a collection like parameter, it take all student
-	 * belonging to the collection, and add it all to the entrance
+	 * add all {@link it.polimi.ingsw.server.model.student.Student student}, that is inside
+	 * @param sc (list of student) to {@link it.polimi.ingsw.server.model.SchoolBoard board}
 	 */
 	public void addAllStudentsToEntrance(StudentCollection sc) {
 		if (sc == null) return;
@@ -189,7 +244,8 @@ public class Player {
 		}
 	}
 	/**
-	 * allow play to active character card (set the active card and decrease the player's coin
+	 * if the player have sufficent coin set the
+	 * @param card (@Code CharacterCard) as variable playedCard
 	 */
 	public boolean playCharacterCard(CharacterCard card) {
 		if (card == null) return false;
@@ -204,12 +260,14 @@ public class Player {
 		return false;
 	}
 	/**
-	 * deactivate the character card
+	 * deactivate the card setting variable playedCard to null
 	 */
 	public void deactivateCard() {
 		playedCard = null;
 	}
-	
+	/**
+	 *add {@link it.polimi.ingsw.notifications.NotificationName notification} to {@link it.polimi.ingsw.notifications.NotificationCenter notcenter} to notify the win
+	 */
 	public void notifyVictory() {
 		//The Player has built its last Tower. Notify his victory
 		HashMap<String, Object> userInfo = new HashMap<>();
@@ -219,7 +277,8 @@ public class Player {
 		NotificationCenter.shared().post(NotificationName.PlayerVictory, this, userInfo);
 	}
 	/**
-	 * create a player copy
+	 * create a copy of {@link it.polimi.ingsw.server.model.Player player}
+	 * @return (@code Player) the copy
 	 */
 	public Player copy() {
 		try {
@@ -235,12 +294,19 @@ public class Player {
 			return this;
 		}
 	}
-
+	/**
+	 getter
+	 @retun (type int)the number of  {@link it.polimi.ingsw.server.model.student.Student Student}
+	 */
 	public int getStudentsInEntrance() {
 		return board.getNumberOfStudentsInEntrance();
 	}
 	
 	@Override
+	/**verify if this class is equal to
+	 * @param(type Object)
+	 * @return (type bool) true if class are equal, false otherwise
+	 */
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;

@@ -16,7 +16,10 @@ import it.polimi.ingsw.utils.cli.ANSIColors;
 import it.polimi.ingsw.utils.cli.ModelFormatter;
 import it.polimi.ingsw.utils.cli.StringFormatter;
 import org.jetbrains.annotations.Nullable;
-
+/**
+ * This Class represent the {@code PlayerStateView}
+ * @author Alessandro Sassi
+ */
 public class PlayerStateView extends TerminalView {
 	
 	private int numberOfCards = 0;
@@ -24,37 +27,57 @@ public class PlayerStateView extends TerminalView {
 	private Integer purchasedCharacterCard;
 	private StudentHost entrance, table;
 	private final MatchVariant variant;
-	
+	/**constructor
+	 * set variant of match
+	 * @param variant (type {@link it.polimi.ingsw.server.model.match.MatchVariant}) type of match
+	 */
 	public PlayerStateView(MatchVariant variant) {
 		super();
 		this.variant = variant;
 	}
-	
+	/**getter
+	 * @return (type int)numer of card{@link it.polimi.ingsw.server.model.assistants.AssistantCard assistantcard}
+	 */
 	public int getNumberOfCards() {
 		return numberOfCards;
 	}
-	
+	/**getter
+	 * @return (type int)numer of max MStep
+	 */
 	public int getMaxMNSteps() {
 		return maxMNSteps;
 	}
-	
+	/**getter
+	 * @return (type int)numer of card{@link it.polimi.ingsw.server.model.characters.Character charactercard} character the player purchased
+	 */
 	public Integer getPurchasedCharacterCard() {
 		return purchasedCharacterCard;
 	}
-	
+	/**getter
+	 * @return (type int)numer of card{@link it.polimi.ingsw.server.model.student.StudentHost StudentHost} the entrance
+	 */
 	public StudentHost getEntrance() {
 		return entrance;
 	}
-	
+	/**getter
+	 * @return (type int)numer of card{@link it.polimi.ingsw.server.model.student.StudentHost StudentHost} the dining room
+	 */
 	public StudentHost getTable() {
 		return table;
 	}
-	
+	/**
+	 * create a thread and add observers(one for each type of {@link it.polimi.ingsw.notifications.Notification Notification} we need) on  {@link it.polimi.ingsw.notifications.NotificationCenter Center} type of match
+	 * for every (@Code Nofication) that arrive call a differrent method of class according to the name of (@Code Nofication)
+	 */
 	@Override
 	public void run() {
 		NotificationCenter.shared().addObserver(this, this::didReceivePlayerState, NotificationName.ClientDidReceivePlayerStateMessage, null);
 	}
-	
+	/**
+	 * method called whan arrive a {@link it.polimi.ingsw.notifications.Notification Notification}with name didReceivePlayerState
+	 display the information about the player
+	 * @param notification (@code Notification) that contain the information of player
+	 */
 	private void didReceivePlayerState(Notification notification) {
 		PlayerStateMessage playerStateMessage = (PlayerStateMessage) notification.getUserInfo().get(NotificationKeys.IncomingNetworkMessage.getRawValue());
 		boolean isForCLIPlayer = playerStateMessage.getNickname().equals(Client.getNickname());
@@ -77,7 +100,10 @@ public class PlayerStateView extends TerminalView {
 		}
 		System.out.println(getControlledCardString(playerStateMessage));
 	}
-	
+	/**
+	 display the information about the active {@link it.polimi.ingsw.server.model.characters.Character charactercard}
+	 * @param playerStateMessage {@link it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage}contain information of player
+	 */
 	private StringBuilder getControlledCardString(PlayerStateMessage playerStateMessage) {
 		StringBuilder formattedString = new StringBuilder();
 		if (playerStateMessage.getActiveCharacterCardIdx() != null) {
@@ -85,7 +111,10 @@ public class PlayerStateView extends TerminalView {
 		}
 		return formattedString;
 	}
-	
+	/**
+	 create the string for display the information of schoolboard {@link it.polimi.ingsw.server.model.SchoolBoard SchoolBoard}
+	 * @param playerStateMessage {@link it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage}contain information of player
+	 */
 	private StringBuilder buildStringForSchoolBoard(PlayerStateMessage playerStateMessage) {
 		StringBuilder formattedString = new StringBuilder();
 		formattedString.append(getSchoolBoardASCIIArt(playerStateMessage));
@@ -97,7 +126,11 @@ public class PlayerStateView extends TerminalView {
 		}
 		return formattedString;
 	}
-	
+	/**
+	 create the structure of the draw(in command line using string)  about{@link it.polimi.ingsw.server.model.SchoolBoard SchoolBoard}
+	 * @param playerStateMessage {@link it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage}contain information of player
+	 * @return(type stringbuilder)the builded string
+	 */
 	private StringBuilder getSchoolBoardASCIIArt(PlayerStateMessage playerStateMessage) {
 		StringBuilder stringBuilder = new StringBuilder();
 		int studentRow = 0;
@@ -153,7 +186,14 @@ public class PlayerStateView extends TerminalView {
 		}
 		return stringBuilder;
 	}
-	
+	/**
+	 print in
+	 * @param stringBuilder (type stringBuilder)the string builder actually in construction
+	the student of type
+	 * @param lockedStudent (type{@link it.polimi.ingsw.server.model.student.StudentHost Student})
+	 * if there is it in
+	 * @param entrance (type{@link it.polimi.ingsw.server.model.student.StudentHost SHost})
+	 */
 	private void extractAndPrintStudent(StringBuilder stringBuilder, StudentHost entrance, @Nullable Student lockedStudent) {
 		boolean hasPrintedStudent = false;
 		if (lockedStudent != null) {
@@ -180,7 +220,10 @@ public class PlayerStateView extends TerminalView {
 			stringBuilder.append("__");
 		}
 	}
-	
+	/**
+	 create the string for display the information of assistant card {@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard}
+	 * @param playerStateMessage {@link it.polimi.ingsw.server.controller.network.messages.PlayerStateMessage}contain information of player
+	 */
 	private StringBuilder buildStringForAssistantCards(PlayerStateMessage playerStateMessage) {
 		StringBuilder formattedString = new StringBuilder("Assistant Cards available: ");
 		int index = 0;

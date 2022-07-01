@@ -9,11 +9,21 @@ import it.polimi.ingsw.server.model.student.StudentHost;
 import it.polimi.ingsw.utils.cli.StringFormatter;
 
 import java.util.*;
-
+/**
+ * This Class represent the {@code StudentHostingCard}
+ * @author Alessandro Sassi
+ */
 public class StudentHostingCard extends CharacterCard {
-
+    /**
+     * initialize {@code StudentHostingCard}
+     */
     private StudentCollection hostedStudents;
-
+    /**
+     * constructor, set the parameter of the card according to
+     * @param character (type {@link it.polimi.ingsw.server.model.characters.CharacterCard charactercard}) character of the card
+     * process it,check parameter if are correct, define the executor parameter, and
+     * @throws CharacterCardIncorrectParametersException
+     */
     public StudentHostingCard(Character character) {
         super(character);
         switch (character) {
@@ -99,7 +109,11 @@ public class StudentHostingCard extends CharacterCard {
                     executor = null;
         }
     }
-
+    /**
+     * setup the number of hosted student{@link it.polimi.ingsw.server.model.student.Student Table}of the card picking them from (@code bag)
+     * @param t (type {@link it.polimi.ingsw.server.model.TableManager Table}) link to access the Table
+     * @throws CollectionUnderflowError (@code bag) is empty
+     */
     @Override
     public void setupWithTable(TableManager t) {
         //Picks from the Bag a number of students specified by the Character enum
@@ -111,24 +125,51 @@ public class StudentHostingCard extends CharacterCard {
             e.printStackTrace();
         }
     }
-
+    /**
+     * this method is used to to activate the effect of card, setting the correct variable
+     * @param t (type {@link it.polimi.ingsw.server.model.TableManager Table}) link to access the manager
+     * @param players      (type list of Player){@link it.polimi.ingsw.server.model.Player Player} list of the player
+     * @param currentPlayer    (type Player) {@code Player} the player which are playing
+     * @param userInfo (type CharacterCardParamSet){@link it.polimi.ingsw.server.model.characters.CharacterCardParamSet CharacterCardParamSet}
+     @throws CharacterCardIncorrectParametersException if the parameter of the effect of card are incorrect
+     @throws  CharacterCardNoMoreUsesAvailableException player finished the uses of card
+     */
     @Override
     public int useCard(TableManager t, List<Player> players, Player currentPlayer, CharacterCardParamSet userInfo) throws CharacterCardIncorrectParametersException, CharacterCardNoMoreUsesAvailableException {
         markCardAsUsedInTurn();
         return executor.performAction(t, players, currentPlayer, userInfo);
     }
-
+    /**
+     * getter
+     * @return (type collection){@link it.polimi.ingsw.server.model.student.StudentCollection collection} of student hosted by the card
+     */
     @Override
     public StudentCollection getHostedStudents() {
         StudentCollection copyCollection = new StudentCollection();
         copyCollection.mergeWithCollection(hostedStudents);
         return copyCollection;
     }
-
+    /**
+     * this method check that player do not exceed the max number of uses of (type {@link it.polimi.ingsw.server.model.characters.CharacterCard Charactercard}) character of the card
+     * @param character (type Charactercard)to take number of max uses
+     * @throws CharacterCardNoMoreUsesAvailableException if player try to exceed max uses of(@code Charactercard)
+     */
     private void checkMaxUsesInTurn(Character character) throws CharacterCardNoMoreUsesAvailableException {
         if (getTimesUsedInCurrentTurn() > character.getMaxNumberOfUsesInTurn()) throw new CharacterCardNoMoreUsesAvailableException();
     }
-
+    /**
+     * this method is used  to perform the movement of {@link it.polimi.ingsw.server.model.student.Student Student}
+     * @param s (type Student) type of (@code Student) to move
+     * @param numberOfStudentsToMove (type int) number of student to move
+    * @param pSource (type Player){@link it.polimi.ingsw.server.model.Player Player} source player of movement
+     * @param pDest (type Player){@code Player} destionation player of movement
+     * @param tableManager (type {@link it.polimi.ingsw.server.model.TableManager Table}) link to access the tablemanager
+     * @param dstIslandIndex (type StudentMovementSource)  index of the target island{@link it.polimi.ingsw.server.model.student.Island Island}
+     * @param movementSource  (type StudentMovementSource)(@codeStudentMovementSource)source of movement
+     *  @param movementDestination  (type StudentMovementSource)(@code StudentMovementSource) destionation of movement
+     *  @param autoUpdateToMatchMaxStudentCount (type Bool)if was auto-updated
+     * @throws StudentHostingCardIncorrectUpdateParametersException if the parameter to update card are incorrect
+     */
     private void moveStudents(Student s, int numberOfStudentsToMove, Player pSource, Player pDest, int dstIslandIndex, TableManager tableManager, StudentMovementSource movementSource, StudentMovementDestination movementDestination, boolean autoUpdateToMatchMaxStudentCount) throws StudentHostingCardIncorrectUpdateParametersException {
         //region Check for Exceptions to abort the execution of the effect (i.e. transaction-like)
         if (tableManager == null) throw new StudentHostingCardIncorrectUpdateParametersException("StudentHostingCard MoveStudents(_:) ERROR: For full method safety tableManager must always be non-null");
@@ -197,22 +238,33 @@ public class StudentHostingCard extends CharacterCard {
             e.printStackTrace();
         }
     }
-    
+    /**
+     reset variable
+     */
     @Override
     public void deactivate() {
     }
-    
+    /**
+     * create a (@code CharacterCardBean) from the parameter of this class
+     * @return (type CharacterCardBean) {@link it.polimi.ingsw.server.model.characters.CharacterCardBean CharacterCardBean}) that card rapresent
+     */
     @Override
     public CharacterCardBean beanify() {
         return new CharacterCardBean(getCharacter(), getPrice(), null, -1, -1, hostedStudents);
     }
-
+    /**
+     * this method create a copy of card to
+     * @param dstCard (type {@link it.polimi.ingsw.server.model.characters.CharacterCard charactercard})
+     */
     @Override
     protected void copyTo(CharacterCard dstCard) {
         super.copyTo(dstCard);
         ((StudentHostingCard)dstCard).hostedStudents = hostedStudents;
     }
-
+    /**verify if this class is equal to
+     * @param(type Object)
+     * @return (type bool) true if class are equal, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -228,13 +280,17 @@ public class StudentHostingCard extends CharacterCard {
         result = 31 * result + hostedStudents.hashCode();
         return result;
     }
-
+    /**
+     * This Class represent the {@code StudentMovementSource}
+     */
     private enum StudentMovementSource {
         PlayerEntrance,
         PlayerTable,
         Self
     }
-
+    /**
+     * This Class represent the {@code StudentMovementDestination}
+     */
     private enum StudentMovementDestination {
         PlayerEntrance,
         PlayerTable,

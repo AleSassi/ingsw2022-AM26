@@ -9,9 +9,14 @@ import it.polimi.ingsw.server.model.assistants.Wizard;
 import it.polimi.ingsw.server.model.match.MatchVariant;
 import it.polimi.ingsw.utils.cli.ANSIColors;
 import it.polimi.ingsw.utils.cli.StringFormatter;
-
+/**
+ * This Class represent the {@code LoginView}
+ * @author Alessandro Sassi
+ */
 public class LoginView extends TerminalView {
-	
+	/**
+	 * create a thread and Ask to the player all the information about the match, until he insert valid infomation, than send a {@link it.polimi.ingsw.server.controller.network.messages.LoginMessage Message}, at the call the {@link it.polimi.ingsw.client.cli.view.LoginWaitingRoom Message}
+	 */
 	@Override
 	public void run() {
 		System.out.println(StringFormatter.formatWithColor("Enter your nickname:\t", ANSIColors.Green));
@@ -66,7 +71,12 @@ public class LoginView extends TerminalView {
 		LoginWaitingRoom loginWaitingRoom = new LoginWaitingRoom(matchVariant);
 		loginWaitingRoom.run();
 	}
-	
+
+	/**
+	 * method called whan arrive a {@link it.polimi.ingsw.notifications.Notification Notification}with name NetworkTimeoutNotification
+	 *the method endgame
+	 * @param notification (@code Notification) that contain the information of event
+	 */
 	@Override
 	protected void didReceiveNetworkTimeoutNotification(Notification notification) {
 		System.out.println(StringFormatter.formatWithColor("The Client encountered an error. Reason: Timeout. The network connection with the Server might have been interrupted, or the Server might be too busy to respond", ANSIColors.Red));

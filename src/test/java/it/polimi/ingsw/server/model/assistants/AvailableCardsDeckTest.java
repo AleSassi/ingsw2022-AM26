@@ -11,12 +11,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class AvailableCardsDeckTest {
     
     AvailableCardsDeck deck;
-    
+	/**construct the deck
+	 */
     @BeforeEach
     void initDeck() {
         deck = new AvailableCardsDeck();
     }
-	
+
+	/**try to remove a card{@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} from the deck{@link it.polimi.ingsw.server.model.assistants.AvailableCardsDeck AvailableCardsDeck} and verify, afetr operation, that (@code size) is smaller than older (@code size)
+	 */
 	@Test
 	void removeCard() {
 		int initialSize = deck.getCount();
@@ -25,7 +28,10 @@ class AvailableCardsDeckTest {
 		assertEquals(initialSize - 1, deck.getCount());
 		assertNotEquals(card, deck.getCard(0));
 	}
-    
+
+	/**try to remove a card{@link it.polimi.ingsw.server.model.assistants.AssistantCard AssistantCard} from an empty deck{@link it.polimi.ingsw.server.model.assistants.AvailableCardsDeck AvailableCardsDeck} and verify
+	 * @throws CollectionUnderflowError
+	 */
     @Test
     void removeWithUnderflow() {
         int initialDeckSize = deck.getCount();
@@ -34,7 +40,8 @@ class AvailableCardsDeckTest {
         }
         assertThrows(CollectionUnderflowError.class, () -> deck.removeCard(0));
     }
-	
+	/**create 2 new deck{@link it.polimi.ingsw.server.model.assistants.AvailableCardsDeck AvailableCardsDeck Deck}, for both (@code Deck) created, for 3 time remove the card with index 0, check doen't throw exception and than check if are equal
+	 */
 	@Test
 	void testEquals() {
 		AvailableCardsDeck deckA = new AvailableCardsDeck();
