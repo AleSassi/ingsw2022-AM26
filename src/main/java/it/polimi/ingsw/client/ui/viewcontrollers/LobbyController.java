@@ -33,6 +33,17 @@ public class LobbyController extends RescalableController {
 	private int numberOfPlayersToFill = 4;
 	private List<Notification> playerStateMessagesQueue; //Used to forward them to the main controller, since it might happen that the main controller is initialized and presented after the notification arrives
 	private Notification tableMessage, activePlayerMessage, matchStateMessage;
+	//region Rescale variables
+	private final double matchVariantLabelWidth = 570;
+	private final double matchVariantLabelHeight = 20;
+	private final double matchVariantLabelY = 315;
+	private final double matchVariantFont = 20;
+	private final double statusLabelWidth = 570;
+	private final double statusLabelHeight = 100;
+	private final double statusLabelY = 389;
+	private final double statusLabelFont = 35;
+	//endregion
+
 	
 	@FXML
 	private Label statusLabel;
@@ -195,10 +206,10 @@ public class LobbyController extends RescalableController {
 	
 	@Override
 	public void rescale(double scale) {
-		RescaleUtils.rescaleToCenter(matchVariantLabel, 570, 20, 315, scale);
-		RescaleUtils.rescaleToCenter(statusLabel, 570, 100, 389, scale);
-		matchVariantLabel.setStyle("-fx-font-size: " + (20 * scale));
-		statusLabel.setStyle("-fx-font-size: " + (35 * scale));
+		RescaleUtils.rescaleToCenter(matchVariantLabel, matchVariantLabelWidth, matchVariantLabelHeight, matchVariantLabelY, scale);
+		RescaleUtils.rescaleToCenter(statusLabel, statusLabelWidth, statusLabelHeight, statusLabelY, scale);
+		matchVariantLabel.setStyle("-fx-font-size: " + (matchVariantFont * scale));
+		statusLabel.setStyle("-fx-font-size: " + (statusLabelFont * scale));
 		
 		LoginController.layoutEriantysHeader(scale, cranioImg, eriantysImg);
 	}

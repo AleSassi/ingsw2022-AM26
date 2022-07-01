@@ -23,6 +23,9 @@ public class StudentOnIsland extends RescalableAnchorPane {
     private final Student color;
     private final Label studentLabel = new Label("0");
     private final int idx;
+    private final double defaultLayoutX = 0;
+    private final double defaultLayoutY = 0;
+    private final double defaultFontSize = 20;
 
     /**
      * Constructor creates a new {@link it.polimi.ingsw.server.model.student.Student Student}
@@ -88,10 +91,10 @@ public class StudentOnIsland extends RescalableAnchorPane {
     
     @Override
     public void rescale(double scale) {
-        studentPane.setLayoutX(0);
-        studentLabel.setLayoutX(0);
+        studentPane.setLayoutX(defaultLayoutX);
+        studentLabel.setLayoutX(defaultLayoutY);
         studentPane.setPrefSize(getUnscaledWidth() * scale , getUnscaledHeight() * scale);
         studentLabel.setPrefSize(getUnscaledWidth() * scale , getUnscaledHeight() * scale);
-        studentLabel.setFont(new Font("Avenir", 20 * scale));
+        studentLabel.setFont(new Font("Avenir", defaultFontSize * scale));
     }
 }

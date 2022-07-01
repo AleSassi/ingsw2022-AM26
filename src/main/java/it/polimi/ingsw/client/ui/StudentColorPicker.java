@@ -30,6 +30,17 @@ public class StudentColorPicker extends ModalPopup {
 	private StudentColorPickerHandler completionHandler;
 	private final GridPane studentGridPane = new GridPane();
 	private final List<AnchorPane> studentPanes = new ArrayList<>();
+
+	//region Resize variable
+	private final double studentGridPaneX = 50;
+	private final double studentGridHgap = 30;
+	private final double studentGridVgap = 15;
+	private final double studentGridRowConstraintsA = 30;
+	private final double studentGridColumnConstraintsA = 20;
+	private final double studentGridRowConstraintsB = 80;
+	private final double studentGridColumnConstraintsB = 80;
+	//endregion
+
 	
 	/**
 	 * Constructs a Color Picker with a title string
@@ -75,23 +86,25 @@ public class StudentColorPicker extends ModalPopup {
 	public void setCompletionHandler(StudentColorPickerHandler completionHandler) {
 		this.completionHandler = completionHandler;
 	}
-	
+
+
+
 	@Override
 	public void rescaleChildren(double scale) {
-		studentGridPane.setLayoutY(50 * scale);
+		studentGridPane.setLayoutY(studentGridPaneX * scale);
 		studentGridPane.setPrefSize(getUnscaledWidth() * scale, getUnscaledHeight() * scale);
-		studentGridPane.setHgap(30 * scale);
-		studentGridPane.setVgap(15 * scale);
+		studentGridPane.setHgap(studentGridHgap * scale);
+		studentGridPane.setVgap(studentGridVgap * scale);
 		studentGridPane.getRowConstraints().removeAll(studentGridPane.getRowConstraints());
 		studentGridPane.getColumnConstraints().removeAll(studentGridPane.getColumnConstraints());
-		studentGridPane.getRowConstraints().add(new RowConstraints((30 * scale)));
-		studentGridPane.getColumnConstraints().add(new ColumnConstraints((20 * scale)));
+		studentGridPane.getRowConstraints().add(new RowConstraints((studentGridRowConstraintsA * scale)));
+		studentGridPane.getColumnConstraints().add(new ColumnConstraints((studentGridColumnConstraintsA * scale)));
 		for (int i = 0; i < 2; i++) {
-			RowConstraints row = new RowConstraints(80 * scale);
+			RowConstraints row = new RowConstraints(studentGridRowConstraintsB * scale);
 			studentGridPane.getRowConstraints().add(row);
 		}
 		for (int i = 0; i < 3; i++) {
-			ColumnConstraints col = new ColumnConstraints(80 * scale);
+			ColumnConstraints col = new ColumnConstraints(studentGridColumnConstraintsB * scale);
 			studentGridPane.getColumnConstraints().add(col);
 		}
 	}

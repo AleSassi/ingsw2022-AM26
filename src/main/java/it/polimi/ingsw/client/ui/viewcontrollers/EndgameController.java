@@ -41,6 +41,25 @@ public class EndgameController extends RescalableController {
 	private Button newGameButton;
 	@FXML
 	private Button quitButton;
+	//region Rescale variables
+	private final double victoryLabelFont = 120;
+	private final double victoryPaneWidth = 297;
+	private final double victoryPaneHeight = 218;
+	private final double victoryLabelWidth = 533;
+	private final double victoryLabelHeight = 147;
+	private final double victoryLabelY = 248;
+	private final double victoryPaneY = 37;
+	private final double winnerLabelWidth = 200;
+	private final double winnerLabelHeight = 20;
+	private final double winnerLabelFont = 18;
+	private final double winnerLabelY = 427;
+	private final double newGameButtonWidth = 542;
+	private final double newGameButtonHeight = 128;
+	private final double newGameButtonY = 469;
+	private final double quitButtonWidth = 542;
+	private final double quitButtonHeight = 128;
+	private final double quitButtonY = 651;
+	//endregion
 
 	/**
 	 * this method displays a different page according to the result of the game for the actual player
@@ -98,25 +117,25 @@ public class EndgameController extends RescalableController {
 	 */
 	@Override
 	public void rescale(double scale) {
-		victoryLabel.setFont(new Font("Avenir", 120 * scale));
-		victoryPane.setPrefSize(297 * scale, 218 * scale);
+		victoryLabel.setFont(new Font("Avenir", victoryLabelFont * scale));
+		victoryPane.setPrefSize(victoryPaneWidth * scale, victoryPaneHeight * scale);
 		double windowWidth = GUI.getWindowWidth();
-		victoryLabel.setPrefWidth(533 * scale);
-		victoryLabel.setPrefHeight(147 * scale);
+		victoryLabel.setPrefWidth(victoryLabelWidth * scale);
+		victoryLabel.setPrefHeight(victoryLabelHeight * scale);
 		victoryLabel.setLayoutX((windowWidth - victoryLabel.getPrefWidth()) * 0.5);
-		victoryLabel.setLayoutY(248 * scale);
+		victoryLabel.setLayoutY(victoryLabelY * scale);
 		victoryPane.setLayoutX((windowWidth - victoryPane.getPrefWidth()) * 0.5);
-		victoryPane.setLayoutY(37 * scale);
-		winnerLabel.setPrefSize(200 * scale, 20 * scale);
-		winnerLabel.setFont(new Font("Avenir", 18 * scale));
+		victoryPane.setLayoutY(victoryPaneY * scale);
+		winnerLabel.setPrefSize(winnerLabelWidth * scale, winnerLabelHeight * scale);
+		winnerLabel.setFont(new Font("Avenir", winnerLabelFont * scale));
 		winnerLabel.setLayoutX((windowWidth - winnerLabel.getPrefWidth()) * 0.5);
-		winnerLabel.setLayoutY(427 * scale);
-		newGameButton.setPrefSize(542 * scale, 128 * scale);
+		winnerLabel.setLayoutY(winnerLabelY * scale);
+		newGameButton.setPrefSize(newGameButtonWidth * scale, newGameButtonHeight * scale);
 		newGameButton.setLayoutX((windowWidth - newGameButton.getPrefWidth()) * 0.5);
-		newGameButton.setLayoutY(469 * scale);
-		quitButton.setPrefSize(542 * scale, 128 * scale);
+		newGameButton.setLayoutY(newGameButtonY * scale);
+		quitButton.setPrefSize(quitButtonWidth * scale, quitButtonHeight * scale);
 		quitButton.setLayoutX((windowWidth - quitButton.getPrefWidth()) * 0.5);
-		quitButton.setLayoutY(651 * scale);
+		quitButton.setLayoutY(quitButtonY * scale);
 	}
 	
 	/**

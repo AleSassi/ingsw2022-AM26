@@ -26,6 +26,10 @@ import java.util.HashMap;
 public class CharacterCardStudentPickerPane extends CharacterCardPane {
 	
 	private AnchorPane pickedStudentPane;
+	private final double layoutX = 40;
+	private final double layoutY = 81;
+	private final double width = 50;
+	private final double height = 50;
 
 	/**
 	 * Constructor creates a new {@code CharacterCardStudentPickerPane}
@@ -95,9 +99,9 @@ public class CharacterCardStudentPickerPane extends CharacterCardPane {
 	public void rescale(double scale) {
 		super.rescale(scale);
 		if (pickedStudentPane != null) {
-			pickedStudentPane.setLayoutX((90 - 50) * 0.5 * scale);
-			pickedStudentPane.setLayoutY((136 - 50 - 5) * scale);
-			pickedStudentPane.setPrefSize(50 * scale, 50 * scale);
+			pickedStudentPane.setLayoutX(layoutX * 0.5 * scale);
+			pickedStudentPane.setLayoutY(layoutY * scale);
+			pickedStudentPane.setPrefSize(width * scale, height * scale);
 		}
 	}
 }
