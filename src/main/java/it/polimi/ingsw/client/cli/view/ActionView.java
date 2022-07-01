@@ -129,7 +129,7 @@ public class ActionView extends TerminalView {
 								if (args.length > 1) {
 									try {
 										int mnSteps = Integer.parseInt(args[1]);
-										if (mnSteps >= 0 && mnSteps <= playerStateView.getMaxMNSteps()) {
+										if (mnSteps > 0 && mnSteps <= playerStateView.getMaxMNSteps()) {
 											successDecoding = true;
 											actionMessage = new PlayerActionMessage(Client.getNickname(), PlayerActionMessage.ActionType.DidMoveMNBySteps, -1, null, false, -1, mnSteps, -1, -1, null);
 										}
@@ -253,11 +253,14 @@ public class ActionView extends TerminalView {
 				if (actionCommand.isValidForPhaseAndVariant(phase, variant)) {
 					boolean canPurchaseCard = playerStateView.getPurchasedCharacterCard() == null;
 					if (actionCommand == ClientActionCommand.PurchaseCharacterCard && canPurchaseCard) {
-						actionCommand.printHelp();
+						actionCommand.printHelp(false);
 					} else if (actionCommand == ClientActionCommand.PlayCharacterCard && !canPurchaseCard) {
-						actionCommand.printHelp();
+						actionCommand.printHelp(false);
 					} else if (actionCommand != ClientActionCommand.PlayCharacterCard && actionCommand != ClientActionCommand.PurchaseCharacterCard) {
-						actionCommand.printHelp();
+						actionCommand.printHelp(actionCommand == ClientActionCommand.MoveMotherNature);
+						if (actionCommand == ClientActionCommand.MoveMotherNature) {
+							System.out.println(StringFormatter.formatWithColor(" (between 1 and " + playerStateView.getMaxMNSteps() + ")", ANSIColors.Green));
+						}
 					}
 				}
 			}

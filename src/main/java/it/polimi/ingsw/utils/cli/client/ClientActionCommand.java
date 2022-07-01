@@ -52,7 +52,12 @@ public enum ClientActionCommand {
 		return false;
 	}
 	
-	public void printHelp() {
-		System.out.println(StringFormatter.formatWithColor(getRawValue(), ANSIColors.Yellow) + "\t" + StringFormatter.formatWithColor(getDescription(), ANSIColors.Green));
+	public void printHelp(boolean usingPrint) {
+		String helpStr = StringFormatter.formatWithColor(getRawValue(), ANSIColors.Yellow) + "\t" + StringFormatter.formatWithColor(getDescription(), ANSIColors.Green);
+		if (usingPrint) {
+			System.out.print(helpStr);
+		} else {
+			System.out.println(helpStr);
+		}
 	}
 }
