@@ -2,6 +2,7 @@ package it.polimi.ingsw.server.model.match;
 
 import it.polimi.ingsw.server.exceptions.model.IncorrectConstructorParametersException;
 import it.polimi.ingsw.server.exceptions.model.InvalidPlayerCountException;
+import it.polimi.ingsw.server.exceptions.model.IslandSkippedInfluenceForStopCardException;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.Tower;
 import it.polimi.ingsw.server.model.assistants.Wizard;
@@ -65,5 +66,26 @@ public class IndependentPlayerMatchManager extends MatchManager {
     @Override
     protected List<Player> getPlayersWithTowers() {
         return getAllPlayers();
+    }
+    
+    @Override
+    protected Player getPlayerControllingIsland() throws IslandSkippedInfluenceForStopCardException {
+        // Find the new player that controls the island
+        for (Player player: getAllPlayers()) {
+            int influence = getInfluenceOfPlayer(player);
+            boolean playerControlsIsland = true;
+            for (Player otherPlayer : getAllPlayers()) {
+                if (!otherPlayer.equals(player)) {
+                    if (getInfluenceOfPlayer(otherPlayer) >= influence) {
+                        playerControlsIsland = false;
+                        break;
+                    }
+                }
+            }
+            if (playerControlsIsland) {
+                return player;
+            }
+        }
+        return null;
     }
 }

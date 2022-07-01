@@ -483,26 +483,42 @@ public abstract class MatchManager {
 			Tower currentIslandTower = managedTable.getCurrentIsland().getActiveTowerType();
 			// Find the previous owner
 			Optional<Player> previousOwner = getPlayersWithTowers().stream().filter((player) -> player.getTowerType() == currentIslandTower).findFirst();
-			// Find the new player that controls the island
-			for (Player player: getAllPlayers()) {
-				int influence = managedTable.getInfluenceOnCurrentIsland(player);
-				boolean playerControlsIsland = true;
-				for (Player otherPlayer: getAllPlayers()) {
-					if (!otherPlayer.equals(player)) {
-						if (managedTable.getInfluenceOnCurrentIsland(otherPlayer) >= influence) {
-							playerControlsIsland = false;
-							break;
-						}
-					}
-				}
-				if (playerControlsIsland) {
-					managedTable.changeControlOfCurrentIsland(previousOwner.orElse(null), player);
-					break;
-				}
+			Player newOwner = getPlayerControllingIsland();
+			if (!Objects.equals(newOwner, previousOwner.get()) && newOwner != null) {
+				changeIslandControl(newOwner);
 			}
 		} catch (IslandSkippedInfluenceForStopCardException | IslandSkippedControlAssignmentForStopCardException e) {
 			// If we skipped the Island due to the StopCard being there, we should not do anything
 		}
+	}
+	
+	/**
+	 * Finds the Player that should control the current Island
+	 * @return The Player that should take ownership of the Island
+	 */
+	protected abstract Player getPlayerControllingIsland() throws IslandSkippedInfluenceForStopCardException;
+	
+	/**
+	 * Computes the influence of the player on the current Island
+	 * @param player The Player you want to compute the influence of
+	 * @return The influence number of the Player on the current island
+	 * @throws IslandSkippedInfluenceForStopCardException If the Island influence computation was skipped due to a StopCard being present on the Island
+	 */
+	protected int getInfluenceOfPlayer(Player player) throws IslandSkippedInfluenceForStopCardException {
+		return managedTable.getInfluenceOnCurrentIsland(player);
+	}
+	
+	/**
+	 * Changes control of the current island to the destination player, unifying it with adjacent ones if necessary
+	 * @param to The PLayer that takes control of the Island
+	 * @throws IslandSkippedControlAssignmentForStopCardException If the Island control swap was skipped due to a StopCard being present on the Island
+	 */
+	protected void changeIslandControl(Player to) throws IslandSkippedControlAssignmentForStopCardException {
+		Tower currentIslandTower = managedTable.getCurrentIsland().getActiveTowerType();
+		// Find the previous owner
+		Optional<Player> previousOwner = getPlayersWithTowers().stream().filter((player) -> player.getTowerType() == currentIslandTower).findFirst();
+		//Change control
+		managedTable.changeControlOfCurrentIsland(previousOwner.orElse(null), to);
 	}
 	
 	/**

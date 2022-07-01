@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server.model.match;
 
 import it.polimi.ingsw.server.exceptions.model.IncorrectConstructorParametersException;
+import it.polimi.ingsw.server.exceptions.model.IslandSkippedInfluenceForStopCardException;
 import it.polimi.ingsw.server.model.Player;
 import it.polimi.ingsw.server.model.PlayerTeam;
 import it.polimi.ingsw.server.model.Tower;
@@ -74,5 +75,34 @@ public class TeamMatchManager extends MatchManager {
 			result.add(team.getLeadPlayer());
 		}
 		return result;
+	}
+	
+	@Override
+	protected Player getPlayerControllingIsland() throws IslandSkippedInfluenceForStopCardException {
+		// Find the new team that controls the island - return the Player with the Towers
+		for (PlayerTeam playerTeam: teams) {
+			int totalTeamInfluence = getTeamInfluenceOnIsland(playerTeam);
+			boolean teamControlsIsland = true;
+			for (PlayerTeam otherTeam : teams) {
+				if (!otherTeam.equals(playerTeam)) {
+					if (getTeamInfluenceOnIsland(otherTeam) >= totalTeamInfluence) {
+						teamControlsIsland = false;
+						break;
+					}
+				}
+			}
+			if (teamControlsIsland) {
+				return playerTeam.getLeadPlayer();
+			}
+		}
+		return null;
+	}
+	
+	private int getTeamInfluenceOnIsland(PlayerTeam playerTeam) throws IslandSkippedInfluenceForStopCardException {
+		int totalTeamInfluence = 0;
+		for (Player player: playerTeam.getAllPlayers()) {
+			totalTeamInfluence += getInfluenceOfPlayer(player);
+		}
+		return totalTeamInfluence;
 	}
 }
