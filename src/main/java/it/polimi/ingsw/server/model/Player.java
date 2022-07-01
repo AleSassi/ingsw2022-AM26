@@ -174,7 +174,7 @@ public class Player {
 		if (board.getCountAtTable(s) == 10) throw new TableFullException();
 		
 		board.addStudentToTable(s);
-		if (board.getCountAtTable(s) % 3 == 0) {
+		if (board.getCountAtTable(s) % 3 == 0 && this.availableCoins > 0) {
 			this.availableCoins += tableManager.getCoinFromReserve();
 		}
 	}
@@ -182,7 +182,7 @@ public class Player {
 	/**
 	 * remove a {@link it.polimi.ingsw.server.model.student.Student student}, that has type
 	 * @param s (type of student) chosen {@code Student}, to the dining room of {@link it.polimi.ingsw.server.model.SchoolBoard board}
-	 * @throws TableFullException whenever {@link it.polimi.ingsw.server.model.SchoolBoard board} doesn't have sufficent student of type s
+	 * @throws CollectionUnderflowError whenever {@link it.polimi.ingsw.server.model.SchoolBoard board} doesn't have sufficent student of type s
 	 */
 	public void removeStudentFromTable(Student s) throws CollectionUnderflowError {
 		board.removeStudentFromTable(s);
