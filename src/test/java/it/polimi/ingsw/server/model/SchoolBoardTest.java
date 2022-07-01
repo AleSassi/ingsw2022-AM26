@@ -48,12 +48,10 @@ class SchoolBoardTest {
             assertEquals(2, board.getAvailableTowerCount());
             board.pickAndRemoveTower();
             assertEquals(1, board.getAvailableTowerCount());
-            board.pickAndRemoveTower();
-            assertEquals(0, board.getAvailableTowerCount());
         });
         assertThrows(InsufficientTowersException.class, board::pickAndRemoveTower);
         assertDoesNotThrow(board::gainTower);
-        assertEquals(1, board.getAvailableTowerCount());
+        assertEquals(2, board.getAvailableTowerCount());
     }
 
     @Test

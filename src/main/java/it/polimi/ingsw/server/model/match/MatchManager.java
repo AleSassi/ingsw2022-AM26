@@ -21,6 +21,7 @@ import it.polimi.ingsw.server.model.student.StudentCollection;
 import it.polimi.ingsw.server.model.student.StudentHost;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * This Class represent the {@code MatchManger}
@@ -484,7 +485,11 @@ public abstract class MatchManager {
 			// Find the previous owner
 			Optional<Player> previousOwner = getPlayersWithTowers().stream().filter((player) -> player.getTowerType() == currentIslandTower).findFirst();
 			Player newOwner = getPlayerControllingIsland();
-			if (!Objects.equals(newOwner, previousOwner.get()) && newOwner != null) {
+			AtomicBoolean changeControl = new AtomicBoolean(true);
+			previousOwner.ifPresent(previous -> {
+				changeControl.set(!previous.equals(newOwner));
+			});
+			if (changeControl.get() && newOwner != null) {
 				changeIslandControl(newOwner);
 			}
 		} catch (IslandSkippedInfluenceForStopCardException | IslandSkippedControlAssignmentForStopCardException e) {

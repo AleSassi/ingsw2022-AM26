@@ -145,7 +145,7 @@ public class SchoolBoard {
      * @throws InsufficientTowersException whenever the number of tower  doen't have sufficent tower
      */
     public Tower pickAndRemoveTower() throws InsufficientTowersException {
-        if (this.availableTowerCount == 0) throw new InsufficientTowersException();
+        if (this.availableTowerCount == 1) throw new InsufficientTowersException();
 
         this.availableTowerCount -= 1;
         return towerType;
