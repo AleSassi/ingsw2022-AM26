@@ -185,9 +185,6 @@ public class GameClient {
         userInfo.put(NotificationKeys.IncomingNetworkMessage.getRawValue(), message);
         NotificationName clientNotificationName = message.clientReceivedMessageNotification();
         if (clientNotificationName != null) {
-            if (clientNotificationName == NotificationName.ClientDidReceiveLoginResponse) {
-                startPongTimeoutTimer();
-            }
             NotificationCenter.shared().post(clientNotificationName, null, userInfo);
         } else if (message instanceof PingPongMessage) {
             PingPongMessage pong = new PingPongMessage(false);
