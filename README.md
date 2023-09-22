@@ -6,6 +6,8 @@ Eriantys is a board game whose reimplementation using the Java language is the f
 
 **Teacher** Alessandro Margara
 
+**Final Grade** 30/30 Cum Laude
+
 ### Project requirements
 The project consists in the reimplementation of the board game **Eriantys** created by Cranio Creations. The game has to be implemented using Java, and must run on a distributed architecture.
 
